@@ -1,0 +1,39 @@
+.presentation-container {
+    height: 91vh;
+    width: 95%;
+    overflow: hidden;
+    /* background-color: red; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.presentation-title-container {
+    margin-top: 13vh;
+    align-self: start;
+    width: 35%;
+}
+
+.presentation-image-container {
+    width: 50%;
+    margin-top: -10vh;
+    margin-right: -10%;
+
+}
+
+.presentation-image {
+    height: 75vh;
+}
+
+.presentation-title {
+    font-size: 4vw;
+    font-weight: 900;
+}
+
+.presentation-under-title {
+    width: 70%;
+    margin-top: 2vh;
+    font-size: 1.4vw;
+    font-weight: 400;
+}
