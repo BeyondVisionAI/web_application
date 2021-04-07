@@ -94,6 +94,7 @@ Si vous souhaitez contribuer, créez votre branche et faites des pull requests s
 * **Fabien Cheung Lim Yen** _alias_ [@Fistoflex](https://github.com/Fistoflex)
 * **Dimitri Clain** _alias_ [@Dimitri-CLAIN](https://github.com/Dimitri-CLAIN)
 * **Paul Van Kerckvoorde** _alias_ [@Polipoppy](https://github.com/Polipoppy)
+* * **Paul Van Kerckvoorde** _alias_ [@Tim-Snugget](https://github.com/Tim-Snugget)
 
 
 ## License
