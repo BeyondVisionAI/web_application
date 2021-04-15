@@ -7,7 +7,6 @@ jobs:
     steps:
     - name: Step 1 "Check dev version"
       id: hello
-      uses: actions/web_application@v1
       run: docker-compose -f ./docker-compose-dev.yaml up --build
     # Use the output from the `hello` step
     # - name: Get the output time
