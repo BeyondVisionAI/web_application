@@ -1,0 +1,15 @@
+on: [push]
+
+jobs:
+  check_push_job:
+    runs-on: ubuntu-latest
+    name: A job to check the push made
+    steps:
+    - name: Step 1 "Check dev version"
+      id: hello
+      uses: actions/web_application@v1
+      run: docker-compose -f ./docker-compose-dev.yaml up --build
+    # Use the output from the `hello` step
+    # - name: Get the output time
+    #   run: echo "The time was ${{ steps.hello.outputs.time }}"
+    ## faire les tests
