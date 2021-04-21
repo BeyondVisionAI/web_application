@@ -6,7 +6,7 @@ services:
       - "server"
     build:
       context: ./Frontend
-      dockerfile: ./DockerfileProd
+      dockerfile: ./DockerFileProd
     ports:
       - 80:80
     environment:
@@ -24,7 +24,6 @@ services:
       dockerfile: ./DockerfileProd
     ports:
       - "8080:8080"
-    environment:
     networks:
       - api
       - bdd
@@ -39,7 +38,7 @@ services:
         - ./.docker/mongodb/data/log/:/var/log/mongodb/
         - ./.docker/mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     env_file:
-        - .envbdd
+        - .env
     networks:
       - bdd
     environment:
