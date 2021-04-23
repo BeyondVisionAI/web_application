@@ -8,7 +8,7 @@ jobs:
       - name: Setup de l'environnement de test
         uses: actions/checkout@v2
       - name: Build the stack
-        run: docker-compose -f docker-compose-dev.yaml up --build
+        run: docker-compose -f docker-compose-dev.yaml up --build -d
       - name: Test the frontend connexion
         run: |
               curl -s --retry 10 --retry-connrefused http://localhost:3000/
