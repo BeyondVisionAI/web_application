@@ -1,13 +1,24 @@
-on: [push]
 
+name: docker-compose-actions-workflow
+on: push
 jobs:
-  check_push_job:
+  test:
     runs-on: ubuntu-latest
-    name: A job to check the push made
     steps:
-    - name: Step 1 "Check dev version"
-      id: hello
-      run: cd .. && ls -la && pwd && docker-compose -f docker-compose-dev.yaml up --build
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose -f docker-compose-dev.yaml up --build
+
+#on: [push]
+
+#jobs:
+#  check_push_job:
+#    runs-on: ubuntu-latest
+#    name: A job to check the push made
+#    steps:
+#    - name: Step 1 "Check dev version"
+#      id: hello
+#      run: cd .. && ls -la && pwd && docker-compose -f docker-compose-dev.yaml up --build
     # Use the output from the `hello` step
     # - name: Get the output time
     #   run: echo "The time was ${{ steps.hello.outputs.time }}"
