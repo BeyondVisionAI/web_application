@@ -10,7 +10,7 @@ jobs:
       - name: Build the stack
         run: docker-compose -f docker-compose-dev.yaml up --build -d
       - name: Ping after
-        run: docker run web_application_client_web_1 
+        run: docker run container:web_application_client_web_1 
       - name: Test the frontend connexion
         run: docker --help && docker ps -a
         
