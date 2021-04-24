@@ -9,10 +9,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose -f docker-compose-dev.yaml up --build -d
-      - name: Ping after
-        run: docker run container:web_application_client_web_1 
       - name: Test the frontend connexion
         run: docker --help && docker ps -a
+      - name: Ping after
+        run: docker run container:web_application_client_web_1 
+
         
         #      curl -s --retry 10 --retry-connrefused http://localhost:3000/
 
