@@ -10,9 +10,7 @@ jobs:
       - name: Build the stack
         run: docker-compose -f docker-compose-dev.yaml up --build -d
       - name: Test the frontend connexion
-        run: docker --help && docker ps -a
-      - name: Ping after
-        run: docker run container:web_application_client_web_1 
+        run: docker ps -a && docker run -d -p 80:80 web_application_client_web_1
 
         
         #      curl -s --retry 10 --retry-connrefused http://localhost:3000/
