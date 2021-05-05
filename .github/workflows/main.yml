@@ -9,23 +9,3 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose -f docker-compose-dev.yaml up --build -d
-      - name: Test the frontend connexion
-        run: docker ps && curl -s --retry 10 --retry-connrefused http://0.0.0.0:80/
-
-        
-        #      curl -s --retry 10 --retry-connrefused http://localhost:3000/
-
-#on: [push]
-
-#jobs:
-#  check_push_job:
-#    runs-on: ubuntu-latest
-#    name: A job to check the push made
-#    steps:
-#    - name: Step 1 "Check dev version"
-#      id: hello
-#      run: cd .. && ls -la && pwd && docker-compose -f docker-compose-dev.yaml up --build
-    # Use the output from the `hello` step
-    # - name: Get the output time
-    #   run: echo "The time was ${{ steps.hello.outputs.time }}"
-    ## faire les tests
