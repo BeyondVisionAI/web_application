@@ -1,0 +1,94 @@
+.contact-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10vh 28%;
+    padding-top: 20vh;
+    display: flex;
+    flex-direction: column;
+    /* background-color: red; */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.contact-container > * {
+    z-index: 1;
+}
+
+.contact-enveloppe {
+    position: absolute;
+    height: 70vh;
+    bottom: -400vh;
+    z-index: 0;
+}
+
+.contact-container > label, .contact-container > .top-line > div > label {
+    font-weight: 500;
+    text-align: left;
+    align-self: flex-start;
+}
+
+.contact-container > textarea, .contact-container > .top-line > div > input {
+    border: 3px solid #7793ED;
+    box-sizing: border-box;
+    border-radius: 12px;
+}
+
+.contact-container > textarea:focus, .contact-container > .top-line > div > input:focus {
+    outline: none;
+}
+
+.contact-container > label {
+    margin-top: 15px;
+}
+
+.contact-container > textarea {
+    resize: none;
+}
+
+.contact-container > .top-line > div > input {
+    height: 5vh;
+}
+
+.contact-container > .top-line {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.contact-container > .top-line > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 40%;
+}
+.submit-button > p {
+    margin-right: 15px;
+}
+
+.submit-button {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #7793ED;
+    background: transparent;
+    border: solid 3px #7793ED;
+    width: 80%;
+    align-self: center;
+    border-radius: 60px;
+    font-weight: 500;
+    font-size: 1.2vw;
+    cursor: pointer;
+    padding: 10px 15px;
+    background-size: 200% 100%;
+    background-image: linear-gradient(to right, transparent 50%, #7793ED 50%);
+    transition: background-position .3s cubic-bezier(0.19, 1, 0.22, 1) .1s, color .5s ease 0s, background-color .5s ease;
+}
+
+.submit-button:hover {
+  color:white;
+  background-color:#7793ED;
+  background-position: -100% 100%;
+}
