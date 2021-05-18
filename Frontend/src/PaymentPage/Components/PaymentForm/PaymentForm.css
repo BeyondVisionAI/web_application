@@ -1,0 +1,27 @@
+.payment-form-container {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    margin: 8%;
+}
+
+.payment-form-card {
+    display: flex;
+    flex-direction: column;
+    padding: 8%;
+    margin: 8%;
+}
+
+
+.payment-form-horizontal {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 8% 0%;
+}
+
+.payment-form-field {
+    width: 100%;
+    margin: 8% 2%;
+}

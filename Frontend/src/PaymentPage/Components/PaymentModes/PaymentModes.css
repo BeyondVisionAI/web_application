@@ -1,0 +1,22 @@
+.payment-modes-container {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 8%;
+}
+
+.payment-mode-card {
+	margin: 5%;
+    border-color: #7793ED;
+}
+
+.payment-mode-header {
+	color: white;
+    background-color: #7793ED;
+}
+
+.disabled-feature-container {
+    color: lightgray;
+}
