@@ -11,3 +11,14 @@
 .disabled-feature-container {
     color: lightgray;
 }
+
+.payment-mode-card-actions {
+	border-width: 21px;
+	border-color: #7793ED;
+    flex-direction: column;
+    height: 5em
+}
+
+.trial-version-button-text {
+	font-size: 21px;
+}

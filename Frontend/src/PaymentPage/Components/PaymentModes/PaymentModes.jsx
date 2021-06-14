@@ -15,5 +15,5 @@ const PaymentModes = () => {
     </div>
   );
 }
- 
+
 export default PaymentModes;

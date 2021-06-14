@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import LandingPage from './LandingPage/LandingPage';
+import PaymentPage from './PaymentPage/PaymentPage';
 
 function App() {
   return (
     <div className="App">
-        <LandingPage />
+        <PaymentPage />
     </div>
   );
 }
