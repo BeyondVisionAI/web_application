@@ -1,7 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import "./NavBar.css"
 
 const NavBar = () => {
+
+    const history = useHistory()
+
     return (
         <div className="navbar-container">
             <div className="navbar-logo-container">
@@ -15,7 +19,7 @@ const NavBar = () => {
                 <a href="#pricing" className="navbar-link">Pricing</a>
                 <a href="#aboutus" className="navbar-link">About Us</a>
                 <a href="#contact" className="navbar-link">Contact</a>
-                <button className="navbar-button">Login</button>
+                <button className="navbar-button" onClick={() => history.push("/login")}>Login</button>
             </div>
         </div>
     );

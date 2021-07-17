@@ -1,6 +1,6 @@
 import React from 'react';
 import "./LandingPage.css"
-import NavBar from './../GenericComponents/NavBar/NavBar';
+import NavBar from './../../GenericComponents/NavBar/NavBar';
 import Home from './Components/Home/Home';
 import TheProject from './Components/TheProject/TheProject';
 import Pricing from './Components/Pricing/Pricing';
