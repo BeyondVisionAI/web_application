@@ -30,6 +30,9 @@ services:
       - "8080:8080"
     volumes:
       - ./Backend/app.js:/app/app.js
+      - ./Backend/API/:/app/API/
+      - ./Backend/models/:/app/models/
+      - ./Backend/routes/:/app/routes/
     networks:
       - api
       - bdd

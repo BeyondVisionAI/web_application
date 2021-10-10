@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,6 +19,18 @@ app.use((req, res, next) => {
     res.send();
   });
 });
+
+console.log(`_______ ${process.env.MONGO_DB_IP} ________`);
+mongoose.connect(
+  process.env.MONGO_DB_IP,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  () => {
+    console.log("Mongoose Is Connected");
+  }
+);
 
 var routes = require('./routes/routes');
 routes(app);

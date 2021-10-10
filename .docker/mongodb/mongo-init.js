@@ -1,14 +1,3 @@
-db.createCollection( "user",
-   {
-      validator: { $or:
-         [
-            { email: { $regex: /@mongodb\.com$/ } },
-            { password: { $type: "string" } },
-         ]
-      }
-   }
-)
-
 db.createUser(
         {
             user: "usertest",
@@ -16,7 +5,7 @@ db.createUser(
             roles: [
                 {
                     role: "readWrite",
-                    db: "dashboard"
+                    db: "beyondVision"
                 }
             ]
         }
