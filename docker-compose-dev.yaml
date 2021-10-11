@@ -14,8 +14,8 @@ services:
       - NODE_ENV=development
       - PORT=80
     volumes:
-      - ./Frontend/src:/src/
-      - ./Frontend/public:/public/
+      - ./Frontend/src:/src
+      - ./Frontend/public:/public
     networks:
       - api
     restart: on-failure
@@ -30,9 +30,9 @@ services:
       - "8080:8080"
     volumes:
       - ./Backend/app.js:/app/app.js
-      - ./Backend/API/:/app/API/
-      - ./Backend/models/:/app/models/
-      - ./Backend/routes/:/app/routes/
+      - ./Backend/API/:/app/API
+      - ./Backend/models/:/app/models
+      - ./Backend/routes/:/app/routes
     networks:
       - api
       - bdd
@@ -43,8 +43,8 @@ services:
     container_name: mongodb
     hostname: mongodb
     volumes:
-        - ./.docker/mongodb/data/db/:/data/db/
-        - ./.docker/mongodb/data/log/:/var/log/mongodb/
+        - ./.docker/mongodb/data/db/:/data/db
+        - ./.docker/mongodb/data/log/:/var/log/mongodb
         - ./.docker/mongodb/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
     env_file:
         - .env

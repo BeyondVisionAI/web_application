@@ -8,9 +8,10 @@ module.exports = function(app) {
   /**
    * Collaborator
    */
+  app.route('/api/collaborator/:projectID')
+    .get(Collaborator.getCollaborators);
 
   app.route('/api/collaborator')
-    .get(Collaborator.getCollaborators)
     .post(Collaborator.createCollaborator)
     .put(Collaborator.updateCollaborator)
     .delete(Collaborator.deleteCollaborators);

@@ -67,7 +67,7 @@ exports.createCollaborator = async function (req, res) {
  */
 exports.getCollaborators = async function (req, res) {
     try {
-        controllers.Collaborator.find({ projectID: req.body.projectID }, (err, docs) => {
+        controllers.Collaborator.find({ projectID: req.params.projectID }, (err, docs) => {
             if (err) return res.status(500).send(`Error while fetching the database: ${err}`);
             if (docs.length === 0) return res.status(204).send("No collaborator");
             return res.status(200).send(docs);
@@ -89,7 +89,6 @@ exports.getCollaborators = async function (req, res) {
 exports.deleteCollaborators = async function (req, res) {
     try {
         controllers.Collaborator.deleteMany({ userID: { $in: req.body.userIDs }, projectID: { $in: req.body.projectIDs }}, (err, result) => {
-            console.log(result);
             if (err) return res.status(500).send(`Error while deleting collaborators: ${err}`);
             if (result.deletedCount === 0) return res.status(204).send("No collaborator");
             return res.status(200).send(result);
