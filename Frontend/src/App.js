@@ -11,22 +11,22 @@ import PrivateRoute from './GenericComponents/PrivateRoute/PrivateRoute';
 import Page404 from './Pages/Page404/Page404';
 
 function App() {
-  return (
-    <div className="App">
-       <ToastContainer />
-       <AuthProvider>
-          <BrowserRouter>
-              <Switch>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <Route exact path="/" component={LandingPage} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/404" component={Page404} />
-                <Redirect to="/404" />
-              </Switch>
-          </BrowserRouter>
-        </AuthProvider>
-    </div>
-  );
+    return (
+      <div className="App">
+         <ToastContainer />
+         <AuthProvider>
+            <BrowserRouter>
+                <Switch>
+                  <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                  <Route exact path="/" component={LandingPage} />
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/404" component={Page404} />
+                  <Redirect to="/404" />
+                </Switch>
+            </BrowserRouter>
+          </AuthProvider>
+      </div>
+    );
 }
 
 export default App;
