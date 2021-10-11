@@ -8,7 +8,6 @@ const controllers = require("../../models/Collaborator");
  * @returns { status: Number, message: String }
  */
 exports.createCollaborator = async function (req, res) {
-    console.log("__ Create Collaborator __");
     try {
         var newCollaborator = new controllers.Collaborator({
             userID: req.body.userID,
@@ -22,7 +21,10 @@ exports.createCollaborator = async function (req, res) {
             return res.status(200).send("Collaborator successfully created");
         });
     } catch (error) {
-        if (error) return res.status(500).send(`Error while saving the collaborator: ${error}`);
+        if (error) {
+            console.error(`Error while saving the collaborator: ${error}`);
+            res.status(500).send(`Error while saving the collaborator: ${error}`);
+        }
     }
 }
 
@@ -33,10 +35,8 @@ exports.createCollaborator = async function (req, res) {
  * @returns { status: Number, message: String }
  */
  exports.updateCollaborator = async function (req, res) {
-    console.log("__ Update Collaborator __");
-
     try {
-        controllers.Collaborator.update({
+        controllers.Collaborator.updateOne({
             userID: req.body.userID,
             projectID: req.body.projectID
         },
@@ -47,10 +47,14 @@ exports.createCollaborator = async function (req, res) {
         },
         (err, wr) => {
             if (err) return res.status(500).send(`Error while updating the collaborator: ${err}`);
+            if (wr.modifiedCount === 0) return res.status(204).send(`User ${req.body.userID} isn't in the project ${req.body.projectID}`);
             return res.status(200).send(wr);
         });
     } catch (error) {
-        if (err) return res.status(500).send(`Error while updating the collaborator: ${err}`);
+        if (err) {
+            console.error(`Error while updating the collaborator: ${error}`);
+            res.status(500).send(`Error while updating the collaborator: ${err}`);
+        }
     }
 }
 
@@ -59,18 +63,17 @@ exports.createCollaborator = async function (req, res) {
  *
  * @param { projectID: projectID } req
  * @param {*} res
- * @returns { [{ userID, projectID, canWrite, canRead, canDownload }] }
+ * @returns { [{ _id, userID, projectID, canWrite, canRead, canDownload }] }
  */
 exports.getCollaborators = async function (req, res) {
-    console.log("__ Get Collaborators __");
-
     try {
-        controllers.Collaborator.find({projectID: req.body.projectID}, (err, docs) => {
+        controllers.Collaborator.find({ projectID: req.body.projectID }, (err, docs) => {
             if (err) return res.status(500).send(`Error while fetching the database: ${err}`);
             if (docs.length === 0) return res.status(204).send("No collaborator");
             return res.status(200).send(docs);
         });
     } catch (error) {
+        console.error(`Error while fetching the collaborator: ${error}`);
         res.status(500).send(`Error while fetching the database: ${error}`);
     }
 }
@@ -78,21 +81,21 @@ exports.getCollaborators = async function (req, res) {
 
 /**
  *
- * @param { collaborators: [{ 'userID': userID, 'projectID': projectID }] } req
+ * @param { 'userIDs': String[], 'projectIDs': String[] } req
  * @param {*} res
  * @returns { status: Number }
  */
 
 exports.deleteCollaborators = async function (req, res) {
-    console.log("__ Delete Collaborators __");
-
     try {
-        controllers.Collaborator.deleteMany(req.body.collaborators, (err, deletedCount) => {
+        controllers.Collaborator.deleteMany({ userID: { $in: req.body.userIDs }, projectID: { $in: req.body.projectIDs }}, (err, result) => {
+            console.log(result);
             if (err) return res.status(500).send(`Error while deleting collaborators: ${err}`);
-            if (!deletedCount) return res.status(204).send("No collaborator");
-            return res.status(200);
+            if (result.deletedCount === 0) return res.status(204).send("No collaborator");
+            return res.status(200).send(result);
         });
     } catch (error) {
+        console.error(`Error while deleting the collaborators: ${error}`);
         res.status(500).send(`Error while deleting collaborators: ${error}`);
     }
 }
