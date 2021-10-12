@@ -9,6 +9,7 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 import Login from './Pages/Login/Login';
 import PrivateRoute from './GenericComponents/PrivateRoute/PrivateRoute';
 import Page404 from './Pages/Page404/Page404';
+import Project from './Pages/Project/Project';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <BrowserRouter>
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/project" component={Project} />
                 <Route exact path="/" component={LandingPage} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/404" component={Page404} />

@@ -45,7 +45,11 @@ const ManageCollaborators = ({ projectID }) => {
         setLoading(false);
     }, [loading]);
 
-    const renderCollaborator = () => collaborators.map(collaborator => {
+    const renderCollaborator = () => {
+        if (!collaborators) {
+            return (<li>No collaborator in this project</li>);
+        }
+        return (collaborators.map(collaborator => {
             return (
                 <li key={collaborator.userID}>
                     <Profile userID={collaborator.userID}></Profile>
@@ -57,7 +61,8 @@ const ManageCollaborators = ({ projectID }) => {
                     }/>
                 </li>
             );
-    });
+        }));
+    };
 
     return (
         <div>
