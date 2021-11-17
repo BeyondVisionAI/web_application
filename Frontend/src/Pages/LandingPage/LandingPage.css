@@ -1,0 +1,8 @@
+.landing-page-container {
+    background-color: #F2F5FE;
+    color: #7793ED;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

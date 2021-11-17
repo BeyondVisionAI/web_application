@@ -1,0 +1,10 @@
+.project-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 5%;
+    display: flex;
+    flex-direction: row;
+    /* background-color: red; */
+    justify-content: space-between;
+    overflow: hidden;
+}

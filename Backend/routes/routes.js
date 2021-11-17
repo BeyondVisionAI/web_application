@@ -1,6 +1,7 @@
 module.exports = function(app) {
-  const Test = require('../API/Test/TestServer.js');
+    const test = require("./Test");
+    const user = require("./User")
 
-  app.route('/api/test')
-    .get(Test.testServer);
-}
+    test(app);
+    user(app);
+  }

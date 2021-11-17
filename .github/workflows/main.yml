@@ -1,0 +1,11 @@
+
+name: docker-compose-actions-workflow
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup de l'environnement de test
+        uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose -f docker-compose-dev.yaml up --build -d

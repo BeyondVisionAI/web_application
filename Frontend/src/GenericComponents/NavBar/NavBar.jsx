@@ -1,17 +1,25 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import "./NavBar.css"
 
 const NavBar = () => {
+
+    const history = useHistory()
+
     return (
         <div className="navbar-container">
             <div className="navbar-logo-container">
-                <img src="/assets/logo-transparant.png" alt="Beyond Vision logo" className="navbar-logo"/>
+                <a href="#home">
+                <img src="/assets/Logos/Logo small BV.svg" alt="Beyond Vision logo" className="navbar-logo"/>
+                </a>
             </div>
             <div className="navbar-links-container">
-                <a href="#process" className="navbar-link">Le Processus</a>
-                <a href="#prices" className="navbar-link">Tarifs</a>
-                <a href="#aboutus" className="navbar-link">A Propos</a>
+                <a href="#home" className="navbar-link"><span>Home</span></a>
+                <a href="#project" className="navbar-link">The Project</a>
+                <a href="#pricing" className="navbar-link">Pricing</a>
+                <a href="#aboutus" className="navbar-link">About Us</a>
                 <a href="#contact" className="navbar-link">Contact</a>
+                <button className="navbar-button" onClick={() => history.push("/login")}>Login</button>
             </div>
         </div>
     );
