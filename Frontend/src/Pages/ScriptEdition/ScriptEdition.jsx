@@ -9,7 +9,7 @@ const ScriptEdition = () => {
     const [textBlock, setTextBlock] = useState("Python Best Language.");
     const [timer, setTimer] = useState(0);
 
-    const refreshRate = 1000 * 60 * 2; // 2 minutes
+    const refreshRate = 60 * 2; // 2 minutes
     const dateOptions = {weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'};
 
     const handleChange = (event) => {
@@ -25,13 +25,33 @@ const ScriptEdition = () => {
         const interval = setInterval(() => {
             setTimer(timer + 1);
 
-            setDate("Saved at " + new Date().toLocaleDateString("en-US", dateOptions));
-        }, refreshRate);
+            if (timer >= refreshRate) {
+                saveScriptToDB();
+                setTimer(0);
+            }
+        }, 1000);
 
         return () => {
             clearInterval(interval);
         };
     }/*, [] */); // TODO check this
+
+    function displaySaveDate() // TODO Alert component
+    {
+        setDate("Saved at " + new Date().toLocaleDateString("en-US", dateOptions));
+    }
+
+    function saveScriptToDB()
+    {
+        console.log("Save Script to the DB");
+        displaySaveDate();
+    }
+
+    function manualScriptSave()
+    {
+        saveScriptToDB();
+        setTimer(0);
+    }
 
     return (
         <div>
@@ -43,6 +63,9 @@ const ScriptEdition = () => {
                 id="markdown-content"
                 onChange={handleChange}/>
             <h3>{textBlock}</h3>
+            <button onClick={manualScriptSave}>
+                Save script
+            </button>
             <div>
                 <h3>Debug :</h3>
                 <p id="debug-output">
@@ -51,6 +74,8 @@ const ScriptEdition = () => {
             </div>
         </div>
     );
-}
+}   // TODO 
+    // Alert React Component for time save
+    // Do not save if the user didn't update the thing
 
 export default ScriptEdition;
