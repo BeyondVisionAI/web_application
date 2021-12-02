@@ -9,6 +9,7 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 import Login from './Pages/Login/Login';
 import PrivateRoute from './GenericComponents/PrivateRoute/PrivateRoute';
 import Page404 from './Pages/Page404/Page404';
+import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
                 <Route exact path="/" component={LandingPage} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/404" component={Page404} />
+                <Route exact path="/scriptedition" component={ScriptEdition} />
                 <Redirect to="/404" />
               </Switch>
           </BrowserRouter>
