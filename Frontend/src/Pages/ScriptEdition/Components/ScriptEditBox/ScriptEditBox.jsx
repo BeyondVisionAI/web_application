@@ -52,9 +52,8 @@ const ScriptEditBox = () => {
 
     return (
         <div>
-            <h1>Script Edition</h1>
             <label htmlFor="markdown-content">
-                Script
+                Script Box
             </label>
             <textarea
                 id="markdown-content"
@@ -64,7 +63,6 @@ const ScriptEditBox = () => {
                 Save script
             </button>
             <div>
-                <h3>Debug :</h3>
                 <p id="debug-output">
                     {timeDebug}
                 </p>
