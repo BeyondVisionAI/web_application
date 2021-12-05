@@ -6,10 +6,9 @@ import ScriptBoxList from './Components/ScriptBoxList/ScriptBoxList';
 const ScriptEdition = () => {
     return (
         <div className="script-edition-container">
-            <NavBar />
+            {/* <NavBar /> */}
 
             <h1>Movie Title</h1>
-            <ScriptEditBox />
             <ScriptBoxList />
         </div>
     );

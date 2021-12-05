@@ -1,21 +1,22 @@
 import React from "react";
+import ScriptEditBox from "../ScriptEditBox/ScriptEditBox";
 
 const ScriptBoxList = () => {
     const tempText = // TODO fetch current created script parts
     [
-        {id: 0, title: "p1", content: "random text"},
-        {id: 1, title: "p2", content: "another random text"},
-        {id: 2, title: "p3", content: "pretty random text"},
-        {id: 3, title: "p4", content: "last random text"}
+        {id: 0, content: <ScriptEditBox />},
+        {id: 1, content: <ScriptEditBox />},
+        {id: 2, content: <ScriptEditBox />},
+        {id: 3, content: <ScriptEditBox />}
     ];
 
     const scriptBoxes = tempText.map((item) => {
-        <li key={item.id}>
-            <div>
-                <h1>{item.title}</h1>
-                <p>{item.content}</p>
-            </div>
-        </li>
+        <li><ScriptEditBox /></li>
+        // <li key={item.id}>
+        //     <div>
+        //         <ScriptEditBox />
+        //     </div>
+        // </li>
     });
 
     return (
