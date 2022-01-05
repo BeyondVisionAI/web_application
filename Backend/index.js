@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-var routes = require('./Routes/routes');
+var routes = require('./routes/routes');
 var cookieParser = require('cookie-parser')
 const app = express();
 
@@ -20,8 +20,11 @@ app.use((req, res, next) => {
 
 routes(app);
 
+var url = "mongodb://beyondvision:thisisaverysecurepassword@mongodb/beyondvision";
+console.log("Process.env.DB_CONN_STRING : " + url);
+
 mongoose.connect(
-  process.env.DB_CONN_STRING,
+  url,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
