@@ -5,6 +5,8 @@ exports.testServer = function(req, res) {
 }
 
 exports.testAuth = function(req, res) {
+    console.log(req.cookies);
+    console.log(req.user);
     res.statusCode = 200;
     res.send("You are logged in");
 }
