@@ -65,12 +65,16 @@ exports.login = async function(req, res) {
         if (err) throw err;
         if (!doc) return res.status(404).send("Not Found");
         if (bcrypt.compare(req.body.password, doc.password)) {
-            if (!doc.isEmailConfirmed) {
-                return res.status(401).send('Account Not Verified')
-            }
+
+            // PARTIE COMMENTEE POUR LES TESTS !!! //
+            
+            // if (!doc.isEmailConfirmed) {
+            //     return res.status(401).send('Account Not Verified')
+            // }
             var userWithoutPassword = {
                 username: doc.username,
-                email: doc.email
+                email: doc.email,
+                userId: doc._id  ///PARTIE AJOUTEE PAR MOI MEME, PEUT ETRE A RETIRER AU MOMENT DU MERGE (a voir avec alex)
             }
             var userJWT = jwt.sign(userWithoutPassword, process.env.JWT_SECRETKEY, {expiresIn: '15m'})
             res.cookie("token", userJWT, {

@@ -1,24 +1,20 @@
 const mongoose = require("mongoose");
 
-const projectSchema = new mongoose.Schema({
-    projectName: {
-        type: String,
-        required: true
-    },
+const project = new mongoose.Schema({
+    name: String,
     status: {
         type: String,
         enum: ['Error', 'Stop', 'InProgress', 'Done'],
         default: 'Stop',
         required: true
     },
-    videoUrl: {
-        type: String,
-        required: false
+    imageId: {
+      type: Schema.Types.ObjectId,
+      ref: "Image",
+      required: true
     },
-    script: {
-        type: String,
-        required: false
-    },
+    description: String,
+    videoLink: String,
     creator: {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -28,7 +24,11 @@ const projectSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
         required: false
-    }]
+    }],
+    script: {
+        type: String,
+        required: false
+    },
 });
 
-exports.Project = mongoose.model('Project', projectSchema);
+exports.Project = mongoose.model("Project", project);

@@ -1,19 +1,28 @@
 module.exports = function(app) {
-    const ProjectManager = require('../Controllers/Project/ProjectManager');
+    const Project = require('../Controllers/Project/Project')
+    const authMiddleware = require('../Controllers/User/authMiddleware')
+    const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
 
-    app.route('/project/:projectID')
-    .get(ProjectManager.getProject);
+    app.get('/projects/:projectId', 
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        Project.getProject);
 
-    app.route('/project/:projectID/descriptors')
-    .put(ProjectManager.updateProjectDescriptors);
-    app.route('/project/:projectID/script')
-    .put(ProjectManager.updateProjectScript);
-    app.route('/project/:projectID/status')
-    .put(ProjectManager.updateProjectStatus);
-    app.route('/project/:projectID')
-    .put(ProjectManager.updateProject);
+    app.post('/projects', 
+        authMiddleware.authenticateUser, 
+        Project.createProject);
 
-    app.route('/project')
-    .post(ProjectManager.createProject)
-    .delete(ProjectManager.deleteProjects);
+    app.delete('/projects/:projectId', 
+        authMiddleware.authenticateUser,
+        collabMiddleware.hasRightOwner,
+        Project.deleteProject);
+
+    app.patch('/projects/:projectId', 
+        authMiddleware.authenticateUser,
+        collabMiddleware.hasRightAdmin,
+        Project.updateProject);
+
+    app.get('/projects', 
+        authMiddleware.authenticateUser,
+        Project.getAllProjects);
 }

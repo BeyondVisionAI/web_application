@@ -1,9 +1,11 @@
 module.exports = function(app) {
     const test = require("./Test");
-    const user = require("./User")
-    const projectRouts = require("./Project")
+    const user = require("./User");
+    const project = require("./Project");
+    const collaboration = require("./Collaboration");
 
     test(app);
     user(app);
-    projectRouts(app);
+    project(app);
+    collaboration(app);
   }
