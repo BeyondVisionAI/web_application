@@ -4,7 +4,7 @@ module.exports = function(app) {
     const Middleware = require('../Controllers/User/authMiddleware')
 
     app.post('/user/register', Auth.register)
-    
+
     app.post('/user/login', Auth.login)
 
     app.get('/user', Middleware.authenticateUser, User.getUser)
