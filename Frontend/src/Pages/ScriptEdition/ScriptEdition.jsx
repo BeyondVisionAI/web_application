@@ -8,7 +8,9 @@ const ScriptEdition = () => {
         <div className="script-edition-container">
             {/* <NavBar /> */}
 
-            <h1>Movie Title</h1>
+            <h1>Project Title</h1>
+            <div id="movie-insight"></div>
+                
             <ScriptBoxList />
         </div>
     );

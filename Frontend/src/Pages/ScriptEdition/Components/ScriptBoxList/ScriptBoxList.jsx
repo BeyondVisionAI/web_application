@@ -1,8 +1,10 @@
 import React from "react";
 import ScriptEditBox from "../ScriptEditBox/ScriptEditBox";
 
+// TODO fetch current created script parts
+
 const ScriptBoxList = () => {
-    const tempText = // TODO fetch current created script parts
+    const tempText =
     [
         {id: 0, content: <ScriptEditBox />},
         {id: 1, content: <ScriptEditBox />},
@@ -11,12 +13,9 @@ const ScriptBoxList = () => {
     ];
 
     const scriptBoxes = tempText.map((item) => {
-        <li><ScriptEditBox /></li>
-        // <li key={item.id}>
-        //     <div>
-        //         <ScriptEditBox />
-        //     </div>
-        // </li>
+        return (
+        <li id="scriptList{item.id}">{item.content}</li>
+        )
     });
 
     return (
