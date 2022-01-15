@@ -13,10 +13,10 @@ const Errors = {
     //Custom errors : 2
     INTERNAL_ERROR: "INTERNAL_ERROR",
     BAD_REQUEST_MISSING_INFOS: "BAD_REQUEST_MISSING_INFOS",
-    
+
     //Rights : 3
     ROLE_UNAUTHORIZED: "ROLE_UNAUTHORIZED",
-    
+
     //User : 4
     USER_NOT_LOGIN: "USER_NOT_LOGIN",
     USER_NOT_FOUND: "USER_NOT_FOUND"

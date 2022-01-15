@@ -2,8 +2,16 @@ const mongoose = require("mongoose");
 const { Role } = require("./Roles.js");
 
 const collaboration = new mongoose.Schema({
-    projectId: String,
-    userId: String,
+    projectId: {
+        type: Schema.Types.ObjectId,
+        ref: "Project",
+        required: true
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     titleOfCollaboration: String,
     rights: {
         type: String,

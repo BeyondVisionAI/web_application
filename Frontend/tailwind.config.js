@@ -4,6 +4,12 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
+    colore: {
+      myBlue: '#7793ED',
+      myBlack: '#444655',
+      myWhite: '#F6F8FF',
+      disable: 'C4C4C4'
+    }
   },
   variants: {
     extend: {},

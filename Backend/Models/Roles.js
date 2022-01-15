@@ -15,6 +15,8 @@ exports.isValidRole = function (roleToTest) {
             return true;
         case role.READ:
             return true;
+        default:
+            return false;
     }
     return false;
 };
