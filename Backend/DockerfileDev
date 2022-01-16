@@ -6,4 +6,4 @@ RUN npm install -g nodemon
 RUN npm install
 RUN npm install nodemon -g
 EXPOSE 8080
-CMD ["nodemon", "app.js"]
+CMD ["nodemon", "-r", "dotenv/config", "index.js"]
