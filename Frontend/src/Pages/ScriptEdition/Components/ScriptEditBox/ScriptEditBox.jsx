@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from 'react'
 
-const ScriptEditBox = () => {
-    const [textBlock, setTextBlock] = useState("script text");
+const ScriptEditBox = ({replica}) => {
+    const [textBlock, setTextBlock] = useState({replica});
     // const [timer, setTimer] = useState(0);
 
     // const refreshRate = 60 * 2; // 2 minutes
@@ -55,9 +55,10 @@ const ScriptEditBox = () => {
             <textarea
                 id="markdown-content"
                 onChange={handleBlockEvent}
+                defaultValue={replica}
                 cols="40" rows="2"
                 className="p-3 max-w-full leading-normal
-                rounded-md border border-solid border-blue-800 focus:border-red-500"/> {/*add shadow */}
+                rounded-md border border-solid border-blue-800 focus:border-red-500"/>{/*add shadow */}
             {/* <button onClick={manualScriptSave}>
                 Save script
             </button> */}

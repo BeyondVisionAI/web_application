@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { mongoose, Schema } = require("mongoose");
 
-const project = new mongoose.Schema({
+const project = new Schema({
     name: String,
     status: {
         type: String,
@@ -25,10 +25,15 @@ const project = new mongoose.Schema({
         ref: "User",
         required: false
     }],
-    script: {
-        type: String,
+    script: [{
+        replica: String,
+        lastEditor: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required : false
+        },
         required: false
-    },
+    }],
 });
 
 exports.Project = mongoose.model("Project", project);

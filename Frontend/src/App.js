@@ -24,7 +24,7 @@ function App() {
                 <Route exact path="/" component={LandingPage} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/404" component={Page404} />
-                <Route exact path="/scriptedition" component={ScriptEdition} />
+                {/* <Route exact path="/scriptedition" component={ScriptEdition} /> */}
                 <Redirect to="/404" />
               </Switch>
           </BrowserRouter>

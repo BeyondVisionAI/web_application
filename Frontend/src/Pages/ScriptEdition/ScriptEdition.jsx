@@ -5,8 +5,15 @@ import ScriptBoxList from './Components/ScriptBoxList/ScriptBoxList';
 
 const projectID = 1;
 
-const ScriptEdition = () => {
+const ScriptEdition = ( {script/*, video */}) => {
+    const [scriptContent, setScriptContent] = useState([]);
+
+    parseScript(script) = () => {
+        setScriptContent(script.content);
+    }
     return (
+        <>
+        {parseScript(script)}
         <div className="script-edition-container h-screen">
             <NavBar />
 
@@ -17,7 +24,7 @@ const ScriptEdition = () => {
                         <div id="movie-insight" className="w-3/5 bg-red-500 mx-1">
                             <img className="object-cover" src="./fight_club.jpeg" alt="movie insight" />
                         </div>
-                        <div id="script-boxes" className="w-2/5 bg-blue-300 mx-1"><ScriptBoxList /></div>
+                        <div id="script-boxes" className="w-2/5 bg-blue-300 mx-1"><ScriptBoxList script={scriptContent} /></div>
                     </div>
                 </div>
                 <div className="flex h-2/6 w-full px-2 mt-2">
@@ -25,6 +32,7 @@ const ScriptEdition = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 
