@@ -17,7 +17,7 @@ const ScriptBoxList = ({script}) => {
     //     {id: 8, content: <ScriptEditBox />},
     //     {id: 9, content: <ScriptEditBox />}
     // ];
-    const [scriptReplicas, setScriptReplicas] = useState([]);
+    // const [scriptReplicas, setScriptReplicas] = useState([]);
 
 
 
