@@ -8,20 +8,20 @@ const project = new mongoose.Schema({
         default: 'Stop',
         required: true
     },
-    imageId: {
-      type: Schema.Types.ObjectId,
+    thumbnailId: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Image",
       required: true
     },
     description: String,
     videoLink: String,
     creator: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
     assignedAudioDescriptiors: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: false
     }],

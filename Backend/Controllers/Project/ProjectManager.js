@@ -1,29 +1,33 @@
 const { Project } = require("../../Models/Project");
+const { Errors } = require("../../Models/Errors.js");
 
 /**
  *
- * @param { projectName, status, videoUrl, script, creator, assignedAudioDescriptiors } req
+ * @param { name, videoLink, script, assignedAudioDescriptiors } req
  * @param {*} res
  * @returns { status: Number, message: String }
  */
 exports.createProject = async function (req, res) {
     try {
         var newProject = new Project({
-            projectName: req.body.projectName,
-            status: req.body.status,
-            videoUrl: req.body.videoUrl,
+            name: req.body.name,
+            status: 'Stop',
+            thumbnailId: req.body.thumbnailId,
+            description: req.body.description,
+            videoLink: req.body.videoLink,
+            creator: req.user.userId,
+            assignedAudioDescriptiors: req.body.assignedAudioDescriptiors,
             script: req.body.script,
-            creator: req.body.creator,
-            assignedAudioDescriptiors: req.body.assignedAudioDescriptiors
         });
         newProject.save((err) => {
-            if (err) return res.status(500).send(`Error while saving the project: ${err}`);
+            if (err) return res.status(500).send(`${Errors.PROJECT_NOT_FOUND} ${err}`);
+            // Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
             return res.status(200).send("Project successfully created");
         });
     } catch (error) {
         if (error) {
-            console.error(`Error while saving the project: ${error}`);
-            res.status(500).send(`Error while saving the project: ${error}`);
+            console.error(`${Errors.INTERNAL_ERROR} ${error}`);
+            res.status(500).send(`${Errors.INTERNAL_ERROR} ${error}`);
         }
     }
 }
@@ -57,7 +61,7 @@ exports.createProject = async function (req, res) {
 
 /**
  *
- * @param { projectID, projectName, videoUrl, assignedAudioDescriptiors } req
+ * @param { projectID, name, videoLink, assignedAudioDescriptiors } req
  * @param {*} res
  * @returns { status: Number, message: String }
  */
@@ -67,8 +71,8 @@ exports.createProject = async function (req, res) {
             _id: req.body.projectID,
         },
         {
-            projectName: req.body.projectName,
-            videoUrl: req.body.videoUrl,
+            name: req.body.name,
+            videoLink: req.body.videoLink,
             assignedAudioDescriptiors: req.body.assignedAudioDescriptiors
         },
         (err, wr) => {
@@ -142,7 +146,7 @@ exports.createProject = async function (req, res) {
  *
  * @param { projectID } req
  * @param {*} res
- * @returns { [{ _id, projectName, status, videoUrl, script, creator, assignedAudioDescriptiors }] }
+ * @returns { [{ _id, name, status, videoLink, script, creator, assignedAudioDescriptiors }] }
  */
 exports.getProject = async function (req, res) {
     try {
@@ -175,5 +179,5 @@ exports.deleteProjects = async function (req, res) {
         console.error(`Error while deleting the projects: ${error}`);
         res.status(500).send(`Error while deleting projects: ${error}`);
     }
-    // TODO: Delete the video thanks videoUrl
+    // TODO: Delete the video thanks videoLink
 }

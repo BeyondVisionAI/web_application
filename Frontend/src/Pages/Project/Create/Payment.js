@@ -1,9 +1,14 @@
 import React from 'react';
 
-export default function Payment({ prevStep, handleChange, values }) {
+export default function Payment({ prevStep, handleChange, values, postData }) {
     const prev = e => {
         e.preventDefault();
         prevStep();
+    }
+
+    const create = e => {
+        e.preventDefault();
+        postData();
     }
 
     return (
@@ -17,6 +22,7 @@ export default function Payment({ prevStep, handleChange, values }) {
                 />
             </label>
             <button onClick={prev}>Prev</button>
+            <button onClick={create}>Create</button>
         </div>
     )
 }

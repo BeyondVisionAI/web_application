@@ -4,7 +4,7 @@ export default function ProjectData({ nextStep, handleChange, values }) {
     const next = e => {
         e.preventDefault();
         nextStep();
-    }
+    };
 
     return (
         <div>
@@ -14,15 +14,23 @@ export default function ProjectData({ nextStep, handleChange, values }) {
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="title">
                             Titre
                         </label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="text"/>
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="text" onChange={handleChange('title')} value={values.title}/>
                     </div>
                     <div class="w-full md:w-1/2 px-3">
                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="thumbnail">
                             Vignette d'aperçu
                         </label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="thumbnail" type="file" placeholder="Doe"/>
+                        <input
+                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="thumbnail"
+                        type="file"
+                        multiple
+                        accept=".jpg, .jpeg, .png"
+                        onChange={handleChange('thumbnail')}
+                        value={values.thumbnail}/>
                     </div>
                     {/* TODO: display all project thumnail */}
+                    {/* TODO: utiliser les données du projet, autocomplete */}
                 </div>
             </form>
             <button onClick={next}>Next</button>
