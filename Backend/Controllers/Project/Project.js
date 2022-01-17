@@ -27,7 +27,7 @@ exports.createProject = async function(req, res) {
             // status: ENCOURS,
             imageId: "zertyui2345678zertyu2345",
             description: req.body.description,
-            // script: ???,
+            // script: [], // TODO implement that
             videoLink: "http://my-link-vers-la-video"
         });
         await newProject.save();
