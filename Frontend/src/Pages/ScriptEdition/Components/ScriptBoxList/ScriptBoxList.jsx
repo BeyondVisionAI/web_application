@@ -29,7 +29,7 @@ const ScriptBoxList = ({script}) => {
 
     return (
         <div className="h-full m-auto">
-            <ul className="w-full h-full list-none m-auto overflow-y-scroll
+            <ul className="w-full h-full list-none m-auto overflow-y-auto
             flex flex-col flex-nowrap py-1 pl-1">{scriptBoxes}</ul>
         </div>
     )

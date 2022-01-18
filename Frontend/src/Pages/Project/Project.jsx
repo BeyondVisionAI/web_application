@@ -8,17 +8,33 @@ const tempScriptVariable = [
         lastEditor: "Tim"
     },
     {
-        replica: "boyo boyo",
+        replica: "Nice shot!",
         lastEditor: "Dimi"
     },
     {
-        replica: "I love beatbox",
+        replica: "What a save!",
         lastEditor: "Fabien"
     },
     {
-        replica: "Kon Ichiwa",
+        replica: "Close One!",
         lastEditor: "Paul"
     }
+    //, {
+    //     replica: "One. More. Game.",
+    //     lastEditor: "Marco"
+    // },
+    // {
+    //     replica: "Take the shot!",
+    //     lastEditor: "Léo"
+    // },
+    // {
+    //     replica: "Whew.",
+    //     lastEditor: "Matthieu"
+    // },
+    // {
+    //     replica: "Noooooo!",
+    //     lastEditor: "Alex"
+    // }
 ];
 
 
