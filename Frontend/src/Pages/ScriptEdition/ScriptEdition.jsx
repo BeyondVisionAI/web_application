@@ -9,7 +9,10 @@ const ScriptEdition = ( {script/*, video */}) => {
                 <NavBar />
 
                 <div className="page-container container h-5/6 pt-2 flex flex-col">
-                    <h1 className="h-1/6">Project Title</h1>
+                    <div className='h-1/6 flex w-full justify-between content-center px-6'>
+                        <h1 className='text-blue-400 text-3x1'>Project Title</h1>
+                        <button className='bg-blue-600 rounded-lg text-white h-1/3'>Submit</button>
+                    </div>
                     <div className="flex h-3/6 px-1">
                         <div className="flex flex-row w-full justify-around mt-2">
                             <div id="movie-insight" className="flex justify-center content-end w-3/5 rounded-tl-3xl mx-1 p-2 shadow-lg">
