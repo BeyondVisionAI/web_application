@@ -21,9 +21,9 @@ const ScriptBoxList = ({script}) => {
 
 
 
-    const scriptBoxes = script.map((item) => {
+    const scriptBoxes = script.map((item, index) => {
         return (
-        <li className="flex" key={"scriptList_" + item.id}><ScriptEditBox replica={item.content} /></li>
+            <li className="flex" key={"scriptList_" + index}><ScriptEditBox replica={item.replica} /></li>
         )
     });
 

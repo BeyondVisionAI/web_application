@@ -1,32 +1,25 @@
 import React, { useState } from 'react';
-// import ScriptEdition from '../ScriptEdition/ScriptEdition';
+import ScriptEdition from '../ScriptEdition/ScriptEdition';
 import CreateProject from './Create/CreateProject';
 
-const tempScriptVariable = {
-    content: [
-        {
-            id: 0,
-            replica: "This is a replica of the script",
-            lastEditor: "Tim"
-        },
-        {
-            id: 1,
-            replica: "boyo boyo",
-            lastEditor: "Dimi"
-        },
-        {
-            id: 2,
-            replica: "I love beatbox",
-            lastEditor: "Fabien"
-        },
-        {
-            id: 3,
-            replica: "Kon Ichiwa",
-            lastEditor: "Paul"
-        }
-    ],
-    required: false
-};
+const tempScriptVariable = [
+    {
+        replica: "This is a replica of the script",
+        lastEditor: "Tim"
+    },
+    {
+        replica: "boyo boyo",
+        lastEditor: "Dimi"
+    },
+    {
+        replica: "I love beatbox",
+        lastEditor: "Fabien"
+    },
+    {
+        replica: "Kon Ichiwa",
+        lastEditor: "Paul"
+    }
+];
 
 
 export default function Project() {
@@ -46,7 +39,7 @@ export default function Project() {
                     onHide={() => setShowModal(false)}
                 />
             ): null}
-            {/* <ScriptEdition script={tempScriptVariable} /> */}
+            <ScriptEdition script={tempScriptVariable} />
         </>
     );
 }

@@ -1,17 +1,10 @@
-import React, { useState }from 'react';
+import React from 'react';
 import NavBar from '../../GenericComponents/NavBar/NavBar';
-import ScriptEditBox from './Components/ScriptEditBox/ScriptEditBox';
 import ScriptBoxList from './Components/ScriptBoxList/ScriptBoxList';
 
 const ScriptEdition = ( {script/*, video */}) => {
-    const [scriptContent, setScriptContent] = useState([]);
-
-    let parseScript = (script) => {
-        setScriptContent(script.content);
-    }
     return (
         <>
-            {parseScript(script)}
             <div className="script-edition-container h-screen">
                 <NavBar />
 
@@ -19,10 +12,10 @@ const ScriptEdition = ( {script/*, video */}) => {
                     <h1 className="h-1/6">Project Title</h1>
                     <div className="flex h-3/6 px-1">
                         <div className="flex flex-row w-full justify-around mt-2">
-                            <div id="movie-insight" className="w-3/5 bg-red-500 mx-1">
+                            <div id="movie-insight" className="w-3/5 bg-yellow-500 mx-1">
                                 <img className="object-cover" src="./fight_club.jpeg" alt="movie insight" />
                             </div>
-                            <div id="script-boxes" className="w-2/5 bg-blue-300 mx-1"><ScriptBoxList script={scriptContent} /></div>
+                            <div id="script-boxes" className="w-2/5 bg-blue-300 mx-1"><ScriptBoxList script={script} /></div>
                         </div>
                     </div>
                     <div className="flex h-2/6 w-full px-2 mt-2">
@@ -35,4 +28,3 @@ const ScriptEdition = ( {script/*, video */}) => {
 }
 
 export default ScriptEdition;
-// Frontend/src/Pages/ScriptEdition/ScriptEdition.jsx
