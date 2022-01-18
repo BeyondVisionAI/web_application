@@ -9,6 +9,12 @@ module.exports = {
       myBlack: '#444655',
       myWhite: '#F6F8FF',
       disable: 'C4C4C4'
+    },
+    boxShadow: {
+      'xs': '0px 40px 40px rgba(0, 0, 0, 0.25)',
+    },
+    dropShadow: {
+      'xs': '0 4px 4px rgba(0, 0, 0, 0.25)',
     }
   },
   variants: {
