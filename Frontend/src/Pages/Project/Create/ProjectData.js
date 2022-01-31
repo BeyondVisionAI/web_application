@@ -51,7 +51,7 @@ export default function ProjectData({ nextStep, prevStep, handleChange, values }
                     {/* TODO: display all project thumnail */}
                 </div>
             </form>
-            <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+            <div className="absolute bottom-0 right-0 p-6">
                 <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
