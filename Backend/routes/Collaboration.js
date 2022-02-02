@@ -3,11 +3,11 @@ module.exports = function(app) {
     const authMiddleware = require("../Controllers/User/authMiddleware");
     const collabMiddleware = require("../Controllers/Collaboration/collabMiddleware");
 
-    app.get('/projects/:projectId/collaborations', 
+    app.get('/projects/:projectId/collaborations',
         authMiddleware.authenticateUser,
-        collabMiddleware.isCollab, 
+        collabMiddleware.isCollab,
         Collaboration.getCollaborations);
-    
+
     app.post('/projects/:projectId/collaborations',
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightAdmin,

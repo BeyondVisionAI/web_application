@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const { Project } = require("../../Models/Project");
 const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
@@ -33,9 +32,16 @@ exports.getAllProjectsDB = async function(userId) {
     }
 }
 
+/**
+ * Get a project
+ * @param { Request } req { body: { projectID } }
+ * @param { Response } res
+ * @returns { [{ _id, name, status, videoLink, script, creator, assignedAudioDescriptiors }] }
+ */
 exports.getProject = async function(req, res) {
     try {
-        var project = await Project.findById(req.params.projectId);
+        let project = await Project.findById(req.params.projectId);
+
         if (project)
             return res.status(200).send(project);
         return res.status(404).send(Errors.PROJECT_NOT_FOUND);
@@ -45,6 +51,12 @@ exports.getProject = async function(req, res) {
     }
 };
 
+/**
+ * Create a project
+ * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoLink, script }}
+ * @param { Response } res
+ * @returns { status: Number, message: String }
+ */
 exports.createProject = async function(req, res) {
     try {
         if (!req.body.name || !req.body.description)
@@ -52,12 +64,11 @@ exports.createProject = async function(req, res) {
 
         const newProject = new Project({
             name: req.body.name,
-            lastEdit: new Date(),
-            // status: ENCOURS,
-            imageId: "zertyui2345678zertyu2345",
+            status: 'Stop',
+            thumbnailId: req.body.thumbnailId,
             description: req.body.description,
-            // script: ???,
-            videoLink: "http://my-link-vers-la-video"
+            videoLink: req.body.videoLink,
+            script: req.body.script,
         });
         await newProject.save();
         await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
@@ -68,6 +79,12 @@ exports.createProject = async function(req, res) {
     }
 };
 
+/**
+ * Delete a project
+ * @param { Request } req { body: { projectId } }
+ * @param { Response } res
+ * @returns { status: Number, message: String }
+ */
 exports.deleteProject = async function(req, res) {
     try {
         const projectsListedToDelete = await ProjectListed.find({ projectId: req.params.projectId });
@@ -78,7 +95,10 @@ exports.deleteProject = async function(req, res) {
         for (var collaboration of collaborationsToDelete)
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
-        await Project.deleteOne({ _id: req.params.projectId });
+        // What append when doesn't work ?
+        // if (req.user) // Todo: Check if has rights
+        // await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
+        await Project.deleteMany({ _id: { $in: req.body.projectIds }});
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -88,8 +108,11 @@ exports.deleteProject = async function(req, res) {
 
 exports.updateProject = async function(req, res) {
     try {
-        var project = await Project.findById(req.params.projectId);
-        var hasChanged = false;
+        // Question : Pour quoi pas utiliser Project.updateOne ?
+
+        let project = await Project.findById(req.params.projectId);
+        let hasChanged = false;
+
         if (req.body.name && req.body.name != project.name) {
             project.name = req.body.name;
             hasChanged = true;
