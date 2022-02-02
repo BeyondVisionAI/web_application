@@ -22,7 +22,7 @@ export default function DropVideo({ nextStep, handleChange, values }) {
     toast("Video uploaded");
     handleChange('videoLink', "urlVideo");
     nextStep();
-  } // TODO: complete this fonction Waiting Marco
+  } // TODO: complete this fonction Waiting Marco, want to push in WS
 
   return (
       <form class='h-full'>
@@ -42,3 +42,4 @@ export default function DropVideo({ nextStep, handleChange, values }) {
       </form>
   );
 }
+// TODO: change format input handle

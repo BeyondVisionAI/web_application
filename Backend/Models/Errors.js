@@ -19,7 +19,11 @@ const Errors = {
 
     //User : 4
     USER_NOT_LOGIN: "USER_NOT_LOGIN",
-    USER_NOT_FOUND: "USER_NOT_FOUND"
+    USER_NOT_FOUND: "USER_NOT_FOUND",
+
+    //Image : 5
+    IMAGE_NOT_FOUND: "IMAGE_NOT_FOUND",
+    IMAGE_NOT_YOURS: "IMAGE_NOT_YOURS"
 };
 
 exports.Errors = Errors;

@@ -15,12 +15,16 @@ export default function ProjectData({ nextStep, prevStep, handleChange, values }
     }
 
     const onImageChange = e => {
-        let reader = new FileReader();
-
         if (e.target.files && e.target.files[0]) {
+            const formData = new FormData();
+            let reader = new FileReader();
+
+            formData.append("img", e.target.files[0]);
+            formData.append("name", e.target.files[0].name);
+            formData.append("description", `${e.target.files[0].name} of project ${values.title}`); // TODO Fix title null
             reader.readAsDataURL(e.target.files[0]);
+            handleChange('thumbnail', formData);
             reader.onload = () => {
-                handleChange('thumbnail', reader.result);
                 setThumbnail(reader.result);
             }
         }
