@@ -95,8 +95,6 @@ exports.deleteProject = async function(req, res) {
         for (var collaboration of collaborationsToDelete)
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
-        // What append when doesn't work ?
-        // if (req.user) // Todo: Check if has rights
         // await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
         await Project.deleteMany({ _id: { $in: req.body.projectIds }});
         return res.status(204).send("");
