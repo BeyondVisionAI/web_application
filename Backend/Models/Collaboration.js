@@ -1,9 +1,17 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 const { Role } = require("./Roles.js");
 
-const collaboration = new mongoose.Schema({
-    projectId: String,
-    userId: String,
+const collaboration = new Schema({
+    projectId: {
+        type: Schema.Types.ObjectId,
+        ref: "Project",
+        required: true
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     titleOfCollaboration: String,
     rights: {
         type: String,
@@ -12,4 +20,4 @@ const collaboration = new mongoose.Schema({
     }
 });
 
-exports.Collaboration = mongoose.model("Collaboration", collaboration);
+exports.Collaboration = model("Collaboration", collaboration);

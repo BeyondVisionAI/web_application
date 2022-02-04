@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { model, Schema } = require("mongoose");
 
-const project = new mongoose.Schema({
+const project = new Schema({
     name: String,
     status: {
         type: String,
@@ -8,27 +8,22 @@ const project = new mongoose.Schema({
         default: 'Stop',
         required: true
     },
-    imageId: {
+    thumbnailId: {
       type: Schema.Types.ObjectId,
       ref: "Image",
       required: true
     },
     description: String,
     videoLink: String,
-    creator: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    assignedAudioDescriptiors: [{
-        type: Schema.Types.ObjectId,
-        ref: "User",
+    script: [{
+        replica: String,
+        lastEditor: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required : false
+        },
         required: false
     }],
-    script: {
-        type: String,
-        required: false
-    },
 });
 
-exports.Project = mongoose.model("Project", project);
+exports.Project = model("Project", project);

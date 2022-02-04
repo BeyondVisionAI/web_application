@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const { Collaboration } = require("../../Models/Collaboration");
 const { Errors } = require("../../Models/Errors");
 const { Role, isValidRole } = require("../../Models/Roles");
@@ -29,6 +28,15 @@ exports.getAllCollaborationsDB = async function(userId) {
     return all;
 }
 
+exports.getAllCollaborationsWithProjectId = async function(projectId) {
+    const all = await Collaboration.find({ projectId: projectId });
+    return all;
+}
+
+exports.deleteCollaborationDB = async function(collabId) {
+    await Collaboration.deleteOne({ _id: collabId });
+}
+
 exports.getCollaborations = async function(req, res) {
     try {
         const filter = { projectId: req.params.projectId };
@@ -46,14 +54,18 @@ exports.createCollaboration = async function(req, res) {
             console.log("Collaboration->createCollaboration: Req.body not complete :\n" + req.body);
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-    
+        if (req.body.role === Role.OWNER) {
+            console.log("Collaboration->createCollaboration: Can't give Role OWNER at creation");
+            return res.status(400).send(Errors.CANT_GIVE_OWNER_AT_CREATION);
+        }
+
         //Check if there is a collaboration already existing
         const oldCollab = await Collaboration.findOne({ userId: req.body.userId, projectId: req.params.projectId });
         if (oldCollab) {
             console.log("Collaboration->createCollaboration: This user " + req.body.userId + " is already linked to the project " + req.params.projectId);
             return res.status(401).send(Errors.COLLABORATION_ALREADY_EXISTS);
         }
-        
+
         const newCollab = await module.exports.createCollaborationDB(req.body.userId, req.params.projectId, req.body.titleOfCollaboration, req.body.role);
         return res.status(200).send(newCollab);
     } catch (err) {

@@ -5,8 +5,8 @@ const user = new mongoose.Schema({
   username: String,
   password: String,
   email: String,
-  isEmailConfirmed: {type :Boolean, default: false},
-  verificationUID: {type: String, default: uuidv4()}
+  isEmailConfirmed: { type :Boolean, default: false },
+  verificationUID: { type: String, default: uuidv4() }
 });
 
 exports.User = mongoose.model("User", user);
