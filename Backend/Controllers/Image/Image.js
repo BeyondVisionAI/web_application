@@ -6,7 +6,7 @@ const AWS = require('aws-sdk');
 exports.getImage = async function(req, res) {
     console.log(req.body);
     console.log('Get image on s3');
-};
+}; // TODO: Fill Fonction
 
 async function createImageInDb(name, desc, { ETag }, res) {
     try {
@@ -26,12 +26,12 @@ async function createImageInDb(name, desc, { ETag }, res) {
 }
 
 async function uploadOnS3(part, key) {
-// Get ID and SECRET
     let buf = Buffer.from(part[0].replace(/^data:image\/\w+;base64,/, ""),'base64')
 
+    console.log(process.env.S3_ID);
     const s3 = new AWS.S3({
-        accessKeyId: ID,
-        secretAccessKey: SECRET
+        accessKeyId: process.env.S3_ID,
+        secretAccessKey: process.env.S3_SECRET
     });
     let params = {
         Bucket: 'bv-thumbnails-projects',
