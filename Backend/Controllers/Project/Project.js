@@ -1,12 +1,47 @@
-const mongoose = require("mongoose");
 const { Project } = require("../../Models/Project");
 const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
+const { ProjectListed } = require("../../Models/list/ProjectListed");
 
+exports.getProjectDB = async function(projectId) {
+    try {
+        var project = await Project.findById(projectId);
+        return project;
+    } catch (err) {
+        console.log("Project->getProjectDB: " + err);
+        return null;
+    }
+}
+
+exports.getAllProjectsDB = async function(userId) {
+    try {
+        const collabs = await Collaboration.getAllCollaborationsDB(userId);
+        var projects = [];
+        for (const collab in collabs) {
+            var project = await Project.findById(collabs[collab].projectId);
+            if (project)
+                projects.push(project);
+            else
+                console.log("Project->getAllProjectDB: Collab \"" + collabs[collab]._id + "\" is linked to a not existing projectId: " + collab.projectId);
+        }
+        return projects;
+    } catch (err) {
+        console.log("Project->getAllProjectsDB: " + err);
+        return null;
+    }
+}
+
+/**
+ * Get a project
+ * @param { Request } req { body: { projectID } }
+ * @param { Response } res
+ * @returns { [{ _id, name, status, videoLink, script, creator, assignedAudioDescriptiors }] }
+ */
 exports.getProject = async function(req, res) {
     try {
-        var project = await Project.findById(req.params.projectId);
+        let project = await Project.findById(req.params.projectId);
+
         if (project)
             return res.status(200).send(project);
         return res.status(404).send(Errors.PROJECT_NOT_FOUND);
@@ -16,6 +51,12 @@ exports.getProject = async function(req, res) {
     }
 };
 
+/**
+ * Create a project
+ * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoLink, script }}
+ * @param { Response } res
+ * @returns { status: Number, message: String }
+ */
 exports.createProject = async function(req, res) {
     try {
         if (!req.body.name || !req.body.description)
@@ -23,12 +64,11 @@ exports.createProject = async function(req, res) {
 
         const newProject = new Project({
             name: req.body.name,
-            lastEdit: new Date(),
-            // status: ENCOURS,
-            imageId: "zertyui2345678zertyu2345",
+            status: 'Stop',
+            thumbnailId: req.body.thumbnailId,
             description: req.body.description,
-            // script: [], // TODO implement that
-            videoLink: "http://my-link-vers-la-video"
+            videoLink: req.body.videoLink,
+            script: req.body.script,
         });
         await newProject.save();
         await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
@@ -39,9 +79,24 @@ exports.createProject = async function(req, res) {
     }
 };
 
+/**
+ * Delete a project
+ * @param { Request } req { body: { projectId } }
+ * @param { Response } res
+ * @returns { status: Number, message: String }
+ */
 exports.deleteProject = async function(req, res) {
     try {
-        await Project.deleteOne({ _id: req.params.projectId });
+        const projectsListedToDelete = await ProjectListed.find({ projectId: req.params.projectId });
+        for (var projectListed of projectsListedToDelete)
+            await ProjectListed.deleteOne({ _id: projectListed._id });
+
+        const collaborationsToDelete = await Collaboration.getAllCollaborationsWithProjectId(req.params.projectId);
+        for (var collaboration of collaborationsToDelete)
+            await Collaboration.deleteCollaborationDB(collaboration._id);
+
+        await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
+        // await Project.deleteMany({ _id: { $in: req.body.projectIds }});
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -51,8 +106,11 @@ exports.deleteProject = async function(req, res) {
 
 exports.updateProject = async function(req, res) {
     try {
-        var project = await Project.findById(req.params.projectId);
-        var hasChanged = false;
+        // Question : Pour quoi pas utiliser Project.updateOne ?
+
+        let project = await Project.findById(req.params.projectId);
+        let hasChanged = false;
+
         if (req.body.name && req.body.name != project.name) {
             project.name = req.body.name;
             hasChanged = true;
@@ -74,15 +132,9 @@ exports.updateProject = async function(req, res) {
 
 exports.getAllProjects = async function(req, res) {
     try {
-        const collabs = await Collaboration.getAllCollaborationsDB(req.user.userId);
-        var projects = [];
-        for (const collab in collabs) {
-            console.log(collabs[collab]);
-            var project = await Project.findById(collabs[collab].projectId);
-            if (project)
-                projects.push(project);
-            else
-                console.log("Project->getAllProject: Collab \"" + collabs[collab]._id + "\" is linked to a not existing projectId: " + collab.projectId);
+        var projects = await module.exports.getAllProjectsDB(req.user.userId);
+        if (!projects) {
+            return res.status(500).send(Errors.INTERNAL_ERROR);
         }
         return res.status(200).send(projects);
     } catch (err) {

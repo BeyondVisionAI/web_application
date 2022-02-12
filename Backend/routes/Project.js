@@ -1,6 +1,6 @@
 module.exports = function(app) {
-    const Project = require('../Controllers/Project/ProjectManager')
-    const authMiddleware = require('../Controllers/User/authMiddleware')
+    const Project = require('../Controllers/Project/Project');
+    const authMiddleware = require('../Controllers/User/authMiddleware');
     const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
 
     app.get('/projects/:projectId',

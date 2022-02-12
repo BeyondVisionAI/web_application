@@ -10,22 +10,12 @@ const project = new Schema({
         required: true
     },
     thumbnailId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Image",
       required: true
     },
     description: String,
     videoLink: String,
-    creator: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    assignedAudioDescriptiors: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: false
-    }],
     script: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Replica"

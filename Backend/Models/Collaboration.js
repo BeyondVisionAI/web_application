@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 const { Role } = require("./Roles.js");
 
-const collaboration = new mongoose.Schema({
+const collaboration = new Schema({
     projectId: {
         type: Schema.Types.ObjectId,
         ref: "Project",
@@ -20,4 +20,4 @@ const collaboration = new mongoose.Schema({
     }
 });
 
-exports.Collaboration = mongoose.model("Collaboration", collaboration);
+exports.Collaboration = model("Collaboration", collaboration);
