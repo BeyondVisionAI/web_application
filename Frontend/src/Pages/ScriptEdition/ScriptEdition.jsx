@@ -1,6 +1,24 @@
 import React from 'react';
 import NavBar from '../../GenericComponents/NavBar/NavBar';
 import ScriptBoxList from './Components/ScriptBoxList/ScriptBoxList';
+import ReplicaDetails from './Components/ReplicaDetails/ReplicaDetails';
+
+const date = new Date(Date.now());
+
+const dateOptions =
+{
+    weekday: 'short', year: 'numeric', month: '2-digit',
+    day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
+};
+
+const tempReplica = {
+    text: "This is an example of a replica",
+    voice: "plop",
+    comment: "This is an example of a replica's nested comment",
+    // lastEdit: date.setMinutes(date.getMinutes() - 5),
+    lastEdit: Date.now()/*.toLocaleDateString()*/,
+    lastEditor: "John Doe"
+}
 
 const ScriptEdition = ( {script, video} ) => {
     return (
@@ -14,16 +32,22 @@ const ScriptEdition = ( {script, video} ) => {
                     </div>
 
                     <div id="edit-bloc" className="flex h-3/6 px-1">
-                       <div id="menu-detail" className="bg-blue-500 w-3/5 mx-1 p-2 shadow-lg rounded-lg">
-                            
+                       <div id="menu-detail" className="bg-gray-200 w-1/4 mx-1 p-2 shadow-lg rounded-tl-lg">
+                            <h2>Détails</h2>
+                            <ReplicaDetails replica={tempReplica}/>
                        </div>
                        
-                       <div id="movie-insight" className="flex justify-center content-end w-2/5 rounded-tl-3xl mx-1 p-2 shadow-lg bg-red-500">
+                       <div id="movie-insight" className="flex justify-center content-end w-3/4 rounded-tr-3xl mx-1 p-2 shadow-lg bg-red-500">
                            <img className="object-cover" src="/assets/fight_club.jpeg" alt="" />
                        </div>
 
 
                     </div>
+
+                    <div className="flex h-2/6 w-full px-2 mt-2">
+                       <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl shadow-lg">Audio Timeline</div>
+                   </div>
+
                 </div>
             </div>
         </>

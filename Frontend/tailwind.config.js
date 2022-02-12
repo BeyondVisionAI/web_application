@@ -16,9 +16,6 @@ module.exports = {
     dropShadow: {
       'xs': '0 4px 4px rgba(0, 0, 0, 0.25)',
     },
-    borderRadius: {
-      'button-radius': '3.75rem',
-    },
   },
   variants: {
     extend: {},

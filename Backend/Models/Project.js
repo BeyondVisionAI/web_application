@@ -1,4 +1,5 @@
 const { model, Schema } = require("mongoose");
+const Replica = require("Replica");
 
 const project = new Schema({
     name: String,
@@ -26,13 +27,8 @@ const project = new Schema({
         required: false
     }],
     script: [{
-        replica: String,
-        lastEditor: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            required : false
-        },
-        required: false
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Replica"
     }],
 });
 
