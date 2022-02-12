@@ -1,6 +1,8 @@
 FROM node:12.18.4-alpine3.9
 COPY . .
+RUN npm install @craco/craco --save
 RUN npm install
+RUN npm install @craco/craco --save
 ENV PORT=80
 EXPOSE 80
 CMD ["npm", "start"]
