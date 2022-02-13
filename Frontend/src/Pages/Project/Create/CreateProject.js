@@ -14,7 +14,6 @@ export default function CreateProject({ show, onHide }) {
         resume: null,
         videoLink: null,
         videoType: null,
-        collaborators: []
     });
     const [steps, setSteps] = useState([
         {title: 'Téléverser la vidéo', img: <svg class="w-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path class="heroicon-ui" d="M19 10h2a1 1 0 0 1 0 2h-2v2a1 1 0 0 1-2 0v-2h-2a1 1 0 0 1 0-2h2V8a1 1 0 0 1 2 0v2zM9 12A5 5 0 1 1 9 2a5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm8 11a1 1 0 0 1-2 0v-2a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v2a1 1 0 0 1-2 0v-2a5 5 0 0 1 5-5h5a5 5 0 0 1 5 5v2z"/></svg>, isDone: true},
@@ -57,19 +56,19 @@ export default function CreateProject({ show, onHide }) {
             });
             console.log(thumbnailResponse);
 
-            // TODO get videoLink
+            // TODO get videoLink, use video Type
             // TODO Create Project !!!
 
-            // let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`,
-            // {
-            //     name: values.title,
-            //     thumbnailId: null,
-            //     description: values.resume,
-            //     videoLink: null,
-            //     assignedAudioDescriptiors: values.collaborators,
-            //     script: null,
-            // });
-            // console.log(projectResponse);
+            let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`,
+            {
+                name: values.title,
+                status: 'Stop',
+                thumbnailId: thumbnailResponse.data._id,
+                description: values.resume,
+                videoLink: null,
+                script: null,
+            });
+            console.log(projectResponse);
         } catch (error) {
             console.error(error);
         }
