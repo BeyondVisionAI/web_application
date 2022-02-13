@@ -9,7 +9,7 @@ module.exports = function(app) {
         Project.getProject);
 
     app.post('/projects',
-        authMiddleware.authenticateUser,
+        // authMiddleware.authenticateUser,
         Project.createProject);
 
     app.delete('/projects/:projectId',
