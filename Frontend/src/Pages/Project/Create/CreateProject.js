@@ -57,6 +57,9 @@ export default function CreateProject({ show, onHide }) {
             });
             console.log(thumbnailResponse);
 
+            // TODO get videoLink
+            // TODO Create Project !!!
+
             // let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`,
             // {
             //     name: values.title,

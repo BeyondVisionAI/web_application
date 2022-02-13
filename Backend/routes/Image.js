@@ -3,7 +3,7 @@ module.exports = function(app) {
     const authMiddleware = require('../Controllers/User/authMiddleware');
 
     app.post('/image',
-        authMiddleware.authenticateUser,
+        // authMiddleware.authenticateUser,
         image.createImage
     );
     app.get('/image/:id',

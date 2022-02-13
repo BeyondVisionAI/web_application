@@ -20,11 +20,8 @@ app.use((req, res, next) => {
 
 routes(app);
 
-var url = "mongodb://beyondvision:thisisaverysecurepassword@mongodb/beyondvision";
-console.log("Process.env.DB_CONN_STRING : " + url);
-
 mongoose.connect(
-  url,
+  process.env.DB_CONN_STRING,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
