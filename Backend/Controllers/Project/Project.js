@@ -4,7 +4,7 @@ const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 
-exports.getProjectDB = async function(projectId) {
+exports.getProjectDB = async function (projectId) {
     try {
         var project = await Project.findById(projectId);
         return project;
@@ -14,7 +14,7 @@ exports.getProjectDB = async function(projectId) {
     }
 }
 
-exports.getAllProjectsDB = async function(userId) {
+exports.getAllProjectsDB = async function (userId) {
     try {
         const collabs = await Collaboration.getAllCollaborationsDB(userId);
         var projects = [];
@@ -38,7 +38,7 @@ exports.getAllProjectsDB = async function(userId) {
  * @param { Response } res
  * @returns { [{ _id, name, status, videoLink, script, creator, assignedAudioDescriptiors }] }
  */
-exports.getProject = async function(req, res) {
+exports.getProject = async function (req, res) {
     try {
         let project = await Project.findById(req.params.projectId);
 
@@ -57,7 +57,7 @@ exports.getProject = async function(req, res) {
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
-exports.createProject = async function(req, res) {
+exports.createProject = async function (req, res) {
     try {
         if (!req.body.name || !req.body.description)
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
@@ -85,7 +85,7 @@ exports.createProject = async function(req, res) {
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
-exports.deleteProject = async function(req, res) {
+exports.deleteProject = async function (req, res) {
     try {
         const projectsListedToDelete = await ProjectListed.find({ projectId: req.params.projectId });
         for (var projectListed of projectsListedToDelete)
@@ -104,7 +104,7 @@ exports.deleteProject = async function(req, res) {
     }
 }
 
-exports.updateProject = async function(req, res) {
+exports.updateProject = async function (req, res) {
     try {
         // Question : Pour quoi pas utiliser Project.updateOne ?
 
@@ -130,7 +130,7 @@ exports.updateProject = async function(req, res) {
     }
 }
 
-exports.getAllProjects = async function(req, res) {
+exports.getAllProjects = async function (req, res) {
     try {
         var projects = await module.exports.getAllProjectsDB(req.user.userId);
         if (!projects) {

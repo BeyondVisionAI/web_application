@@ -8,10 +8,17 @@ const project = new Schema({
         default: 'Stop',
         required: true
     },
+    actualStep: {
+        type: String,
+        enum: ['ProjectCreation', 'ActionRetrieve', 'TextGeneration', 'VoiceGeneration', 'AudioGeneration', 'VideoGeneration'],
+        default: 'ProjectCreation',
+        percentage: 0,
+        required: true
+    },
     thumbnailId: {
-      type: Schema.Types.ObjectId,
-      ref: "Image",
-      required: true
+        type: Schema.Types.ObjectId,
+        ref: "Image",
+        required: true
     },
     description: String,
     videoLink: String,
@@ -20,7 +27,7 @@ const project = new Schema({
         lastEditor: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required : false
+            required: false
         },
         required: false
     }],
