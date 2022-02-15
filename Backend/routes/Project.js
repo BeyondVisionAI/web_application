@@ -1,4 +1,4 @@
-module.exports = function(app) {
+module.exports = function (app) {
     const Project = require('../Controllers/Project/Project');
     const authMiddleware = require('../Controllers/User/authMiddleware');
     const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
@@ -25,4 +25,7 @@ module.exports = function(app) {
     app.get('/projects',
         authMiddleware.authenticateUser,
         Project.getAllProjects);
+
+    app.post('/projects/:projectId/setStatus',
+        Project.setStatus);
 }

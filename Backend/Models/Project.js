@@ -1,19 +1,38 @@
 const { model, Schema } = require("mongoose");
 
+const enumStatus = [
+    'Error',
+    'Stop',
+    'InProgress',
+    'Done'
+];
+const enumActualStep = [
+    'ProjectCreation',
+    'ActionRetrieve',
+    'TextGeneration',
+    'VoiceGeneration',
+    'AudioGeneration',
+    'VideoGeneration'
+];
+
 const project = new Schema({
     name: String,
     status: {
         type: String,
-        enum: ['Error', 'Stop', 'InProgress', 'Done'],
-        default: 'Stop',
+        enum: enumStatus,
+        default: enumStatus[2],
         required: true
     },
     actualStep: {
         type: String,
-        enum: ['ProjectCreation', 'ActionRetrieve', 'TextGeneration', 'VoiceGeneration', 'AudioGeneration', 'VideoGeneration'],
-        default: 'ProjectCreation',
-        percentage: 0,
+        enum: enumActualStep,
+        default: enumActualStep[1],
         required: true
+    },
+    progress: {
+        type: Number,
+        default: 100,
+        required: false
     },
     thumbnailId: {
         type: Schema.Types.ObjectId,
@@ -33,4 +52,6 @@ const project = new Schema({
     }],
 });
 
+exports.enumStatus = enumStatus;
+exports.enumActualStep = enumActualStep;
 exports.Project = model("Project", project);
