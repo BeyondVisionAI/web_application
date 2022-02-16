@@ -14,4 +14,10 @@ exports.closeMongooseConnection = async function (mongoose) {
     await mongoose.connection.close();
 }
 
+<<<<<<< HEAD
 exports.databaseURL = `mongodb://beyondvisiontesteur:testpassword@mongodb`;
+=======
+exports.databaseURL = `mongodb://beyondvisiontesteur:testpassword@mongodb`;
+
+// mongodb://beyondvisiontests:testpassword@mongodb/beyondvisiontests
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48

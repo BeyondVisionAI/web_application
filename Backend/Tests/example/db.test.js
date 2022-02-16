@@ -23,8 +23,12 @@ describe("User creation", () => {
     //Test if everything is normal
     it ("success creation user", async () => {
         const res = await req.post('/user/register').send({
+<<<<<<< HEAD
             firstName: 'toto',
             lastName: 'tutu',
+=======
+            username: 'toto',
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
             password: 'toto1234',
             email: 'toto@toto.com'
         });
@@ -35,8 +39,12 @@ describe("User creation", () => {
 
 describe("User creation failed", () => {
     const userTest = {
+<<<<<<< HEAD
         firstName: "toto",
         lastName: "titi",
+=======
+        username: "toto",
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
         password: "toto1234",
         email: "toto@toto.com"
     };
@@ -48,8 +56,12 @@ describe("User creation failed", () => {
     //Check if email already exists
     it ("Fail because email already exists", async () => {
         const res = await req.post('/user/register').send({
+<<<<<<< HEAD
             firstName: 'tata',
             lastName: 'titi',
+=======
+            username: 'tata',
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
             password: 'tata1234',
             email: 'toto@toto.com'
         });
@@ -59,11 +71,19 @@ describe("User creation failed", () => {
 
     it ("success", async () => {
         const res = await req.post('/user/login').send({
+<<<<<<< HEAD
             email: "toto@toto.com",
             password: "toto1234"
         });
         expect(res.status).toBe(200);
         expect(res.text).toStrictEqual("Success")
+=======
+            username: "toto",
+            password: "toto1234"
+        });
+        expect(res.status).toBe(200);
+        expect(res.text).toStrictEqual("Ok")
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
     });
 
     afterEach(async () => {

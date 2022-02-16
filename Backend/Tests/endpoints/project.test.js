@@ -18,14 +18,22 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     const setupUserA = {
+<<<<<<< HEAD
         firstName: "toto",
         lastName: "toto",
+=======
+        username: "toto",
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
         password: "toto1234",
         email: "toto@gmail.com"
     };
     const setupUserB = {
+<<<<<<< HEAD
         firstName: "tata",
         lastName: "tata",
+=======
+        username: "tata",
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
         password: "tata1234",
         email: "tata@gmail.com"
     };
@@ -45,7 +53,11 @@ afterAll(async () => {
 describe("TRAINING", () => {
     it("Should login the user", (done) => {
         req.post("/user/login")
+<<<<<<< HEAD
         .send({email: "toto@gmail.com", password: "toto1234"})
+=======
+        .send({username: "toto", password: "toto1234"})
+>>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
         .expect(200)
         .end((err, res) => {
             expect(res.status).toBe(200);
