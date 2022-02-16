@@ -1,5 +1,4 @@
 const { model, Schema } = require("mongoose");
-const Replica = require("Replica");
 
 const project = new Schema({
     name: String,
@@ -15,11 +14,7 @@ const project = new Schema({
       required: true
     },
     description: String,
-    videoLink: String,
-    script: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Replica"
-    }],
+    videoLink: String
 });
 
 exports.Project = model("Project", project);

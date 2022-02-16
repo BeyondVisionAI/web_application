@@ -1,15 +1,20 @@
 const { model, Schema } = require("mongoose");
 
 const replica = new Schema({
+    projectId: {
+        type: Schema.Types.ObjectId,
+        ref: "Project",
+        required: true
+    },
     index: Number,
-    text: String,
+    content: String,
     timestamp: Number,
     duration: Number,
     voiceId: String,
     lastEditor: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        required: false
+        required: true
     },
     lastEditDate: {
         date: Date,
