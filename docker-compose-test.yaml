@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+  tests:
+    depends_on:
+      - "mongodb"
+    build:
+      context: ./Backend
+      dockerfile: ./DockerfileTest
+    env_file:
+      - .env
+    volumes:
+      - ./Backend/index.js:/app/index.js
+      - ./Backend/Controllers:/app/Controllers/
+      - ./Backend/Models:/app/Models/
+      - ./Backend/Routes:/app/Routes/
+    environment:
+      JWT_SECRETKEY: ${TESTS_JWT_SECRETKEY}
+    networks:
+      - api
+      - bdd
+    # restart: on-failure
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-tests
+    hostname: mongodb-tests
+    volumes:
+      # - ./.docker/mongodb/data/db-tests/:/data/db/
+      # - ./.docker/mongodb/data/log-tests/:/var/log/mongodb/
+      - ./.docker/mongodb/mongo-init-test.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    env_file:
+      - .env
+    networks:
+      - bdd
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${TESTS_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${TESTS_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${TESTS_INITDB_DATABASE}
+      # MONGO_INITDB_USERNAME: ${TESTS_INITDB_USERNAME}
+      # MONGO_INITDB_PASSWORD: ${TESTS_INITDB_PASSWORD}
+    ports:
+      - "27017:27017"
+    # restart: on-failure
+    logging:
+      driver: none
+
+networks:
+  api:
+  bdd:
