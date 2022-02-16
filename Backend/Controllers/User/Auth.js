@@ -62,13 +62,15 @@ exports.register = async function (req, res) {
           from: process.env.GMAIL_USERNAME,
           to: req.body.email,
           subject: "Verifying your Beyond Vision account",
-          text: `Verify your account here: http://localhost/verifyEmail?verifUID=${verifUID}`,
+          text: `Verify your account here: ${process.env.WEBSITE_URL}/verifyEmail?verifUID=${verifUID}`,
         };
-        try {
-          await wrapedSendMail(mailData)
-          return res.status(200).send("Success");
-        } catch (err) {
-          return res.status(500).send(Errors.INTERNAL_ERROR);
+        if (!process.env.IS_TEST) {
+          try {
+            await wrapedSendMail(mailData)
+            return res.status(200).send("Success");
+          } catch (err) {
+            return res.status(500).send(Errors.INTERNAL_ERROR);
+          }
         }
       });
     }
@@ -83,7 +85,7 @@ exports.login = async function (req, res) {
     if (err) throw err;
     if (!doc) return res.status(404).send(Errors.USER_NOT_FOUND);
     if (bcrypt.compare(req.body.password, doc.password)) {
-      if (!doc.isEmailConfirmed) {
+      if (!doc.isEmailConfirmed && process.env.IS_TEST) {
         return res.status(401).send(Errors.EMAIL_NOT_VERIFIED);
       }
       var userWithoutPassword = {
@@ -98,7 +100,7 @@ exports.login = async function (req, res) {
       res.cookie("token", userJWT, {
         httpOnly: true,
       });
-      return res.status(200).send("Ok");
+      return res.status(200).send("Success");
     } else {
       return res.status(401).send(Errors.INVALID_PASSWORD);
     }
@@ -155,7 +157,7 @@ exports.askForPasswordChange = async function (req, res) {
         from: process.env.GMAIL_USERNAME,
         to: req.body.email,
         subject: "Password change request - Beyond Vision",
-        text: `Reset your password here: http://localhost/resetPassword?verifUID=${doc.verificationUID}`,
+        text: `Reset your password here: ${process.env.WEBSITE_URL}/resetPassword?verifUID=${doc.verificationUID}`,
     };
     try {
       await wrapedSendMail(mailData)

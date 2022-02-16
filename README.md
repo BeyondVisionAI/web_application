@@ -66,6 +66,7 @@ GOOGLE_CLIENT_ID=googleCliendID
 GOOGLE_CLIENT_SECRET=googleClientSecret
 GOOGLE_REFRESH_TOKEN=googleRefreshToken
 GOOGLE_ACCESS_TOKEN=googleAccessToken
+WEBSITE_URL=UrlWhereWebsiteIsHosted
 ```
 
 ##### Version de Développement :

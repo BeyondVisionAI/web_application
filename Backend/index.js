@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: "http://localhost",
+    origin: process.env.WEBSITE_URL,
     credentials: true,
     optionsSuccessStatus: 200
   })
@@ -19,10 +19,8 @@ app.use(
 
 routes(app);
 
-var url = "mongodb://beyondvision:thisisaverysecurepassword@mongodb/beyondvision";
-
 mongoose.connect(
-  url,
+  process.env.DB_CONN_STRING,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
