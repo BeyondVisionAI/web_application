@@ -28,7 +28,7 @@ const ResetPassword = () => {
             return
         }
         if (!regexPassword.test(password)) {
-            toast.error("Passwords are not matching")
+            toast.error("Passwords needs to have at least 1 uppercase, 1 number, 1 special character")
             return
         }
         try {
@@ -45,7 +45,7 @@ const ResetPassword = () => {
                 toast.success("Password successfully changed")
                 history.push('/login')
             }
-        } catch (err) {
+        } catch {
             toast.error("Could not modify password. Try again later")
             history.push('/login')
         }

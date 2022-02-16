@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-var routes = require('./routes/routes');
+var routes = require('./Routes/routes');
 var cookieParser = require('cookie-parser')
 const cors = require('cors')
 const app = express();
@@ -16,12 +16,10 @@ app.use(
     optionsSuccessStatus: 200
   })
 );
-console.log("new v with cors");
 
 routes(app);
 
 var url = "mongodb://beyondvision:thisisaverysecurepassword@mongodb/beyondvision";
-console.log("Process.env.DB_CONN_STRING : " + url);
 
 mongoose.connect(
   url,

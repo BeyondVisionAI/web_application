@@ -60,7 +60,7 @@ Le second, celui du backend devra contenir ces variables:
 
 ```txt
 JWT_SECRETKEY="secretKeyToSignAndVerifyJWT"
-DB_CONN_STRING="mongodb://nameOfDB:paasswordOfDB@urlOfDb/nameOfCollection"
+DB_CONN_STRING="mongodb://nameOfDB:passwordOfDB@urlOfDb/nameOfCollection"
 GMAIL_USERNAME="example@gmail.com"
 GOOGLE_CLIENT_ID=googleCliendID
 GOOGLE_CLIENT_SECRET=googleClientSecret

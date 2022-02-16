@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React from 'react'
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, Redirect } from "react-router-dom";
 import { toast } from 'react-toastify';
 

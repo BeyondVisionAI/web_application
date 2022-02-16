@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 var nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
+const { Errors } = require("../../Models/Errors");
 
 let transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -23,6 +24,7 @@ async function wrapedSendMail(mailOptions) {
   return new Promise((resolve,reject) => {
     transporter.sendMail(mailOptions, function(error, info) {
     if (error) {
+      console.log("🚀 ~ file: Auth.js ~ line 27 ~ transporter.sendMail ~ error", error)
       reject(false);
     } else {
       resolve(true);
@@ -38,12 +40,12 @@ exports.register = async function (req, res) {
     !req.body.password ||
     !req.body.email
   ) {
-    return res.status(400).send("Bad Request");
+    return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
   }
   var verifUID = uuidv4();
 
   User.findOne({ email: req.body.email }, async (err, doc) => {
-    if (err) return res.status(500).send("Internal Error");
+    if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
     if (doc) return res.status(409).send("Email Already In Use");
     else {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -55,7 +57,7 @@ exports.register = async function (req, res) {
         verificationUID: verifUID,
       });
       await newUser.save(async (err) => {
-        if (err) return res.status(500).send("Internal Error");
+        if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
         const mailData = {
           from: process.env.GMAIL_USERNAME,
           to: req.body.email,
@@ -63,11 +65,10 @@ exports.register = async function (req, res) {
           text: `Verify your account here: http://localhost/verifyEmail?verifUID=${verifUID}`,
         };
         try {
-          console.log("In try");
           await wrapedSendMail(mailData)
           return res.status(200).send("Success");
         } catch (err) {
-          return res.status(500).send("Internal Error");
+          return res.status(500).send(Errors.INTERNAL_ERROR);
         }
       });
     }
@@ -76,14 +77,14 @@ exports.register = async function (req, res) {
 
 exports.login = async function (req, res) {
   if (!req.body.email || !req.body.password) {
-    return res.status(400).send("Bad Request");
+    return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
   }
   User.findOne({ email: req.body.email }, async (err, doc) => {
     if (err) throw err;
-    if (!doc) return res.status(404).send("Not Found");
+    if (!doc) return res.status(404).send(Errors.USER_NOT_FOUND);
     if (bcrypt.compare(req.body.password, doc.password)) {
       if (!doc.isEmailConfirmed) {
-        return res.status(401).send("Account Not Verified");
+        return res.status(401).send(Errors.EMAIL_NOT_VERIFIED);
       }
       var userWithoutPassword = {
         firstName: doc.firstName,
@@ -99,7 +100,7 @@ exports.login = async function (req, res) {
       });
       return res.status(200).send("Ok");
     } else {
-      return res.status(401).send("Inavlid Password");
+      return res.status(401).send(Errors.INVALID_PASSWORD);
     }
   });
 };
@@ -110,48 +111,46 @@ exports.logout = async function (req, res) {
 };
 
 exports.verifyEmail = async function (req, res) {
-  if (!req.body.verifId) return res.status(400).send("Bad Request!");
+  if (!req.body.verifId) return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
+
   User.findOne({ verificationUID: req.body.verifId }, async (err, doc) => {
-    if (err) return res.status(500).send("Internal Error")
-    if (!doc) return res.status(404).send("Not Found");
+    if (err) return res.status(500).send(Errors.INTERNAL_ERROR)
+    if (!doc) return res.status(404).send(Errors.USER_NOT_FOUND);
     var newDoc = { ...doc._doc };
     newDoc.isEmailConfirmed = true;
     newDoc.verificationUID = uuidv4();
     doc.overwrite(newDoc);
     doc.save((err) => {
-      if (err) return res.status(500).send("Internal error");
+      if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
       return res.status(200).send("Success");
     });
   });
 };
 
 exports.changePassword = async function (req, res) {
-  console.log("🚀 ~ file: Auth.js ~ line 128 ~ req", req.body)
   if (!req.body.verifId || !req.body.password) {
-    console.log("🚀 ~ file: Auth.js ~ line 131 ~ req.body.password", req.body.password)
-    console.log("🚀 ~ file: Auth.js ~ line 131 ~ req.body.verifId", req.body.verifId)
-    return res.status(400).send("Bad Request!");
+    return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
   }
   User.findOne({ verificationUID: req.body.verifId }, async (err, doc) => {
-    if (err) return res.status(500).send("Internal Error")
-    if (!doc) return res.status(404).send("Not Found");
+    if (err) return res.status(500).send(Errors.INTERNAL_ERROR)
+    if (!doc) return res.status(404).send(Errors.USER_NOT_FOUND);
     var newDoc = { ...doc._doc };
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     newDoc.password = hashedPassword;
     newDoc.verificationUID = uuidv4();
     doc.overwrite(newDoc);
     doc.save((err) => {
-      if (err) return res.status(500).send("Internal error");
+      if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
       return res.status(200).send("Success");
     });
   });
 };
 
 exports.askForPasswordChange = async function (req, res) {
-  if (!req.body.email) return res.status(400).send("Bad Request!");
+  if (!req.body.email) return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
   User.findOne({ email: req.body.email }, async (err, doc) => {
-    if (!doc) return res.status(404).send("Not Found");
-    if (err) return res.status(500).send("Internal Error");
+    if (!doc) return res.status(404).send(Errors.USER_NOT_FOUND);
+    if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
     const mailData = {
         from: process.env.GMAIL_USERNAME,
         to: req.body.email,
@@ -162,7 +161,7 @@ exports.askForPasswordChange = async function (req, res) {
       await wrapedSendMail(mailData)
       return res.status(200).send("Success");
     } catch (err) {
-      return res.status(500).send("Internal Error");
+      return res.status(500).send(Errors.INTERNAL_ERROR);
     }
   });
 };
