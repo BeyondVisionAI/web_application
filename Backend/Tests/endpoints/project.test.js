@@ -18,12 +18,14 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     const setupUserA = {
-        username: "toto",
+        firstName: "toto",
+        lastName: "toto",
         password: "toto1234",
         email: "toto@gmail.com"
     };
     const setupUserB = {
-        username: "tata",
+        firstName: "tata",
+        lastName: "tata",
         password: "tata1234",
         email: "tata@gmail.com"
     };
@@ -43,7 +45,7 @@ afterAll(async () => {
 describe("TRAINING", () => {
     it("Should login the user", (done) => {
         req.post("/user/login")
-        .send({username: "toto", password: "toto1234"})
+        .send({email: "toto@gmail.com", password: "toto1234"})
         .expect(200)
         .end((err, res) => {
             expect(res.status).toBe(200);

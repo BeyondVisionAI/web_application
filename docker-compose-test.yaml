@@ -16,6 +16,7 @@ services:
       - ./Backend/Routes:/app/Routes/
     environment:
       JWT_SECRETKEY: ${TESTS_JWT_SECRETKEY}
+      IS_TEST: "TRUE"
     networks:
       - api
       - bdd

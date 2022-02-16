@@ -15,5 +15,3 @@ exports.closeMongooseConnection = async function (mongoose) {
 }
 
 exports.databaseURL = `mongodb://beyondvisiontesteur:testpassword@mongodb`;
-
-// mongodb://beyondvisiontests:testpassword@mongodb/beyondvisiontests
