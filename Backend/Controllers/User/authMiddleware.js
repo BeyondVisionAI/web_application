@@ -1,5 +1,5 @@
-const { User } = require("../../Models/User");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { Errors } = require("../../Models/Errors");
 
 exports.authenticateUser = function(req, res, next) {
     const userJWT = req.cookies.token;
@@ -9,6 +9,6 @@ exports.authenticateUser = function(req, res, next) {
         next();
     } catch (err) {
         res.clearCookie("token");
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send(Errors.USER_NOT_LOGIN);
     }
 }

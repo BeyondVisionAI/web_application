@@ -6,6 +6,14 @@ module.exports = function(app) {
     app.post('/user/register', Auth.register)
 
     app.post('/user/login', Auth.login)
+    
+    app.post('/user/logout', Middleware.authenticateUser, Auth.logout)
 
-    app.get('/user', Middleware.authenticateUser, User.getUser)
+    app.post('/user/verifyEmail', Auth.verifyEmail)
+
+    app.post('/user/askForPasswordChange', Auth.askForPasswordChange)
+    
+    app.post('/user/changePassword', Auth.changePassword)
+
+    app.get('/user/me', Middleware.authenticateUser, User.getUser)
 }
