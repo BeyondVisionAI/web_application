@@ -1,6 +1,5 @@
 print('Start #################################################################');
 
-<<<<<<< HEAD
 db = db.getSiblingDB('tests_db_user');
 db.createUser(
   {
@@ -10,8 +9,6 @@ db.createUser(
   },
 );
 
-=======
->>>>>>> ae7dc7967a634c2986598fe132a8c5a2adaa3d48
 db = db.getSiblingDB('tests_db_project');
 db.createUser(
   {
