@@ -23,7 +23,8 @@ describe("User creation", () => {
     //Test if everything is normal
     it ("success creation user", async () => {
         const res = await req.post('/user/register').send({
-            username: 'toto',
+            firstName: 'toto',
+            lastName: 'tutu',
             password: 'toto1234',
             email: 'toto@toto.com'
         });
@@ -34,7 +35,8 @@ describe("User creation", () => {
 
 describe("User creation failed", () => {
     const userTest = {
-        username: "toto",
+        firstName: "toto",
+        lastName: "titi",
         password: "toto1234",
         email: "toto@toto.com"
     };
@@ -46,7 +48,8 @@ describe("User creation failed", () => {
     //Check if email already exists
     it ("Fail because email already exists", async () => {
         const res = await req.post('/user/register').send({
-            username: 'tata',
+            firstName: 'tata',
+            lastName: 'titi',
             password: 'tata1234',
             email: 'toto@toto.com'
         });
@@ -56,11 +59,11 @@ describe("User creation failed", () => {
 
     it ("success", async () => {
         const res = await req.post('/user/login').send({
-            username: "toto",
+            email: "toto@toto.com",
             password: "toto1234"
         });
         expect(res.status).toBe(200);
-        expect(res.text).toStrictEqual("Ok")
+        expect(res.text).toStrictEqual("Success")
     });
 
     afterEach(async () => {

@@ -48,7 +48,11 @@ exports.register = async function (req, res) {
 
   User.findOne({ email: req.body.email }, async (err, doc) => {
     if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
+<<<<<<< HEAD
     if (doc) return res.status(409).send(Errors.EMAIL_ALREADY_USED);
+=======
+    if (doc) return res.status(409).send(Errors.EMAIL_ALREADY_IN_USE);
+>>>>>>> {feat/unit-tests}: tests done on User, need to be corrected by Alex
     else {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const newUser = new User({
@@ -83,6 +87,8 @@ exports.register = async function (req, res) {
           } catch (err) {
             return res.status(500).send(Errors.INTERNAL_ERROR);
           }
+        } else {
+          return res.status(200).send("Success");
         }
       });
     }
@@ -97,7 +103,7 @@ exports.login = async function (req, res) {
     if (err) throw err;
     if (!doc) return res.status(404).send(Errors.USER_NOT_FOUND);
     if (await bcrypt.compare(req.body.password, doc.password)) {
-      if (!doc.isEmailConfirmed && process.env.IS_TEST) {
+      if (!doc.isEmailConfirmed && !process.env.IS_TEST) {
         return res.status(401).send(Errors.EMAIL_NOT_VERIFIED);
       }
       var userWithoutPassword = {
