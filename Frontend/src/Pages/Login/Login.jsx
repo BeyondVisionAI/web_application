@@ -13,6 +13,7 @@ const Login = () => {
     const { currentUser } = useContext(AuthContext);
     const history = useHistory()
     
+    console.log("Hello");
     function authenticate() {
         if (!email || !password) {
             toast.error("Username or password not filled")
@@ -32,9 +33,11 @@ const Login = () => {
               })
               .catch((err) => {
                 if ((err.response.status === 404)) {
-                    toast.error("Username not found")
-                } else if (err.response.status === 401) {
+                    toast.error("Invalid email or password")
+                } else if (err.response.status === 401 && err.response.data == "EMAIL_NOT_VERIFIED") {
                     toast.error("Email not verified")
+                } else if (err.response.status === 401 && err.response.data == "INVALID_PASSWORD") {
+                    toast.error("Invalid email or password")
                 } else {
                     toast.error("Error while contacting the server")
                 }
