@@ -12,3 +12,15 @@ exports.authenticateUser = function(req, res, next) {
         return res.status(401).send(Errors.USER_NOT_LOGIN);
     }
 }
+
+exports.onlyForUnAuthenticatedUser = function (req, res, next) {
+    const userJWT = req.cookies.token;
+    try {
+        const user = jwt.verify(userJWT, process.env.JWT_SECRETKEY);
+        req.user = user;
+        return res.status(401).send(Errors.USER_ALREADY_LOGIN);
+    } catch (err) {
+        res.clearCookie("token");
+        next();
+    }
+}
