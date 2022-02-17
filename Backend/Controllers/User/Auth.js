@@ -48,11 +48,7 @@ exports.register = async function (req, res) {
 
   User.findOne({ email: req.body.email }, async (err, doc) => {
     if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
-<<<<<<< HEAD
     if (doc) return res.status(409).send(Errors.EMAIL_ALREADY_USED);
-=======
-    if (doc) return res.status(409).send(Errors.EMAIL_ALREADY_IN_USE);
->>>>>>> {feat/unit-tests}: tests done on User, need to be corrected by Alex
     else {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const newUser = new User({
