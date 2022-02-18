@@ -25,7 +25,7 @@ afterAll(async () => {
 });
 
 
-// Tests
+// Tests //
 
 describe("Register a user", () => {
     it("Should register the user", async () => {
