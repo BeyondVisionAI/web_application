@@ -11,6 +11,17 @@ const replica = new Schema({
     timestamp: Number,
     duration: Number,
     voiceId: String,
+    comments: [String],
+    /*
+    comments: [
+        author: {
+            type: Schema.Types.OBjectId,
+            ref: "User",
+            required: true
+        },
+        content: String
+    ]
+    */
     lastEditor: {
         type: Schema.Types.ObjectId,
         ref: "User",

@@ -12,40 +12,45 @@ const dateOptions =
 };
 
 const tempReplica = {
-    text: "This is an example of a replica",
+    content: "This is an example of a replica",
     voice: "plop",
-    comment: "This is an example of a replica's nested comment",
+    comment: [
+        "This is an example of a replica's nested comment",
+        "Other comment written about this replica",
+        "I would like to comment something else"
+    ],
     // lastEdit: date.setMinutes(date.getMinutes() - 5),
     lastEdit: Date.now()/*.toLocaleDateString()*/,
     lastEditor: "John Doe"
 }
 
-const ScriptEdition = ( {script, video} ) => {
+console.log(typeof(tempReplica))
+console.log(tempReplica.lastEdit instanceof Date)
+
+const ScriptEdition = ( {title, script, video} ) => {
     return (
         <>
             <div className="script-edition-container h-screen w-screen">
                 <NavBar />
-                <div id="page-container" className="container h-5/6 w-full pt-2 flex flex-col">
-                    <div id="title" className="h-1/6 w-full flex flex-row justify-between items-center px-6 pt-2">
-                        <h1 className="text-blue-400 w-1/3 inline-flex items-center text-2xl">Title du Projet</h1>
+                <div id="page-container" className="h-5/6 w-full py-2 px-6">
+                    <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
+                        <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{title}</h1>
                         <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base">Soumettre</button>
                     </div>
 
-                    <div id="edit-bloc" className="flex h-3/6 px-1">
-                       <div id="menu-detail" className="bg-gray-200 w-1/4 mx-1 p-2 shadow-lg rounded-tl-lg">
-                            <h2>Détails</h2>
+                    <div id="edit-bloc" className="flex h-4/6">
+                        {/* DETAILS IF REPLICA IS SELECTED */}
+                       <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-lg">
                             <ReplicaDetails replica={tempReplica}/>
                        </div>
                        
-                       <div id="movie-insight" className="flex justify-center content-end w-3/4 rounded-tr-3xl mx-1 p-2 shadow-lg bg-red-500">
+                       <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-red-500">
                            <img className="object-cover" src="/assets/fight_club.jpeg" alt="" />
                        </div>
-
-
                     </div>
 
-                    <div className="flex h-2/6 w-full px-2 mt-2">
-                       <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl shadow-lg">Audio Timeline</div>
+                    <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
+                       <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg">Audio Timeline</div>
                    </div>
 
                 </div>
