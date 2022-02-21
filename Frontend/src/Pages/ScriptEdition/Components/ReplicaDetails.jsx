@@ -1,4 +1,5 @@
 import {React, useState } from "react";
+import CommentBox from './CommentBox';
 
 const dateOptions =
 {
@@ -9,7 +10,7 @@ const dateOptions =
 const ReplicaDetails = ({replica}) => {
     const [text, setText] = useState(replica.content);
     const [voice, setVoice] = useState(replica.voice);
-    const [comment, setComment] = useState(replica.comment);
+    const [comments, setComments] = useState(replica.comments);
     // additional infos
     const [lastEdit, setLastEdit] = useState(replica.lastEdit);
     const [lastEditor, setLastEditor] = useState(replica.lastEditor);
@@ -56,14 +57,15 @@ const ReplicaDetails = ({replica}) => {
 
             <h3 className="pl-4 text-xl">Commentaires</h3>
             <div id="comment-frame" className="w-fit h-3/6 bg-red-200 ml-6 mr-9 overflow-y-auto">
-            <textarea name="replica-text" id="" 
-                // cols="40" rows="2"
-                defaultValue={comment}
-                className="p-3 w-full leading-7 text-l
-                rounded-md border border-solid border-blue-800
-                bg-gray-200 resize-none
-                focus:text-black focus:border-blue-800 focus:outline-none"
-                ></textarea>
+                <CommentBox comments={comments} />
+                {/* <textarea name="replica-text" id="" 
+                    // cols="40" rows="2"
+                    defaultValue={comment}
+                    className="p-3 w-full leading-7 text-l
+                    rounded-md border border-solid border-blue-800
+                    bg-gray-200 resize-none
+                    focus:text-black focus:border-blue-800 focus:outline-none"
+                    ></textarea> */}
             </div>
 
             <div className="w-full align-bottom bg-gray-300">

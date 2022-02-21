@@ -1,7 +1,6 @@
 import React from 'react';
 import NavBar from '../../GenericComponents/NavBar/NavBar';
-import ScriptBoxList from './Components/ScriptBoxList/ScriptBoxList';
-import ReplicaDetails from './Components/ReplicaDetails/ReplicaDetails';
+import ReplicaDetails from './Components/ReplicaDetails';
 
 const date = new Date(Date.now());
 
@@ -14,7 +13,7 @@ const dateOptions =
 const tempReplica = {
     content: "This is an example of a replica",
     voice: "plop",
-    comment: [
+    comments: [
         "This is an example of a replica's nested comment",
         "Other comment written about this replica",
         "I would like to comment something else"
@@ -24,8 +23,7 @@ const tempReplica = {
     lastEditor: "John Doe"
 }
 
-console.log(typeof(tempReplica))
-console.log(tempReplica.lastEdit instanceof Date)
+
 
 const ScriptEdition = ( {title, script, video} ) => {
     return (
@@ -43,6 +41,10 @@ const ScriptEdition = ( {title, script, video} ) => {
                        <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-lg">
                             <ReplicaDetails replica={tempReplica}/>
                        </div>
+                       {/* DETAILS EMPTY AS NOT REPLICA IS SELECTED */}
+                       {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-lg">
+                            <ReplicaDetails replica={tempReplica}/>
+                       </div> */}
                        
                        <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-red-500">
                            <img className="object-cover" src="/assets/fight_club.jpeg" alt="" />
