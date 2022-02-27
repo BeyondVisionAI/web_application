@@ -24,7 +24,7 @@ const ReplicaDetails = ({replica}) => {
     return (
         <>
         <div className="h-full w-full flex flex-col justify-around">
-            <h1 className="text-blue-400 text-2xl ml-2">Détails</h1>
+            <h1 className="text-blue-400 text-2xl text-center">Détails</h1>
             <div className="w-full flex flex-row justify-between items-center pl-2">
                 <h3 className="ml-2 text-xl inline-flex items-center">Texte</h3>
                 <h3 className="inline-flex items-center text-l mr-9">{characterCount}</h3>

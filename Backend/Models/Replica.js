@@ -19,6 +19,7 @@ const replica = new Schema({
             ref: "User",
             required: true
         },
+        date: Date,
         content: String
     ]
     */
