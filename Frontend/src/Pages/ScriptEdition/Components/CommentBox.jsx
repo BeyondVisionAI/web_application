@@ -42,7 +42,7 @@ const CommentBox = ({comments}) => {
         console.log("New comment : " + newComment);
         try {
             // first option
-            let jsonObj = {projectId: "something", date: new Date.now(), comment: comment};
+            let jsonObj = {projectId: "something", date: new Date.now(), comment: newComment};
             let commentResponse = await axios.post(`${process.env.REACT_APP_API_URL}/comment`, jsonObj);
 
             console.log(commentResponse);

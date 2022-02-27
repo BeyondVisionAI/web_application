@@ -6,7 +6,6 @@ const replica = new Schema({
         ref: "Project",
         required: true
     },
-    index: Number,
     content: String,
     timestamp: Number,
     duration: Number,
@@ -28,11 +27,7 @@ const replica = new Schema({
         ref: "User",
         required: true
     },
-    lastEditDate: {
-        date: Date,
-        required: false
-    },
-    required: false
+    lastEditDate: Date
 });
 
 exports.Replica = model("Replica", replica);

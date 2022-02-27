@@ -15,5 +15,5 @@ module.exports = function(app) {
     collaboration(app);
     list(app);
     listMember(app);
-//    scriptEdition(app);
+    scriptEdition(app);
   }
