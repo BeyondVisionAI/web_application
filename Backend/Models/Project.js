@@ -13,8 +13,12 @@ const project = new Schema({
       ref: "Image",
       required: true
     },
+    videoId: {
+        type: Schema.Types.ObjectId,
+        ref: "Video",
+        required: true
+    },
     description: String,
-    videoLink: String,
     script: [{
         replica: String,
         lastEditor: {

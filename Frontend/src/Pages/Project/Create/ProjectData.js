@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import UploadFile from '../../../GenericComponents/Files/UploadFile';
+import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 
 export default function ProjectData({ nextStep, prevStep, handleChange, values }) {
     const [thumbnail, setThumbnail] = useState(values.thumbnail);
@@ -37,6 +38,7 @@ export default function ProjectData({ nextStep, prevStep, handleChange, values }
                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="title">
                         Titre
                     </label>
+                    {/* <InputWithLabel errorMessage="Title required" defaultValue={ values.title } placeholder="Title" type="text" label="Title is required" onChange={ e => handleChange('title', e.target.value) } /> */}
                     <input class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="text" defaultValue={ values.title } required onChange={ e => handleChange('title', e.target.value) }/>
                 </div>
                 <UploadFile inputChange={ onImageChange } isFill={thumbnail ? true : false} types=".jpg, .jpeg, .png"/>

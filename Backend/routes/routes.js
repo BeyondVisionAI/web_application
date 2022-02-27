@@ -1,5 +1,5 @@
 module.exports = function(app) {
-    const image = require("./Image");
+    const media = require('./Media/Media.js');
     const test = require("./Test");
     const user = require("./User");
     const project = require("./Project");
@@ -11,7 +11,7 @@ module.exports = function(app) {
     test(app);
     user(app);
     project(app);
-    image(app);
+    media(app);
     collaboration(app);
     list(app);
     listMember(app);

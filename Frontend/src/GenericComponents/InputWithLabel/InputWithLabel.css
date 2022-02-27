@@ -1,0 +1,90 @@
+.input-with-label-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.input-with-label-label {
+    font-size: 1vw;
+}
+
+.input-with-label-input {
+    font-size: 1vw;
+    margin-top: 10px;
+    width: 60%;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: solid 1px;
+    border-color: rgba(30, 30, 30, 0.1);
+}
+.input-with-label-input:invalid {
+    border-color: rgb(255, 81, 81);
+}
+
+.input-with-label-error {
+    margin-top: 3px;
+    color: rgb(255, 81, 81);
+    font-weight: 300;
+    font-size: 0.8vw;
+}
+
+.input-with-label-input:focus {
+    outline: none;
+    border-color: rgb(0, 118, 168);
+}
+
+@media screen and (max-width: 1024px) {
+    .input-with-label-label {
+        font-size: 1.3vw;
+    }
+    .input-with-label-input {
+        font-size: 1.3vw;
+    }
+    .input-with-label-error {
+        font-size: 1.1vw;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .input-with-label-label {
+        font-size: 1.6vw;
+    }
+    .input-with-label-input {
+        font-size: 1.6vw;
+    }
+    .input-with-label-error {
+        font-size: 1.3vw;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .input-with-label-label {
+        font-size: 3vw;
+    }
+    .input-with-label-input {
+        font-size: 3vw;
+    }
+    .input-with-label-container {
+        align-items: center;
+    }
+    .input-with-label-error {
+        font-size: 2vw;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .input-with-label-label {
+        font-size: 4vw;
+    }
+    .input-with-label-input {
+        font-size: 4vw;
+    }
+    .input-with-label-container {
+        align-items: center;
+    }
+    .input-with-label-error {
+        font-size: 2.7vw;
+    }
+}

@@ -36,7 +36,7 @@ exports.getAllProjectsDB = async function(userId) {
  * Get a project
  * @param { Request } req { body: { projectID } }
  * @param { Response } res
- * @returns { [{ _id, name, status, videoLink, script, creator, assignedAudioDescriptiors }] }
+ * @returns { [{ _id, name, status, videoId, script, creator, assignedAudioDescriptiors }] }
  */
 exports.getProject = async function(req, res) {
     try {
@@ -53,7 +53,7 @@ exports.getProject = async function(req, res) {
 
 /**
  * Create a project
- * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoLink, script }}
+ * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoId, script }}
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
@@ -67,7 +67,7 @@ exports.createProject = async function(req, res) {
             status: 'Stop',
             thumbnailId: req.body.thumbnailId,
             description: req.body.description,
-            videoLink: req.body.videoLink,
+            videoId: req.body.videoId,
             script: req.body.script,
         });
         await newProject.save();

@@ -12,7 +12,7 @@ export default function CreateProject({ show, onHide }) {
         title: null,
         thumbnail: null,
         resume: null,
-        videoLink: null,
+        videoId: null,
         videoType: null,
     });
     const [steps, setSteps] = useState([
@@ -56,16 +56,13 @@ export default function CreateProject({ show, onHide }) {
             });
             console.log(thumbnailResponse);
 
-            // TODO get videoLink, use video Type
-            // TODO Create Project !!!
-
             let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`,
             {
                 name: values.title,
                 status: 'Stop',
                 thumbnailId: thumbnailResponse.data._id,
                 description: values.resume,
-                videoLink: null,
+                videoId: values.videoId,
                 script: null,
             });
             console.log(projectResponse);
@@ -73,7 +70,6 @@ export default function CreateProject({ show, onHide }) {
             console.error(error);
         }
     }
-    // Todo: save videoLink
 
     const creationSteps = () => {
         switch (modalStep) {

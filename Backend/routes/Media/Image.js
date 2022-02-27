@@ -1,6 +1,6 @@
 module.exports = function(app) {
-    const image = require('../Controllers/Image/Image');
-    const authMiddleware = require('../Controllers/User/authMiddleware');
+    const image = require('../../Controllers/Media/Image/Image.js');
+    const authMiddleware = require('../../Controllers/User/authMiddleware');
 
     app.post('/image',
         // authMiddleware.authenticateUser,
