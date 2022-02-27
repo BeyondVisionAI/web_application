@@ -83,6 +83,8 @@ exports.register = async function (req, res) {
           } catch (err) {
             return res.status(500).send(Errors.INTERNAL_ERROR);
           }
+        } else {
+          return res.status(200).send("Success");
         }
       });
     }
@@ -97,7 +99,7 @@ exports.login = async function (req, res) {
     if (err) throw err;
     if (!doc) return res.status(404).send(Errors.USER_NOT_FOUND);
     if (await bcrypt.compare(req.body.password, doc.password)) {
-      if (!doc.isEmailConfirmed && process.env.IS_TEST) {
+      if (!doc.isEmailConfirmed && !process.env.IS_TEST) {
         return res.status(401).send(Errors.EMAIL_NOT_VERIFIED);
       }
       var userWithoutPassword = {
