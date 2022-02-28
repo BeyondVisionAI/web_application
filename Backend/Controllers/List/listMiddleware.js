@@ -23,11 +23,11 @@ exports.isMember = async function(req, res, next) {
         var member = await ListMember.findOne({ userId: req.user.userId, listId: req.params.listId });
         if (!member) {
             console.log("ListMiddleware/isMember --> No member found between the userId and the list");
-            return res.status(404).send(Errors.LIST_NOT_YOURS);
+            return res.status(401).send(Errors.LIST_NOT_YOURS);
         }
         next();
     } catch (err) {
-        console.log("ListMiddleware/isMember --> Error catched: \n" + err);
+        console.debug("ListMiddleware/isMember --> Error catched: \n" + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
@@ -52,7 +52,7 @@ exports.hasRightOwner = async function(req, res, next) {
         var member = await ListMember.findOne({ userId: req.user.userId, listId: req.params.listId });
         if (!member) {
             console.log("ListMiddleware/hasRightOwner --> No member found between the userId and the list");
-            return res.status(404).send(Errors.LIST_NOT_YOURS);
+            return res.status(401).send(Errors.LIST_NOT_YOURS);
         }
 
         if (member.rights !== Role.OWNER) {
@@ -86,7 +86,7 @@ exports.hasRightAdmin = async function(req, res, next) {
         var member = await ListMember.findOne({ userId: req.user.userId, listId: req.params.listId });
         if (!member) {
             console.log("ListMiddleware/hasRightAdmin --> No member found between the userId and the list");
-            return res.status(404).send(Errors.LIST_NOT_YOURS);
+            return res.status(401).send(Errors.LIST_NOT_YOURS);
         }
 
         if (member.rights !== Role.ADMIN && member.rights !== Role.OWNER) {
@@ -96,6 +96,40 @@ exports.hasRightAdmin = async function(req, res, next) {
         next();
     } catch (err) {
         console.log("ListMiddleware/hasRightAdmin --> Error catched: \n" + err);
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+}
+
+/*
+    Middleware created to check if the user is member of the list
+    Useful when changing data on the list(add projects, remove some, etc...)
+*/
+exports.hasRightWrite = async function(req, res, next) {
+    try {
+        if (!req.user || !req.user.userId) {
+            console.log("ListMiddleware/hasRightWrite --> No req.user or req.user.userId on the request");
+            return res.status(401).send(Errors.USER_NOT_LOGIN);
+        }
+
+        var list = await List.findById(req.params.listId);
+        if (!list) {
+            console.log("ListMiddleware/hasRightWrite --> List Not Found");
+            return res.status(404).send(Errors.LIST_NOT_FOUND);
+        }
+
+        var member = await ListMember.findOne({ userId: req.user.userId, listId: req.params.listId });
+        if (!member) {
+            console.log("ListMiddleware/hasRightWrite --> No member found between the userId and the list");
+            return res.status(401).send(Errors.LIST_NOT_YOURS);
+        }
+
+        if (member.rights !== Role.WRITE && member.rights !== Role.ADMIN && member.rights !== Role.OWNER) {
+            console.log("ListMiddleware/hasRightWrite --> ADMIN or OWNER rights required for this operation");
+            return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
+        }
+        next();
+    } catch (err) {
+        console.log("ListMiddleware/hasRightWrite --> Error catched: \n" + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }

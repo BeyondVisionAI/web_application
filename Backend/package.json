@@ -38,6 +38,8 @@
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/"
-    ]
+    ],
+    "verbose": true,
+    "setupFilesAfterEnv": ["<rootDir>/Tests/general/setup.js"]
   }
 }

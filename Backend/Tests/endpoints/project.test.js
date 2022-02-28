@@ -1,15 +1,25 @@
 const app = require("../general/server");
 const supertest = require("supertest");
-const req = supertest(app);
+const request = supertest(app);
 const DBManager = require("../general/dbManager");
 const mongoose = require("mongoose");
 const databaseName = `${process.env.TESTS_DB_PROJECT}`;
+const Helper = require("../general/helper");
 
+const { Errors } = require("../../Models/Errors");
 const { User } = require("../../Models/User");
+const { Project } = require("../../Models/Project");
+const { Collaboration } = require("../../Models/Collaboration");
 
-var userA;
-var userB;
-var Cookies;
+// Variables //
+const userA = { firstName: "toto", lastName: "toto", email: "toto@toto.com", password: "toto1234" };
+const userB = { firstName: "tata", lastName: "tata", email: "tata@tata.com", password: "tata1234" };
+const userC = { firstName: "titi", lastName: "titi", email: "titi@titi.com", password: "titi1234" };
+var cookiesA;
+var cookiesB;
+var cookiesC;
+
+// Setup //
 
 beforeAll(async () => {
     const url = `${DBManager.databaseURL}/${databaseName}`;
@@ -17,20 +27,13 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-    const setupUserA = {
-        firstName: "toto",
-        lastName: "toto",
-        password: "toto1234",
-        email: "toto@gmail.com"
-    };
-    const setupUserB = {
-        firstName: "tata",
-        lastName: "tata",
-        password: "tata1234",
-        email: "tata@gmail.com"
-    };
-    userA = await new User(setupUserA).save();
-    userB = await new User(setupUserB).save();
+    var res;
+    res = await Helper.User.registerAndLoginUser(request, userA.firstName, userA.lastName, userA.email, userA.password);
+    cookiesA = res.headers['set-cookie'].pop().split(';')[0];
+    res = await Helper.User.registerAndLoginUser(request, userB.firstName, userB.lastName, userB.email, userB.password);
+    cookiesB = res.headers['set-cookie'].pop().split(';')[0];
+    res = await Helper.User.registerAndLoginUser(request, userC.firstName, userC.lastName, userC.email, userC.password);
+    cookiesC = res.headers['set-cookie'].pop().split(';')[0];
 });
 
 afterEach(async () => {
@@ -42,57 +45,16 @@ afterAll(async () => {
 });
 
 
-describe("TRAINING", () => {
-    it("Should login the user", (done) => {
-        req.post("/user/login")
-        .send({email: "toto@gmail.com", password: "toto1234"})
-        .expect(200)
-        .end((err, res) => {
-            expect(res.status).toBe(200);
-            Cookies = res.headers['set-cookie'].pop().split(';')[0];
-            done();
-        });
-    });
+// Tests //
 
-    it("Should get project", (done) => {
-        var answer = req.get('/projects');
-        answer.cookies = Cookies;
-        answer.expect(200)
-        .end(function (err, res) {
-            expect(res.status).toBe(200);
-            expect(res.body).toStrictEqual([]);
-            done();
-        });
-    });
+describe("Create a project", () => {
+    // it("Should create a project", async () => {
+    //     const res = await (await request.post("/projects").set("Cookie", cookiesA))
+    //     .send({
+
+    //     })
+    // });
+    it ("toto", () => {
+        expect(true).toBe(true);
+    })
 });
-
-
-// describe("Get project", () => {
-//     it("login puis get projects", async () => {
-//         const res = await req.post("/user/login").send({username: "toto", password: "toto1234"});
-//         Cookies = res.headers['set-cookie'].pop().split(';')[0];
-//         expect(res.status).toBe(200);
-
-//         req.cookies = Cookies;
-//         const res2 = await req.get("/projects");
-//         console.log(res2.text);
-//         expect(res2.status).toBe(200);
-//     });
-
-//     it("test", () => {
-//         expect(true).toBe(true);
-//     })
-// });
-
-
-
-
-
-
-
-/*
-
-PROBLEME : Je ne sais pas comment générer des user pour les requetes
-y a eu des problèmes pour setup le docker (env, volumes qui se mettaient pas a jour, problemes d'acces aux db, etc...)
-
-*/

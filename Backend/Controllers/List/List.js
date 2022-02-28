@@ -107,7 +107,7 @@ exports.createNewList = async function(req, res) {
     try {
         if (!req.body || !req.body.name) {
             console.log("List->createNewList: Bad request, missing the name of the list");
-            return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
+            return res.status(401).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
         var newList = new List({ name: req.body.name });
         await newList.save();
@@ -129,15 +129,19 @@ exports.addProjectToList = async function(req, res) {
         const project = await Project.getProjectDB(req.params.projectId);
         if (!project) {
             console.log("List->addProjectToList: Project \"" + req.params.projectId + "\" not found in Project Collection");
-            return res.status(400).send(Errors.PROJECT_NOT_FOUND);
+            return res.status(404).send(Errors.PROJECT_NOT_FOUND);
+        }
+        const collab = await Collaboration.getCollaborationBetweenUserAndProjectDB(req.user.userId, project._id)
+        if (!collab) {
+            console.log("List->addProjectToList: User doesn't have rights on this project");
+            return res.status(401).send(Errors.PROJECT_NOT_YOURS);
         }
         const list = await List.findById(req.params.listId);
         if (!list) {
             console.log("List->addProjectToList: List \"" + req.params.listId + "\" not found in List Collection");
-            return res.status(400).send(Errors.PROJECT_NOT_FOUND);
+            return res.status(400).send(Errors.LIST_NOT_FOUND);
         }
         const isExistingProjectInList = await ProjectListed.findOne({ projectId: req.params.projectId, listId: req.params.listId });
-        console.log(isExistingProjectInList);
         if (isExistingProjectInList) {
             console.log("List->addProjectToList: Project \"" + req.params.projectId + "\" already in List \"" + req.params.listId);
             return res.status(401).send(Errors.PROJECT_LISTED_ALREADY_EXISTS);
@@ -163,7 +167,7 @@ exports.removeProjectFromList = async function(req, res) {
             return res.status(404).send(Errors.PROJECT_LISTED_NOT_FOUND);
         }
         await ProjectListed.deleteOne({ _id: projectToDelete._id });
-        return res.status(200).send("");
+        return res.status(204).send("");
     } catch (err) {
         console.log("List->removeProjectFromList: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -183,7 +187,7 @@ exports.deleteList = async function(req, res) {
             await ProjectListed.deleteOne({ _id: projectListedToDelete._id });
 
         await List.deleteOne({ _id: listId });
-        return res.status(200).send("");
+        return res.status(204).send("");
     } catch (err) {
         console.log("List->deleteList: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -192,15 +196,15 @@ exports.deleteList = async function(req, res) {
 
 exports.leaveList = async function(req, res) {
     try {
-        const member = await ListMember.find({ listId: req.params.listId, userId: req.user.userId });
+        const member = await ListMember.findOne({ listId: req.params.listId, userId: req.user.userId });
         if (member.rights === Role.OWNER) {
             console.log("List->leaveList: User try to leave List \"" + req.params.listId + "\", but he is the OWNER of the list");
-            res.status(401).send(Errors.ROLE_UNAUTHORIZED);
+            return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
         }
         await ListMember.deleteOne({ _id: member._id });
         return res.status(200).send("");
     } catch (err) {
-        console.log("List->leaveList: " + err);
+        console.debug("List->leaveList: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }

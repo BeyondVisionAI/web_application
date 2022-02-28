@@ -57,19 +57,14 @@ describe("User creation failed", () => {
         expect(res.body).toStrictEqual({});
     });
 
-    it ("success", async () => {
-        const res = await req.post('/user/login').send({
-            email: "toto@toto.com",
-            password: "toto1234"
-        });
-        expect(res.status).toBe(200);
-        expect(res.text).toStrictEqual("Success")
-    });
-
-    afterEach(async () => {
-        //Reset the DB content after each test
-        await DBManager.removeAllCollections(mongoose);
-    });
+    // it ("success", async () => {
+    //     const res = await req.post('/user/login').send({
+    //         email: "toto@toto.com",
+    //         password: "toto1234"
+    //     });
+    //     expect(res.status).toBe(200);
+    //     expect(res.text).toStrictEqual("Success")
+    // });
 });
 
 afterEach(async () => {

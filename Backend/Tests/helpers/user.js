@@ -21,3 +21,8 @@ exports.registerAndLoginUser = async function(request, firstName, lastName, emai
     const res = await exports.loginUser(request, email, password);
     return res;
 }
+
+exports.getInformationsOnUser = async function(request, cookies) {
+    const res = await request.get("/user/me").set("Cookie", cookies);
+    return res;
+}
