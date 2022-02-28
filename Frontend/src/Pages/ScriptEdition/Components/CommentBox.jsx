@@ -9,9 +9,9 @@ const CommentBox = ({comments}) => {
         setNewComment(value);
     }
 
-    const commentList = comments.map((comment) => {
+    const commentList = comments.map((comment, index) => {
         return (
-            <li className="flex">
+            <li className="flex" key={index}>
                 <div className="p-3 w-full h-auto
                 my-1
                 rounded-md border border-solid border-blue-800
@@ -40,26 +40,29 @@ const CommentBox = ({comments}) => {
     const postComment = async function (e) {
         e.preventDefault();
         console.log("New comment : " + newComment);
-        try {
-            // first option
-            let jsonObj = {projectId: "something", date: new Date.now(), comment: newComment};
-            let commentResponse = await axios.post(`${process.env.REACT_APP_API_URL}/comment`, jsonObj);
+        // try {
+        //     let jsonObj = {projectId: "something", date: Date.now(), comment: newComment};
+        //     let commentResponse = await axios.post(`${process.env.REACT_APP_API_URL}/comment`, jsonObj);
 
-            console.log(commentResponse);
-        } catch (e) {
-            console.error(e);
-        }
+        //     console.log(commentResponse);
+        // } catch (e) {
+        //     console.error(e);
+        // }
+        setNewComment("");
     }
 
     return (
         <form onSubmit={postComment}>
             <ul className="w-full h-full list-none m-auto flex flex-col flex-nowrap pl-1">{commentList}</ul>
-            <input type="text" placeholder="Écrivez votre nouveau commentaire"
-                onChange={e => setNewComment(e.target.value)}
-                className="p-3 w-full h-auto leading-7 text-l my-1
-                rounded-md border border-solid border-blue-800
-                bg-gray-200 resize-none
-                focus:text-black focus:border-blue-800 focus:outline-none" />
+            <div className="w-full h-auto pl-1">
+                <input type="text" placeholder="Écrivez votre nouveau commentaire"
+                    onChange={e => setNewComment(e.target.value)}
+                    value={newComment}
+                    className="p-3 w-full h-auto leading-7 text-l my-1
+                    rounded-md border border-solid border-blue-800
+                    bg-gray-200 resize-none
+                    focus:text-black focus:border-blue-800 focus:outline-none" />
+            </div>
         </form>
     )
 }

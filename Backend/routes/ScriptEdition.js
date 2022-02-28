@@ -1,8 +1,14 @@
 module.exports = function(app) {
     // const scriptEdition = require("../Controllers/ScriptEdition/ScriptEdition.js");
     const replica =  require("../Controllers/ScriptEdition/Replica.js")
+    const replicaComments = require("../Controllers/ScriptEdition/ReplicaComments");
     const authMiddleware = require('../Controllers/User/authMiddleware');
     const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
+
+    /*
+    ** Replicas Routes
+    */
+
 
     app.get("/projects/:projectId/replicas",
         authMiddleware.authenticateUser,
@@ -28,4 +34,28 @@ module.exports = function(app) {
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightWrite,
         replica.deleteReplica);
+
+    /*
+    ** Replica Comments Routes
+    */
+
+    app.get("/projects/:projectId/replicas/:replicaId/comments",
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        replicaComments.getReplicaComments);
+
+    app.get("/projects/:projectId/replicas/:replicaId/comments/:commentId",
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        replicaComments.getReplicaComment);
+    
+    app.post("/projects/:projectId/replicas/:replicaId/comments",
+        authMiddleware.authenticateUser,
+        collabMiddleware.hasRightWrite,
+        replicaComments.postComment);
+    
+    app.delete("/projects/:projectId/replicas/:replicaId/comments/:commentId",
+        authMiddleware.authenticateUser,
+        collabMiddleware.hasRightOwner,
+        replicaComments.deleteComment);
 }

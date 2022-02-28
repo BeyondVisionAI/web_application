@@ -41,6 +41,9 @@ const Errors = {
 
     //Replica : 7
     REPLICA_NOT_FOUND: "REPLICA_NOT_FOUND",
+
+    //ReplicaComment : 
+    REPLICACOMMENT_NOT_FOUND: "REPLICACOMMENT_NOT_FOUND",
 };
 
 exports.Errors = Errors;

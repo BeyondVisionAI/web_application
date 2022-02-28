@@ -1,11 +1,11 @@
-const { Project } = require("../../Models/Project");
 const { Errors } = require("../../Models/Errors.js");
-const { Replica } = require("../../Models/Replica");
+const { Replica } = require("../../Models/ScriptEdition/Replica");
+const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
 
 
 exports.getProjectReplicas = async function(req, res) {
     try {
-        var script = await Replica.find({projectId: req.params.projectId});
+        var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
         res.status(200).send(script);
     } catch (err) {
         console.log("Replica->getProjectReplicas : " + err);
@@ -53,7 +53,6 @@ exports.createReplica = async function(req, res) {
 exports.updateReplica = async function(req, res) {
     try {
         let replica = await Replica.findById(req.params.replicaId);
-        // does this ^^^ works as well as the Project.findById? I never define a replica by its own ID
         let hasChanged = false;
 
         if (req.body.content && req.body.content != replica.content) {
@@ -91,8 +90,10 @@ exports.deleteReplica = async function(req, res) {
         if (!replicaToDelete)
             return res.status(404).send(Errors.REPLICA_NOT_FOUND);
         var isDeleted = await replicaToDelete.deleteOne();
+        const commentsToDelete = await ReplicaComment.find({replicaId: req.params.replicaId});
+        for (var comment of commentsToDelete)
+            await comment.deleteOne();
 
-        // if (!isDeleted) // check if a replica is correctly created
         return res.status(200).send("Success");
     } catch (err) {
         console.log("Replica->deleteReplica : " + err);
