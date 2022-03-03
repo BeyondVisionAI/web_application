@@ -10,7 +10,7 @@ beforeAll(() => {
 //Group of tests
 describe('Check if order is good', () => {
     it('Should be toto', () => {
-        expect(toto).toBe("toto");
+        expect(toto).toBe("tata");
     });
     it('Should be tata', () => {
         expect(toto).toBe("tata");
