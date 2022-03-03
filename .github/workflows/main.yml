@@ -10,6 +10,6 @@ jobs:
       - name: Build the stack
         run: docker-compose -f ./docker-compose-test.yaml up --build
       - name: Check containers
-        run: docker ps
+        run: docker ps -a
       - name: Check the exit code
         run: docker inspect web_application_tests --format='{{.State.ExitCode}}'
