@@ -9,5 +9,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose -f docker-compose-dev.yaml up --build -d
+      - name: Check containers
+        run: docker ps -a
       - name: Check the exit code
         run: docker inspect web_application_tests --format='{{.State.ExitCode}}'
