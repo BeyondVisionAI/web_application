@@ -7,7 +7,9 @@ jobs:
     steps:
       - name: Setup de l'environnement de test
         uses: actions/checkout@v2
-      - name: Check running containers
-        run: docker ps
       - name: Build the stack
         run: docker-compose -f docker-compose-test.yaml up --build -d
+      - name: Check containers
+        run: docker ps -a
+      - name: Check the exit code
+        run: docker inspect web_application_tests --format='{{.State.ExitCode}}'
