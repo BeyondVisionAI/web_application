@@ -14,5 +14,8 @@ jobs:
       - name: Get container ID
         run: echo '::set-output name=CONTAINER_ID::$(docker ps -aqf "name=web_application_tests")'
         id: get-container-id
-      - name: Check the exit code
-        run: return $(docker inspect ${{ steps.get-container-id.outputs.CONTAINER_ID }} --format='{{.State.ExitCode}}')
+      - name: Get the exit code
+        run: echo '::set-output name=EXIT_CODE::$(docker inspect ${{ steps.get-container-id.outputs.CONTAINER_ID }} --format="{{.State.ExitCode}}")'
+        id: get-exit-code
+      - name: Exit Github action with exit code
+        run: return ${{ steps.get-exit-code.outputs.EXIT_CODE }}
