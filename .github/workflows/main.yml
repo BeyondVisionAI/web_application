@@ -15,4 +15,4 @@ jobs:
         run: echo '::set-output name=CONTAINER_ID::$(docker ps -aqf "name=web_application_tests")'
         id: get-container-id
       - name: Check the exit code
-        run: docker inspect ${{ steps.get-container-id.outputs.CONTAINER_ID }} --format='{{.State.ExitCode}}'
+        run: return $(docker inspect ${{ steps.get-container-id.outputs.CONTAINER_ID }} --format='{{.State.ExitCode}}')
