@@ -41,7 +41,7 @@ exports.addNewListMember = async function(req, res) {
         await newMemberList.save();
         return res.status(200).send(newMemberList);
     } catch (err) {
-        console.debug("ListMember->addNewListMember: " + err);
+        console.log("ListMember->addNewListMember: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
@@ -77,7 +77,7 @@ exports.updateRoleOfMember = async function(req, res) {
         await targetMember.save();
         return res.status(200).send(targetMember);
     } catch (err) {
-        console.debug("ListMember->updateRoleOfMember: " + err);
+        console.log("ListMember->updateRoleOfMember: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }

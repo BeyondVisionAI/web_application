@@ -204,7 +204,7 @@ exports.leaveList = async function(req, res) {
         await ListMember.deleteOne({ _id: member._id });
         return res.status(200).send("");
     } catch (err) {
-        console.debug("List->leaveList: " + err);
+        console.log("List->leaveList: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }

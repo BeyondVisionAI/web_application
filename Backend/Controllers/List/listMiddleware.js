@@ -27,7 +27,7 @@ exports.isMember = async function(req, res, next) {
         }
         next();
     } catch (err) {
-        console.debug("ListMiddleware/isMember --> Error catched: \n" + err);
+        console.log("ListMiddleware/isMember --> Error catched: \n" + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
