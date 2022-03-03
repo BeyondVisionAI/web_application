@@ -18,4 +18,4 @@ jobs:
         run: echo '::set-output name=EXIT_CODE::$(docker inspect ${{ steps.get-container-id.outputs.CONTAINER_ID }} --format="{{.State.ExitCode}}")'
         id: get-exit-code
       - name: Exit Github action with exit code
-        run: return ${{ steps.get-exit-code.outputs.EXIT_CODE }}
+        run: exit ${{ steps.get-exit-code.outputs.EXIT_CODE }}
