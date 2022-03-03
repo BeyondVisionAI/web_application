@@ -7,8 +7,6 @@ const databaseName = `${process.env.TESTS_DB_LIST}`;
 const Helper = require("../general/helper");
 
 const { Errors } = require("../../Models/Errors");
-const { User } = require("../../Models/User");
-const { Project } = require("../../Models/Project");
 const { List } = require("../../Models/list/List");
 const { ListMember } = require("../../Models/list/ListMember");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
@@ -829,7 +827,7 @@ describe("Remove member from List", () => {
         expect(res.text).toBe(Errors.LIST_MEMBER_CANT_BE_CHANGED_YOURS);
     });
 
-    it("Shoulf fail because target is the OWNER of the list", async () => {
+    it("Should fail because target is the OWNER of the list", async () => {
         const res = await request.delete(`/lists/${list._id}/members/${userA.userId}`).set("Cookie", userB.cookies);
         expect(res.status).toBe(401);
         expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
