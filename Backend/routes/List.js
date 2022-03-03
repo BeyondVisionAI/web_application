@@ -26,12 +26,12 @@ module.exports = function(app) {
 
     app.post('/lists/:listId/projects/:projectId',
         authMiddleware.authenticateUser,
-        listMiddleware.hasRightAdmin,
+        listMiddleware.hasRightWrite,
         List.addProjectToList);
 
     app.delete('/lists/:listId/projects/:projectId',
         authMiddleware.authenticateUser,
-        listMiddleware.hasRightAdmin,
+        listMiddleware.hasRightWrite,
         List.removeProjectFromList);
 
     app.delete('/lists/:listId',
