@@ -11,5 +11,8 @@ jobs:
         run: docker-compose -f ./docker-compose-test.yaml up --build
       - name: Check containers
         run: docker ps -a
+      - name: Get container ID
+        run: echo '::set-output name=CONTAINER_ID::docker ps -aqf "name=web_application_tests"'
+        id: get-container-id
       - name: Check the exit code
-        run: docker inspect web_application_tests --format='{{.State.ExitCode}}'
+        run: docker inspect ${{ steps.get-container-id.outputs.CONTAINER_ID }} --format='{{.State.ExitCode}}'
