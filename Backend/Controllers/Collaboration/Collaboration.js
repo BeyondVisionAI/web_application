@@ -1,6 +1,7 @@
 const { Collaboration } = require("../../Models/Collaboration");
 const { Errors } = require("../../Models/Errors");
 const { Role, isValidRole } = require("../../Models/Roles");
+const { User } = require("../../Models/User");
 
 exports.getCollaborationBetweenUserAndProjectDB = async function(userId, projectId) {
     var collab = await Collaboration.findOne({ userId: userId, projectId: projectId });
@@ -50,23 +51,28 @@ exports.getCollaborations = async function(req, res) {
 
 exports.createCollaboration = async function(req, res) {
     try {
-        if (!req.body.userId || !req.body.titleOfCollaboration || !req.body.role || !isValidRole(req.body.role)) {
+        if (!req.body.email || !req.body.titleOfCollaboration || !req.body.rights || !isValidRole(req.body.rights)) {
             console.log("Collaboration->createCollaboration: Req.body not complete :\n" + req.body);
-            return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
+            return res.status(401).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-        if (req.body.role === Role.OWNER) {
+        if (req.body.rights === Role.OWNER) {
             console.log("Collaboration->createCollaboration: Can't give Role OWNER at creation");
             return res.status(400).send(Errors.CANT_GIVE_OWNER_AT_CREATION);
         }
 
-        //Check if there is a collaboration already existing
-        const oldCollab = await Collaboration.findOne({ userId: req.body.userId, projectId: req.params.projectId });
+        const targetUser = await User.findOne({ email: req.body.email });
+        if (!targetUser) {
+            console.log("Collaboration->createCollaboration: Target email isn't on the database");
+            return res.status(404).send(Errors.EMAIL_UNKNOWN);
+        }
+
+        const oldCollab = await Collaboration.findOne({ userId: targetUser._id, projectId: req.params.projectId });
         if (oldCollab) {
-            console.log("Collaboration->createCollaboration: This user " + req.body.userId + " is already linked to the project " + req.params.projectId);
+            console.log("Collaboration->createCollaboration: This user " + targetUser._id + " is already linked to the project " + req.params.projectId);
             return res.status(401).send(Errors.COLLABORATION_ALREADY_EXISTS);
         }
 
-        const newCollab = await module.exports.createCollaborationDB(req.body.userId, req.params.projectId, req.body.titleOfCollaboration, req.body.role);
+        const newCollab = await module.exports.createCollaborationDB(targetUser._id, req.params.projectId, req.body.titleOfCollaboration, req.body.rights);
         return res.status(200).send(newCollab);
     } catch (err) {
         console.log("Collaboration->createCollaboration: " + err);
@@ -76,8 +82,8 @@ exports.createCollaboration = async function(req, res) {
 
 exports.updateCollaboration = async function(req, res) {
     try {
-        const userCollab = await module.exports.getCollaborationBetweenUserAndProjectDB(req.user.userId, req.params.projectId);
-        const targetCollab = await Collaboration.findById(req.params.collabId);
+        var userCollab = await module.exports.getCollaborationBetweenUserAndProjectDB(req.user.userId, req.params.projectId);
+        var targetCollab = await Collaboration.findById(req.params.collabId);
 
         //Safety checks
         if (!targetCollab) {
@@ -101,8 +107,9 @@ exports.updateCollaboration = async function(req, res) {
         if (req.body.titleOfCollaboration && req.body.titleOfCollaboration !== targetCollab.titleOfCollaboration) {
             targetCollab.titleOfCollaboration = req.body.titleOfCollaboration;
         }
-        if (req.body.role && req.body.role !== targetCollab.rights && isValidRole(req.body.role))
+        if (req.body.rights && req.body.rights !== targetCollab.rights && isValidRole(req.body.rights)) {
             targetCollab = await updateRole(req, res, targetCollab, userCollab);
+        }
         await targetCollab.save();
         return res.status(200).send(targetCollab);
     } catch (err) {
@@ -113,15 +120,16 @@ exports.updateCollaboration = async function(req, res) {
 
 updateRole = async function(req, res, targetCollab, userCollab) {
     try {
-        if (userCollab.rights === Role.ADMIN && req.body.role === Role.OWNER) {
+        if (userCollab.rights === Role.ADMIN && req.body.rights === Role.OWNER) {
             console.log("Collaboration->updateRole: An ADMIN can't promote to OWNER");
             return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
         }
-        if (userCollab.rights === Role.OWNER && req.body.role === Role.OWNER) {
+        if (userCollab.rights === Role.OWNER && req.body.rights === Role.OWNER) {
             userCollab.rights = Role.ADMIN;
             await userCollab.save();
         }
-        targetCollab.rights = req.body.role;
+        targetCollab.rights = req.body.rights;
+        targetCollab = await targetCollab.save();
         return targetCollab;
     } catch (err) {
         console.log("Collaboration->updateRole: " + err);
