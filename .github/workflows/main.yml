@@ -1,5 +1,5 @@
 
-name: docker-compose-actions-workflow
+name: docker-compose-test-workflow
 on: push
 jobs:
   test:
@@ -8,8 +8,14 @@ jobs:
       - name: Setup de l'environnement de test
         uses: actions/checkout@v2
       - name: Build the stack
-        run: docker-compose -f docker-compose-dev.yaml up --build -d
+        run: docker-compose -f ./docker-compose-test.yaml up --build
       - name: Check containers
         run: docker ps -a
-      - name: Check the exit code
-        run: docker inspect web_application_tests --format='{{.State.ExitCode}}'
+      - name: Get container ID
+        run: echo '::set-output name=CONTAINER_ID::$(docker ps -aqf "name=web_application_tests")'
+        id: get-container-id
+      - name: Get the exit code
+        run: echo '::set-output name=EXIT_CODE::$(docker inspect ${{ steps.get-container-id.outputs.CONTAINER_ID }} --format="{{.State.ExitCode}}")'
+        id: get-exit-code
+      - name: Exit Github action with exit code
+        run: exit ${{ steps.get-exit-code.outputs.EXIT_CODE }}
