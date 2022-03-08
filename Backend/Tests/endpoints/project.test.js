@@ -562,4 +562,274 @@ describe("Update a collaboration", () => {
             rights: Role.WRITE
         }));
     });
+
+    it("Should fail because user isn't logged in", async () => {
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${collab._id}`)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.USER_NOT_LOGIN);
+    });
+
+    it("Should fail because projectId doesn't exist", async () => {
+        const res = await request.patch(`/projects/${idNotExisting}/collaborations/${collab._id}`).set("Cookie", userA.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(404);
+        expect(res.text).toBe(Errors.PROJECT_NOT_FOUND);
+    });
+
+    it("Should fail because user isn't on the project", async () => {
+        const res = await request.patch(`/projects/${projectB._id}/collaborations/${collab._id}`).set("Cookie", userA.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.PROJECT_NOT_YOURS);
+    });
+
+    it("Should fail because collab isn't on the project", async () => {
+        const res = await request.patch(`/projects/${projectC._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.COLLABORATION_NOT_LINKED_TO_PROJECT);
+    });
+
+    it("Should success because user is ADMIN on the project", async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userC.userId, Role.ADMIN);
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(200);
+    });
+
+    it("Should fail because user is WRITE on the project", async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userC.userId, Role.WRITE);
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+
+    it("Should fail because user is READ on the project", async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userC.userId, Role.READ);
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+
+    it("Should fail because collab doesn't exist", async () => {
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${idNotExisting}`).set("Cookie", userA.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(404);
+        expect(res.text).toBe(Errors.COLLABORATION_NOT_FOUND);
+    });
+
+    it("Should fail because user can't change his own collaboration status", async () => {
+        const targetCollab = await Collaboration.findOne({projectId: projectA._id, userId: userA.userId});
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${targetCollab._id}`).set("Cookie", userA.cookies)
+        .send({
+            rights: Role.WRITE,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.COLLABORATION_CANT_BE_CHANGED_YOURS);
+    });
+
+    it("Should fail because the target is the OWNER of the project", async () => {
+        const targetCollab = await Collaboration.findOne({projectId: projectA._id, userId: userA.userId});
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${targetCollab._id}`).set("Cookie", userB.cookies)
+        .send({
+            rights: Role.ADMIN,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+
+    it("Should fail because ADMIN is trying to give OWNER status", async () => {
+        const targetCollab = await Helper.Project.createCollaborationDB(projectA._id, userC.userId, Role.ADMIN);
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${targetCollab._id}`).set("Cookie", userB.cookies)
+        .send({
+            rights: Role.OWNER,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+
+    it("Should successfully give OWNER Role to another person", async () => {
+        const res = await request.patch(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userA.cookies)
+        .send({
+            rights: Role.OWNER,
+            titleOfCollaboration: "new title"
+        });
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual(expect.objectContaining({
+            userId: userB.userId,
+            titleOfCollaboration: "new title",
+            rights: Role.OWNER
+        }));
+
+        const dbCheck = await Collaboration.findOne({ projectId: projectA._id, userId: userB.userId });
+        expect(dbCheck).toEqual(expect.objectContaining({
+            userId: mongoose.Types.ObjectId(userB.userId),
+            titleOfCollaboration: "new title",
+            rights: Role.OWNER
+        }));
+
+        const dbCheck2 = await Collaboration.findOne({ projectId: projectA._id, userId: userA.userId });
+        expect(dbCheck2).toEqual(expect.objectContaining({
+            userId: mongoose.Types.ObjectId(userA.userId),
+            titleOfCollaboration: "Owner of Project",
+            rights: Role.ADMIN
+        }));
+    });
+});
+
+describe("Delete a collaboration", () => {
+    var collab;
+    beforeEach(async () => {
+        collab = await Helper.Project.createCollaborationDB(projectA._id, userB.userId, Role.ADMIN);
+    });
+
+    it("Should delete the collaboration", async () => {
+        var dbCheck = await Collaboration.find({projectId: projectA._id});
+        expect(dbCheck.length).toBe(2);
+
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(204);
+
+        dbCheck = await Collaboration.find({projectId: projectA._id});
+        expect(dbCheck.length).toBe(1);
+    });
+
+    it("Should fail because user isn't logged in", async () => {
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${collab._id}`);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.USER_NOT_LOGIN);
+    });
+
+    it("Should fail because project doesn't exist", async () => {
+        const res = await request.delete(`/projects/${idNotExisting}/collaborations/${collab._id}`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(404);
+        expect(res.text).toBe(Errors.PROJECT_NOT_FOUND);
+    });
+
+    it("Should fail because project not yours", async () => {
+        const res = await request.delete(`/projects/${projectB._id}/collaborations/${collab._id}`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.PROJECT_NOT_YOURS);
+    });
+
+    it("Should fail because collaboration doesn't exist", async () => {
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${idNotExisting}`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(404);
+        expect(res.text).toBe(Errors.COLLABORATION_NOT_FOUND);
+    });
+
+    it("Should fail because collaboration isn't linked to project", async () => {
+        const res = await request.delete(`/projects/${projectC._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.COLLABORATION_NOT_LINKED_TO_PROJECT);
+    });
+
+    it("Should fail because user ADMIN is trying to delete its own collaboration", async () => {
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userB.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.COLLABORATION_CANT_BE_CHANGED_YOURS);
+    });
+
+    it("Should fail because user OWNER is trying to delete its own collaboration", async () => {
+        const targetCollab = await Collaboration.findOne({projectId: projectA._id, userId: userA.userId});
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${targetCollab._id}`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.COLLABORATION_CANT_BE_CHANGED_YOURS);
+    });
+
+    it("Should success because user is ADMIN on the project", async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userC.userId, Role.ADMIN);
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies);
+        expect(res.status).toBe(204);
+    });
+
+    it("Should fail because user is WRITE on the project", async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userC.userId, Role.WRITE);
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+
+    it("Should fail because user is READ on the project", async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userC.userId, Role.READ);
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${collab._id}`).set("Cookie", userC.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+
+    it("Should fail because user is trying to remove OWNER of project", async () => {
+        const targetCollab = await Collaboration.findOne({projectId: projectA._id, userId: userA.userId});
+        const res = await request.delete(`/projects/${projectA._id}/collaborations/${targetCollab._id}`).set("Cookie", userB.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+});
+
+describe("Leave project", () => {
+    beforeEach(async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userB.userId, Role.ADMIN);
+    });
+
+    it("Should successfully leave project(ADMIN)", async () => {
+        const res = await request.post(`/projects/${projectA._id}/leave`).set("Cookie", userB.cookies);
+        expect(res.status).toBe(200);
+
+        const dbCheck = await Collaboration.find({projectId: projectA._id});
+        expect(dbCheck.length).toBe(1);
+        expect(dbCheck[0].userId).toEqual(mongoose.Types.ObjectId(userA.userId));
+    });
+
+    it("Should fail leave project(OWNER)", async () => {
+        const res = await request.post(`/projects/${projectA._id}/leave`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.ROLE_UNAUTHORIZED);
+    });
+
+    it("Should fail because user isn't logged in", async () => {
+        const res = await request.post(`/projects/${projectA._id}/leave`);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.USER_NOT_LOGIN);
+    });
+
+    it("Should fail because project doesn't exist", async () => {
+        const res = await request.post(`/projects/${idNotExisting}/leave`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(404);
+        expect(res.text).toBe(Errors.PROJECT_NOT_FOUND);
+    });
+
+    it("Should fail because user isn't on this project", async () => {
+        const res = await request.post(`/projects/${projectB._id}/leave`).set("Cookie", userA.cookies);
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.PROJECT_NOT_YOURS);
+    });
 });

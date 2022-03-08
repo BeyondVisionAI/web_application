@@ -108,31 +108,20 @@ exports.updateCollaboration = async function(req, res) {
             targetCollab.titleOfCollaboration = req.body.titleOfCollaboration;
         }
         if (req.body.rights && req.body.rights !== targetCollab.rights && isValidRole(req.body.rights)) {
-            targetCollab = await updateRole(req, res, targetCollab, userCollab);
+            if (userCollab.rights === Role.ADMIN && req.body.rights === Role.OWNER) {
+                console.log("Collaboration->updateRole: An ADMIN can't promote to OWNER");
+                return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
+            }
+            if (userCollab.rights === Role.OWNER && req.body.rights === Role.OWNER) {
+                userCollab.rights = Role.ADMIN;
+                await userCollab.save();
+            }
+            targetCollab.rights = req.body.rights;
         }
         await targetCollab.save();
         return res.status(200).send(targetCollab);
     } catch (err) {
         console.log("Collaboration->updateCollaboration: " + err);
-        return res.status(500).send(Errors.INTERNAL_ERROR);
-    }
-}
-
-updateRole = async function(req, res, targetCollab, userCollab) {
-    try {
-        if (userCollab.rights === Role.ADMIN && req.body.rights === Role.OWNER) {
-            console.log("Collaboration->updateRole: An ADMIN can't promote to OWNER");
-            return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
-        }
-        if (userCollab.rights === Role.OWNER && req.body.rights === Role.OWNER) {
-            userCollab.rights = Role.ADMIN;
-            await userCollab.save();
-        }
-        targetCollab.rights = req.body.rights;
-        targetCollab = await targetCollab.save();
-        return targetCollab;
-    } catch (err) {
-        console.log("Collaboration->updateRole: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
@@ -155,14 +144,14 @@ exports.deleteCollaboration = async function(req, res) {
             return res.status(401).send(Errors.COLLABORATION_CANT_BE_CHANGED_YOURS);
         }
         if (targetCollab.rights === Role.OWNER) {
-            console.log("Collaboration->deleteCollaboration: An ADMIN can't change the OWNER's role");
+            console.log("Collaboration->deleteCollaboration: An ADMIN can't remove the OWNER from the project");
             return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
         }
 
         await Collaboration.deleteOne({ _id: targetCollab._id });
         return res.status(204).send("");
     } catch (err) {
-        console.log("Collaboration->deleteCollaboration: " + err);
+        console.debug("Collaboration->deleteCollaboration: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
@@ -176,7 +165,7 @@ exports.leaveProject = async function(req, res) {
             return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
         }
         await Collaboration.deleteOne({ _id: collab._id });
-        return res.status(201).send("");
+        return res.status(200).send("");
     } catch (err) {
         console.log("Collaboration->leaveProject: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
