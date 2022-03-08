@@ -42,7 +42,7 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/Tests/exclude"
     ],
-    "verbose": false,
+    "verbose": true,
     "setupFilesAfterEnv": ["<rootDir>/Tests/general/setup.js"]
   }
 }
