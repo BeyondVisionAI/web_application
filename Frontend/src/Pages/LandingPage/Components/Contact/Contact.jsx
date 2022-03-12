@@ -2,11 +2,19 @@ import React, { useState } from 'react';
 import "./Contact.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 const Contact = () => {
     const [name, setName] = useState(null)
     const [email, setEmail] = useState(null)
-    const [message, setMessage] = useState(null)
+    const [message, setMessage] = useState("")
+
+    async function sendEmail() {
+        if (!name || !email || !message) {
+            toast.error("Missing field to send message")
+        }
+    }
+
     return (
         <div href="contact" id="contact" className="contact-container">
             <img className="contact-enveloppe" src="/Enveloppe.svg" alt="enveloppe drawing" />
@@ -22,7 +30,7 @@ const Contact = () => {
             </div>
             <label>Your message *</label>
             <textarea rows={8} cols={115} value={message} onChange={(event) => setMessage(event.target.value)}/>
-            <div className="submit-button">
+            <div onClick={sendEmail} className="submit-button">
                 <p>Send</p>
                 <FontAwesomeIcon icon={faPaperPlane} />
             </div>
