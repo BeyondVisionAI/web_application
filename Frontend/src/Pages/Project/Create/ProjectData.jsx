@@ -38,9 +38,7 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
                 </div>
                 <UploadFile setData={ setImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>
             </div>
-            <div class="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded">
-                { thumbnail ? <img class="object-cover" src={ thumbnail } alt="Thumbnail"></img> : null }
-            </div>
+            { thumbnail ? <img class="object-scale-down w-1/3 h-1/2" src={ thumbnail } alt="Thumbnail"></img> : <div class="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded"></div> }
             <div className="absolute bottom-0 right-0 p-6">
                 <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"

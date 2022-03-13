@@ -1,12 +1,14 @@
-const { Project } = require("../../Models/Project");
+const { Project, enumStatus, enumActualStep } = require("../../Models/Project");
 const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 
-exports.getProjectDB = async function(projectId) {
+exports.getProjectDB = async function (projectId) {
     try {
         var project = await Project.findById(projectId);
+        console.log(projectId);
+        console.log(project);
         return project;
     } catch (err) {
         console.log("Project->getProjectDB: " + err);
@@ -14,7 +16,7 @@ exports.getProjectDB = async function(projectId) {
     }
 }
 
-exports.getAllProjectsDB = async function(userId) {
+exports.getAllProjectsDB = async function (userId) {
     try {
         const collabs = await Collaboration.getAllCollaborationsDB(userId);
         var projects = [];
@@ -38,7 +40,7 @@ exports.getAllProjectsDB = async function(userId) {
  * @param { Response } res
  * @returns { [{ _id, name, status, videoId, script, creator, assignedAudioDescriptiors }] }
  */
-exports.getProject = async function(req, res) {
+exports.getProject = async function (req, res) {
     try {
         let project = await Project.findById(req.params.projectId);
 
@@ -57,7 +59,7 @@ exports.getProject = async function(req, res) {
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
-exports.createProject = async function(req, res) {
+exports.createProject = async function (req, res) {
     try {
         if (!req.body.name || !req.body.description)
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
@@ -85,7 +87,7 @@ exports.createProject = async function(req, res) {
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
-exports.deleteProject = async function(req, res) {
+exports.deleteProject = async function (req, res) {
     try {
         const projectsListedToDelete = await ProjectListed.find({ projectId: req.params.projectId });
         for (var projectListed of projectsListedToDelete)
@@ -104,7 +106,7 @@ exports.deleteProject = async function(req, res) {
     }
 }
 
-exports.updateProject = async function(req, res) {
+exports.updateProject = async function (req, res) {
     try {
         // Question : Pour quoi pas utiliser Project.updateOne ?
 
@@ -134,7 +136,7 @@ exports.updateProject = async function(req, res) {
     }
 }
 
-exports.getAllProjects = async function(req, res) {
+exports.getAllProjects = async function (req, res) {
     try {
         var projects = await module.exports.getAllProjectsDB(req.user.userId);
         if (!projects) {
@@ -144,5 +146,42 @@ exports.getAllProjects = async function(req, res) {
     } catch (err) {
         console.log("Project->getAllProject: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+}
+
+/**
+ * set the Status of a project from the ServerAPI
+ * @param { Request } req { params: projectId, body: { statusType, stepType, percentage (no required) } }
+ * @param { Response } res
+ * @returns { response to send }
+ */
+exports.setStatus = async function (req, res) {
+    try {
+        if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        var project = await Project.findById(req.params.projectId);
+
+        if (!project)
+            return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
+        else if (!Object.values(enumStatus).includes(req.body.statusType) || !Object.values(enumActualStep).includes(req.body.stepType))
+            return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+
+        project.status = req.body.statusType;
+        project.ActualStep = req.body.stepType;
+
+        if (req.body.progress && req.body.progress >= 0 && progrreq.body.progressess <= 100)
+            project.progress = req.body.progress;
+        else if (req.body.statusType === 'Stop' || req.body.statusType === 'Error')
+            project.progress = 0;
+        else if (req.body.statusType === 'InProgress')
+            project.progress = 50;
+        else if (req.body.statusType === 'Done')
+            project.progress = 100;
+
+        await project.save();
+        return (res.status(200).send("The status has been changed"));
+    } catch (err) {
+        console.log("Project->setStatus: " + err);
+        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
 }

@@ -1,7 +1,7 @@
 const { Project } = require("../../Models/Project");
 const { Errors } = require("../../Models/Errors.js");
 
-exports.getProjectScript = async function(req, res) {
+exports.getProjectScript = async function (req, res) {
     try {
         var project = await Project.findById(req.params.projectId);
         if (!project)
