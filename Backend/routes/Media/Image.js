@@ -1,5 +1,5 @@
 module.exports = function(app) {
-    const image = require('../../Controllers/Media/Image/Image.js');
+    const image = require('../../Controllers/Media/Image/Image');
     const authMiddleware = require('../../Controllers/User/authMiddleware');
 
     app.post('/image',

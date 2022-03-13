@@ -14,6 +14,7 @@ import EmailVerificatn from './Pages/EmailVerification/EmailVerification';
 import Register from './Pages/Register/Register';
 import AskForPasswordChange from './Pages/AskForPasswordChange/AskForPasswordChange';
 import ResetPassword from './Pages/ResetPassword/ResetPassword';
+import ManageProject from './Pages/Project/Manage/ManageProject';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <Route exact path="/" component={LandingPage} />
               <Route exact path="/project" component={Project} />
+              <Route exact path="/project/:id" component={ManageProject} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/askForPasswordChange" component={AskForPasswordChange} />

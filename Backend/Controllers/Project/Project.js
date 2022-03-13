@@ -66,9 +66,9 @@ exports.createProject = async function(req, res) {
             name: req.body.name,
             status: 'Stop',
             thumbnailId: req.body.thumbnailId,
-            description: req.body.description,
             videoId: req.body.videoId,
-            script: req.body.script,
+            description: req.body.description,
+            script: req.body.script
         });
         await newProject.save();
         // await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
@@ -117,6 +117,10 @@ exports.updateProject = async function(req, res) {
         }
         if (req.body.description && req.body.description != project.description) {
             project.description = req.body.description;
+            hasChanged = true;
+        }
+        if (req.body.videoId && req.body.videoId != project.videoId) {
+            project.videoId = req.body.videoId;
             hasChanged = true;
         }
         if (hasChanged === true) {

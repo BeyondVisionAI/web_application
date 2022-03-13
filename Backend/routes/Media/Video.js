@@ -1,5 +1,5 @@
 module.exports = function(app) {
-    const video = require('../../Controllers/Media/Video/Video.js')
+    const video = require('../../Controllers/Media/Video/Video')
     const authMiddleware = require('../../Controllers/User/authMiddleware');
 
     app.post('/video',

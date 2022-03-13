@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^6.4.3",
+    "@craco/craco": "^7.0.0-alpha.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.12",
     "aos": "^2.3.4",
     "autoprefixer": "^9.8.6",
+    "aws-sdk": "^2.1092.0",
     "axios": "^0.21.1",
+    "node-polyfill-webpack-plugin": "^1.1.4",
     "postcss": "^8",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -44,6 +46,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {}
+  }
 }

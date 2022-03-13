@@ -5,6 +5,13 @@ const video = new Schema({
     desc: String,
     ETag: String,
     url: String,
+    status: {
+        type: String,
+        enum: ['Error', 'Posted', 'InProgress'],
+        default: 'Error',
+        required: true
+    },
+    progression: Number
 });
 
 exports.Video = model("Video", video);

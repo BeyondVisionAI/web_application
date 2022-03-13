@@ -18,7 +18,7 @@ export default function Payment({ prevStep, handleChange, values, postData }) {
                     type="text"
                     placeholder="Title"
                     defaultValue={ values.title }
-                    onChange={(e) => handleChange('title', e.target.value)}
+                    onChange={(e) => handleChange('name', e.target.value)}
                 />
             </label>
             <div className="absolute bottom-0 right-0 p-6">

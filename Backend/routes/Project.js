@@ -4,8 +4,8 @@ module.exports = function(app) {
     const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
 
     app.get('/projects/:projectId',
-        authMiddleware.authenticateUser,
-        collabMiddleware.isCollab,
+        // authMiddleware.authenticateUser,
+        // collabMiddleware.isCollab,
         Project.getProject);
 
     app.post('/projects',

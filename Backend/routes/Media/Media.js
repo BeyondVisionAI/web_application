@@ -1,6 +1,6 @@
 module.exports = function(app) {
-    const image = require("./Image.js");
-    const video = require("./Video.js");
+    const image = require("./Image");
+    const video = require("./Video");
 
     image(app);
     video(app);
