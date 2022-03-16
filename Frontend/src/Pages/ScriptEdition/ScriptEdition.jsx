@@ -33,22 +33,59 @@ const tempTLR = [
 
 const ScriptEdition = ( {project, video} ) => {
     const [replicas, setReplicas] = useState([]);
-    const [replicaSelected, setReplicaSelected] = useState(false);
+    const [replicaSelected, setReplicaSelected] = useState(null);
 
-    const fetchProjectDetails = async () => {
-        const res = await axios({
-            method: "GET",
-            url: `${process.env.REACT_APP_API_URL}/projects/${project.projectId}/replicas`,
-            withCredentials: true
-        });
-        setReplicas(Object.values(res.data));
-    }
+    // const fetchProjectDetails = async () => {
+    //     const res = await axios({
+    //         method: "GET",
+    //         url: `${process.env.REACT_APP_API_URL}/projects/${project.projectId}/replicas`,
+    //         withCredentials: true
+    //     });
+    //     console.log(res);
+    //     console.log(res.data);
+    //     setReplicas(Object.values(res.data));
+    //     console.log(replicas);
+    //     console.log(replicas[0]);
+    // }
     
+    const displayData = () => {
+        console.log(replicas);
+        console.log(replicas[0]);
+    }
 
+    const updateReplicaAction = async (selectedId) => {
+        console.log("bjr");
+        setReplicaSelected(selectedId);
+    }
+
+    const getReplicaFromId = (id) => {
+        for (var i = 0; i < replicas.length; i++) {
+            if (replicas[i]._id === id)
+                return replicas[i];
+        }
+        return null;
+    }
+
+    // page loaded, make the call
     useEffect(() => {
+        const fetchProjectDetails = async () => {
+            const res = await axios({
+                method: "GET",
+                url: `${process.env.REACT_APP_API_URL}/projects/${project.projectId}/replicas`,
+                withCredentials: true
+            });
+            let resRep = Object.values(res.data);
+            console.log("res replica : " + resRep);
+            setReplicas(resRep);
+        }
         fetchProjectDetails();
     }, []);
 
+
+    // getReplicas done, or replica update
+    // useEffect(() => {
+
+    // }, [replicas]);
 
     return (
         <>
@@ -61,25 +98,20 @@ const ScriptEdition = ( {project, video} ) => {
                     </div>
 
                     <div id="edit-bloc" className="flex h-4/6">
-                        {/* DETAILS IF REPLICA IS SELECTED */}
-                        {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
-                                <ReplicaDetails replica={tempReplica}/>
-                        </div> */}
-                        {/* DETAILS EMPTY AS NOT REPLICA IS SELECTED */}
-                        {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-lg">
-                            <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
+
+                    <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
+                        {replicaSelected !== null ?
+                            <ReplicaDetails replica={getReplicaFromId(replicaSelected)}/>
+                        :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
                                 <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
                             </div>
-                        </div> */}
+                        }
+                    </div>
 
-                        <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
-                            {replicaSelected == true ?
-                                <ReplicaDetails replica={tempReplica}/>
-                            :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
-                                    <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
-                                </div>
-                            }
-                        </div>
+
+                        {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
+                            {replicas.length > 0 ? <ReplicaDetails replica={replicas[0]}/> : <div></div>}
+                        </div> */}
 
 
                        <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-red-500">
@@ -89,9 +121,10 @@ const ScriptEdition = ( {project, video} ) => {
 
                     <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
                        {/* <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg">Audio Timeline</div> */}
-                       <Timeline className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} onReplicaSelection={/*setReplicaSelected*/(val) => setReplicaSelected(val)} />
+                       <Timeline className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} onReplicaSelection={updateReplicaAction} />
                     </div>
 
+                    <button onClick={displayData}>Click to display</button>
                 </div>
             </div>
         </>

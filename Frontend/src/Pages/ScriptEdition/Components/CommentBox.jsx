@@ -17,7 +17,7 @@ const CommentBox = ({comments}) => {
                 rounded-md border border-solid border-blue-800
                 bg-gray-200">
                     <p className="leading-7 text-l">
-                        {comment}
+                        {comment.content}
                     </p>
                 </div>
             </li>
