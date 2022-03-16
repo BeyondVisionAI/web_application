@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBar from '../../GenericComponents/NavBar/NavBar';
 import ReplicaDetails from './Components/ReplicaDetails';
+import Timeline from './Components/Timeline';
+import axios from 'axios';
 
-const date = new Date(Date.now());
-
-const dateOptions =
-{
-    weekday: 'short', year: 'numeric', month: '2-digit',
-    day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
-};
+// var res = await axios({
+//     method: "GET",
+//     url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/replicas`,
+//     // withCredentials: true
+// });
 
 const tempReplica = {
     content: "This is an example of a replica",
@@ -24,39 +24,73 @@ const tempReplica = {
     lastEditor: "John Doe"
 }
 
+const tempTLR = [
+    {content: "first replica"},
+    {content: "second replica"},
+    {content: "third replica"},
+    {content: "fourth replica"}
+]
+
+const ScriptEdition = ( {project, video} ) => {
+    const [replicas, setReplicas] = useState([]);
+    const [replicaSelected, setReplicaSelected] = useState(false);
+
+    const fetchProjectDetails = async () => {
+        const res = await axios({
+            method: "GET",
+            url: `${process.env.REACT_APP_API_URL}/projects/${project.projectId}/replicas`,
+            withCredentials: true
+        });
+        setReplicas(Object.values(res.data));
+    }
+    
+
+    useEffect(() => {
+        fetchProjectDetails();
+    }, []);
 
 
-const ScriptEdition = ( {title, script, video} ) => {
     return (
         <>
             <div className="script-edition-container h-screen w-screen">
                 <NavBar />
                 <div id="page-container" className="h-5/6 w-full py-2 px-6">
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
-                        <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{title}</h1>
+                        <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{project.title}</h1>
                         <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base">Soumettre</button>
                     </div>
 
                     <div id="edit-bloc" className="flex h-4/6">
                         {/* DETAILS IF REPLICA IS SELECTED */}
-                       <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
-                            <ReplicaDetails replica={tempReplica}/>
-                       </div>
-                       {/* DETAILS EMPTY AS NOT REPLICA IS SELECTED */}
-                       {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-lg">
-                           <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
-                               <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
-                           </div>
-                       </div> */}
-                       
+                        {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
+                                <ReplicaDetails replica={tempReplica}/>
+                        </div> */}
+                        {/* DETAILS EMPTY AS NOT REPLICA IS SELECTED */}
+                        {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-lg">
+                            <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
+                                <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
+                            </div>
+                        </div> */}
+
+                        <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
+                            {replicaSelected == true ?
+                                <ReplicaDetails replica={tempReplica}/>
+                            :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
+                                    <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
+                                </div>
+                            }
+                        </div>
+
+
                        <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-red-500">
                            <img className="object-cover" src="/assets/fight_club.jpeg" alt="" />
                        </div>
                     </div>
 
                     <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
-                       <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg">Audio Timeline</div>
-                   </div>
+                       {/* <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg">Audio Timeline</div> */}
+                       <Timeline className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} onReplicaSelection={/*setReplicaSelected*/(val) => setReplicaSelected(val)} />
+                    </div>
 
                 </div>
             </div>

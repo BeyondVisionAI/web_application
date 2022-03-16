@@ -1,5 +1,6 @@
 const { cp } = require("fs");
 const { Errors } = require("../../Models/Errors");
+const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment");
 
 
@@ -29,7 +30,9 @@ exports.postComment = async function(req, res) {
     try {
         if (!req.body.content)
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
-
+        else if (await Replica.findById(req.params.replicaId) == null)
+            return res.status(404).send(Errors.REPLICA_NOT_FOUND);
+        
         const newComment = new ReplicaComment({
             replicaId: req.params.replicaId,
             author: req.user.userId,
@@ -56,6 +59,19 @@ exports.deleteComment = async function(req, res) {
         return res.status(200).send("Success");
     } catch (err) {
         console.log("ReplicaComment->deleteComment : " + err);
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+}
+
+// meant to be used as a clean way to organise the cascade deletion of item in the db
+// doesn't work yet
+exports.deleteCommentsByReplicaId = async function(req, res) {
+    try {
+        var commentsDeleted = await ReplicaComment.deleteMany({replicaId: req.params.replicaId});
+        console.log(`${commentsDeleted} comments have been removed from the DB following a replica's removal.`);
+        return res.status(200).send("Success");
+    } catch (err) {
+        console.log("ReplicaComment->deleteCommentsByReplicaId : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }

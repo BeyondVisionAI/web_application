@@ -2,7 +2,6 @@ const { Errors } = require("../../Models/Errors.js");
 const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
 
-
 exports.getProjectReplicas = async function(req, res) {
     try {
         var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
@@ -86,13 +85,18 @@ exports.updateReplica = async function(req, res) {
 
 exports.deleteReplica = async function(req, res) {
     try {
+        // await ReplicaCommentController.deleteCommentsByReplicaId(req, res);
         var replicaToDelete = await Replica.findById(req.params.replicaId);
         if (!replicaToDelete)
             return res.status(404).send(Errors.REPLICA_NOT_FOUND);
-        var isDeleted = await replicaToDelete.deleteOne();
-        const commentsToDelete = await ReplicaComment.find({replicaId: req.params.replicaId});
-        for (var comment of commentsToDelete)
-            await comment.deleteOne();
+        await replicaToDelete.deleteOne();
+        const attachedCommentsDeleted = await ReplicaComment.deleteMany({replicaId: req.params.replicaId});
+        if (attachedCommentsDeleted > 0) console.log(`${attachedCommentsDeleted} comments deleted with the removed replica`);
+
+        // Old way of cascade-removing attached comments to the targeted replica
+        // const commentsToDelete = await ReplicaComment.find({replicaId: req.params.replicaId});
+        // for (var comment of commentsToDelete)
+        //     await comment.deleteOne();
 
         return res.status(200).send("Success");
     } catch (err) {

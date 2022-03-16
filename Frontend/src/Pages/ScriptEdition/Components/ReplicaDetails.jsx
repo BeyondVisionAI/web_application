@@ -1,5 +1,6 @@
 import {React, useState } from "react";
 import CommentBox from './CommentBox';
+import axios from 'axios';
 
 const dateOptions =
 {
@@ -18,7 +19,7 @@ const ReplicaDetails = ({replica}) => {
 
     const formatted_date = new Date(lastEdit).toLocaleDateString("fr-FR", dateOptions);
     const handleReplicaTextChange = (event) => {
-        setCharacterCount("" + event.target.value.length + "/100");
+        setCharacterCount(`${event.target.value.length}/100`);
     }
 
     return (

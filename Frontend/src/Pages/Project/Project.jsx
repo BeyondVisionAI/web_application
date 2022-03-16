@@ -2,41 +2,7 @@ import React, { useState } from 'react';
 import ScriptEdition from '../ScriptEdition/ScriptEdition';
 import CreateProject from './Create/CreateProject';
 
-const tempScriptVariable = [
-    {
-        replica: "This is a replica of the script",
-        lastEditor: "Tim"
-    },
-    {
-        replica: "Nice shot!",
-        lastEditor: "Dimi"
-    },
-    {
-        replica: "What a save!",
-        lastEditor: "Fabien"
-    },
-    {
-        replica: "Close One!",
-        lastEditor: "Paul"
-    }
-    //, {
-    //     replica: "One. More. Game.",
-    //     lastEditor: "Marco"
-    // },
-    // {
-    //     replica: "Take the shot!",
-    //     lastEditor: "Léo"
-    // },
-    // {
-    //     replica: "Whew.",
-    //     lastEditor: "Matthieu"
-    // },
-    // {
-    //     replica: "Noooooo!",
-    //     lastEditor: "Alex"
-    // }
-];
-
+const projectId = "621c3425d3f549034a3e74a4";
 
 export default function Project() {
     const [modalShow, setShowModal] = useState(false);
@@ -55,7 +21,7 @@ export default function Project() {
                     onHide={() => setShowModal(false)}
                 />
             ): null}
-            <ScriptEdition script={tempScriptVariable} />
+            <ScriptEdition project={{title: "Titre du projet", projectId: projectId}} />
         </>
     );
 }
