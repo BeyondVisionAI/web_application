@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eo pipefail
+# set -eo pipefail
 
 # This is a very small modification of the original docker script taken from
 # https://github.com/mongo-express/mongo-express-docker/blob/master/docker-entrypoint.sh

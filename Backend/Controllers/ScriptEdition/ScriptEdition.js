@@ -2,7 +2,7 @@ const { Project } = require("../../Models/Project");
 const { Errors } = require("../../Models/Errors.js");
 const { Replica } = require("../../Models/Replica");
 
-exports.getProjectScript = async function(req, res) {
+exports.getProjectScript = async function (req, res) {
     try {
         // will be deleted once the malware will be created
         var project = await Project.findById(req.params.projectId);
