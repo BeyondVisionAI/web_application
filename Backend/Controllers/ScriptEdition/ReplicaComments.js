@@ -28,6 +28,7 @@ exports.getReplicaComment = async function(req, res) {
 
 exports.postComment = async function(req, res) {
     try {
+        console.warn("body", req.body);
         if (!req.body.content)
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         else if (await Replica.findById(req.params.replicaId) == null)

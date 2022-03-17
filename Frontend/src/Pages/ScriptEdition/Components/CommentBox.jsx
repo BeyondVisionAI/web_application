@@ -1,7 +1,7 @@
 import {React, useState} from "react";
 import axios from 'axios';
 
-const CommentBox = ({comments}) => {
+const CommentBox = ({comments, replica, updateComments}) => {
 
     const [newComment, setNewComment] = useState("");
 
@@ -40,14 +40,20 @@ const CommentBox = ({comments}) => {
     const postComment = async function (e) {
         e.preventDefault();
         console.log("New comment : " + newComment);
-        // try {
-        //     let jsonObj = {projectId: "something", date: Date.now(), comment: newComment};
-        //     let commentResponse = await axios.post(`${process.env.REACT_APP_API_URL}/comment`, jsonObj);
+        try {
+            let body = {content: newComment};
+            const commentResponse = await axios({
+                method: 'POST',
+                data: body,
+                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
+                withCredentials: true
+            });
 
-        //     console.log(commentResponse);
-        // } catch (e) {
-        //     console.error(e);
-        // }
+            console.log(commentResponse);
+            await updateComments();
+        } catch (e) {
+            console.error(e);
+        }
         setNewComment("");
     }
 

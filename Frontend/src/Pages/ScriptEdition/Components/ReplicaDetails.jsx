@@ -22,6 +22,19 @@ const ReplicaDetails = ({replica}) => {
         setCharacterCount(`${event.target.value.length}/100`);
     }
 
+    const updateReplicaComments = async () => {
+        const res = await axios({
+            method: 'GET',
+            url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
+            // url: `${process.env.REACT_APP_API_URL}/projects/621c3425d3f549034a3e74a4/replicas/6224c73be1677f40bcb942a0/comments`,
+            withCredentials: true
+        });
+        console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
+        console.log(res);
+        let resComm = Object.values(res.data);
+        console.log(resComm);
+        setComments(resComm);
+    }
 
     useEffect(() => {
         const fetchReplicaComments = async () => {
@@ -85,7 +98,7 @@ const ReplicaDetails = ({replica}) => {
 
             <h3 className="pl-4 text-xl">Commentaires</h3>
             <div id="comment-frame" className="w-fit h-3/6 bg-red-200 ml-6 mr-9 overflow-y-auto">
-                <CommentBox comments={comments} />
+                <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
                 {/* <textarea name="replica-text" id="" 
                     // cols="40" rows="2"
                     defaultValue={comment}
