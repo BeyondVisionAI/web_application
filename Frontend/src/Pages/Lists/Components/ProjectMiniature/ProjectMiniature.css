@@ -1,0 +1,93 @@
+
+.project-miniature-container {
+    margin: 5px 10px 5px 10px;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: white;
+    width: 500px;
+    height: 300px;
+    border-radius: 16px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.img-container {
+    height: 240px;
+    width: 100%;
+}
+
+.img-container img {
+    border-radius: 16px 16px 0 0;
+}
+
+.info-container {
+    height: 60px;
+    width: 100%;
+}
+
+.project-status {
+    width: 12%;
+}
+
+.project-infos-middle {
+    height: 100%;
+    width: 60%;
+}
+
+.project-title {
+    font-family: 'Roboto', 'Oxygen', 'Ubuntu', 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.2em;
+    color: #444655;
+}
+
+.project-last-edit {
+    font-family: 'Roboto', 'Oxygen', 'Ubuntu', 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.8em;
+    color: rgba(68, 70, 85, 0.48);
+}
+
+.project-collaborators {
+    width: 28%;
+    /* background-color: orange; */
+}
+
+.circle-collab {
+    background-color: #7793ED;
+    border: 0.694412px solid #142BA9;
+    height: 45px;
+    width: 45px;
+}
+
+.circle-collab#outer {
+    overflow: hidden;
+}
+
+.circle-one {
+    position: absolute;
+    left: 30%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.circle-two {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.circle-three {
+    position: absolute;
+    left: 70%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}

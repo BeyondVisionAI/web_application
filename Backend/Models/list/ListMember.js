@@ -1,9 +1,17 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 const { Role } = require("../Roles");
 
-const listMember = new mongoose.Schema({
-    listId: String,
-    userId: String,
+const listMember = new Schema({
+    listId: {
+        type: Schema.Types.ObjectId,
+        ref: "List",
+        required: true
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     rights: {
         type: String,
         enum: Role,
@@ -11,4 +19,4 @@ const listMember = new mongoose.Schema({
     }
 });
 
-exports.ListMember = mongoose.model("ListMember", listMember);
+exports.ListMember = model("ListMember", listMember);

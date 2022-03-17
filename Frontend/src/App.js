@@ -14,6 +14,7 @@ import EmailVerificatn from './Pages/EmailVerification/EmailVerification';
 import Register from './Pages/Register/Register';
 import AskForPasswordChange from './Pages/AskForPasswordChange/AskForPasswordChange'; 
 import ResetPassword from './Pages/ResetPassword/ResetPassword';
+import Lists from './Pages/Lists/Lists';
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         <AuthProvider>
           <BrowserRouter>
             <Switch>
-              <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
+              <PrivateRoute exact path="/dashboard" component={Lists} />
               <Route exact path="/" component={LandingPage} />
               <Route exact path="/project" component={Project} />
               <Route exact path="/login" component={Login} />

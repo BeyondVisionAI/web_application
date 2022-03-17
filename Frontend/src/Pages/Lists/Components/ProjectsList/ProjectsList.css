@@ -1,0 +1,40 @@
+.main-container {
+    padding: 5px;
+    margin: 30px 15px 10px 15px; 
+}
+
+.list-title {
+    font-family: 'Roboto', 'Oxygen', 'Ubuntu', 'Helvetica Neue', sans-serif;
+    font-weight: 500;
+    font-size: 1.5em;
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.projects-list-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 15px;
+}
+
+.projects-list-container::-webkit-scrollbar {
+    display: none;
+}
+  
+.projects-list-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* .projects-list-container > .project-miniature {
+    margin: 5px 10px 5px 10px;
+    display: inline-block;
+    vertical-align: middle;
+} */
+
+/* .project-miniature {
+    background-color: red;
+    height: 300px;
+    width: 500px;
+} */
