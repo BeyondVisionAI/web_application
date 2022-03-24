@@ -50,27 +50,36 @@ export default function CreateProject({ show, onHide }) {
         setValue(tmp);
     }
 
-    const postData = async () => {
-        try {
-            let imageRes = await UploadFile(image, 'bv-thumbnails-projects', 'eu-west-3', `${values.name}_${image.name}`);
+    const uploadMedia = () => {
+        UploadFile(image, 'bv-thumbnails-projects', 'eu-west-3', `${values.name}_${image.name}`)
+        .then(async (imageRes) => {
             let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
                 name: imageRes.Key,
                 desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
                 ETag: imageRes.ETag,
             });
             handleChange('thumbnailId', thumbnailResponse.data._id);
-            let videoRes = await UploadFile(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.name}_${video.name}`);
+            axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
+        }).catch(err => console.error("Upload thumbnail error:", err));
+        UploadFile(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.name}_${video.name}`)
+        .then(async videoRes => {
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,
                 desc: `Video for ${values.name} type ${values.videoType}`,
                 ETag: videoRes.ETag,
                 url: 'Url Undefined'
             });
-            // TODO: Handle loading
             handleChange('videoId', videoResponse.data._id);
+            axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
+        }).catch(err => console.error("Upload video error:", err));
+    }
+
+    const postData = async () => {
+        try {
             let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`, { status: 'Stop', ...values, script: null });
             handleChange('id', projectResponse.data._id);
             history.push(`/project/${projectResponse.data._id}`);
+            uploadMedia();
         } catch (error) {
             console.error(error);
         }

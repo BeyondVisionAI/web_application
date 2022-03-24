@@ -106,29 +106,15 @@ exports.deleteProject = async function (req, res) {
     }
 }
 
+/**
+ * Delete a project
+ * @param { Request } req { params: { projectId }, body: { status?, actualStep?, progress?, thumbnailId?, videoId?, description?, script? } }
+ * @param { Response } res
+ * @returns { status: Number, data: Project }
+ */
 exports.updateProject = async function (req, res) {
     try {
-        // Question : Pour quoi pas utiliser Project.updateOne ?
-
-        let project = await Project.findById(req.params.projectId);
-        let hasChanged = false;
-
-        if (req.body.name && req.body.name != project.name) {
-            project.name = req.body.name;
-            hasChanged = true;
-        }
-        if (req.body.description && req.body.description != project.description) {
-            project.description = req.body.description;
-            hasChanged = true;
-        }
-        if (req.body.videoId && req.body.videoId != project.videoId) {
-            project.videoId = req.body.videoId;
-            hasChanged = true;
-        }
-        if (hasChanged === true) {
-            project.lastEdit = new Date();
-            await project.save();
-        }
+        const project = await Project.findOneAndUpdate({ _id: req.params.projectId }, req.body);
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);
