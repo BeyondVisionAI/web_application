@@ -36,7 +36,7 @@ exports.getAllProjectsDB = async function (userId) {
 
 /**
  * Get a project
- * @param { Request } req { body: { projectID } }
+ * @param { Request } req { params: { projectID } }
  * @param { Response } res
  * @returns { [{ _id, name, status, videoId, script, creator, assignedAudioDescriptiors }] }
  */

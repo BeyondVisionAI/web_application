@@ -1,16 +1,15 @@
 import AWS from 'aws-sdk';
 
 AWS.config.setPromisesDependency();
-AWS.config.update({
-    region: process.env.S3_REGION,
-    accessKeyId: process.env.S3_ID,
-    secretAccessKey: process.env.S3_SECRET
-});
 
-export function UploadFile(file, bucketnName, keyName = null)
+export function UploadFile(file, bucketnName, region = 'us-east-1', keyName = null)
 {
     try {
-        let s3 = new AWS.S3();
+        let s3 = new AWS.S3({
+            accessKeyId: 'AKIAVEXTIW63VUWJ2LT7',
+            secretAccessKey: '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',
+            region: region
+        });
         const params = {
             Bucket: bucketnName,
             Key: keyName,
@@ -20,7 +19,7 @@ export function UploadFile(file, bucketnName, keyName = null)
 
         return s3.upload(params, function (err, data) {
             if (err) {
-                return ({ code: 500, err: "S3 Upload issue" });
+                return ({ code: 500, err: "S3 Upload issue" + err });
             }
             console.log(`File uploaded successfully. ${data.Location}`);
             return ({ code: 200 })

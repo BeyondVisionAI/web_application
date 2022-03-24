@@ -52,16 +52,23 @@ export default function CreateProject({ show, onHide }) {
 
     const postData = async () => {
         try {
-            let imageRes = await UploadFile(image, 'bv-Ids-projects');
-            console.log('Image - S3:', imageRes);
-            let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/image`, imageRes);
+            let imageRes = await UploadFile(image, 'bv-thumbnails-projects', 'eu-west-3', `${values.name}_${image.name}`);
+            let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
+                name: imageRes.Key,
+                desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
+                ETag: imageRes.ETag,
+            });
             handleChange('thumbnailId', thumbnailResponse.data._id);
-            let videoRes = await UploadFile(video, 'bv-videos');
-            console.log('Video - S3:', videoRes);
-            let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/video`, videoRes);
+            let videoRes = await UploadFile(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.name}_${video.name}`);
+            let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
+                name: videoRes.Key,
+                desc: `Video for ${values.name} type ${values.videoType}`,
+                ETag: videoRes.ETag,
+                url: 'Url Undefined'
+            });
+            // TODO: Handle loading
             handleChange('videoId', videoResponse.data._id);
             let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`, { status: 'Stop', ...values, script: null });
-            console.log(projectResponse);
             handleChange('id', projectResponse.data._id);
             history.push(`/project/${projectResponse.data._id}`);
         } catch (error) {

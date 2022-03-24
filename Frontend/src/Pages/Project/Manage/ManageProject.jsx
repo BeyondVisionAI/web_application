@@ -69,3 +69,4 @@ export default function ManageProject(props) {
         );
     }
 }
+// TODO: Mettre un temps de chargement quand la donnée n'est pas disponible
