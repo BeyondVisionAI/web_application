@@ -11,17 +11,64 @@ const dateOptions =
 
 const ReplicaDetails = ({replica}) => {
     const [text, setText] = useState(replica.content);
-    const [voice, setVoice] = useState(replica.voice);
     const [comments, setComments] = useState([]);
+    const [timestamp, setTimestamp] = useState(replica.timestamp);
+    const [duration, setDuration] = useState(replica.duration);
+    const [voiceId, setVoiceId] = useState(replica.voiceId);
+
     // additional infos 
     const [lastEdit, setLastEdit] = useState(replica.lastEdit);
     const [lastEditor, setLastEditor] = useState(replica.lastEditor);
     const [characterCount, setCharacterCount] = useState("" + replica.content.length + "/100");
 
     const formatted_date = new Date(lastEdit).toLocaleDateString("fr-FR", dateOptions);
-    const handleReplicaTextChange = (event) => {
+
+    const handleReplicaTextChange = async function (event) {
         setCharacterCount(`${event.target.value.length}/100`);
+        setText(event.target.value);
     }
+
+    useEffect(() => {
+        const updateReplicaText = async function () {
+            try {
+                const res = await axios({
+                    method: 'PUT',
+                    data: {
+                        content: text,
+                        timestamp: timestamp,
+                        duration: duration,
+                        voiceId: voiceId
+                    },
+                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+                    withCredentials: true
+                });
+            } catch (err) {
+                console.error("error => ", err);
+            }
+        }
+
+        updateReplicaText();
+}, [text]);
+
+    // const handleReplicaTextChange = async function (event) {
+    //     setCharacterCount(`${event.target.value.length}/100`);
+
+    //     try {
+    //         const res = await axios({
+    //             method: 'PUT',
+    //             data: {
+    //                 content: event.target.value,
+    //                 timestamp: timestamp,
+    //                 duration: duration,
+    //                 voiceId: voiceId
+    //             },
+    //             url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+    //             withCredentials: true
+    //         });
+    //     } catch (err) {
+    //         console.error("error => ", err);
+    //     }
+    // }
 
     const updateReplicaComments = async () => {
         try {
@@ -101,8 +148,9 @@ const ReplicaDetails = ({replica}) => {
         fetchReplicaComments();
         setText(replica.content);
         setCharacterCount(replica.content.length);
-        setVoice(replica.voice);
-        // setComments(replica.comments);
+        setTimestamp(replica.timestamp);
+        setDuration(replica.duration);
+        setVoiceId(replica.voiceId);
         setLastEdit(replica.lastEdit);
         setLastEditor(replica.lastEditor);
     }, [replica]);
@@ -128,7 +176,7 @@ const ReplicaDetails = ({replica}) => {
 
             <div className="w-full flex flex-row justify-between items-center pl-2">
                 <h3 className="ml-2 text-xl inline-flex items-center">Voix</h3>
-                <select name="voiceSelection" id="" selected={voice}
+                <select name="voiceSelection" id="" selected={voiceId}
                 className="inline-flex items-center form-select form-select-lg
                 w-2/5 p-2 mr-9
                 text-xl 
