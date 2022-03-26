@@ -3,12 +3,7 @@ import NavBar from '../../GenericComponents/NavBar/NavBar';
 import ReplicaDetails from './Components/ReplicaDetails';
 import Timeline from './Components/Timeline';
 import axios from 'axios';
-
-// var res = await axios({
-//     method: "GET",
-//     url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/replicas`,
-//     // withCredentials: true
-// });
+import { toast } from 'react-toastify';
 
 const tempReplica = {
     content: "This is an example of a replica",
@@ -35,24 +30,6 @@ const ScriptEdition = ( {project, video} ) => {
     const [replicas, setReplicas] = useState([]);
     const [replicaSelected, setReplicaSelected] = useState(null);
 
-    // const fetchProjectDetails = async () => {
-    //     const res = await axios({
-    //         method: "GET",
-    //         url: `${process.env.REACT_APP_API_URL}/projects/${project.projectId}/replicas`,
-    //         withCredentials: true
-    //     });
-    //     console.log(res);
-    //     console.log(res.data);
-    //     setReplicas(Object.values(res.data));
-    //     console.log(replicas);
-    //     console.log(replicas[0]);
-    // }
-    
-    const displayData = () => {
-        console.log(replicas);
-        console.log(replicas[0]);
-    }
-
     const updateReplicaAction = async (selectedId) => {
         console.log("bjr");
         setReplicaSelected(selectedId);
@@ -66,26 +43,79 @@ const ScriptEdition = ( {project, video} ) => {
         return null;
     }
 
-    // page loaded, make the call
-    useEffect(() => {
-        const fetchProjectDetails = async () => {
+    const udpateProjectReplica = async () => {
+        try {
             const res = await axios({
                 method: "GET",
                 url: `${process.env.REACT_APP_API_URL}/projects/${project.projectId}/replicas`,
                 withCredentials: true
             });
             let resRep = Object.values(res.data);
-            console.log("res replica : " + resRep);
             setReplicas(resRep);
+        } catch (e) {
+            let errMsg = "Error";
+            switch (e.response.status) {
+                case 401:
+                    switch (e.response.data) {
+                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                        /* errors that fits the 403 to me */
+                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
+                        default: errMsg = "Error (401)."; break;
+                    } break;
+                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                case 404:
+                    switch (e.response.data) {
+                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
+                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
+                        default: errMsg = "Error (404)."; break;
+                    } break;
+                default /* 500 */ : errMsg = "Internal Error."; break;
+            }
+            toast.error(errMsg);
+            console.error(e);
+        }
+    }
+
+
+    // page loaded, make the call
+    useEffect(() => {
+        const fetchProjectDetails = async () => {
+            try {
+                const res = await axios({
+                    method: "GET",
+                    url: `${process.env.REACT_APP_API_URL}/projects/${project.projectId}/replicas`,
+                    withCredentials: true
+                });
+                let resRep = Object.values(res.data);
+                console.log("res replica : " + resRep);
+                console.table(resRep);
+                setReplicas(resRep);
+            } catch (e) {
+                let errMsg = "Error";
+                switch (e.response.status) {
+                    case 401:
+                        switch (e.response.data) {
+                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                            /* errors that fits the 403 to me */
+                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
+                            default: errMsg = "Error (401)."; break;
+                        } break;
+                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                    case 404:
+                        switch (e.response.data) {
+                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
+                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
+                            default: errMsg = "Error (404)."; break;
+                        } break;
+                    default /* 500 */ : errMsg = "Internal Error."; break;
+                }
+                toast.error(errMsg);
+                console.error(e);
+            }
         }
         fetchProjectDetails();
     }, []);
 
-
-    // getReplicas done, or replica update
-    // useEffect(() => {
-
-    // }, [replicas]);
 
     return (
         <>
@@ -106,14 +136,8 @@ const ScriptEdition = ( {project, video} ) => {
                                 <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
                             </div>
                         }
+
                     </div>
-
-
-                        {/* <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
-                            {replicas.length > 0 ? <ReplicaDetails replica={replicas[0]}/> : <div></div>}
-                        </div> */}
-
-
                        <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-red-500">
                            <img className="object-cover" src="/assets/fight_club.jpeg" alt="" />
                        </div>
@@ -121,10 +145,8 @@ const ScriptEdition = ( {project, video} ) => {
 
                     <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
                        {/* <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg">Audio Timeline</div> */}
-                       <Timeline className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} onReplicaSelection={updateReplicaAction} />
+                       <Timeline className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.projectId} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} />
                     </div>
-
-                    <button onClick={displayData}>Click to display</button>
                 </div>
             </div>
         </>

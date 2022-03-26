@@ -1,6 +1,7 @@
 import {React, useEffect, useState } from "react";
 import CommentBox from './CommentBox';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const dateOptions =
 {
@@ -23,25 +24,10 @@ const ReplicaDetails = ({replica}) => {
     }
 
     const updateReplicaComments = async () => {
-        const res = await axios({
-            method: 'GET',
-            url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
-            // url: `${process.env.REACT_APP_API_URL}/projects/621c3425d3f549034a3e74a4/replicas/6224c73be1677f40bcb942a0/comments`,
-            withCredentials: true
-        });
-        console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
-        console.log(res);
-        let resComm = Object.values(res.data);
-        console.log(resComm);
-        setComments(resComm);
-    }
-
-    useEffect(() => {
-        const fetchReplicaComments = async () => {
+        try {
             const res = await axios({
                 method: 'GET',
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
-                // url: `${process.env.REACT_APP_API_URL}/projects/621c3425d3f549034a3e74a4/replicas/6224c73be1677f40bcb942a0/comments`,
                 withCredentials: true
             });
             console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
@@ -49,6 +35,67 @@ const ReplicaDetails = ({replica}) => {
             let resComm = Object.values(res.data);
             console.log(resComm);
             setComments(resComm);
+        } catch (e) {
+            let errMsg = "Error";
+            switch (e.response.status) {
+                case 401:
+                    switch (e.response.data) {
+                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                        /* errors that fits the 403 to me */
+                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
+                        default: errMsg = "Error (401)."; break;
+                    } break;
+                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                case 404:
+                    switch (e.response.data) {
+                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
+                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
+                        case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
+                        default: errMsg = "Error (404)."; break;
+                    } break;
+                default /* 500 */ : errMsg = "Internal Error."; break;
+            }
+            toast.error(errMsg);
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        const fetchReplicaComments = async () => {
+            try {
+                const res = await axios({
+                    method: 'GET',
+                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
+                    withCredentials: true
+                });
+                console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
+                console.log(res);
+                let resComm = Object.values(res.data);
+                console.log(resComm);
+                setComments(resComm);
+            } catch (e) {
+                let errMsg = "Error";
+                switch (e.response.status) {
+                    case 401:
+                        switch (e.response.data) {
+                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                            /* errors that fits the 403 to me */
+                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
+                            default: errMsg = "Error (401)."; break;
+                        } break;
+                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                    case 404:
+                        switch (e.response.data) {
+                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
+                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
+                            case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
+                            default: errMsg = "Error (404)."; break;
+                        } break;
+                    default /* 500 */ : errMsg = "Internal Error."; break;
+                }
+                toast.error(errMsg);
+                console.error(e);
+            }
         }
 
         fetchReplicaComments();
@@ -99,14 +146,6 @@ const ReplicaDetails = ({replica}) => {
             <h3 className="pl-4 text-xl">Commentaires</h3>
             <div id="comment-frame" className="w-fit h-3/6 bg-red-200 ml-6 mr-9 overflow-y-auto">
                 <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
-                {/* <textarea name="replica-text" id="" 
-                    // cols="40" rows="2"
-                    defaultValue={comment}
-                    className="p-3 w-full leading-7 text-l
-                    rounded-md border border-solid border-blue-800
-                    bg-gray-200 resize-none
-                    focus:text-black focus:border-blue-800 focus:outline-none"
-                    ></textarea> */}
             </div>
 
             <div className="w-full align-bottom bg-gray-300">
