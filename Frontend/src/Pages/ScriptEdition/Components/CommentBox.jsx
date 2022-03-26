@@ -1,5 +1,5 @@
 import {React, useState} from "react";
-import axios from 'axios';
+import { axios } from 'axios';
 import { toast } from 'react-toastify';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 
@@ -112,6 +112,8 @@ const CommentBox = ({comments, replica, updateComments}) => {
                     }
                 default/*500*/: errLog = `Error (${err.response.status}) - Internal Error.`; break;
             }
+
+            toast.error(errLog);
         }
     }
 

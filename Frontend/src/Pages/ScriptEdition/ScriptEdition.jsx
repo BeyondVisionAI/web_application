@@ -14,8 +14,7 @@ const tempReplica = {
         "I would like to comment something else",
         "This should be an overflowing comment in the list"
     ],
-    // lastEdit: date.setMinutes(date.getMinutes() - 5),
-    lastEdit: Date.now()/*.toLocaleDateString()*/,
+    lastEdit: Date.now(),
     lastEditor: "John Doe"
 }
 
@@ -77,7 +76,6 @@ const ScriptEdition = ( {project, video} ) => {
     }
 
 
-    // page loaded, make the call
     useEffect(() => {
         const fetchProjectDetails = async () => {
             try {
@@ -144,7 +142,6 @@ const ScriptEdition = ( {project, video} ) => {
                     </div>
 
                     <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
-                       {/* <div id="timeline" className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg">Audio Timeline</div> */}
                        <Timeline className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.projectId} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} />
                     </div>
                 </div>
