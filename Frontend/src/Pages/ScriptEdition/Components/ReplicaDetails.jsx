@@ -23,13 +23,22 @@ const ReplicaDetails = ({replica}) => {
 
     const formatted_date = new Date(lastEdit).toLocaleDateString("fr-FR", dateOptions);
 
+    const [isTextUpdated, toggleTextUpdate] = useState(false);
+    let replicaTextUpdateTimeout = null;
+
+    // useEffect(() => {
+    //     replicaTextUpdateTimeout = setTimeout(console.log("tptp"), 500);
+    // }, [isTextUpdated]);
+
     const handleReplicaTextChange = async function (event) {
         setCharacterCount(`${event.target.value.length}/100`);
         setText(event.target.value);
+        toggleTextUpdate(!isTextUpdated)
     }
 
     useEffect(() => {
         const updateReplicaText = async function () {
+            console.log("sending the update request");
             try {
                 const res = await axios({
                     method: 'PUT',
@@ -47,28 +56,35 @@ const ReplicaDetails = ({replica}) => {
             }
         }
 
-        updateReplicaText();
-}, [text]);
+        replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
 
-    // const handleReplicaTextChange = async function (event) {
-    //     setCharacterCount(`${event.target.value.length}/100`);
+        return () => {
+            clearTimeout(replicaTextUpdateTimeout);
+        }
+    }, [isTextUpdated]);
 
-    //     try {
-    //         const res = await axios({
-    //             method: 'PUT',
-    //             data: {
-    //                 content: event.target.value,
-    //                 timestamp: timestamp,
-    //                 duration: duration,
-    //                 voiceId: voiceId
-    //             },
-    //             url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
-    //             withCredentials: true
-    //         });
-    //     } catch (err) {
-    //         console.error("error => ", err);
-    //     }
-    // }
+
+//     useEffect(() => {
+//         const updateReplicaText = async function () {
+//             try {
+//                 const res = await axios({
+//                     method: 'PUT',
+//                     data: {
+//                         content: text,
+//                         timestamp: timestamp,
+//                         duration: duration,
+//                         voiceId: voiceId
+//                     },
+//                     url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+//                     withCredentials: true
+//                 });
+//             } catch (err) {
+//                 console.error("error => ", err);
+//             }
+//         }
+
+//         updateReplicaText();
+// }, [text]);
 
     const updateReplicaComments = async () => {
         try {
