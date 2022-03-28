@@ -129,7 +129,7 @@ const ScriptEdition = ( {project, video} ) => {
 
                     <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
                         {replicaSelected !== null ?
-                            <ReplicaDetails replica={getReplicaFromId(replicaSelected)}/>
+                            <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplicaList={udpateProjectReplica}/>
                         :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
                                 <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
                             </div>

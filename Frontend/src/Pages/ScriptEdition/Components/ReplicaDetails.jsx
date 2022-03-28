@@ -9,7 +9,7 @@ const dateOptions =
     day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
 };
 
-const ReplicaDetails = ({replica}) => {
+const ReplicaDetails = ({replica, updateReplicaList}) => {
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
@@ -51,6 +51,7 @@ const ReplicaDetails = ({replica}) => {
                     url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
                     withCredentials: true
                 });
+                updateReplicaList();
             } catch (err) {
                 console.error("error => ", err);
             }
@@ -163,7 +164,7 @@ const ReplicaDetails = ({replica}) => {
 
         fetchReplicaComments();
         setText(replica.content);
-        setCharacterCount(replica.content.length);
+        setCharacterCount(`${replica.content.length}/100`);
         setTimestamp(replica.timestamp);
         setDuration(replica.duration);
         setVoiceId(replica.voiceId);
