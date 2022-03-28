@@ -1,14 +1,16 @@
 module.exports = function(app) {
     const video = require('../../Controllers/Media/Video/Video')
     const authMiddleware = require('../../Controllers/User/authMiddleware');
+    const collabMiddleware = require('../../Controllers/User/collabMiddleware');
 
     app.post('/videos',
         authMiddleware.authenticateUser,
         video.createVideo
     );
 
-    app.get('/videos/:id',
+    app.get('/videos/:projectId/:id',
         authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
         video.getVideo
     );
 }
