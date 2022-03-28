@@ -1,7 +1,7 @@
 module.exports = function(app) {
     const image = require('../../Controllers/Media/Image/Image');
     const authMiddleware = require('../../Controllers/User/authMiddleware');
-    const collabMiddleware = require('../../Controllers/User/collabMiddleware');
+    const collabMiddleware = require('../../Controllers/Collaboration/collabMiddleware');
 
     app.post('/images',
         authMiddleware.authenticateUser,
