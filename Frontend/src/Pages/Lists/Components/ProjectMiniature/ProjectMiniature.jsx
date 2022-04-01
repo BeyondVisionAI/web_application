@@ -1,8 +1,11 @@
-import React from 'react';
-import Projects from '../../Data/projects.json';
+import React, { useContext } from 'react';
 import "./ProjectMiniature.css";
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 
-export default function ProjectMiniature({ movie }) {
+export default function ProjectMiniature({ idList, movie, openAddProjectToList, openRemoveProjectFromList, openDestroyLeaveProject }) {
 
     // var collaborators = [];
 
@@ -25,15 +28,73 @@ export default function ProjectMiniature({ movie }) {
     //     </div>);
     // }
 
+    const {currentUser} = useContext(AuthContext);
+
+    const [roleProject, setRoleProject] = useState('');
+    const [roleList, setRoleList] = useState('');
+
+    useEffect(() => {
+        const getMyRoleOnProject = async () => {
+            try {
+                var res = await axios({
+                    method: "GET",
+                    withCredentials: true,
+                    url: `${process.env.REACT_APP_API_URL}/projects/${movie._id}/collaborations`,
+                });
+                res.data.forEach(collab => {
+                    if (collab.userId === currentUser.userId) {
+                        setRoleProject(collab.rights);
+                    }
+                });
+            } catch (err) {
+                toast.error("Can't get project rights")
+            }
+        };
+
+        const getMyRoleOnList = async () => {
+            if (idList === "My projects" || idList === "Shared with me") {
+                return
+            }
+            try {
+                var res = await axios({
+                    method: "GET",
+                    withCredentials: true,
+                    url: `${process.env.REACT_APP_API_URL}/lists/${idList}/members`,
+                });
+                res.data.forEach(listMember => {
+                    if (listMember.userId === currentUser.userId) {
+                        setRoleList(listMember.rights);
+                    }
+                });
+            } catch (err) {
+                toast.error("Can't get list rights")
+            }
+        };
+
+        getMyRoleOnProject();
+        getMyRoleOnList();
+        return function cleanup() {
+        };
+    }, [idList, currentUser.userId, movie._id])
+
     return (
         <div className="project-miniature-container">
             <div className="img-container relative">
             {/* <img className="object-fill w-full h-full" src={`./assets/movies/${actualProject.picture}`} alt={`Movie ${movie.name}`}></img> */}
             <img className="object-fill w-full h-full" src={`./assets/movies/animal.jpg`} alt={`Movie ${movie.name}`}></img>
-                <div onClick={console.log("click")} className="rounded-full absolute top-3 right-3 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF">
+                <div className="rounded-full absolute top-3 right-3 dropdown grid justify-items-stretch">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 justify-self-end" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                     </svg>
+                    <div className='dropdown-child'>
+                        <p onClick={() => {openAddProjectToList(movie._id)}}>Add to a list</p>
+                        {
+                            roleProject === "OWNER" ? <p onClick={() => {openDestroyLeaveProject(movie._id)}}>Destroy the project</p> : <p onClick={() => {openDestroyLeaveProject(movie._id)}}>Leave the project</p>
+                        }
+                        {
+                            idList !=="My projects" && idList !== "Shared with me" && roleList !== "READ" ? <p onClick={() => {openRemoveProjectFromList(movie._id, idList)}}>Remove from the list</p> : null
+                        }
+                    </div>
                 </div>
             </div>
             <div className="info-container align-middle">

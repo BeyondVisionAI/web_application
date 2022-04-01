@@ -1,6 +1,6 @@
 .main-container {
     padding: 5px;
-    margin: 30px 15px 10px 15px; 
+    margin: 30px 15px 10px 15px;
 }
 
 .list-title {
@@ -21,20 +21,28 @@
 .projects-list-container::-webkit-scrollbar {
     display: none;
 }
-  
+
 .projects-list-container {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-/* .projects-list-container > .project-miniature {
-    margin: 5px 10px 5px 10px;
-    display: inline-block;
-    vertical-align: middle;
-} */
+.dropdown-child {
+    display: none;
+    background-color: #7793ED;
+    min-width: 50px;
+    border-radius: 10px;
+    z-index: 100;
+}
 
-/* .project-miniature {
-    background-color: red;
-    height: 300px;
-    width: 500px;
-} */
+.dropdown-child p {
+    color: white;
+    padding: 15px 20px 15px 10px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.svg-class:hover .dropdown-child {
+    display: block;
+}
