@@ -150,6 +150,30 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
     }, [replica]);
 
 
+    const formatTimestamp = function (t, d) {
+        const msToTimecode = function(t) {
+            var hours = Math.floor(t / 3600000);
+            var minutes = Math.floor((t - (hours * 3600000)) / 60000);
+            var seconds = Math.floor((t - (hours * 3600000) - (minutes * 60000)) / 1000);
+            var ms = t - (hours * 3600000) - (minutes * 60000) - (seconds * 1000);
+        
+            var hStr = hours < 10 ? "0"+hours : ""+hours;
+            var mStr = minutes < 10 ? "0"+minutes : ""+minutes;
+            var sStr = seconds < 10 ? "0"+seconds : ""+seconds;
+            var msStr= ms >= 100 ? ""+ms : ms >= 10 ? "0"+ms : "00"+ms;
+            
+            if (hours == 0)
+                return mStr + ':' + sStr + ':' + msStr;
+            return hStr + ':' + mStr + ':' + sStr + ':' + msStr;
+        }
+
+        var start = msToTimecode(t);
+        var end = msToTimecode(t + d);
+
+        return "[" + start + "] - [" + end + "] (" + d / 1000 + "s)";
+    }
+
+
     return (
         <>
         <div className="h-full w-full flex flex-col justify-around">
@@ -188,8 +212,10 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                 <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
             </div>
 
-            <div className="w-full align-bottom bg-gray-300">
-                <p className="text-right text-gray-400 align-bottom hover:align-top">Dernier changement le {formatted_date} par {lastEditor}</p>
+            <div className="w-full align-bottom bg-gray-300 flex flex-row justify-between">
+                <p className="inline-flex text-right text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
+                <p className="inline-flex text-right text-gray-400 align-bottom hover:align-top">{formatted_date}</p>
+                {/* <p className="text-right text-gray-400 align-bottom hover:align-top">Dernier changement le {formatted_date} par {lastEditor}</p> */}
             </div>
         </div>
         </>
