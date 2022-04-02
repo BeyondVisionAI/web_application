@@ -3,6 +3,7 @@ import CommentBox from './CommentBox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+
 const dateOptions =
 {
     weekday: 'short', year: 'numeric', month: '2-digit',
@@ -17,7 +18,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
     const [voiceId, setVoiceId] = useState(replica.voiceId);
 
     // additional infos 
-    const [lastEdit, setLastEdit] = useState(replica.lastEdit);
+    const [lastEdit, setLastEdit] = useState(replica.lastEditDate);
     const [lastEditor, setLastEditor] = useState(replica.lastEditor);
     const [characterCount, setCharacterCount] = useState("" + replica.content.length + "/100");
 
@@ -26,9 +27,6 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
     const [isTextUpdated, toggleTextUpdate] = useState(false);
     let replicaTextUpdateTimeout = null;
 
-    // useEffect(() => {
-    //     replicaTextUpdateTimeout = setTimeout(console.log("tptp"), 500);
-    // }, [isTextUpdated]);
 
     const handleReplicaTextChange = async function (event) {
         setCharacterCount(`${event.target.value.length}/100`);
@@ -37,8 +35,8 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
     }
 
     useEffect(() => {
+        console.log("Text Update change");
         const updateReplicaText = async function () {
-            console.log("sending the update request");
             try {
                 const res = await axios({
                     method: 'PUT',
@@ -64,28 +62,6 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         }
     }, [isTextUpdated]);
 
-
-//     useEffect(() => {
-//         const updateReplicaText = async function () {
-//             try {
-//                 const res = await axios({
-//                     method: 'PUT',
-//                     data: {
-//                         content: text,
-//                         timestamp: timestamp,
-//                         duration: duration,
-//                         voiceId: voiceId
-//                     },
-//                     url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
-//                     withCredentials: true
-//                 });
-//             } catch (err) {
-//                 console.error("error => ", err);
-//             }
-//         }
-
-//         updateReplicaText();
-// }, [text]);
 
     const updateReplicaComments = async () => {
         try {
@@ -125,6 +101,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
     }
 
     useEffect(() => {
+        console.log("Use effect of replica selection change");
         const fetchReplicaComments = async () => {
             try {
                 const res = await axios({
@@ -168,7 +145,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         setTimestamp(replica.timestamp);
         setDuration(replica.duration);
         setVoiceId(replica.voiceId);
-        setLastEdit(replica.lastEdit);
+        setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
     }, [replica]);
 
@@ -182,9 +159,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                 <h3 className="inline-flex items-center text-l mr-9">{characterCount}</h3>
             </div>
             <textarea name="replica-text" id="" 
-            // cols="40" rows="2"
             value={text} maxLength='100'
-            // defaultValue={text} maxLength='100'
             onChange={handleReplicaTextChange}
             className="w-11/12 resize-none my-2 ml-4 px-2 py-1 leading-7 text-xl
             rounded-md border border-solid border-blue-500

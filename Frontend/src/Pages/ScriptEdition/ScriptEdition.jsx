@@ -5,32 +5,12 @@ import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const tempReplica = {
-    content: "This is an example of a replica",
-    voice: "plop",
-    comments: [
-        "This is an example of a replica's nested comment",
-        "Other comment written about this replica, which should overflow on itself since its quite long aaaaaaaaaaaaaaaaaaaaaaaaa eeeeeeeeeeeeeeeeeee eeeeaeaeaeaaeaae aeaeaeaea",
-        "I would like to comment something else",
-        "This should be an overflowing comment in the list"
-    ],
-    lastEdit: Date.now(),
-    lastEditor: "John Doe"
-}
-
-const tempTLR = [
-    {content: "first replica"},
-    {content: "second replica"},
-    {content: "third replica"},
-    {content: "fourth replica"}
-]
 
 const ScriptEdition = ( {project, video} ) => {
     const [replicas, setReplicas] = useState([]);
     const [replicaSelected, setReplicaSelected] = useState(null);
 
     const updateReplicaAction = async (selectedId) => {
-        console.log("bjr");
         setReplicaSelected(selectedId);
     }
 
@@ -85,8 +65,6 @@ const ScriptEdition = ( {project, video} ) => {
                     withCredentials: true
                 });
                 let resRep = Object.values(res.data);
-                console.log("res replica : " + resRep);
-                console.table(resRep);
                 setReplicas(resRep);
             } catch (e) {
                 let errMsg = "Error";
