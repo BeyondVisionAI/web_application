@@ -4,7 +4,10 @@ const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js
 
 exports.getProjectReplicas = async function(req, res) {
     try {
-        var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
+        // var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
+        var script = await Replica.find({projectId: req.params.projectId}).
+            populate({path: 'lastEditor', select: 'firstName lastName'}).
+            sort({timestamp: "asc"});
         res.status(200).send(script);
     } catch (err) {
         console.log("Replica->getProjectReplicas : " + err);
@@ -15,7 +18,8 @@ exports.getProjectReplicas = async function(req, res) {
 
 exports.getProjectReplica = async function(req, res) {
     try {
-        var replica = await Replica.findById(req.params.replicaId);
+        var replica = await Replica.findById(req.params.replicaId).
+            populate({path: 'lastEditor', select: 'firstName lastName'});
         res.status(200).send(replica);
     } catch (err) {
         console.log("Replica->getProjectReplica : " + err);

@@ -147,6 +147,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         setVoiceId(replica.voiceId);
         setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
+        console.log("last editor : ", lastEditor.firstName, lastEditor.lastName);
     }, [replica]);
 
 
@@ -173,6 +174,10 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         return "[" + start + "] - [" + end + "] (" + d / 1000 + "s)";
     }
 
+    const formatLastEditor = function(person) {
+        var fName = person.firstName;
+        return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+    }
 
     return (
         <>
@@ -213,9 +218,8 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
             </div>
 
             <div className="w-full align-bottom bg-gray-300 flex flex-row justify-between">
-                <p className="inline-flex text-right text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
-                <p className="inline-flex text-right text-gray-400 align-bottom hover:align-top">{formatted_date}</p>
-                {/* <p className="text-right text-gray-400 align-bottom hover:align-top">Dernier changement le {formatted_date} par {lastEditor}</p> */}
+                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
+                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top">{formatted_date} by {formatLastEditor(lastEditor)}</p>
             </div>
         </div>
         </>
