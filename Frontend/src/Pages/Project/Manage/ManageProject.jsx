@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavBar from '../../../GenericComponents/NavBar/NavBar';
 import axios from 'axios';
+import { Downloader } from '../../../GenericComponents/Files/Downloader';
 
 export default function ManageProject(props) {
     const [project, setProject] = useState(null);

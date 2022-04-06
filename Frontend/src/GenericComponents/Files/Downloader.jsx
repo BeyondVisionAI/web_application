@@ -1,6 +1,6 @@
 import { DownloadFileUrl } from './S3Manager';
 import { useEffect, useState } from 'react';
-import "../Button/Button.css"
+import "../Button/Button.css";
 
 export function Downloader(props) {
     console.log("Downloader")
