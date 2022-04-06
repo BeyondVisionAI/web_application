@@ -59,6 +59,11 @@ export default function ManageProject(props) {
                         <div className='h-1/4 m-8 rounded-b-lg drop-shadow-xl bg-[#ffffff]'>Invoice</div>
                     </div>
                 </div>
+                {/*TODO bien placé les bouttons et ne pas les affiché si il n'existe pas */}
+                <Downloader bucket='bv-finished-products' keyName={`Video/${props.match.params.id}.mp4`}
+                label='Download Video' donwload/>
+                <Downloader bucket='bv-finished-products' keyName={`Audio/${props.match.params.id}.mp3`}
+                label='Download Audio' donwload/>
             </div>
         );
     } else {
