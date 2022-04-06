@@ -24,24 +24,3 @@ export function Downloader(props) {
     );
 
 }
-export async function DownloadFileUrl(bucketName, keyName) {
-    try {
-        let s3 = new AWS.S3();
-        const params = {
-            Bucket: bucketName,
-            Key: keyName,
-        };
-        const url = await new Promise((resolve, reject) => {
-            s3.getSignedUrl('getObject', params, function (err, url) {
-                if (err) {
-                    reject(err)
-                }
-                resolve(url)
-            })
-        });
-        return (url);
-    } catch (err) {
-        console.log('Error catch', err, err.stack);
-        return ("")
-    }
-}
