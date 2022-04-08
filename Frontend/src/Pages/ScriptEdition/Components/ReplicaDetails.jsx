@@ -4,12 +4,6 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const dateOptions =
-{
-    weekday: 'short', year: 'numeric', month: '2-digit',
-    day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
-};
-
 const ReplicaDetails = ({replica, updateReplicaList}) => {
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
@@ -22,11 +16,12 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
     const [lastEditor, setLastEditor] = useState(replica.lastEditor);
     const [characterCount, setCharacterCount] = useState("" + replica.content.length + "/100");
 
-    const formatted_date = new Date(lastEdit).toLocaleDateString("fr-FR", dateOptions);
-
     const [isTextUpdated, toggleTextUpdate] = useState(false);
     let replicaTextUpdateTimeout = null;
 
+    /***
+     * TEXT AND REPLICA UPDATE
+     */
 
     const handleReplicaTextChange = async function (event) {
         setCharacterCount(`${event.target.value.length}/100`);
@@ -61,44 +56,6 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
             clearTimeout(replicaTextUpdateTimeout);
         }
     }, [isTextUpdated]);
-
-
-    const updateReplicaComments = async () => {
-        try {
-            const res = await axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
-                withCredentials: true
-            });
-            console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
-            console.log(res);
-            let resComm = Object.values(res.data);
-            console.log(resComm);
-            setComments(resComm);
-        } catch (e) {
-            let errMsg = "Error";
-            switch (e.response.status) {
-                case 401:
-                    switch (e.response.data) {
-                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                        /* errors that fits the 403 to me */
-                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                        default: errMsg = "Error (401)."; break;
-                    } break;
-                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                case 404:
-                    switch (e.response.data) {
-                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                        case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
-                        default: errMsg = "Error (404)."; break;
-                    } break;
-                default /* 500 */ : errMsg = "Internal Error."; break;
-            }
-            toast.error(errMsg);
-            console.error(e);
-        }
-    }
 
     useEffect(() => {
         console.log("Use effect of replica selection change");
@@ -147,9 +104,52 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         setVoiceId(replica.voiceId);
         setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
-        console.log("last editor : ", lastEditor.firstName, lastEditor.lastName);
     }, [replica]);
 
+    /***
+     * COMMENT UPDATE
+     */
+
+    const updateReplicaComments = async () => {
+        try {
+            const res = await axios({
+                method: 'GET',
+                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
+                withCredentials: true
+            });
+            console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
+            console.log(res);
+            let resComm = Object.values(res.data);
+            console.log(resComm);
+            setComments(resComm);
+        } catch (e) {
+            let errMsg = "Error";
+            switch (e.response.status) {
+                case 401:
+                    switch (e.response.data) {
+                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                        /* errors that fits the 403 to me */
+                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
+                        default: errMsg = "Error (401)."; break;
+                    } break;
+                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                case 404:
+                    switch (e.response.data) {
+                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
+                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
+                        case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
+                        default: errMsg = "Error (404)."; break;
+                    } break;
+                default /* 500 */ : errMsg = "Internal Error."; break;
+            }
+            toast.error(errMsg);
+            console.error(e);
+        }
+    }
+
+    /***
+     * FORMATTING FUNCTIONS
+     */
 
     const formatTimestamp = function (t, d) {
         const msToTimecode = function(t) {
@@ -173,6 +173,17 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
 
         return "[" + start + "] - [" + end + "] (" + d / 1000 + "s)";
     }
+
+
+    const formatDate = function(time) {
+        const dateOptions =
+        {
+            weekday: 'short', year: 'numeric', month: '2-digit',
+            day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
+        };
+        return new Date(time).toLocaleDateString("fr-FR", dateOptions);
+    }
+
 
     const formatLastEditor = function(person) {
         var fName = person.firstName;
@@ -217,13 +228,13 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                 <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
             </div>
 
-            <div className="w-full align-bottom bg-gray-300 flex flex-row justify-between">
+            <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
                 <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
-                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top">{formatted_date} by {formatLastEditor(lastEditor)}</p>
+                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
             </div>
         </div>
         </>
-        )
+    )
 }
 
 export default ReplicaDetails;

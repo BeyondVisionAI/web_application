@@ -2,26 +2,48 @@ import {React, useState} from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
+import Tooltip from '@mui/material/Tooltip';
 
 const CommentBox = ({comments, replica, updateComments}) => {
 
     const [newComment, setNewComment] = useState("");
     const [contextSelectedCommentId, setContextSelectedCommentId] = useState(null);
 
+    /***
+     * FORMAT FUNCTIONS
+     */
+
+    const formatAuthor = function(person) {
+        var fName = person.firstName;
+        return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+    }
+
+    const formatDate = function(time) {
+        const dateOptions =
+        {
+            year: 'numeric', month: '2-digit',
+            day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
+        };
+        return new Date(time).toLocaleDateString("fr-FR", dateOptions);
+    }
+
+
     const commentList = comments.map((comment, index) => {
         return (
             <ContextMenuTrigger id="comment_ctm" key={index}>
-                <li className="flex">
-                    <div className="p-3 w-full h-auto
-                    my-1
-                    rounded-md border border-solid border-blue-800
-                    bg-gray-200"
-                    onContextMenu={() => setContextSelectedCommentId(comment._id)}>
-                        <p className="leading-7 text-l">
-                            {comment.content}
-                        </p>
-                    </div>
-                </li>
+                <Tooltip title={`Écrit par ${formatAuthor(comment.author)} le ${formatDate(comment.date)}`}>
+                    <li className="flex">
+                        <div className="p-3 w-full h-auto
+                        my-1
+                        rounded-md border border-solid border-blue-800
+                        bg-gray-200"
+                        onContextMenu={() => setContextSelectedCommentId(comment._id)}>
+                            <p className="leading-7 text-l">
+                                {comment.content}
+                            </p>
+                        </div>
+                    </li>
+                </Tooltip>
             </ContextMenuTrigger>
         )
     });

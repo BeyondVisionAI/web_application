@@ -6,7 +6,9 @@ const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment");
 
 exports.getReplicaComments = async function(req, res) {
     try {
-        var comments = await ReplicaComment.find({replicaId: req.params.replicaId}).sort({date: "asc"});
+        var comments = await ReplicaComment.find({replicaId: req.params.replicaId})
+            .populate({path: "author", select: 'firstName lastName'})
+            .sort({date: "asc"});
         res.status(200).send(comments);
     } catch (err) {
         console.log("ReplicaComment->getReplicaComments : " + err);
@@ -17,7 +19,8 @@ exports.getReplicaComments = async function(req, res) {
 
 exports.getReplicaComment = async function(req, res) {
     try {
-        var comment = await ReplicaComment.findById(req.params.commentId);
+        var comment = await ReplicaComment.findById(req.params.commentId)
+            .populate({path: "author", select: 'firstName lastName'});
         res.status(200).send(comment);
     } catch (err) {
         console.log("ReplicaComment->getReplicaComment : " + err);
