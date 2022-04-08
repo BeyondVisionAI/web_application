@@ -50,18 +50,18 @@ export default function CreateProject({ show, onHide }) {
         setValue(tmp);
     }
 
-    const uploadMedia = () => {
-        UploadFile(image, 'bv-thumbnails-projects', 'eu-west-3', `${values.name}_${image.name}`)
+    function uploadMedia () {
+        UploadFile(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
         .then(async (imageRes) => {
             let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
                 name: imageRes.Key,
                 desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
-                ETag: imageRes.ETag,
+                ETag: imageRes.ETag
             });
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
         }).catch(err => console.error("Upload thumbnail error:", err));
-        UploadFile(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.name}_${video.name}`)
+        UploadFile(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
         .then(async videoRes => {
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,
@@ -74,12 +74,12 @@ export default function CreateProject({ show, onHide }) {
         }).catch(err => console.error("Upload video error:", err));
     }
 
-    const postData = async () => {
+    async function postData () {
         try {
             let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`, { status: 'Stop', ...values, script: null });
             handleChange('id', projectResponse.data._id);
-            history.push(`/project/${projectResponse.data._id}`);
             uploadMedia();
+            history.push(`/project/${projectResponse.data._id}`);
         } catch (error) {
             console.error(error);
         }

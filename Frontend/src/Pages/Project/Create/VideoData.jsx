@@ -54,4 +54,3 @@ export default function VideoData({ nextStep, prevStep, handleChange, values }) 
         </form>
     )
 }
-// TODO: Fix Image size (W, H)

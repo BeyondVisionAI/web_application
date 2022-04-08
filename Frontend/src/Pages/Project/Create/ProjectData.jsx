@@ -15,18 +15,18 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
         prevStep();
     }
 
-    const onImageChange = () => {
-        if (image) {
-            let reader = new FileReader();
-
-            reader.readAsDataURL(image);
-            reader.onload = () => {
-                setThumbnail(reader.result);
-            }
-        }
-    };
-
     useEffect(() => {
+        const onImageChange = () => {
+            if (image) {
+                let reader = new FileReader();
+
+                reader.readAsDataURL(image);
+                reader.onload = () => {
+                    setThumbnail(reader.result);
+                }
+            }
+        };
+
         onImageChange();
     }, [image]);
 

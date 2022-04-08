@@ -2,9 +2,17 @@ const { Errors } = require("../../../Models/Errors.js");
 const { Image } = require('../../../Models/Media/Image');
 
 exports.getImage = async function(req, res) {
-    console.log(req.body);
-    console.log('Get image on s3');
-}; // TODO: Fill Fonction
+    try {
+        const image = await Image.findById(req.params.id);
+
+        if (image)
+            return res.status(200).send(image);
+        return res.status(404).send(Errors.IMAGE_NOT_FOUND);
+    } catch (error) {
+        console.log(`Image -> GetImageDb: ${error}`);
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+};
 
 exports.createImage = async function(req, res) {
     const { name, desc, ETag } = req.body;
