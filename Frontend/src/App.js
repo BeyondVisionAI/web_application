@@ -15,6 +15,7 @@ import Register from './Pages/Register/Register';
 import AskForPasswordChange from './Pages/AskForPasswordChange/AskForPasswordChange';
 import ResetPassword from './Pages/ResetPassword/ResetPassword';
 import ManageProject from './Pages/Project/Manage/ManageProject';
+import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
 
 function App() {
   return (
@@ -25,8 +26,9 @@ function App() {
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <Route exact path="/" component={LandingPage} />
-              <Route exact path="/project" component={Project} />
-              <Route exact path="/project/:id" component={ManageProject} />
+              <PrivateRoute exact path="/project" component={Project} />
+              <PrivateRoute exact path="/project/:id" component={ManageProject} />
+              <PrivateRoute exact path="/project/:id/edit" component={ScriptEdition} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/askForPasswordChange" component={AskForPasswordChange} />

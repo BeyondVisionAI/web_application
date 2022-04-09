@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../../../GenericComponents/NavBar/NavBar';
 import { DownloadFileUrl } from '../../../GenericComponents/Files/S3Manager';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 export default function ManageProject(props) {
     const [project, setProject] = useState(null);
     const [thumbnail, setThumbnail] = useState(null);
+    const history = useHistory();
 
+    axios.defaults.withCredentials = true;
     useEffect(() => {
         const getProject = async function (id) {
             try {
@@ -44,6 +47,10 @@ export default function ManageProject(props) {
         return (<div class="flex flex-wrap shadow-xl rounded"></div>);
     }
 
+    const RedirectToEdit = () => {
+        history.push(`/project/${props.match.params.id}/edit`);
+    }
+
 // TODO :
 //   Check if I have the rights
 //   indentation du text, récupération des: collabo, invoices, bouton mode edit, on load
@@ -55,7 +62,7 @@ export default function ManageProject(props) {
         return (
             <div className='w-full h-screen bg-myWhite'>
                 <NavBar />
-                <></>
+                <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => RedirectToEdit()}>Edit</button>
                 <div className='flex w-full h-screen'>
                     <div className='w-2/3 h-full'>
                         <div className='h-3/5 rounded-t-lg m-5 drop-shadow-xl bg-white flex'>
