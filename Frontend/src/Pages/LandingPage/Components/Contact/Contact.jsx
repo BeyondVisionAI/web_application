@@ -17,7 +17,6 @@ const Contact = () => {
 
     return (
         <div href="contact" id="contact" className="contact-container">
-            <img className="contact-enveloppe" src="/Enveloppe.svg" alt="enveloppe drawing" />
             <div className="top-line">
                 <div>
                     <label>Your name *</label>

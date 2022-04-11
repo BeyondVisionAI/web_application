@@ -50,3 +50,57 @@
     font-size: 1.2vw;
     margin-bottom: 15px;
 }
+
+@media only screen and (max-width: 1024px) {
+
+    .price-button {
+        width: 90%;
+        font-size: 1.6vw;
+    }
+    
+    .pricing-element-container-secondary > .price-button {
+        font-size: 1.3vw;
+    }
+    
+    .pricing-list-element {
+        font-size: 1.5vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .price-button {
+        font-size: 2vw;
+    }
+    
+    .pricing-element-container-secondary > .price-button {
+        font-size: 1.7vw;
+    }
+    
+    .pricing-list-element {
+        font-size: 2vw;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+
+    .pricing-element-container, .pricing-element-container-secondary {
+        width: 100%;
+        margin-top: 2vh;
+    }
+    
+    .pricing-element-container-secondary {
+        width: 100%;
+    }
+
+    .price-button {
+        font-size: 3.4vw;
+    }
+    
+    .pricing-element-container-secondary > .price-button {
+        font-size: 3.4vw;
+    }
+    
+    .pricing-list-element {
+        font-size: 3.4vw;
+    }
+}

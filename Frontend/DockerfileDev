@@ -4,5 +4,6 @@ RUN npm install @craco/craco --save
 RUN npm install
 RUN npm install @craco/craco --save
 ENV PORT=80
+ENV CHOKIDAR_USEPOLLING=true
 EXPOSE 80
 CMD ["npm", "start"]

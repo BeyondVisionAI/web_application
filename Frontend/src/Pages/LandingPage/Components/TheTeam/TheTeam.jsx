@@ -6,7 +6,7 @@ import Aos from 'aos'
 const TheTeam = () => {
 
     useEffect(() => {
-        Aos.init({duration: "1500"})
+        Aos.init({duration: "1500", disable: 'mobile'})
     }, []);
 
     return (

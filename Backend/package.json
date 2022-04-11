@@ -28,6 +28,8 @@
     "mongoose": "^6.0.12",
     "multiparty": "^4.2.3",
     "nodemailer": "^6.7.0",
-    "uuid": "^8.3.2"
+    "stripe": "^8.205.0",
+    "uuid": "^8.3.2",
+    "validate-currency-code": "^0.1.1"
   }
 }

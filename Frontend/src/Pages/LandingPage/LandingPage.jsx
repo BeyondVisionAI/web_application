@@ -14,7 +14,7 @@ const LandingPage = () => {
             <Home />
             <TheProject />
             <Pricing />
-            <TheTeam />
+            {/* <TheTeam /> */}
             <Contact />
         </div>
     );

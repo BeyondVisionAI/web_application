@@ -7,6 +7,7 @@ module.exports = function(app) {
     const list = require("./List");
     const listMember = require("./ListMember");
     const scriptEdition = require("./ScriptEdition");
+    const payment = require("./Payment")
 
     test(app);
     user(app);
@@ -15,5 +16,6 @@ module.exports = function(app) {
     collaboration(app);
     list(app);
     listMember(app);
+    payment(app)
 //    scriptEdition(app);
   }

@@ -4,7 +4,7 @@ import Aos from 'aos'
 
 const PricingElement = (props) => {
     useEffect(() => {
-        Aos.init({duration: "1500"})
+        Aos.init({duration: "1500", disable: 'mobile'})
     }, []);
     return (
         <div data-aos={props.animation} data-aos-delay={props.delay} className={props.isMainElement ? "pricing-element-container" : "pricing-element-container-secondary"}>

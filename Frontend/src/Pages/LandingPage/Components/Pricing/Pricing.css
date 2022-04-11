@@ -10,3 +10,23 @@
     height: 100vh;
     overflow: hidden;
 }
+
+@media only screen and (max-width: 1024px) {
+    .pricing-container {
+        padding: 0 10%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .pricing-container {
+        padding: 0 0;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .pricing-container {
+        padding: 0 20%;
+        flex-direction: column;
+        height: 150vh;
+    }
+}
