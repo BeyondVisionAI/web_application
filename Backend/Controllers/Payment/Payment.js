@@ -2,7 +2,6 @@ const { Errors } = require("../../Models/Errors");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 var validateCurrencyCode = require('validate-currency-code');
 const { Payment } = require("../../Models/Payment");
-const endpointSecret = 'whsec_...';
 
 
 function isNumeric(value) {
@@ -44,7 +43,6 @@ exports.createPaymentIntent = async function (req, res) {
 
 exports.getUserPayment = async function (req, res) {
     Payment.find({userId: req.user.userId}, async (err, docs) => {
-        console.log("🚀 ~ file: Payment.js ~ line 46 ~ Payment.find ~ docs", docs)
         if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
         res.status(200).json(docs);
     })
@@ -52,19 +50,6 @@ exports.getUserPayment = async function (req, res) {
 
 exports.stripeWebhook = async function (req, res) {
     let event = req.body;
-    if (endpointSecret) {
-        const signature = req.headers["stripe-signature"];
-        try {
-            event = stripe.webhooks.constructEvent(
-            req.body,
-            signature,
-            endpointSecret
-            );
-        } catch (err) {
-            console.log(`⚠️  Webhook signature verification failed.`, err.message);
-            return res.sendStatus(400);
-        }
-    }
 
     switch (event.type) {
         case "payment_intent.succeeded":
@@ -95,8 +80,6 @@ exports.stripeWebhook = async function (req, res) {
             break;
         default:
             console.log(`Unhandled event type ${event.type}.`);
+            return res.send();
     }
-
-    // Return a 200 response to acknowledge receipt of the event
-    res.send();
 };

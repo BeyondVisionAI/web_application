@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-var routes = require('./routes/routes');
+var routes = require('./Routes/routes');
 var cookieParser = require('cookie-parser')
 const cors = require('cors')
 const app = express();
