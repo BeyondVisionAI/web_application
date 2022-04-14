@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import NavBar from '../../../GenericComponents/NavBar/NavBar';
-import { DownloadFileUrl } from '../../../GenericComponents/Files/S3Manager';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import Description from './Widgets/Description';
+import ProjectStatus from './Widgets/ProjectStatus';
+import Options from './Widgets/Options';
+import Bill from './Widgets/Bill';
+import VideoPlayer from './Widgets/VideoPlayer';
 
 export default function ManageProject(props) {
     const [project, setProject] = useState(null);
-    const [thumbnail, setThumbnail] = useState(null);
     const history = useHistory();
 
     axios.defaults.withCredentials = true;
     useEffect(() => {
-        const getProject = async function (id) {
+        async function getProject(id) {
             try {
                 let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`);
 
@@ -21,8 +24,6 @@ export default function ManageProject(props) {
                     thumbnailId: projectR.data.thumbnailId,
                     description: projectR.data.description
                 });
-                if (projectR.data.thumbnailId)
-                    getData(props.match.params.id, projectR.data.thumbnailId);
             } catch (error) {
                 console.error(error);
             }
@@ -31,29 +32,12 @@ export default function ManageProject(props) {
         getProject(props.match.params.id)
     }, [props.match.params.id]);
 
-    async function getData (projectId, thumbnailId) {
-        try {
-            let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projectId}/${thumbnailId}`);
-            let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
-            setThumbnail(url);
-        } catch (err) {
-            console.error(`Getting file ${thumbnailId} on S3`, err);
-        }
-    }
-
-    const dispThumbnail = () => {
-        if (thumbnail)
-            return (<img className='object-scale-down w-2/4' src={ thumbnail } alt='thumbnail'></img>);
-        return (<div class="flex flex-wrap shadow-xl rounded"></div>);
-    }
-
     const RedirectToEdit = () => {
         history.push(`/project/${props.match.params.id}/edit`);
     }
 
 // TODO :
-//   Check if I have the rights
-//   indentation du text, récupération des: collabo, invoices, bouton mode edit, on load
+//   Indentation du text, récupération des: collabo, invoices, bouton mode edit, on load
 //   Cancel scroll barre
 //   Modification de la nav bar
 //   Mettre un temps de chargement quand la donnée n'est pas disponible
@@ -65,28 +49,18 @@ export default function ManageProject(props) {
                 <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => RedirectToEdit()}>Edit</button>
                 <div className='flex w-full h-screen'>
                     <div className='w-2/3 h-full'>
-                        <div className='h-3/5 rounded-t-lg m-5 drop-shadow-xl bg-white flex'>
-                            <div className='w-2/4'>
-                                <h1 className='indent-1 top-10 p-5 text-2xl font-bold'>{project.title}</h1>
-                                <p className='p-5 right-9 text-lg'>{project.description}</p>
-                            </div>
-                            <div className='w-2/4'>
-                                { dispThumbnail() }
-                            </div>
-                        </div>
-                        <div className='h-1/5 flex'>
-                            <div className='w-1/2 rounded-bl-lg m-5 drop-shadow-xl bg-white'>
-                                Script
-                            </div>
-                            <div className='w-1/2 rounded-br-lg m-5 drop-shadow-xl bg-white'>
-                                Autre
-                            </div>
-                        </div>
+                        <Description
+                            projectId={props.match.params.id}
+                            title={project.title}
+                            description={project.description}
+                            thumbnailId={project.thumbnailId}
+                        />
+                        <VideoPlayer />
                     </div>
                     <div className='h-full w-1/3 rounded-xl'>
-                        <div className='h-1/4 m-8 rounded-t-lg drop-shadow-xl bg-white'>{project.status}</div>
-                        <div className='h-1/4 m-8 drop-shadow-xl bg-white'>Collaboration</div>
-                        <div className='h-1/4 m-8 rounded-b-lg drop-shadow-xl bg-white'>Invoice</div>
+                        <ProjectStatus />
+                        <Options/>
+                        <Bill />
                     </div>
                 </div>
             </div>
