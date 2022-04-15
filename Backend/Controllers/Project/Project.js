@@ -114,7 +114,7 @@ exports.deleteProject = async function (req, res) {
  */
 exports.updateProject = async function (req, res) {
     try {
-        const project = await Project.findOneAndUpdate({ _id: req.params.projectId }, req.body);
+        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, {returnDocument: 'after'});
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);
