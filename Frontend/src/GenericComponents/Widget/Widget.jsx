@@ -8,4 +8,6 @@ export default function Widget(props) {
   )
 }
 
-// TODO: Add loading, Title?
+// TODO:
+//  Add loading, Title ?
+//  Update button

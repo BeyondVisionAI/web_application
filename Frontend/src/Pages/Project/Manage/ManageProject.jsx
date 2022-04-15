@@ -21,7 +21,9 @@ export default function ManageProject(props) {
                 setProject({
                     title: projectR.data.name,
                     status: projectR.data.status,
+                    actualStep: projectR.data.actualStep,
                     thumbnailId: projectR.data.thumbnailId,
+                    videoUrl: projectR.data.url,
                     description: projectR.data.description
                 });
             } catch (error) {
@@ -55,11 +57,17 @@ export default function ManageProject(props) {
                             description={project.description}
                             thumbnailId={project.thumbnailId}
                         />
-                        <VideoPlayer />
+                        <VideoPlayer
+                            videoUrl={project.videoUrl}
+                        />
                     </div>
                     <div className='h-full w-1/3 rounded-xl'>
-                        <ProjectStatus />
-                        <Options/>
+                        <ProjectStatus
+                            actualStep={project.actualStep}
+                        />
+                        <Options
+                            projectId={props.match.params.id}
+                        />
                         <Bill />
                     </div>
                 </div>
