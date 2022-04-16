@@ -1,2 +1,3 @@
 .docker/mongodb/data
 .env
+.DS_Store

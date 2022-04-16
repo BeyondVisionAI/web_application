@@ -4,9 +4,11 @@ const { Role } = require("../../Models/Roles");
 
 exports.createProjectDB = async function (mongoose, projectName) {
     const thumbnailId = mongoose.Types.ObjectId();
+    const videoId = mongoose.Types.ObjectId();
     const project = new Project({
         name: projectName,
         status: "Done",
+        videoId: videoId,
         thumbnailId: thumbnailId,
         description: `A Description for ${projectName}`,
         videoLink: `VideoLink for ${projectName}`

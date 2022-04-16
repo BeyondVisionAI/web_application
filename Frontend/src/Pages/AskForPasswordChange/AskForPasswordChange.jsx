@@ -10,7 +10,7 @@ import axios from 'axios';
 const AskForPasswordChange = () => {
     const [email, setEmail] = useState(null)
     const history = useHistory()
-    
+
     function askForChange() {
         if (!email ) {
             toast.error("Username or password not filled")
@@ -50,5 +50,5 @@ const AskForPasswordChange = () => {
         </div>
     );
 }
- 
+
 export default AskForPasswordChange;

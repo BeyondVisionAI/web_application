@@ -39,6 +39,13 @@ const Errors = {
     //Image : 6
     IMAGE_NOT_FOUND: "IMAGE_NOT_FOUND",
     IMAGE_NOT_YOURS: "IMAGE_NOT_YOURS",
+
+    //Replica : 7
+    REPLICA_NOT_FOUND: "REPLICA_NOT_FOUND",
+    REPLICA_NOT_IN_PROJECT: "REPLICA_NOT_IN_PROJECT",
+
+    //ReplicaComment : 
+    REPLICACOMMENT_NOT_FOUND: "REPLICACOMMENT_NOT_FOUND",
 };
 
 exports.Errors = Errors;

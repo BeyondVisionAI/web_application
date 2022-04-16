@@ -36,9 +36,9 @@ exports.getAllProjectsDB = async function (userId) {
 
 /**
  * Get a project
- * @param { Request } req { body: { projectID } }
+ * @param { Request } req { params: { projectID } }
  * @param { Response } res
- * @returns { [{ _id, name, status, videoLink, script, creator, assignedAudioDescriptiors }] }
+ * @returns { [{ _id, name, status, videoId, script, creator, assignedAudioDescriptiors }] }
  */
 exports.getProject = async function (req, res) {
     try {
@@ -55,7 +55,7 @@ exports.getProject = async function (req, res) {
 
 /**
  * Create a project
- * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoLink, script }}
+ * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoId, script }}
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
@@ -68,12 +68,12 @@ exports.createProject = async function (req, res) {
             name: req.body.name,
             status: 'Stop',
             thumbnailId: req.body.thumbnailId,
+            videoId: req.body.videoId,
             description: req.body.description,
-            videoLink: req.body.videoLink,
-            script: req.body.script,
+            script: req.body.script
         });
         await newProject.save();
-        // await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
+        await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
         res.status("200").send(newProject);
     } catch (err) {
         console.log("Project->createProject: " + err);
@@ -98,7 +98,7 @@ exports.deleteProject = async function (req, res) {
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
         await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
-        // await Project.deleteMany({ _id: { $in: req.body.projectIds }});
+        await Project.deleteMany({ _id: { $in: req.body.projectIds }});
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -106,25 +106,15 @@ exports.deleteProject = async function (req, res) {
     }
 }
 
+/**
+ * Delete a project
+ * @param { Request } req { params: { projectId }, body: { status?, actualStep?, progress?, thumbnailId?, videoId?, description?, script? } }
+ * @param { Response } res
+ * @returns { status: Number, data: Project }
+ */
 exports.updateProject = async function (req, res) {
     try {
-        // Question : Pour quoi pas utiliser Project.updateOne ?
-
-        let project = await Project.findById(req.params.projectId);
-        let hasChanged = false;
-
-        if (req.body.name && req.body.name != project.name) {
-            project.name = req.body.name;
-            hasChanged = true;
-        }
-        if (req.body.description && req.body.description != project.description) {
-            project.description = req.body.description;
-            hasChanged = true;
-        }
-        if (hasChanged === true) {
-            project.lastEdit = new Date();
-            await project.save();
-        }
+        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, {returnDocument: 'after'});
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);
