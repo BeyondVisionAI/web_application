@@ -36,4 +36,13 @@ db.createUser(
   },
 );
 
+db = db.getSiblingDB('tests_db_replica');
+db.createUser(
+  {
+    user: 'beyondvisiontesteur',
+    pwd: 'testpassword',
+    roles: [{ role: 'readWrite', db: 'tests_db_replica' }]
+  },
+);
+
 print('END #################################################################');
