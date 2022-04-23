@@ -52,11 +52,11 @@ beforeEach(async () => {
     projectC = await Helper.Project.createProjectAndLinkToUserDB(mongoose, "Project C", userC.userId);
 
     replicaA1 = await Helper.Replica.createReplicaInProjectDB(mongoose, projectA._id,
-        userA, replicaTestContent);
+        userA.userId, replicaTestContent);
     replicaA2 = await Helper.Replica.createReplicaInProjectDB(mongoose, projectA._id,
-        userA, "replica 2", 4200, 1500, 42);
+        userA.userId, "replica 2", 4200, 1500, 42);
     replicaB1 = await Helper.Replica.createReplicaInProjectDB(mongoose, projectB._id,
-        userB, replicaTestContent);
+        userB.userId, replicaTestContent);
     });
 
 afterEach(async () => {
@@ -83,60 +83,69 @@ describe("Get all the replicas from a project", () => {
         expect(res.status).toBe(200);
         expect(res.body.length).toBe(2);
 
-        console.debug("Array is of " + res.body.length);
-        console.debug("First object is " + res.body[0]);
-        console.debug("Second object is " + res.body[1]);
-
-        // expect(Object.is(res.body[0], expect.objectContaining({
-        //     projectId: projectA._id,
-        //     _id: replicaA1._id,
-        //     content: replicaTestContent,
-        //     timestamp: 0,
-        //     duration: 1000,
-        // }))).toBe(true);
-
-        // const expected = [expect.objectContaining({projectId: projectA._id, _id: replicaA1._id,
-        //     content: replicaTestContent, timestamp: 0, duration: 1000}),
-        //     expect.objectContaining({projectId: projectA._id, _id: replicaA2._id, content: "replica 2",
-        //     timestamp: 4200, duration: 1500})
-        // ];
-
-        // expect(expected).toEqualContaining
-
-        expect(res.body[0]).toEqual(expect.objectContaining({
-            projectId: projectA._id,
-            // _id: replicaA1._id,
-            content: replicaTestContent,
-            timestamp: 0,
-            duration: 1000,
-            // voiceId: 0,
-            // lastEditor: userA,
-            // lastEditDate: replicaA1.lastEditDate
-        }));
-        // expect(res.body[1]).toEqual(expect.objectContaining({
-        //     projectId: projectA._id,
-        //     _id: replicaA2._id,
-        //     content: "replica 2",
-        //     timestamp: 4200,
-        //     duration: 1500,
-        //     // voiceId: 42,
-        //     // lastEditor: userA,
-        //     // lastEditDate: replicaA2.lastEditDate
-        // }));
-
-
-        const res2 = await request.get(`/projects/${projectB._id}/replicas`).set("Cookie", userB.cookies);
-        expect(res2.status).toBe(200);
-        expect(res2.body.length).toBe(1);
-        expect(res2.body).toEqual(expect.arraycontaining([
+        expect(res.body).toEqual(expect.arrayContaining([
             expect.objectContaining({
-                projectId: projectB._id,
-                _id: replicaB1._id,
+                projectId: String(projectA._id),
+                _id: String(replicaA1._id),
                 content: replicaTestContent,
                 timestamp: 0,
                 duration: 1000,
-                lastEditor: userB,
-                lastEditDate: replicaB1.lastEditDate
+                lastEditor: expect.objectContaining({ // I populate the GET result so the lastEditor is != than userId
+                    _id: userA.userId,
+                    firstName: userA.firstName,
+                    lastName: userA.lastName
+                }),
+                // lastEditDate: String(replicaA1.lastEditDate),
+                voiceId: expect.any(String) // TODO
+            }),
+            expect.objectContaining({
+                projectId: String(projectA._id),
+                _id: String(replicaA2._id),
+                content: replicaA2.content,
+                timestamp: replicaA2.timestamp,
+                duration: replicaA2.duration,
+                lastEditor: expect.objectContaining({
+                    _id: userA.userId,
+                    firstName: userA.firstName,
+                    lastName: userA.lastName
+                }),
+                voiceId: expect.any(String) // TODO
+            })
+        ]));
+
+        ///////// WORKING TEMPLATE
+        // expect(res.body[0]).toEqual(expect.objectContaining({
+        //     projectId: String(projectA._id),
+        //     _id: String(replicaA1._id),
+        //     content: replicaTestContent,
+        //     timestamp: 0,
+        //     duration: 1000,
+        //     lastEditor: expect.objectContaining({ // I populate the GET result so the lastEditor is != than userId
+        //         _id: userA.userId,
+        //         firstName: userA.firstName,
+        //         lastName: userA.lastName
+        //     }),
+        //     // lastEditDate: String(replicaA1.lastEditDate),
+        //     voiceId: expect.any(String)
+        // }));
+        /////////////////
+
+        const resProjB = await request.get(`/projects/${projectB._id}/replicas`).set("Cookie", userB.cookies);
+        expect(resProjB.status).toBe(200);
+        expect(resProjB.body.length).toBe(1);
+        expect(resProjB.body).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+                projectId: String(projectB._id),
+                _id: String(replicaB1._id),
+                content: replicaB1.content,
+                duration: replicaB1.duration,
+                timestamp: replicaB1.timestamp,
+                lastEditor: expect.objectContaining({
+                    _id: userB.userId,
+                    firstName: userB.firstName,
+                    lastName: userB.lastName
+                }),
+                voiceId: expect.any(String)
             })
         ]));
     });
