@@ -38,6 +38,8 @@ services:
       - bdd
     env_file:
       - ./Backend/.env
+    environment:
+      - IS_TEST="TRUE"
     restart: on-failure
 
   mongodb:

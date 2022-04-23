@@ -72,3 +72,5 @@ InputWithLabel.propTypes = {
 }
 
 export default InputWithLabel;
+
+// TODO: Has a value to know if the input is correct or no. => can't valide the form without this value

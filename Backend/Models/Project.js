@@ -36,11 +36,13 @@ const project = new Schema({
     },
     thumbnailId: {
         type: Schema.Types.ObjectId,
-        ref: "Image",
-        required: true
+        ref: "Image"
+    },
+    videoId: {
+        type: Schema.Types.ObjectId,
+        ref: "Video",
     },
     description: String,
-    videoLink: String,
     script: [{
         replica: String,
         lastEditor: {
