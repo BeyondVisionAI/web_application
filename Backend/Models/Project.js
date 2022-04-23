@@ -42,16 +42,7 @@ const project = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Video",
     },
-    description: String,
-    script: [{
-        replica: String,
-        lastEditor: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            required: false
-        },
-        required: false
-    }],
+    description: String
 });
 
 exports.enumStatus = enumStatus;

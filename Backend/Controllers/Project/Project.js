@@ -1,4 +1,5 @@
 const { Project, enumStatus, enumActualStep } = require("../../Models/Project");
+const Replica = require("../../Models/ScriptEdition/Replica");
 const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
@@ -98,7 +99,7 @@ exports.deleteProject = async function (req, res) {
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
         await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
-        await Project.deleteMany({ _id: { $in: req.body.projectIds }});
+        await Project.deleteMany({ _id: { $in: req.body.projectIds } });
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -114,7 +115,7 @@ exports.deleteProject = async function (req, res) {
  */
 exports.updateProject = async function (req, res) {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, {returnDocument: 'after'});
+        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, { returnDocument: 'after' });
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);
@@ -143,31 +144,58 @@ exports.getAllProjects = async function (req, res) {
  */
 exports.setStatus = async function (req, res) {
     try {
-        if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
+        let { statusType, stepType, progress } = req.body;
+
+        if (!req.params.projectId || !statusType || !stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
         var project = await Project.findById(req.params.projectId);
 
         if (!project)
             return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
-        else if (!Object.values(enumStatus).includes(req.body.statusType) || !Object.values(enumActualStep).includes(req.body.stepType))
+        else if (!Object.values(enumStatus).includes(statusType) || !Object.values(enumActualStep).includes(stepType))
             return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
 
-        project.status = req.body.statusType;
-        project.ActualStep = req.body.stepType;
+        project.status = statusType;
+        project.ActualStep = stepType;
 
-        if (req.body.progress && req.body.progress >= 0 && progrreq.body.progressess <= 100)
-            project.progress = req.body.progress;
-        else if (req.body.statusType === 'Stop' || req.body.statusType === 'Error')
+        if (progress && progress >= 0 && progress <= 100)
+            project.progress = progress;
+        else if (statusType === 'Stop' || statusType === 'Error')
             project.progress = 0;
-        else if (req.body.statusType === 'InProgress')
+        else if (statusType === 'InProgress')
             project.progress = 50;
-        else if (req.body.statusType === 'Done')
+        else if (statusType === 'Done')
             project.progress = 100;
 
         await project.save();
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
         console.log("Project->setStatus: " + err);
+        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+    }
+}
+
+/**
+ * set the Status of a project from the ServerAPI
+ * @param { Request } req { params: projectId, body: { jsonString } }
+ * @param { Response } res
+ * @returns { response to send }
+ */
+exports.setScript = async function (req, res) {
+    try {
+        if (!req.params.projectId || !req.body.jsonToSend)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        for (let key in req.body.jsonToSend.script) {
+            let { actionName, startTime, endTime } = req.body.jsonToSend.script[key];
+
+            let replica = await new Replica();
+            replica = { projectId: req.params.projectId, content: actionName, timestamp: startTime, duration: endTime - startTime, voiceId: 1, lastEditDate: new Date() };
+            await replica.save();
+        }
+
+        return (res.status(200).send("Script save to the project."));
+    } catch (err) {
+        console.log("Project->setScript: " + err);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
 }
