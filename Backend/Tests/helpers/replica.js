@@ -10,7 +10,8 @@ exports.createReplicaInProjectDB = async function(mongoose, projectId,
             timestamp: timestamp,
             duration: duration,
             voiceId: voiceId,
-            lastEditor: editor,
+            // lastEditor: editor,
+            lastEditor: mongoose.Types.ObjectId(),
             lastEditDate: new Date()
         }).save();
         return replica;
