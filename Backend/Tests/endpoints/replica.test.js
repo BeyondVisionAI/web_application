@@ -8,6 +8,7 @@ const Helper = require("../general/helper");
 
 const { Errors } = require("../../Models/Errors");
 const { Project } = require("../../Models/Project");
+const { Role } = require("../../Models/Roles");
 
 // Variables //
 var userA = { firstName: "toto", lastName: "toto", email: "toto@toto.com", password: "toto1234", userId: "", cookies: "" };
@@ -71,10 +72,24 @@ describe("Get all the replicas from a project", () => {
     it("Should fail because the user is not logged in", async () => {
         const res = await request.get(`/projects/${projectA._id}/replicas`);
 
-        console.debug(">> " + res.text);
-
         expect(res.status).toBe(401);
         expect(res.text).toBe(Errors.USER_NOT_LOGIN);
+    });
+
+
+    it("Should fail because the project does not exist", async () => {
+        const res = await request.get(`/projects/${idNotExisting}/replicas`).set("Cookie", userA.cookies);
+
+        expect(res.status).toBe(404);
+        expect(res.text).toBe(Errors.PROJECT_NOT_FOUND);
+    });
+
+
+    it("Should fail because the user has no right to the project", async () => {
+        const res = await request.get(`/projects/${projectA._id}/replicas`).set("Cookie", userB.cookies);
+
+        expect(res.status).toBe(401);
+        expect(res.text).toBe(Errors.PROJECT_NOT_YOURS);
     });
 
 
@@ -146,6 +161,42 @@ describe("Get all the replicas from a project", () => {
                     lastName: userB.lastName
                 }),
                 voiceId: expect.any(String)
+            })
+        ]));
+    });
+
+
+    it("Should test if an user with READ access can get replicas of a project", async () => {
+        await Helper.Project.createCollaborationDB(projectA._id, userB.userId, Role.READ);
+        const res = await request.get(`/projects/${projectA._id}/replicas`).set("Cookie", userB.cookies);
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+                projectId: String(projectA._id),
+                _id: String(replicaA1._id),
+                content: replicaTestContent,
+                timestamp: 0,
+                duration: 1000,
+                lastEditor: expect.objectContaining({ // I populate the GET result so the lastEditor is != than userId
+                    _id: userA.userId,
+                    firstName: userA.firstName,
+                    lastName: userA.lastName
+                }),
+                // lastEditDate: String(replicaA1.lastEditDate),
+                voiceId: expect.any(String) // TODO
+            }),
+            expect.objectContaining({
+                projectId: String(projectA._id),
+                _id: String(replicaA2._id),
+                content: replicaA2.content,
+                timestamp: replicaA2.timestamp,
+                duration: replicaA2.duration,
+                lastEditor: expect.objectContaining({
+                    _id: userA.userId,
+                    firstName: userA.firstName,
+                    lastName: userA.lastName
+                }),
+                voiceId: expect.any(String) // TODO
             })
         ]));
     });

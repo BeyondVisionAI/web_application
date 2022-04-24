@@ -16,12 +16,12 @@ exports.createProjectDB = async function (mongoose, projectName) {
     return project;
 }
 
-exports.createCollaborationDB = async function (projectId, userId, rights) {
+exports.createCollaborationDB = async function (projectId, userId, rights, titleCollab = 'Owner of Project') {
     const collab = await new Collaboration({
         projectId: projectId,
         userId: userId,
         rights: rights,
-        titleOfCollaboration: `Owner of Project`
+        titleOfCollaboration: titleCollab
     }).save();
     return collab;
 }
