@@ -1,12 +1,14 @@
-const { Project } = require("../../Models/Project");
+const { Project, enumStatus, enumActualStep } = require("../../Models/Project");
 const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 
-exports.getProjectDB = async function(projectId) {
+exports.getProjectDB = async function (projectId) {
     try {
         var project = await Project.findById(projectId);
+        console.log(projectId);
+        console.log(project);
         return project;
     } catch (err) {
         console.log("Project->getProjectDB: " + err);
@@ -14,7 +16,7 @@ exports.getProjectDB = async function(projectId) {
     }
 }
 
-exports.getAllProjectsDB = async function(userId) {
+exports.getAllProjectsDB = async function (userId) {
     try {
         const collabs = await Collaboration.getAllCollaborationsDB(userId);
         var projects = [];
@@ -34,11 +36,11 @@ exports.getAllProjectsDB = async function(userId) {
 
 /**
  * Get a project
- * @param { Request } req { body: { projectID } }
+ * @param { Request } req { params: { projectID } }
  * @param { Response } res
- * @returns { [{ _id, name, status, videoLink, script, creator, assignedAudioDescriptiors }] }
+ * @returns { [{ _id, name, status, videoId, script, creator, assignedAudioDescriptiors }] }
  */
-exports.getProject = async function(req, res) {
+exports.getProject = async function (req, res) {
     try {
         let project = await Project.findById(req.params.projectId);
 
@@ -53,11 +55,11 @@ exports.getProject = async function(req, res) {
 
 /**
  * Create a project
- * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoLink, script }}
+ * @param { Request } req { user: { userId }, body: { name, thumbnailId, description, videoId, script }}
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
-exports.createProject = async function(req, res) {
+exports.createProject = async function (req, res) {
     try {
         if (!req.body.name || !req.body.description)
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
@@ -66,9 +68,9 @@ exports.createProject = async function(req, res) {
             name: req.body.name,
             status: 'Stop',
             thumbnailId: req.body.thumbnailId,
+            videoId: req.body.videoId,
             description: req.body.description,
-            videoLink: req.body.videoLink,
-            script: req.body.script,
+            script: req.body.script
         });
         await newProject.save();
         await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
@@ -85,7 +87,7 @@ exports.createProject = async function(req, res) {
  * @param { Response } res
  * @returns { status: Number, message: String }
  */
-exports.deleteProject = async function(req, res) {
+exports.deleteProject = async function (req, res) {
     try {
         const projectsListedToDelete = await ProjectListed.find({ projectId: req.params.projectId });
         for (var projectListed of projectsListedToDelete)
@@ -96,7 +98,7 @@ exports.deleteProject = async function(req, res) {
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
         await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
-        // await Project.deleteMany({ _id: { $in: req.body.projectIds }});
+        await Project.deleteMany({ _id: { $in: req.body.projectIds }});
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -104,25 +106,15 @@ exports.deleteProject = async function(req, res) {
     }
 }
 
-exports.updateProject = async function(req, res) {
+/**
+ * Delete a project
+ * @param { Request } req { params: { projectId }, body: { status?, actualStep?, progress?, thumbnailId?, videoId?, description?, script? } }
+ * @param { Response } res
+ * @returns { status: Number, data: Project }
+ */
+exports.updateProject = async function (req, res) {
     try {
-        // Question : Pour quoi pas utiliser Project.updateOne ?
-
-        let project = await Project.findById(req.params.projectId);
-        let hasChanged = false;
-
-        if (req.body.name && req.body.name != project.name) {
-            project.name = req.body.name;
-            hasChanged = true;
-        }
-        if (req.body.description && req.body.description != project.description) {
-            project.description = req.body.description;
-            hasChanged = true;
-        }
-        if (hasChanged === true) {
-            project.lastEdit = new Date();
-            await project.save();
-        }
+        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, {returnDocument: 'after'});
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);
@@ -130,7 +122,7 @@ exports.updateProject = async function(req, res) {
     }
 }
 
-exports.getAllProjects = async function(req, res) {
+exports.getAllProjects = async function (req, res) {
     try {
         var projects = await module.exports.getAllProjectsDB(req.user.userId);
         if (!projects) {
@@ -140,5 +132,42 @@ exports.getAllProjects = async function(req, res) {
     } catch (err) {
         console.log("Project->getAllProject: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+}
+
+/**
+ * set the Status of a project from the ServerAPI
+ * @param { Request } req { params: projectId, body: { statusType, stepType, percentage (no required) } }
+ * @param { Response } res
+ * @returns { response to send }
+ */
+exports.setStatus = async function (req, res) {
+    try {
+        if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        var project = await Project.findById(req.params.projectId);
+
+        if (!project)
+            return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
+        else if (!Object.values(enumStatus).includes(req.body.statusType) || !Object.values(enumActualStep).includes(req.body.stepType))
+            return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+
+        project.status = req.body.statusType;
+        project.ActualStep = req.body.stepType;
+
+        if (req.body.progress && req.body.progress >= 0 && progrreq.body.progressess <= 100)
+            project.progress = req.body.progress;
+        else if (req.body.statusType === 'Stop' || req.body.statusType === 'Error')
+            project.progress = 0;
+        else if (req.body.statusType === 'InProgress')
+            project.progress = 50;
+        else if (req.body.statusType === 'Done')
+            project.progress = 100;
+
+        await project.save();
+        return (res.status(200).send("The status has been changed"));
+    } catch (err) {
+        console.log("Project->setStatus: " + err);
+        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
 }

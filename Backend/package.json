@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/BeyondVisionAI/MicroserviceTemplate#readme",
   "dependencies": {
+    "aws-sdk": "^2.1067.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -29,7 +30,22 @@
     "multiparty": "^4.2.3",
     "nodemailer": "^6.7.0",
     "stripe": "^8.205.0",
-    "uuid": "^8.3.2",
-    "validate-currency-code": "^0.1.1"
+    "validate-currency-code": "^0.1.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7",
+    "supertest": "^6.2.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/Tests/exclude"
+    ],
+    "verbose": true,
+    "setupFilesAfterEnv": ["<rootDir>/Tests/general/setup.js"]
   }
 }

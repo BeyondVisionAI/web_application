@@ -36,6 +36,10 @@ services:
     networks:
       - api
       - bdd
+    env_file:
+      - ./Backend/.env
+    environment:
+      - IS_TEST="TRUE"
     restart: on-failure
 
   mongodb:
