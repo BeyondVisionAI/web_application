@@ -31,8 +31,9 @@ const NavBar = () => {
                     <a onClick={() => setIsMenuActive(false)} href="#home" className="navbar-link"><span>Home</span></a>
                     <a onClick={() => setIsMenuActive(false)} href="#project" className="navbar-link">The Project</a>
                     <a onClick={() => setIsMenuActive(false)} href="#pricing" className="navbar-link">Pricing</a>
-                    {/* <a onClick={() => setIsMenuActive(false)} href="#aboutus" className="navbar-link">About Us</a> */}
-                    {/* <a onClick={() => setIsMenuActive(false)} href="#contact" className="navbar-link">Contact</a> */}
+                    <a onClick={() => setIsMenuActive(false)} href="#aboutus" className="navbar-link">About Us</a>
+                    <a onClick={() => setIsMenuActive(false)} href="#timeline" className="navbar-link">Timeline</a>
+                    <a onClick={() => setIsMenuActive(false)} href="#contact" className="navbar-link">Contact</a>
                     <button className="navbar-button" onClick={() => history.push("/login")}>Login</button>
                 </div> 
             </div>}
@@ -51,7 +52,8 @@ const NavBar = () => {
                 <a href="#home" className="navbar-link"><span>Home</span></a>
                 <a href="#project" className="navbar-link">The Project</a>
                 <a href="#pricing" className="navbar-link">Pricing</a>
-                {/* <a href="#aboutus" className="navbar-link">About Us</a> */}
+                <a href="#aboutus" className="navbar-link">About Us</a>
+                <a href="#timeline" className="navbar-link">Timeline</a>
                 <a href="#contact" className="navbar-link">Contact</a>
                 <button className="navbar-button" onClick={() => history.push("/login")}>Login</button>
             </div>
