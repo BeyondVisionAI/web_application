@@ -32,6 +32,7 @@ services:
       - ./Backend/index.js:/app/index.js
       - ./Backend/Controllers:/app/Controllers/
       - ./Backend/Models:/app/Models/
+      - ./Backend/Configs:/app/Configs/
       - ./Backend/Routes:/app/Routes/
     networks:
       - api
