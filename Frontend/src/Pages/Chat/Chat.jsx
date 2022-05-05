@@ -3,14 +3,21 @@ import ChatMessage from './ChatMessage';
 import "./Chat.css"
 import { AuthContext } from './../../GenericComponents/Auth/Auth';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCommentAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import TextareaAutosize from 'react-textarea-autosize';
 
-const Chat = () => {
+const Chat = (props) => {
+    // TODO:
+    // Ajouter les messages que l'on envoi directement dans l'array de message
+    // 
+
     const {socket, currentUser} = useContext(AuthContext);
     
     const [messages, setMessages] = useState([])
     const [toSend, setToSend] = useState("");
     const [roomID, setRoomID] = useState(null)
-    const [isSetUsername, setIsSetUsername] = useState(true)
+    const [isOpen, setIsOpen] = useState(false)
     
     socket.on('connection', () => {
         console.log(`I'm connected with the back-end`);
@@ -20,8 +27,17 @@ const Chat = () => {
         setMessages([...messages, message]);
     });
 
+    useEffect(() => {
+        setRoomID(props.projectId);
+        return () => {
+            socket.emit("leave room");
+        }
+    }, [props]);
+
     useEffect(async () => {
+        console.log("🚀 ~ file: Chat.jsx ~ line 36 ~ useEffect ~ roomID", roomID)
         if (!roomID) return
+        socket.emit("join room", roomID);
         try {
             var res = await axios({
                 method: "GET",
@@ -34,8 +50,13 @@ const Chat = () => {
             console.error(e)
         }
     }, [roomID]);
+
+    useEffect(() => {
+        scrollToBottomOfMessages()
+    }, [messages]);
     
-    function sendMessage() {
+    function sendMessage(e) {
+        e.preventDefault();
         if (toSend.length === 0) {
             alert("No Message Written")
             return
@@ -47,32 +68,37 @@ const Chat = () => {
         setToSend("");
     }
 
-    function changeStep(roomNb) {
-        setRoomID(roomNb)
-        socket.emit("join room", roomNb);
-        setIsSetUsername(false);
+    useEffect(() => {
+        scrollToBottomOfMessages()
+    }, [isOpen]);
+
+    function scrollToBottomOfMessages() {
+        var element = document.getElementById("message-container");
+        console.log("🚀 ~ file: Chat.jsx ~ line 53 ~ useEffect ~ element", element)
+        if (!element)
+            return
+        element.scrollTop = element.scrollHeight;
     }
 
-    function leaveRoom() {
-        setRoomID(null)
-        socket.emit("leave room");
-        setMessages([]);
-        setIsSetUsername(true);
+    function onEnterPress (e) {
+        if(e.keyCode == 13 && e.shiftKey == false) {
+            e.preventDefault();
+            sendMessage(e)
+        }
     }
 
-    if (isSetUsername) {
+    if(!isOpen) {
         return (
-            <div>
-                <button onClick={() => changeStep(1)}>Join Room 1</button>
-                <button onClick={() => changeStep(2)}>Join Room 2</button>
+            <div onClick={() => setIsOpen(true)} className='chat-bubble'>
+                <FontAwesomeIcon icon={faCommentAlt} className="chat-bubble-icon" />
             </div>
         )
     }
-
     
     return (
-        <div className='page-container'>
-            <div className='chat-container'>
+        <div className='chat-container'>
+            <h2 className='chat-container-quit-button' onClick={() => setIsOpen(false)}>x</h2>
+            <div id='message-container' className='message-container'>
                 {messages.map((message, key) => {
                     return (
                         <ChatMessage key={key} message={message.message} from={message.senderID.firstName + " " + message.senderID.lastName}
@@ -80,9 +106,12 @@ const Chat = () => {
                     )
                 })}
             </div>
-            <input value={toSend} type="text" name="message" id="message"  onChange={(event) => setToSend(event.target.value)}/>
-            <button onClick={sendMessage}>Send</button>
-            <button onClick={leaveRoom}>Leave Room</button>
+            <form onSubmit={sendMessage} className='message-typing-container'>
+                <TextareaAutosize minRows={1} maxRows={3} onKeyDown={onEnterPress} className='message-typing-input' value={toSend} type="text" name="message" id="message"  onChange={(event) => setToSend(event.target.value)}/>
+                <button type='submit' className='message-send-button-container'>
+                    <FontAwesomeIcon icon={faPaperPlane} className='message-send-button' />
+                </button>
+            </form>
         </div>
     );
 }

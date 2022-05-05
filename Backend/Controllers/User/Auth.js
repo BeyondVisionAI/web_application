@@ -109,7 +109,7 @@ exports.login = async function (req, res) {
         userId: doc._id,
       };
       var userJWT = jwt.sign(userWithoutPassword, process.env.JWT_SECRETKEY, {
-        expiresIn: "15m",
+        expiresIn: "24h",
       });
       res.cookie("token", userJWT, {
         httpOnly: true,

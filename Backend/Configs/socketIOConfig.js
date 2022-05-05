@@ -44,12 +44,14 @@ exports.socketIOConfig = function (http) {
                 if (room.id === roomId) index = roomIndex
             })
             if (index === null) {
+                console.log(`Creating new room with id = ${roomId}`);
                 var newRoom = {
                     id: roomId,
                     users: [socket.id]
                 }
                 rooms.push(newRoom)
             } else {
+                console.log(`Adding user ${socket.id} to room ${roomId}`);
                 if (!rooms[index].users.includes(roomId)) rooms[index].users.push(socket.id)
             }
         })
@@ -62,9 +64,11 @@ exports.socketIOConfig = function (http) {
         })
 
         socket.on("message", message => {
+            
             var cookies = parseCookie(socket.handshake.headers.cookie)
             const sender = jwt.verify(cookies['token'], process.env.JWT_SECRETKEY);
             var index = rooms.findIndex(x => x.users.includes(socket.id));
+            console.log("🚀 ~ file: socketIOConfig.js ~ line 68 ~ io.on ~ rooms", rooms)
             console.log(`Received message from user ${sender.userId} containing ${message.message}`);
             var newChat = new Chat({
                 senderID: sender.userId,

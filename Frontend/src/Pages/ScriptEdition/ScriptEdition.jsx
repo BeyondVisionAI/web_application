@@ -5,6 +5,7 @@ import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
+import Chat from '../Chat/Chat';
 
 
 export default function ScriptEdition(props) {
@@ -150,6 +151,7 @@ export default function ScriptEdition(props) {
                         </div>
                     </div>
                 </div>
+                <Chat projectId={props.match.params.id}/>
             </>
         )
     } else {
