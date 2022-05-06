@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 
-export default function ProjectsList({ id, list, openAddProjectToList, openRemoveProjectFromList, openDestroyLeaveProject }) {
+export default function ProjectsList({ id, list, openAddProjectToList, openRemoveProjectFromList, openDestroyLeaveProject, openDestroyLeaveList }) {
 
     const { currentUser } = useContext(AuthContext);
 
@@ -59,6 +59,7 @@ export default function ProjectsList({ id, list, openAddProjectToList, openRemov
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 justify-self-start" fill="none" viewBox="0 0 24 24" stroke="#000000">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                                     </svg>
+{/*                                     
                                     <div className='dropdown-child absolute top-7'>
                                         {
                                             roleList === "OWNER" || roleList === "ADMIN" ?
@@ -70,9 +71,9 @@ export default function ProjectsList({ id, list, openAddProjectToList, openRemov
                                         }
                                         {
                                             roleList === "OWNER" ?
-                                                <p>Destroy the list</p> : <p>Leave the list</p>
+                                                <p onClick={() => {openDestroyLeaveList(id)}}>Destroy the list</p> : <p onClick={() => {openDestroyLeaveList(id)}}>Leave the list</p>
                                         }
-                                    </div>
+                                    </div> */}
                                 </div> : <p></p>
                         }
                     </div>

@@ -8,6 +8,7 @@ import ModalRemoveProjectFromList from './Components/ModalRemoveProjectFromList/
 import { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 import ModalDestroyLeaveProject from './Components/ModalDestroyLeaveProject/ModalDestroyLeaveProject';
+import ModalDestroyLeaveList from './Components/ModalDestroyLeaveList/ModalDestroyLeaveList';
 
 export default function Lists() {
 
@@ -20,6 +21,7 @@ export default function Lists() {
     const [addProjectToListPopupOpen, setAddProjectToListOpen] = useState(false);
     const [removeProjectFromListPopupOpen, setRemoveProjectFromListOpen] = useState(false);
     const [destroyLeaveProjectPopupOpen, setDestroyLeaveProjectOpen] = useState(false);
+    const [destroyLeaveListPopupOpen, setDestroyLeaveListOpen] = useState(false);
 
     //Variables for modals
     const [projectToModify, setProjectToModify] = useState(0);
@@ -33,7 +35,6 @@ export default function Lists() {
     }
 
     useEffect(() => {
-
         const getMyProjects = async () => {
             try {
                 setMyProjectsList({ id: 0, name: "My projects", movies: [] });
@@ -137,6 +138,15 @@ export default function Lists() {
         setProjectToModify(0);
     };
 
+    const handleOpenDestroyLeaveListPopup = (listId) => {
+        setDestroyLeaveListOpen(true);
+        setListToModify(listId);
+    };
+    const handleCloseDestroyLeaveListPopup = () => {
+        setDestroyLeaveListOpen(false);
+        setListToModify(0);
+    };
+
     if (!isFinished) {
         return (
             <div className="page-container">
@@ -154,21 +164,35 @@ export default function Lists() {
                     projectId={projectToModify} listId={listToModify}></ModalRemoveProjectFromList>
                 <ModalDestroyLeaveProject refresh={setRefreshKey} open={destroyLeaveProjectPopupOpen} close={handleCloseDestroyLeaveProjectPopup}
                     projectId={projectToModify}></ModalDestroyLeaveProject>
+                <ModalDestroyLeaveList refresh={setRefreshKey} open={destroyLeaveListPopupOpen} close={handleCloseDestroyLeaveListPopup}
+                    listId={listToModify}></ModalDestroyLeaveList>
 
                 {
                     myProjectsList.movies.length > 0 ? 
-                    <ProjectsList key={0} id="My projects" list={myProjectsList} openAddProjectToList={handleOpenAddProjectToListPopup} openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup} openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup}/>
+                    <ProjectsList key={0} id="My projects" list={myProjectsList} 
+                    openAddProjectToList={handleOpenAddProjectToListPopup} 
+                    openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup} 
+                    openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup} 
+                    openDestroyLeaveList={handleOpenDestroyLeaveListPopup}/>
                     : null
                 }
                 {
                     sharedProjectsList.movies.length > 0 ?
-                    <ProjectsList key={1} id="Shared with me" list={sharedProjectsList} openAddProjectToList={handleOpenAddProjectToListPopup} openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup} openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup}/>
+                    <ProjectsList key={1} id="Shared with me" list={sharedProjectsList} 
+                    openAddProjectToList={handleOpenAddProjectToListPopup} 
+                    openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup} 
+                    openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup} 
+                    openDestroyLeaveList={handleOpenDestroyLeaveListPopup}/>
                     : null
                 }
                 {
                     customLists.map((list, index) => (
                         (list) && (list.movies) && (list.movies.length > 0) ?
-                            <ProjectsList key={index} id={list.id} list={list} openAddProjectToList={handleOpenAddProjectToListPopup} openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup} openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup} /> : <div key={index}></div>
+                            <ProjectsList key={index} id={list.id} list={list} 
+                            openAddProjectToList={handleOpenAddProjectToListPopup} 
+                            openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup} 
+                            openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup} 
+                            openDestroyLeaveList={handleOpenDestroyLeaveListPopup}/> : <div key={index}></div>
                     ))
                 }
             </div>
