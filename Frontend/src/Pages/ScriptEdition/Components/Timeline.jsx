@@ -1,15 +1,17 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import '../react-contextmenu.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+// temporary duration of a project, so we can do the timeline
+const videoLength = 3600000 / 4;
 
 const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
 
-    // coefficient between seconds and pixels : 1 second = 20 px
-    var secToPxCoef = 20; // will change if zoom
+    // coefficient between seconds (in ms) and pixels : 1 sec = 
+    var secToPxCoef = 150000; // will change if zoom
 
 
     const removeReplica = async function () {
@@ -70,8 +72,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ContextMenuTrigger id="replica_menu" key={index}>
-                <button className='h-fit w-fit bg-green-700 p-4 rounded focus:outline-none focus:border focus:border-blue-600
-                absolute' style={{left: `${secToPxCoef * replica.timestamp}px`}}//{secToPxCoef * {replica.timestamp}}}}
+                <button className='bg-green-700 py-4 rounded focus:outline-none focus:border focus:border-blue-600
+                absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
                     onClick={() => onReplicaSelection(replica._id)} 
                     onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
                     <p>{replica.content}</p>
@@ -80,12 +82,50 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         )
     })
 
+    const drawTimecodeLine = function() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        
+        const spacing = secToPxCoef / 10; // should I count the pixels necessary to draw lines?
+
+        ctx.lineWidth = 0.1;
+        ctx.strokeStyle = 'white';
+        ctx.beginPath();
+        // ctx.moveTo(10, 10);
+        // ctx.lineTo(100, 10);
+        // ctx.stroke();
+
+        for (var interval = 0; interval < 10; interval++) {
+            ctx.moveTo(interval * spacing + 0.5, 50);
+            ctx.lineTo(interval * spacing + 0.5, 10);
+            ctx.stroke();
+        }
+        
+        // ctx.moveTo(100, 0);
+        // ctx.lineTo(100, 120);
+        // ctx.stroke();
+
+        // ctx.moveTo(200, 0);
+        // ctx.lineTo(200, 220);
+        // ctx.stroke();
+    }
+
+    useEffect(() => {
+        drawTimecodeLine();
+    }, []);
 
     return (
         <>
-            <div className='flex flex-row items-center overflow-x-auto relative
-            w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'>
+            <div className='flex overflow-x-auto relative
+            w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'
+            style={{width: `${secToPxCoef * videoLength}px`}}>
                 {replicaLine}
+                {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
+                <div className='p-1 absolute'
+                style={{left: `${secToPxCoef * videoLength / 1000000 - 1}px`, width: `${secToPxCoef / 1000000}px`}} />
+                <canvas id='canvas' className='h-1/5 bg-black place-self-end w-full'
+                    style={{width: `${secToPxCoef * videoLength}px`}}>
+                </canvas>
             </div>
 
 
