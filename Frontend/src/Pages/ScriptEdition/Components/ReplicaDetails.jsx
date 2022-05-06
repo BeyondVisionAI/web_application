@@ -44,7 +44,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                     url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
                     withCredentials: true
                 });
-                updateReplicaList();
+                updateReplicaList(replica.projectId);
             } catch (err) {
                 console.error("error => ", err);
             }
