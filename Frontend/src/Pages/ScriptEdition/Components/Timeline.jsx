@@ -4,8 +4,13 @@ import '../react-contextmenu.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+
 const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
+
+    // coefficient between seconds and pixels : 1 second = 20 px
+    var secToPxCoef = 20; // will change if zoom
+
 
     const removeReplica = async function () {
         try {
@@ -65,7 +70,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ContextMenuTrigger id="replica_menu" key={index}>
-                <button className='h-fit w-fit bg-green-700 p-4 rounded focus:outline-none focus:border focus:border-blue-600'
+                <button className='h-fit w-fit bg-green-700 p-4 rounded focus:outline-none focus:border focus:border-blue-600
+                absolute' style={{left: `${secToPxCoef * replica.timestamp}px`}}//{secToPxCoef * {replica.timestamp}}}}
                     onClick={() => onReplicaSelection(replica._id)} 
                     onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
                     <p>{replica.content}</p>
@@ -74,9 +80,10 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         )
     })
 
+
     return (
         <>
-            <div className='flex flex-row justify-between items-center
+            <div className='flex flex-row items-center overflow-x-auto relative
             w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'>
                 {replicaLine}
             </div>
