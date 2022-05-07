@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "audioconcat": "^0.1.4",
+    "aws-sdk": "^2.1082.0",
+    "ffmpeg": "^0.0.4",
+    "fluent-ffmpeg": "^2.1.2"
+  }
+}
