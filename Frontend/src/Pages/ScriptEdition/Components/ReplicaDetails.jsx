@@ -58,7 +58,6 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
     }, [isTextUpdated]);
 
     useEffect(() => {
-        console.log("Use effect of replica selection change");
         const fetchReplicaComments = async () => {
             try {
                 const res = await axios({
@@ -66,10 +65,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                     url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
                     withCredentials: true
                 });
-                console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
-                console.log(res);
                 let resComm = Object.values(res.data);
-                console.log(resComm);
                 setComments(resComm);
             } catch (e) {
                 let errMsg = "Error";
@@ -117,10 +113,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
                 withCredentials: true
             });
-            console.log(`/projects/${replica.projectId}/replicas/${replica._id}/comments`);
-            console.log(res);
             let resComm = Object.values(res.data);
-            console.log(resComm);
             setComments(resComm);
         } catch (e) {
             let errMsg = "Error";

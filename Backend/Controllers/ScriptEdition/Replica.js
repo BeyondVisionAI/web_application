@@ -30,9 +30,10 @@ exports.getProjectReplica = async function(req, res) {
 
 exports.createReplica = async function(req, res) {
     try {
-        if (!req.body.content || !req.body.timestamp || !req.body.duration
-            || !req.body.voiceId)
+        if (req.body.content !== '' || !req.body.timestamp || !req.body.duration
+            || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
+        }
 
         const newReplica = new Replica({
             projectId: req.params.projectId,
