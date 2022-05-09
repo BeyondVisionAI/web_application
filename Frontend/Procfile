@@ -1,1 +1,1 @@
-web: npm i && npm i -g craco && npm start
+web: npm run prod
