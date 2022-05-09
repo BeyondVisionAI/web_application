@@ -10,7 +10,6 @@ import TextareaAutosize from 'react-textarea-autosize';
 const Chat = (props) => {
     // TODO:
     // Ajouter les messages que l'on envoi directement dans l'array de message
-    // 
 
     const {socket, currentUser} = useContext(AuthContext);
     

@@ -8,7 +8,7 @@ import {loadStripe} from '@stripe/stripe-js';
 import InputWithLabel from '../../GenericComponents/InputWithLabel/InputWithLabel';
 import { toast } from 'react-toastify';
 import axios from "axios"
-const stripePromise = loadStripe("pk_test_51KTBRyJkPRyJJUzIcZr6S3kPKviTPBuoBPyM9OrLdDj9MnLqUMRDVbjOckMUY9EDLDXRRAX3t25wcQXi99hxSKk000Mi0pGqGH");
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Dashboard() {
     const {logout, currentUser} = useContext(AuthContext)
@@ -22,7 +22,7 @@ export default function Dashboard() {
     useEffect(() => {
         const clientSecret = new URLSearchParams(window.location.search).get(
             'payment_intent_client_secret'
-          );
+        );
         if (clientSecret) {
             setIsRedirectFromPayment(true)
         }

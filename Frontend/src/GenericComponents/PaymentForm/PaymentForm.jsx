@@ -6,7 +6,7 @@ import Checkout from './Checkout';
 import { toast } from 'react-toastify';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
-const stripePromise = loadStripe("pk_test_51KTBRyJkPRyJJUzIcZr6S3kPKviTPBuoBPyM9OrLdDj9MnLqUMRDVbjOckMUY9EDLDXRRAX3t25wcQXi99hxSKk000Mi0pGqGH");
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 const PaymentForm = (props) => {
     const [isLoading, setIsLoading] = useState(true)
