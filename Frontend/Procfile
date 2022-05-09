@@ -1,1 +1,1 @@
-frontend: npm start
+frontend: npm i && npm i -g craco && npm start
