@@ -181,3 +181,25 @@ exports.setStatus = async function (req, res) {
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
 }
+
+/**
+ * changes the verification method of the project (can be an IA verification or a human (from the shop) verification)
+ * @param { Request } req { params: projectId }
+ * @param { Response } res
+ * @returns { response to send }
+ */
+exports.setAudiodescriptor = async function (req, res) {
+    try {
+        if (!req.params.projectId)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        var project = await Project.findById(req.params.projectId);
+
+        if (!project)
+            return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
+
+        return (res.status(200).send("The verfifcation mathod has been changed"));
+    } catch (err) {
+        console.log("Project->setAudiodescriptor: " + err);
+        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+    }
+}

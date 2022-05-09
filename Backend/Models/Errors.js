@@ -39,6 +39,9 @@ const Errors = {
     //Image : 6
     IMAGE_NOT_FOUND: "IMAGE_NOT_FOUND",
     IMAGE_NOT_YOURS: "IMAGE_NOT_YOURS",
+
+    //Shop : 7
+    ARTICLE_NOT_FOUND: "ARTICLE_NOT_FOUND"
 };
 
 exports.Errors = Errors;

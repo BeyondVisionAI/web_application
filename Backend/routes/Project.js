@@ -28,4 +28,10 @@ module.exports = function (app) {
 
     app.post('/projects/:projectId/setStatus',
         Project.setStatus);
+
+    app.put('/projects/:projectId/setAudiodescriptor',
+        authMiddleware.authenticateUser,
+        collabMiddleware.hasRightAdmin,
+        Project.setAudiodescriptor
+    );
 }

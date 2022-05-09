@@ -7,6 +7,7 @@ module.exports = function (app) {
   const list = require("./List");
   const listMember = require("./ListMember");
   const scriptEdition = require("./ScriptEdition");
+  const shop = require('./Shop');
 
   test(app);
   user(app);
@@ -16,4 +17,5 @@ module.exports = function (app) {
   list(app);
   listMember(app);
   //  scriptEdition(app);
+  shop(app);
 }
