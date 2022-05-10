@@ -2,6 +2,9 @@
   "name": "beyond-vision-website",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@craco/craco": "^7.0.0-alpha.0",
     "@emotion/react": "^11.9.0",
