@@ -1,39 +1,32 @@
 module.exports = function(app) {
     const Shop = require("../Controllers/Shop/Shop");
     const authMiddleware = require("../Controllers/User/authMiddleware");
-
-    // Adding Item in a shop
-
-    app.post('/shop/add',
-        authMiddleware.authenticateUser,
-        Shop.addItem
-        );
-    
-    // SHOP MAIN PAGE
+    const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
 
     app.get('/shop',
         authMiddleware.authenticateUser,
-        Shop.getItems
-    );
-
-    app.get('/shop/:name&:type&:minPrice&:maxPrice',
-        authMiddleware.authenticateUser,
         Shop.searchItems
     );
-
-    app.post('/shop/addToCart',
+    app.post('/shop/:projectId/cart',
         authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
         Shop.addToCart
     );
-
-    // ARTICLE PAGE
-
-    app.get('/shop/:itemid',
+    app.delete('/shop/:projectId/cart/:itemId',
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        Shop.removeFromCart
+    );
+    app.post('/shop/items',
+        authMiddleware.authenticateUser,
+        Shop.addItem
+    );
+    app.get('/shop/items/:itemid',
         authMiddleware.authenticateUser,
         Shop.getItemById
     );
-
-    // PROJET
-
-    // SEE PROJECT.JS LINE 32
+    app.delete('/shop/items/:itemid',
+        authMiddleware.authenticateUser,
+        Shop.removeMyItem
+    );
 }

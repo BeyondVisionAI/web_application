@@ -7,10 +7,10 @@ const { Errors } = require("../../Models/Errors.js");
  * @param { Response } res
  * @returns { response to send }
  */
-exports.addItem = async function (req, res) {
+exports.addItem = async function(req, res) {
     try {
-        //if (!req.body...)
-        //    return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        if (!req.body)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
 
         return (res.status(200).send("Item successfully added to the catalog"));
     } catch (err) {
@@ -20,32 +20,14 @@ exports.addItem = async function (req, res) {
 }
 
 /**
- * Sends articles from the Beyond Vision catalog item to the frontend
- * @param { Request } req { body: itemsPerPage, pageNb }
- * @param { Response } res
- * @returns { response to send }
- */
-exports.getItems = async function (req, res) {
-    try {
-        if ((!req.body.itemsPerPage || !req.body.pageNb) || (req.body.itemsPerPage <= 0 || req.body.pageNb < 0))
-            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-
-        return (res.status(200).send("Items have been successfully retrieved"));
-    } catch (err) {
-        console.log("Shop->getItems: " + err);
-        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
-    }
-}
-
-/**
  * research items in the Beyond Vision catalog
- * @param { Request } req { params: name, type, minPrice, maxPrice }
+ * @param { Request } req { params: name, type, minPrice, maxPrice, itemsPerPage, pageNb }
  * @param { Response } res
  * @returns { response to send }
  */
-exports.searchItems = async function (req, res) {
+exports.searchItems = async function(req, res) {
     try {
-        if (!req.params.name || !req.params.type || !req.params.minPrice || !req.params.maxPrice || (req.params.minPrice < 0 || req.params.maxPrice < req.params.minPrice))
+        if (!req.params.name || !req.params.type || !req.params.minPrice || !req.params.maxPrice || (req.params.minPrice < 0 || req.params.maxPrice < req.params.minPrice) || (req.body.itemsPerPage <= 0 || req.body.pageNb < 0))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
         // TODO Mongo request from params
 
@@ -62,11 +44,11 @@ exports.searchItems = async function (req, res) {
  * @param { Response } res
  * @returns { response to send }
  */
-exports.addToCart = async function (req, res) {
+exports.addToCart = async function(req, res) {
     try {
         if ((!req.body.projectId || !req.body.articleID))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        
+
         var project = await Project.findById(req.params.projectId);
         // var article = await TODO: Shop.findById(req.params.articleId)
 
@@ -89,11 +71,11 @@ exports.addToCart = async function (req, res) {
  * @param { Response } res
  * @returns { response to send }
  */
-exports.getItemById = async function (req, res) {
+exports.getItemById = async function(req, res) {
     try {
         if ((!req.body.articleID))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        
+
         // var article = await TODO: Shop.findById(req.params.articleId)
 
         // if (!article)
