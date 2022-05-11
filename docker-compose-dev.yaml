@@ -29,10 +29,17 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./Backend/app.js:/app/app.js
+      - ./Backend/index.js:/app/index.js
+      - ./Backend/Controllers:/app/Controllers/
+      - ./Backend/Models:/app/Models/
+      - ./Backend/Routes:/app/Routes/
     networks:
       - api
       - bdd
+    env_file:
+      - ./Backend/.env
+    environment:
+      - IS_TEST="TRUE"
     restart: on-failure
 
   mongodb:

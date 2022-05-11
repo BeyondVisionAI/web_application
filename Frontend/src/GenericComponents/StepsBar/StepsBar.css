@@ -1,0 +1,43 @@
+:root {
+    --fill-time: 800ms;
+    --bg-change-time: 800ms;
+    --icon-change-time: 500ms;
+}
+
+.progress-bar-active {
+    width: 0%;
+    animation: var(--fill-time) progress-fill forwards;
+}
+
+.step-active {
+    background-color: white(34 197 94);
+    border-width: 2px;
+    border-color: rgb(229 231 235);
+    animation: var(--bg-change-time) background-change forwards;
+    animation-delay: var(--fill-time);
+}
+
+.step-icon-active {
+    color: rgb(75 85 99);
+    animation: var(--icon-change-time) icon-change forwards;
+    animation-delay: var(--fill-time);
+}
+
+@keyframes progress-fill {
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes background-change {
+    100% {
+        border-color: rgb(110 231 183);
+        background-color: rgb(110 231 183);
+    }
+}
+
+@keyframes icon-change {
+    100% {
+        color: white;
+    }
+}

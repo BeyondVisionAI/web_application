@@ -47,6 +47,28 @@ foo@bar:~$ dos2unix .docker/mongo-express/docker-entrypoint.sh
 
 [Installer dos2unix](https://tech.gamuza.fr/dos2unix-l-utilitaire-pour-reformater-les-fichiers-textes-generes-sous-windows.html)
 
+##### Configuration
+
+Avant de lancer l'application il faudra creer plusieurs .env
+Le premier, celui du frontend devra contenir ces variables:
+
+```txt
+REACT_APP_API_URL="urltoapi"
+```
+
+Le second, celui du backend devra contenir ces variables:
+
+```txt
+JWT_SECRETKEY="secretKeyToSignAndVerifyJWT"
+DB_CONN_STRING="mongodb://nameOfDB:passwordOfDB@urlOfDb/nameOfCollection"
+GMAIL_USERNAME="example@gmail.com"
+GOOGLE_CLIENT_ID=googleCliendID
+GOOGLE_CLIENT_SECRET=googleClientSecret
+GOOGLE_REFRESH_TOKEN=googleRefreshToken
+GOOGLE_ACCESS_TOKEN=googleAccessToken
+WEBSITE_URL=UrlWhereWebsiteIsHosted
+```
+
 ##### Version de Développement :
 
 Afin de lancer le projet en mode développement il vous faudra avoir docker ainsi que docker compose sur votre machine.

@@ -1,0 +1,17 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+
+        <mj-divider border-color="#7793ED"></mj-divider>
+
+        <mj-text font-family="'Roboto', sans-serif" font-size="20px" color="#7793ED">Hi {{firstName}} {{lastName}}</mj-text>
+        <mj-text font-family="'Roboto', sans-serif" font-size="18px" color="black">Your account creation is almost done !</mj-text>
+        <mj-text font-family="'Roboto', sans-serif" font-size="15px" color="black">We just need to confirm this address email is really yours. To do 	so, click the button below</mj-text>
+        <mj-button background-color="#7793ED" font-family="'Roboto', sans-serif" font-weight="800" color="white" href={{verifyEmaiLink}}>Click here</mj-button>
+        <mj-divider border-color="#7793ED"></mj-divider>
+
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

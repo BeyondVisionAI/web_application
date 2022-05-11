@@ -1,0 +1,137 @@
+.login-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+}
+
+.login-left-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    width: 50%;
+}
+
+.login-right-container {
+    display: flex;
+    position: absolute;
+    right: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.login-image {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+.login-form {
+    width: 80%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.login-form-title {
+    font-size: 1.8vw;
+}
+
+.login-form-under-title {
+    font-size: 1vw;
+    font-weight: 400;
+    margin-bottom: 40px;
+}
+
+.login-no-account {
+    font-size: .9vw;
+    margin-bottom: 15px;
+}
+
+.login-no-account > b {
+    color: rgb(0, 118, 168);
+    cursor: pointer;
+}
+
+.go-back-link {
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+@media screen and (max-width: 1024px) {
+    .login-form-title {
+        font-size: 3vw;
+    }
+    .login-form-under-title {
+        font-size: 1.3vw;
+    }
+    .login-no-account {
+        font-size: 1.1vw;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .login-form-title {
+        font-size: 4vw;
+    }
+    .login-form-under-title {
+        font-size: 1.6vw;
+    }
+    .login-no-account {
+        font-size: 1.4vw;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .go-back-link {
+        align-self: center;
+    }
+    .login-right-container {
+        display: none;
+    }
+    .login-left-container {
+        width: 100%;
+    }
+    .login-form {
+        align-items: center;
+    }
+    .login-form-title {
+        font-size: 6vw;
+    }
+    .login-form-under-title {
+        text-align: center;
+        font-size: 3vw;
+        margin-bottom: 5vh;
+    }
+    .login-no-account {
+        font-size: 2vw;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .login-right-container {
+        display: none;
+    }
+    .login-left-container {
+        width: 100%;
+    }
+    .login-form {
+        align-items: center;
+    }
+    .login-form-title {
+        font-size: 8vw;
+    }
+    .login-form-under-title {
+        text-align: center;
+        font-size: 4vw;
+        margin-bottom: 5vh;
+    }
+    .login-no-account {
+        font-size: 3vw;
+    }
+}

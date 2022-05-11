@@ -1,6 +1,19 @@
 module.exports = function(app) {
-  const Test = require('../API/Test/TestServer.js');
+  const media = require('./Media/Media.js');
+  const test = require("./Test");
+  const user = require("./User");
+  const project = require("./Project");
+  const collaboration = require("./Collaboration");
+  const list = require("./List");
+  const listMember = require("./ListMember");
+  const scriptEdition = require("./ScriptEdition");
 
-  app.route('/api/test')
-    .get(Test.testServer);
+  test(app);
+  user(app);
+  project(app);
+  media(app);
+  collaboration(app);
+  list(app);
+  listMember(app);
+  scriptEdition(app);
 }
