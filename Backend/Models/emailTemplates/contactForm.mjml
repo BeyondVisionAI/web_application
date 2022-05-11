@@ -1,0 +1,19 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+
+        <mj-divider border-color="#7793ED"></mj-divider>
+
+        <mj-text font-family="'Roboto', sans-serif" font-size="20px" color="#7793ED">Received a new contact form entry from {{name}}</mj-text>
+        <mj-text font-family="'Roboto', sans-serif" font-size="18px" color="black">Message Body:</mj-text>
+        <mj-text font-family="'Roboto', sans-serif" font-size="15px" color="black">{{messageBody}}</mj-text>
+        <mj-text font-family="'Roboto', sans-serif" font-size="18px" color="black">Reply to them at this email address or by clicking the link below {{emailAddress}}</mj-text>
+        
+        <mj-button background-color="#7793ED" font-family="'Roboto', sans-serif" font-weight="800" color="white" href={{emailAdressHref}}>Click here</mj-button>
+        <mj-divider border-color="#7793ED"></mj-divider>
+
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
