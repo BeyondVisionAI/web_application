@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
-import { DownloadFileUrl } from '../../../../GenericComponents/Files/S3Manager';
+import { DownloadFileUrl, UploadFileOnS3 } from '../../../../GenericComponents/Files/S3Manager';
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import UploadFile from '../../../../GenericComponents/Files/UploadFile';
 import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWithLabel';
@@ -22,9 +22,9 @@ export default function Description({ editing, setEditing, updateProjectValues, 
 
     useEffect(() => {
         try {
-            async function getData () {
+            async function getThumbnailProject(projId) {
                 try {
-                    let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projectId}/${thumbnailId}`);
+                    let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projId}/${thumbnailId}`);
                     let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
                     setThumbnail(url);
                 } catch (err) {
@@ -33,7 +33,7 @@ export default function Description({ editing, setEditing, updateProjectValues, 
             }
 
             if (thumbnailId)
-                getData();
+                getThumbnailProject(projectId);
         } catch (error) {
             console.error(error);
             toast.error('Error while fetching data!');
@@ -63,11 +63,29 @@ export default function Description({ editing, setEditing, updateProjectValues, 
     }, [image]);
 
     useEffect(() => {
+        function updateThumbnail() {
+            let bucket = 'bv-thumbnail-project';
+
+            UploadFileOnS3(image, bucket, 'us-east-1', `${projectId}.${image.name.split(".").pop()}`)
+            .then(async (imageRes) => {
+                let thumbnailResponse = await axios.put(`${process.env.REACT_APP_API_URL}/images/${thumbnailId}`, {
+                    name: imageRes.Key,
+                    desc: `Thumbnail for ${tmpProject.name} locate in ${bucket} bucket`,
+                    ETag: imageRes.ETag,
+                });
+                console.log(thumbnailResponse.data);
+                if (thumbnailResponse.status !== 200)
+                    console.error("Update image db error");
+            }).catch(err => console.error("Upload thumbnail error:", err));
+        }
+
         async function updateProject () {
             try {
                 let response = await axios.patch(`${process.env.REACT_APP_API_URL}/projects/${projectId}`, tmpProject);
+
+                updateThumbnail();
                 if (response.status !== 200)
-                    toast.error(response.message);
+                    toast.error("Error while update project");
                 else {
                     toast.success('Update success');
                     updateProjectValues([{field: 'description', value: response.data.description}, {field: 'name', value: response.data.name}]);
@@ -75,14 +93,14 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                 }
             } catch (error) {
                 console.error(error);
-                toast.error(error);
+                toast.error("Error, please retry.");
             }
         }
 
         if (editing === 2) {
             updateProject();
         }
-    }, [editing, projectId, setEditing, tmpProject, updateProjectValues])
+    }, [editing, image, projectId, setEditing, thumbnailId, tmpProject, updateProjectValues])
 
     return (
         <Widget weight='h-2/4' rounded='rounded-t-lg'>

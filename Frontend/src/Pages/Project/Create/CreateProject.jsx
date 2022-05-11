@@ -6,7 +6,7 @@ import VideoData from './VideoData';
 import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideo from './DropVideo';
 import { useHistory } from "react-router-dom";
-import { UploadFile } from '../../../GenericComponents/Files/S3Manager';
+import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
 
 export default function CreateProject({ show, onHide }) {
     const [modalStep, setModalStep] = useState(0);
@@ -52,7 +52,7 @@ export default function CreateProject({ show, onHide }) {
     }
 
     function uploadMedia () {
-        UploadFile(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
+        UploadFileOnS3(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
         .then(async (imageRes) => {
             let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
                 name: imageRes.Key,
@@ -62,7 +62,7 @@ export default function CreateProject({ show, onHide }) {
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
         }).catch(err => console.error("Upload thumbnail error:", err));
-        UploadFile(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
+        UploadFileOnS3(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
         .then(async videoRes => {
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,
