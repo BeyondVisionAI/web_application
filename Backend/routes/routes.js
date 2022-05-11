@@ -10,6 +10,7 @@ module.exports = function(app) {
     const payment = require("./Payment")
     const media = require('./Media/Media.js');
     const chat = require('./Chat')
+    const mail = require('./Mail')
 
     chat(app);
     test(app);
@@ -22,4 +23,5 @@ module.exports = function(app) {
     payment(app)
     media(app);
     scriptEdition(app);
+    mail(app);
 }

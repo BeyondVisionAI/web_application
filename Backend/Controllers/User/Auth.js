@@ -6,34 +6,8 @@ const bcrypt = require("bcryptjs");
 const { Errors } = require("../../Models/Errors");
 const fs = require('fs');
 var handlebars = require('handlebars');
+const { wrapedSendMail } = require("../Mail/Mail")
 
-let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    type: "OAuth2",
-    user: process.env.GMAIL_USERNAME,
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-    accessToken: process.env.GOOGLE_ACCESS_TOKEN,
-    expires: 3426,
-  },
-});
-
-async function wrapedSendMail(mailOptions) {
-  return new Promise((resolve,reject) => {
-    transporter.sendMail(mailOptions, function(error, info) {
-    if (error) {
-      console.log("🚀 ~ file: Auth.js ~ line 27 ~ transporter.sendMail ~ error", error)
-      reject(false);
-    } else {
-      resolve(true);
-    }
-  });
- })
-}
 
 exports.register = async function (req, res) {
   if (

@@ -12,9 +12,9 @@ export const AuthProvider = ({ children }) => {
     async function forceRefresh() {
         try {
             var res = await axios({
-            method: "GET",
-            url: `${process.env.REACT_APP_API_URL}/user/me`,
-            withCredentials: true
+                method: "GET",
+                url: `${process.env.REACT_APP_API_URL}/user/me`,
+                withCredentials: true
             })
             setCurrentUser(res.data)
             setPending(false)
@@ -24,11 +24,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        console.log("🚀 ~ file: Auth.jsx ~ line 10 ~ AuthProvider ~ currentUser", currentUser)
-        console.log("🚀 ~ file: Auth.jsx ~ line 29 ~ useEffect ~ Cookies.get('token')", Cookies.get('token'))
+        if (!currentUser) return;
         setSocket(io("http://localhost:8080", {
             withCredentials: true,
             autoConnect: true,
+            reconnection: true,
+            reconnectionDelay: 500,
+            reconnectionAttempts: 10
         }))
     }, [currentUser]);
 
