@@ -2,12 +2,12 @@ const { Errors } = require("../../Models/Errors.js");
 const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
 
-exports.getProjectReplicas = async function(req, res) {
+exports.getProjectReplicas = async function (req, res) {
     try {
         // var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
-        var script = await Replica.find({projectId: req.params.projectId}).
-            populate({path: 'lastEditor', select: 'firstName lastName'}).
-            sort({timestamp: "asc"});
+        var script = await Replica.find({ projectId: req.params.projectId }).
+            populate({ path: 'lastEditor', select: 'firstName lastName' }).
+            sort({ timestamp: "asc" });
         res.status(200).send(script);
     } catch (err) {
         console.log("Replica->getProjectReplicas : " + err);
@@ -16,10 +16,10 @@ exports.getProjectReplicas = async function(req, res) {
 }
 
 
-exports.getProjectReplica = async function(req, res) {
+exports.getProjectReplica = async function (req, res) {
     try {
         var replica = await Replica.findById(req.params.replicaId).
-            populate({path: 'lastEditor', select: 'firstName lastName'});
+            populate({ path: 'lastEditor', select: 'firstName lastName' });
         res.status(200).send(replica);
     } catch (err) {
         console.log("Replica->getProjectReplica : " + err);
@@ -28,8 +28,9 @@ exports.getProjectReplica = async function(req, res) {
 }
 
 
-exports.createReplica = async function(req, res) {
+exports.createReplica = async function (req, res) {
     try {
+        var voiceID = 1;
         if (!req.body.content || !req.body.timestamp || !req.body.duration
             || !req.body.voiceId)
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
@@ -41,10 +42,21 @@ exports.createReplica = async function(req, res) {
             duration: req.body.duration,
             voiceId: req.body.voiceId,
             lastEditor: req.user.userId,
-            lastEditDate: Date.now()
+            lastEditDate: Date.now(),
+            audioCreated: false
         });
 
         await newReplica.save();
+        var datas = { projectID: req.params.projectId, voiceID: voiceID, text: req.body.content, replicaID: newReplica.replicaId }
+        await axios.post("localhost:8082/Voice/TextToSpeech", datas, (res, err) => {
+            if (!err && res.status === 200) {
+                newReplica.audioCreated = true;
+                await newReplica.save();
+            } else {
+                throw Errors.REICEVED_ERROR
+            }
+            audioCreated
+        });
         res.status(200).send(newReplica);
     } catch (err) {
         console.log("Replica->createReplica : " + err);
@@ -53,7 +65,7 @@ exports.createReplica = async function(req, res) {
 }
 
 
-exports.updateReplica = async function(req, res) {
+exports.updateReplica = async function (req, res) {
     try {
         let replica = await Replica.findById(req.params.replicaId);
         let hasChanged = false;
@@ -87,14 +99,14 @@ exports.updateReplica = async function(req, res) {
 }
 
 
-exports.deleteReplica = async function(req, res) {
+exports.deleteReplica = async function (req, res) {
     try {
         // await ReplicaCommentController.deleteCommentsByReplicaId(req, res);
         var replicaToDelete = await Replica.findById(req.params.replicaId);
         if (!replicaToDelete)
             return res.status(404).send(Errors.REPLICA_NOT_FOUND);
         await replicaToDelete.deleteOne();
-        const attachedCommentsDeleted = await ReplicaComment.deleteMany({replicaId: req.params.replicaId});
+        const attachedCommentsDeleted = await ReplicaComment.deleteMany({ replicaId: req.params.replicaId });
         if (attachedCommentsDeleted > 0) console.log(`${attachedCommentsDeleted} comments deleted with the removed replica`);
 
         // Old way of cascade-removing attached comments to the targeted replica

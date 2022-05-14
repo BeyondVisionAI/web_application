@@ -46,6 +46,9 @@ const Errors = {
 
     //ReplicaComment : 
     REPLICACOMMENT_NOT_FOUND: "REPLICACOMMENT_NOT_FOUND",
+
+    //Response API :
+    REICEVED_ERROR: "REICEVED_ERROR"
 };
 
 exports.Errors = Errors;
