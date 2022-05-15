@@ -47,16 +47,19 @@ exports.createReplica = async function (req, res) {
         });
 
         await newReplica.save();
-        var datas = { projectID: req.params.projectId, voiceID: voiceID, text: req.body.content, replicaID: newReplica.replicaId }
-        await axios.post("localhost:8082/Voice/TextToSpeech", datas, (res, err) => {
-            if (!err && res.status === 200) {
-                newReplica.audioCreated = true;
-                await newReplica.save();
-            } else {
-                throw Errors.REICEVED_ERROR
-            }
-            audioCreated
-        });
+        if (req.body.createAudio === true) {
+            var datas = { projectID: req.params.projectId, voiceID: voiceID, text: req.body.content, replicaID: newReplica.replicaId }
+            await axios.post("localhost:8082/Voice/TextToSpeech", datas, (res, err) => {
+                if (!err && res.status === 200) {
+                    newReplica.audioCreated = true;
+                    newReplica.duration = res.body.audioDuration;
+                    await newReplica.save();
+                } else {
+                    throw Errors.REICEVED_ERROR
+                }
+                audioCreated
+            });
+        }
         res.status(200).send(newReplica);
     } catch (err) {
         console.log("Replica->createReplica : " + err);
