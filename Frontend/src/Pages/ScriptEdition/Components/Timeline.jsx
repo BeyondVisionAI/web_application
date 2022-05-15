@@ -4,6 +4,8 @@ import '../react-contextmenu.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+import TimecodeLine from './TimecodeLine';
+
 // temporary duration of a project, so we can do the timeline
 const videoLength = 3600000 / 4;
 const canvasHeight = 80;
@@ -188,25 +190,25 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         // }
     }
 
-    useEffect(() => {
-        drawTimecodeLine();
-    }, []);
+    // useEffect(() => {
+    //     drawTimecodeLine();
+    // }, []);
 
     return (
         <>
             <ContextMenuTrigger id='timeline_menu' >
-                <div className='flex overflow-x-auto relative
-                w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'
-                style={{width: `${secToPxCoef * videoLength}px`}}>
+                <div className='flex overflow-x-scroll relative
+                w-screen h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'>
                     {replicaLine}
                     {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
                     <div className='p-1 absolute'
                     style={{left: `${secToPxCoef * videoLength / 1000000 - 1}px`, width: `${secToPxCoef / 1000000}px`}} />
 
-                    <canvas id='canvas' className='bg-black place-self-end'
+                        <TimecodeLine videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/>
+                    {/* <canvas id='canvas' className='bg-black place-self-end'
                     style={{width: `${secToPxCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
                         height={canvasHeight}  width={secToPxCoef * videoLength / 10000000} >
-                    </canvas>
+                    </canvas> */}
                 </div>
             </ContextMenuTrigger>
 
