@@ -16,7 +16,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
-
+    var timecodeArray = [];
 
 
     const addReplica = async function () {
@@ -137,6 +137,30 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     }
 
 
+    const setupTimecodeLine = function () {
+        const nbSeconds = videoLength / 1000;
+
+        for (var i = 0; i < nbSeconds; i++) {
+            timecodeArray.push({
+                videoLength: videoLength,
+                secondToPixelCoef: secToPxCoef,
+                minute: i,
+                zoom: 1
+            });
+        }
+    }
+    useEffect(() => {
+        setupTimecodeLine();
+    }, []);
+
+
+    const timecodeLineCreator = timecodeArray.map((values) => {
+        return (
+            <TimecodeLine videoLength={values.videoLength} secondToPixelCoef={values.secondToPixelCoef}
+            minute={values.minute} zoom={values.zoom} />
+        )
+    })
+
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ContextMenuTrigger id="replica_menu" key={index}>
@@ -154,46 +178,6 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     })
 
 
-    const drawLine = function(ctx, xCoordinate, heightCoef) {
-        ctx.moveTo(xCoordinate, canvasHeight);
-        ctx.lineTo(xCoordinate, canvasHeight - canvasHeight * heightCoef);
-        ctx.stroke();
-    }
-
-    const drawTimecodeLine = function() {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
-        
-        const spacing = secToPxCoef / 1000;
-
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = '#FFF';
-        ctx.beginPath();
-
-        for (var minute = 0; minute < 10; minute++) {
-            drawLine(ctx, spacing * minute * 60, 0.8);
-            for (var second = 0; second < 60; second++) {
-                drawLine(ctx, spacing * minute + spacing * second, 0.5);
-                // ms
-                drawLine(ctx, spacing * minute + spacing * second + spacing * 1 / 4, 0.2);
-                drawLine(ctx, spacing * minute + spacing * second + spacing * 2 / 4, 0.2);
-                drawLine(ctx, spacing * minute + spacing * second + spacing * 3 / 4, 0.2);
-            }
-        }
-        // for (var interval = 0; interval < 10; interval++) {
-        //     drawLine(ctx, spacing * interval, 0.5);
-        //     // ms
-        //     drawLine(ctx, spacing * interval + spacing * 1 / 4, 0.2);
-        //     drawLine(ctx, spacing * interval + spacing * 2 / 4, 0.2);
-        //     drawLine(ctx, spacing * interval + spacing * 3 / 4, 0.2);
-
-        // }
-    }
-
-    // useEffect(() => {
-    //     drawTimecodeLine();
-    // }, []);
-
     return (
         <>
             <ContextMenuTrigger id='timeline_menu' >
@@ -201,10 +185,15 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                 w-screen h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'>
                     {replicaLine}
                     {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
-                    <div className='p-1 absolute'
-                    style={{left: `${secToPxCoef * videoLength / 1000000 - 1}px`, width: `${secToPxCoef / 1000000}px`}} />
+                    <div className='p-1 w-full place-self-end flex flex-row'
+                    style={{height: `${canvasHeight}px`}}>
+                    {/* style={{left: `${secToPxCoef * videoLength / 1000000 - 1}px`, width: `${secToPxCoef / 1000000}px`}}> */}
+                        {timecodeLineCreator}
+                    </div>
+                        {/* <TimecodeLine videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/> */}
 
-                        <TimecodeLine videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/>
+
+
                     {/* <canvas id='canvas' className='bg-black place-self-end'
                     style={{width: `${secToPxCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
                         height={canvasHeight}  width={secToPxCoef * videoLength / 10000000} >

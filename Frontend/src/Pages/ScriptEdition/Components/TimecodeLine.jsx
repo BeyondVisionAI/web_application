@@ -11,10 +11,16 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
         ctx.stroke();
     }
     
+    const fillBackground = function(ctx, canvas) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
     const drawTimecodeLines = function() {
         const spacing = secondToPixelCoef / 1000;
         var canvas = document.getElementById('timecodeCanvas');
         var ctx = canvas.getContext('2d');
+        fillBackground(ctx, canvas);
         ctx.lineWidth = 1;
         ctx.font = "15px Arial";
         ctx.strokeStyle = 'white';
