@@ -87,7 +87,7 @@ exports.updateReplica = async function (req, res) {
                 if (!err && res.status === 200) {
                     replica.audioCreated = true;
                     replica.duration = res.body.audioDuration;
-                    await replica.save();
+                    replica.save();
                 } else {
                     throw Errors.REICEVED_ERROR
                 }

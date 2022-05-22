@@ -16,7 +16,7 @@ const replica = new Schema({
         required: true
     },
     lastEditDate: Date,
-    audioCreated: boolean
+    audioCreated: Boolean
 });
 
 
