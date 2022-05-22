@@ -47,19 +47,6 @@ exports.createReplica = async function (req, res) {
         });
 
         await newReplica.save();
-        if (req.body.createAudio === true) {
-            var datas = { projectID: req.params.projectId, voiceID: voiceID, text: req.body.content, replicaID: newReplica.replicaId }
-            await axios.post("localhost:8082/Voice/TextToSpeech", datas, (res, err) => {
-                if (!err && res.status === 200) {
-                    newReplica.audioCreated = true;
-                    newReplica.duration = res.body.audioDuration;
-                    await newReplica.save();
-                } else {
-                    throw Errors.REICEVED_ERROR
-                }
-                audioCreated
-            });
-        }
         res.status(200).send(newReplica);
     } catch (err) {
         console.log("Replica->createReplica : " + err);
@@ -93,6 +80,18 @@ exports.updateReplica = async function (req, res) {
             replica.lastEditDate = new Date();
             replica.lastEditor = req.user.userId;
             await replica.save();
+        }
+        if (req.body.createAudio === true) {
+            var datas = { projectID: req.params.projectId, voiceID: voiceID, text: req.body.content, replicaID: replica.replicaId }
+            await axios.post("localhost:8082/Voice/TextToSpeech", datas, (res, err) => {
+                if (!err && res.status === 200) {
+                    replica.audioCreated = true;
+                    replica.duration = res.body.audioDuration;
+                    await replica.save();
+                } else {
+                    throw Errors.REICEVED_ERROR
+                }
+            });
         }
         return res.status(200).send(replica);
     } catch (err) {
