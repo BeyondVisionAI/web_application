@@ -48,7 +48,7 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
     }, []);
 
     return (
-        <canvas id='timecodeCanvas' className='bg-black place-self-end'
+        <canvas id='timecodeCanvas' className='bg-black'
         style={{width: `${secondToPixelCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
         width={9000} height={canvasHeight}>
         </canvas>

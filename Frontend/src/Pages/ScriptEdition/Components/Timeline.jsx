@@ -161,6 +161,12 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         )
     })
 
+    // const timecodeLineCreator = timecodeArray.map((values) => {
+    //     <div className='w-max h-max bg-black border-black'>
+    //         ...
+    //     </div>
+    // });
+
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ContextMenuTrigger id="replica_menu" key={index}>
@@ -185,14 +191,14 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                 w-screen h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'>
                     {replicaLine}
                     {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
-                    <div className='p-1 w-full place-self-end flex flex-row'
-                    style={{height: `${canvasHeight}px`}}>
-                    {/* style={{left: `${secToPxCoef * videoLength / 1000000 - 1}px`, width: `${secToPxCoef / 1000000}px`}}> */}
-                        {timecodeLineCreator}
+                    <div className='p-0 w-full place-self-end flex flex-row justify-between'
+                    // style={{height: `${canvasHeight}px`}}>
+                    style={{width: `${secToPxCoef / 1000000}px`, height: `${canvasHeight}px`}}>
+                        {/* {timecodeLineCreator} */}
+                        <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/>
+                        <TimecodeLine className="justify-self-end" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={2}/>
+                        <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={3}/>
                     </div>
-                        {/* <TimecodeLine videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/> */}
-
-
 
                     {/* <canvas id='canvas' className='bg-black place-self-end'
                     style={{width: `${secToPxCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
