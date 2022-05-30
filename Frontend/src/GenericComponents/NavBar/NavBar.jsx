@@ -34,7 +34,7 @@ const NavBar = () => {
                     <a onClick={() => setIsMenuActive(false)} href="#aboutus" className="navbar-link">About Us</a>
                     <a onClick={() => setIsMenuActive(false)} href="#timeline" className="navbar-link">Timeline</a>
                     <a onClick={() => setIsMenuActive(false)} href="#contact" className="navbar-link">Contact</a>
-                    <button className="navbar-button" onClick={() => history.push("/login")}>Login</button>
+                    {/* <button className="navbar-button" onClick={() => history.push("/login")}>Login</button> */}
                 </div> 
             </div>}
         </div>
