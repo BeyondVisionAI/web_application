@@ -2,8 +2,10 @@ import React, { useContext } from 'react';
 import "./ProjectMiniature.css";
 import { useState, useEffect } from "react";
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
+import { DownloadFileUrl } from '../../../../GenericComponents/Files/S3Manager';
 
 export default function ProjectMiniature({ idList, movie, openAddProjectToList, openRemoveProjectFromList, openDestroyLeaveProject }) {
 
@@ -28,10 +30,13 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
     //     </div>);
     // }
 
+    const history = useHistory();
+
     const {currentUser} = useContext(AuthContext);
 
     const [roleProject, setRoleProject] = useState('');
     const [roleList, setRoleList] = useState('');
+    const [thumbnail, setThumbnail] = useState('');
 
     useEffect(() => {
         const getMyRoleOnProject = async () => {
@@ -77,11 +82,35 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
         };
     }, [idList, currentUser.userId, movie._id])
 
+    useEffect(() => {
+        try {
+            async function getThumbnailProject(projId) {
+                try {
+                    let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${movie._id}/${movie.thumbnailId}`);
+                    let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
+                    setThumbnail(url);
+                } catch (err) {
+                    console.error(`Getting file ${"thumbnailId"} on S3`, err);
+                }
+            }
+            if (true || "thumbnailId")
+                getThumbnailProject("projectId");
+            console.log(movie);
+        } catch (error) {
+            console.error(error);
+            toast.error('Error while fetching data!');
+        }
+    }, []);
+
+    const RedirectToProject = () => {
+        history.push(`/project/${movie._id}`);
+    }
+
     return (
         <div className="project-miniature-container">
             <div className="img-container relative">
-            {/* <img className="object-fill w-full h-full" src={`./assets/movies/${actualProject.picture}`} alt={`Movie ${movie.name}`}></img> */}
-            <img className="object-fill w-full h-full" src={`./assets/movies/animal.jpg`} alt={`Movie ${movie.name}`}></img>
+            <img className="object-fill w-full h-full" src={thumbnail} alt={`Movie ${movie.name}`} onClick={() => RedirectToProject()}></img>
+            {/* <img className="object-fill w-full h-full" src={`./assets/movies/animal.jpg`} alt={`Movie ${movie.name}`}></img> */}
                 <div className="rounded-full absolute top-3 right-3 dropdown grid justify-items-stretch">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 justify-self-end" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />

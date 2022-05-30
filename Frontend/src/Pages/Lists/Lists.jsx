@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 import ModalDestroyLeaveProject from './Components/ModalDestroyLeaveProject/ModalDestroyLeaveProject';
 import ModalDestroyLeaveList from './Components/ModalDestroyLeaveList/ModalDestroyLeaveList';
+import CreateProject from '../Project/Create/CreateProject';
 
 export default function Lists() {
 
@@ -22,6 +23,7 @@ export default function Lists() {
     const [removeProjectFromListPopupOpen, setRemoveProjectFromListOpen] = useState(false);
     const [destroyLeaveProjectPopupOpen, setDestroyLeaveProjectOpen] = useState(false);
     const [destroyLeaveListPopupOpen, setDestroyLeaveListOpen] = useState(false);
+    const [modalShow, setShowModal] = useState(false);
 
     //Variables for modals
     const [projectToModify, setProjectToModify] = useState(0);
@@ -166,6 +168,17 @@ export default function Lists() {
                     projectId={projectToModify}></ModalDestroyLeaveProject>
                 <ModalDestroyLeaveList refresh={setRefreshKey} open={destroyLeaveListPopupOpen} close={handleCloseDestroyLeaveListPopup}
                     listId={listToModify}></ModalDestroyLeaveList>
+                <button
+                className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                onClick={() => setShowModal(true)}
+            >Create project</button>
+            {modalShow ? (
+                <CreateProject
+                    show={modalShow}
+                    onHide={() => setShowModal(false)}
+                />
+            ): null}
 
                 {
                     myProjectsList.movies.length > 0 ? 

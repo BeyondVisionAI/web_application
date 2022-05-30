@@ -49,6 +49,7 @@ export default function ProjectsList({ id, list, openAddProjectToList, openRemov
     return (
         <div>
             {
+                
                 (list !== undefined) &&
                 <div className="main-container">
                     <div className='flex'>
