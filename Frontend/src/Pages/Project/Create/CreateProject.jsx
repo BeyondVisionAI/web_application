@@ -62,7 +62,7 @@ export default function CreateProject({ show, onHide }) {
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
         }).catch(err => console.error("Upload thumbnail error:", err));
-        UploadFileOnS3(video, 'bv-streaming-source-56j5jposuppx', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
+        UploadFileOnS3(video, 'bv-streaming-video-source-ahnauucgvgsf', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
         .then(async videoRes => {
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,

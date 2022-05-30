@@ -19,18 +19,38 @@ export default function ManageProject(props) {
     const [editing, setEditing] = useState(EDIT.off);
     const history = useHistory();
 
+    // const playerRef = React.useRef(null);
+    // const handlePlayerReady = (player) => {
+    //   playerRef.current = player;
+
+    //   player.on('waiting', () => {
+    //     player.log('player is waiting');
+    //   });
+    //   player.on('dispose', () => {
+    //     player.log('player will dispose');
+    //   });
+    // };
+
     axios.defaults.withCredentials = true;
     useEffect(() => {
         async function getProject(id) {
             try {
+                let videoUrl = undefined;
                 let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`);
+                try {
+                    let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`);
 
+                    if (video.status === 200)
+                        videoUrl = `https://d10lu3tsncvjck.cloudfront.net/${video.data.name}`;
+                } catch (error) {
+                    console.log('Video non dispo');
+                }
                 setProject({
                     name: projectR.data.name,
                     status: projectR.data.status,
                     actualStep: projectR.data.actualStep,
                     thumbnailId: projectR.data.thumbnailId,
-                    videoUrl: projectR.data.url,
+                    videoUrl: videoUrl,
                     description: projectR.data.description
                 });
             } catch (error) {
@@ -94,19 +114,20 @@ export default function ManageProject(props) {
                         />
                         <VideoPlayer
                             videoUrl={project.videoUrl}
+                            // onReady={handlePlayerReady}
                         />
-                    </div>
-                    <div className='h-full w-1/3 rounded-xl'>
-                        <ProjectStatus
-                            actualStep={project.actualStep}
-                        />
-                        <Options
-                            projectId={props.match.params.id}
-                        />
-                        <Bill />
-                    </div>
-                </div>
-            </div>
+                     </div>
+                     <div className='h-full w-1/3 rounded-xl'>
+                         <ProjectStatus
+                             actualStep={project.actualStep}
+                         />
+                         <Options
+                             projectId={props.match.params.id}
+                         />
+                         <Bill />
+                     </div>
+                 </div>
+             </div>
         );
     } else {
         return (
