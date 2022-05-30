@@ -15,7 +15,6 @@ exports.isReplicaFromProject = async function(req, res, next) {
             return res.status(404).send(Errors.REPLICA_NOT_FOUND);
         }
 
-        console.log(`replica middleware : projectID ${project._id} || replica.projectID ${replica.projectId}`);
         if (replica.projectId != req.params.projectId) {
             console.log("ReplicaMiddleware/isReplicaFromProject -> Replica's ProjectId does not correspond to the given project.");
             return res.status(404).send(Errors.REPLICA_NOT_IN_PROJECT);

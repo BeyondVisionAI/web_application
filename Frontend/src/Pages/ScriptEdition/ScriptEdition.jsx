@@ -44,11 +44,11 @@ export default function ScriptEdition(props) {
         return null;
     }
 
-    const udpateProjectReplica = async () => {
+    const udpateProjectReplica = async (id) => {
         try {
             const res = await axios({
                 method: "GET",
-                url: `${process.env.REACT_APP_API_URL}/projects/${project.id}/replicas`,
+                url: `${process.env.REACT_APP_API_URL}/projects/${id}/replicas`,
                 withCredentials: true
             });
             let resRep = Object.values(res.data);
@@ -79,17 +79,18 @@ export default function ScriptEdition(props) {
 
 
     useEffect(() => {
-        const fetchProjectDetails = async () => {
+        const fetchProjectDetails = async (id) => {
             try {
                 const res = await axios({
                     method: "GET",
-                    url: `${process.env.REACT_APP_API_URL}/projects/${project.id}/replicas`,
+                    url: `${process.env.REACT_APP_API_URL}/projects/${id}/replicas`,
                     withCredentials: true
                 });
                 let resRep = Object.values(res.data);
                 setReplicas(resRep);
             } catch (e) {
                 let errMsg = "Error";
+                console.log(e);
                 switch (e.response.status) {
                     case 401:
                         switch (e.response.data) {
@@ -111,7 +112,7 @@ export default function ScriptEdition(props) {
                 console.error(e);
             }
         }
-        fetchProjectDetails();
+        fetchProjectDetails(props.match.params.id);
     }, []);
 
     const RedirectToProjectManagement = () => {

@@ -50,7 +50,6 @@ const CommentBox = ({comments, replica, updateComments}) => {
 
     const postComment = async function (e) {
         e.preventDefault();
-        console.log("New comment : " + newComment);
         try {
             let body = {content: newComment};
             const commentResponse = await axios({
@@ -60,7 +59,6 @@ const CommentBox = ({comments, replica, updateComments}) => {
                 withCredentials: true
             });
 
-            console.log(commentResponse);
             await updateComments();
         } catch (e) {
             let errMsg = "Error";
