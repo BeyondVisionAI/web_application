@@ -122,9 +122,9 @@ export default function ScriptEdition(props) {
     if (project) {
         return (
             <>
-                <div className="script-edition-container h-screen w-screen">
+                <div className="script-edition-container h-screen w-screen overflow-x-hidden">
                     <NavBar />
-                    <div id="page-container" className="h-5/6 w-full py-2 px-6">
+                    <div id="page-container" className="w-screen h-5/6 py-2 px-6">
                         <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                             <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{project.title}</h1>
                             <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base" onClick={() => RedirectToProjectManagement()}>Soumettre</button>
@@ -141,13 +141,13 @@ export default function ScriptEdition(props) {
                             }
 
                         </div>
-                           <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-red-500">
-                               <img className="object-cover" src="/assets/fight_club.jpeg" alt="" />
+                           <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-gray-100">
+                               <img className="object-cover h-10/12" src="/assets/fight_club.jpeg" alt="" />
                            </div>
                         </div>
 
                         <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
-                           <Timeline className="w-full h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} />
+                           <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} />
                         </div>
                     </div>
                 </div>

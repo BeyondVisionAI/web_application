@@ -217,7 +217,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
             </div>
 
             <h3 className="pl-4 text-xl">Commentaires</h3>
-            <div id="comment-frame" className="w-fit h-3/6 bg-red-200 ml-6 mr-9 overflow-y-auto">
+            <div id="comment-frame" className="w-fit h-3/6 ml-6 mr-9 overflow-y-auto">
                 <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
             </div>
 

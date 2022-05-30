@@ -161,16 +161,11 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         )
     })
 
-    // const timecodeLineCreator = timecodeArray.map((values) => {
-    //     <div className='w-max h-max bg-black border-black'>
-    //         ...
-    //     </div>
-    // });
 
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ContextMenuTrigger id="replica_menu" key={index}>
-                <button className='bg-green-700 py-4 rounded focus:outline-none focus:border focus:border-blue-600
+                <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
                 absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
                     onClick={() => onReplicaSelection(replica._id)} 
                     onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
@@ -188,7 +183,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         <>
             <ContextMenuTrigger id='timeline_menu' >
                 <div className='flex overflow-x-scroll relative
-                w-screen h-full bg-green-400 rounded-b-3xl opacity-50 shadow-lg'>
+                w-screen h-full bg-gray-500 rounded-b-3xl opacity-50 shadow-lg'>
                     {replicaLine}
                     {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
                     <div className='p-0 w-full place-self-end flex flex-row justify-between'
@@ -196,8 +191,6 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                     style={{width: `${secToPxCoef / 1000000}px`, height: `${canvasHeight}px`}}>
                         {/* {timecodeLineCreator} */}
                         <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/>
-                        <TimecodeLine className="justify-self-end" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={2}/>
-                        <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={3}/>
                     </div>
 
                     {/* <canvas id='canvas' className='bg-black place-self-end'
