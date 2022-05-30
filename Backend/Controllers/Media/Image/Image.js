@@ -14,6 +14,16 @@ exports.getImage = async function(req, res) {
     }
 };
 
+exports.updateImage = async function(req, res) {
+    try {
+        const image = await Image.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
+        return res.status(200).send(image);
+    } catch (err) {
+        console.log("Image->updateImage: " + err);
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+};
+
 exports.createImage = async function(req, res) {
     const { name, desc, ETag } = req.body;
 

@@ -14,7 +14,7 @@ export default function Options({ projectId }) {
   // TODO: Fill option thanks the project data ?
 
   function createChoice(choices) {
-    return choices.map(choice => <option name={`${choice.name}`} selected={choice.selected} >{choice.name}</option>)
+    return choices.map(choice => <option name={choice.name} key={choice.name} selected={choice.selected} >{choice.name}</option>)
   }
 
   function handleOptionsChange(event, option) {

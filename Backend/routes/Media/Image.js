@@ -7,6 +7,12 @@ module.exports = function(app) {
         authMiddleware.authenticateUser,
         image.createImage
     );
+
+    app.put('/images/:id',
+        authMiddleware.authenticateUser,
+        image.updateImage
+    );
+
     app.get('/images/:projectId/:id',
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,

@@ -1,0 +1,48 @@
+.main-container {
+    padding: 5px;
+    margin: 30px 15px 10px 15px;
+}
+
+.list-title {
+    font-family: 'Roboto', 'Oxygen', 'Ubuntu', 'Helvetica Neue', sans-serif;
+    font-weight: 500;
+    font-size: 1.5em;
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.projects-list-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 15px;
+}
+
+.projects-list-container::-webkit-scrollbar {
+    display: none;
+}
+
+.projects-list-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.dropdown-child {
+    display: none;
+    background-color: #7793ED;
+    min-width: 50px;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+.dropdown-child p {
+    color: white;
+    padding: 15px 20px 15px 10px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.svg-class:hover .dropdown-child {
+    display: block;
+}
