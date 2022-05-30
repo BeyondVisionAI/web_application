@@ -7,7 +7,7 @@ const AWSAccess = {
     secretAccessKey: '2VlQ+9P+MstAMD3qsaHDMzqiu46SknNB23qYgHlQ'
 };
 
-export function UploadFile(file, bucketnName, region = 'us-east-1', keyName = null)
+export function UploadFileOnS3(file, bucketnName, region = 'us-east-1', keyName = null)
 {
     try {
         let s3 = new AWS.S3({
@@ -41,7 +41,6 @@ export async function DownloadFileUrl(bucketName, keyName)
             Bucket: bucketName,
             Key: keyName,
         };
-        console.log(params);
         const url = await new Promise((resolve, reject) => {
             s3.getSignedUrl('getObject', params, function (err, url) {
                 if (err) {
