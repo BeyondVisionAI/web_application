@@ -28,6 +28,8 @@ services:
       dockerfile: ./DockerfileDev
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     volumes:
       - ./Backend/index.js:/app/index.js
       - ./Backend/Controllers:/app/Controllers/
