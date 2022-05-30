@@ -12,8 +12,7 @@ const Login = () => {
     const [email, setEmail] = useState(null)
     const { currentUser } = useContext(AuthContext);
     const history = useHistory()
-    
-    console.log("Hello");
+
     function authenticate() {
         if (!email || !password) {
             toast.error("Username or password not filled")
