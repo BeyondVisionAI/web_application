@@ -55,7 +55,7 @@ const NavBar = () => {
                 <a href="#aboutus" className="navbar-link">About Us</a>
                 <a href="#timeline" className="navbar-link">Timeline</a>
                 <a href="#contact" className="navbar-link">Contact</a>
-                <button className="navbar-button" onClick={() => history.push("/login")}>Login</button>
+                {/* <button className="navbar-button" onClick={() => history.push("/login")}>Login</button> */}
             </div>
         </div>
     );
