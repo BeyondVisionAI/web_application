@@ -1,4 +1,4 @@
-const { Schema } = require("mongoose");
+const { model, Schema } = require("mongoose");
 
 const itemType = [
     'Audiodescriptor',
@@ -17,7 +17,7 @@ const item = new Schema({
         ref: "User",
         required: true
     },
-    actualStep: {
+    type: {
         type: String,
         enum: itemType,
         required: true

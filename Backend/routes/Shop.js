@@ -19,14 +19,14 @@ module.exports = function(app) {
     );
     app.post('/shop/items',
         authMiddleware.authenticateUser,
-        Shop.addItem
+        Shop.addItem    //OK
     );
     app.get('/shop/items/:itemid',
         authMiddleware.authenticateUser,
-        Shop.getItemById
+        Shop.getItemById    //OK
     );
     app.delete('/shop/items/:itemid',
         authMiddleware.authenticateUser,
-        Shop.removeMyItem
+        Shop.removeMyItem   //OK
     );
 }

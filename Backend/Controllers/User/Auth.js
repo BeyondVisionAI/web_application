@@ -78,7 +78,7 @@ exports.register = async function (req, res) {
         };
         if (!process.env.IS_TEST) {
           try {
-            await wrapedSendMail(mailData)
+            //await wrapedSendMail(mailData)
             return res.status(200).send("Success");
           } catch (err) {
             return res.status(500).send(Errors.INTERNAL_ERROR);
