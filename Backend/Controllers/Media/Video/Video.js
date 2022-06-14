@@ -57,14 +57,14 @@ exports.snsEndpoint = async function(req, res)
             chunks.push(chunk);
         });
         req.on('end', function () {
-            var message = JSON.parse(chunks.join(''));
+            let message = JSON.parse(chunks.join(''));
+            console.log('Nous avons un call message');
             console.log(message);
+
+            let body = JSON.parse(message.Message);
+            console.log(body);
+            console.log(body.hlsUrl ? body.hlsUrl : body.status);
         });
-        res.end();
-    //     console.log('-- SNS Notification --');
-    //     console.log(req.body);
-    //     console.log(req.params);
-    //     console.log(req.url);
     //     let video;
 
     //     if (req.body.status) {
