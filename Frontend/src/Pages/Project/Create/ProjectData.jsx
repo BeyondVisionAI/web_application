@@ -31,14 +31,14 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
     }, [image]);
 
     return (
-        <form class="flex w-full h-full">
-            <div class="flex flex-wrap w-2/3">
-                <div class="w-2/3 h-1/5 px-3 mb-6">
+        <form className="flex w-full h-full">
+            <div className="flex flex-wrap w-2/3">
+                <div className="w-2/3 h-1/5 px-3 mb-6">
                     <InputWithLabel defaultValue={ values.title } placeholder="Title" type="text" label="Title" onChange={ title => handleChange('name', title) } />
                 </div>
                 <UploadFile setData={ setImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>
             </div>
-            { thumbnail ? <img class="object-scale-down w-1/3 h-1/2" src={ thumbnail } alt="Thumbnail"></img> : <div class="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded"></div> }
+            { thumbnail ? <img className="object-scale-down w-1/3 h-1/2" src={ thumbnail } alt="Thumbnail"></img> : <div className="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded"></div> }
             <div className="absolute bottom-0 right-0 p-6">
                 <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"

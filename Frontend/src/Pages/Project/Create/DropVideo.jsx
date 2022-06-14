@@ -8,13 +8,13 @@ export default function DropVideo({ video, setVideo, nextStep, handleChange, val
     }
 
   return (
-        <form class='h-full'>
-            <div class="relative group w-full h-64 flex justify-center items-center">
+        <form className='h-full'>
+            <div className="relative group w-full h-64 flex justify-center items-center">
                 <UploadFile
                 setData={ setVideo }
                 isFill={video ? true : false}
                 types=".mov, .mp4, .wav"
-                other={ video ? <p class="relative z-20 cursor-pointer text-blue-500 hover:text-blue-600 block">{ video.name }</p> : null }
+                other={ video ? <p className="relative z-20 cursor-pointer text-blue-500 hover:text-blue-600 block">{ video.name }</p> : null }
                 />
             </div>
             <div className="absolute bottom-0 right-0 p-6">

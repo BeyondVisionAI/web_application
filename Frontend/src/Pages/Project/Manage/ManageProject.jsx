@@ -35,13 +35,13 @@ export default function ManageProject(props) {
     useEffect(() => {
         async function getProject(id) {
             try {
-                let videoUrl = undefined;
+                let videoUrl = null;
                 let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`);
                 try {
                     let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`);
 
                     if (video.status === 200)
-                        videoUrl = `https://d10lu3tsncvjck.cloudfront.net/${video.data.name}`;
+                        videoUrl = video.data.url;
                 } catch (error) {
                     console.log('Video non dispo');
                 }

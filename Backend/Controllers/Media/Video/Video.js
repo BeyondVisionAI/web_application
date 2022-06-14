@@ -35,3 +35,37 @@ exports.createVideo = async function(req, res)
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
+
+// exports.putVideoUrl = async function(req, res)
+// {
+//     try {
+//         const video = await Video.findByIdAndUpdate(req.params.id, req.body, {returnDocument: 'after'});
+
+//         return res.status(200).send(video);
+//     } catch (err) {
+//         console.log("Video->updateUrl: " + err);
+
+//         return res.status(500).send(Errors.INTERNAL_ERROR);
+//     }
+// }
+
+exports.snsEndpoint = async function(req, res)
+{
+    try {
+        console.log('-- SNS Notification --');
+        console.log(req.data);
+        let video;
+
+        if (req.body.status) {
+            video = await Video.findByIdAndUpdate(req.params.id, {status: req.body.status}, {returnDocument: 'after'});
+        } else {
+
+            video = await Video.findByIdAndUpdate(req.params.id, {url: req.body.hlsUrl, status: req.body.workflowStatus}, {returnDocument: 'after'});
+        }
+        return res.status(200).send(video);
+    } catch (err) {
+        console.log("Update Video data from SNS notification: " + err);
+
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+}
