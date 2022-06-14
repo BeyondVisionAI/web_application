@@ -57,7 +57,7 @@ exports.snsEndpoint = async function(req, res)
         let video;
 
         if (req.body.status) {
-            video = await Video.findBy`IdAndUpdate(req.params.id, {status: req.body.status}, {returnDocument: 'after'});
+            video = await Video.findByIdAndUpdate(req.params.id, {status: req.body.status}, {returnDocument: 'after'});
         } else {
             video = await Video.findByIdAndUpdate(req.params.id, {url: req.body.hlsUrl, status: req.body.workflowStatus}, {returnDocument: 'after'});
         }
