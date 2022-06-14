@@ -53,15 +53,15 @@ exports.snsEndpoint = async function(req, res)
 {
     try {
         console.log('-- SNS Notification --');
-        console.log(req.data);
+        console.log(req.body);
         let video;
 
         if (req.body.status) {
-            video = await Video.findByIdAndUpdate(req.params.id, {status: req.body.status}, {returnDocument: 'after'});
+            video = await Video.findBy`IdAndUpdate(req.params.id, {status: req.body.status}, {returnDocument: 'after'});
         } else {
-
             video = await Video.findByIdAndUpdate(req.params.id, {url: req.body.hlsUrl, status: req.body.workflowStatus}, {returnDocument: 'after'});
         }
+        console.log(video)
         return res.status(200).send(video);
     } catch (err) {
         console.log("Update Video data from SNS notification: " + err);
