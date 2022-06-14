@@ -54,6 +54,8 @@ exports.snsEndpoint = async function(req, res)
     try {
         console.log('-- SNS Notification --');
         console.log(req.body);
+        console.log(req.params);
+        console.log(req.url);
         let video;
 
         if (req.body.status) {
