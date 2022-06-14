@@ -18,9 +18,9 @@ module.exports = function(app) {
     //     video.putVideoUrl
     // );
 
-    app.get('/snsEndpoint',
-        video.snsEndpoint
-    );
+    // app.get('/snsEndpoint',
+    //     video.snsEndpoint
+    // );
     app.post('/snsEndpoint',
         video.snsEndpoint
     );

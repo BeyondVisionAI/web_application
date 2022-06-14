@@ -51,23 +51,32 @@ exports.createVideo = async function(req, res)
 
 exports.snsEndpoint = async function(req, res)
 {
-    try {
-        console.log('-- SNS Notification --');
-        console.log(req.body);
-        console.log(req.params);
-        console.log(req.url);
-        let video;
+    // try {
+        let chunks = [];
+        req.on('data', function (chunk) {
+            chunks.push(chunk);
+        });
+        req.on('end', function () {
+            var message = JSON.parse(chunks.join(''));
+            console.log(message);
+        });
+        res.end();
+    //     console.log('-- SNS Notification --');
+    //     console.log(req.body);
+    //     console.log(req.params);
+    //     console.log(req.url);
+    //     let video;
 
-        if (req.body.status) {
-            video = await Video.findByIdAndUpdate(req.params.id, {status: req.body.status}, {returnDocument: 'after'});
-        } else {
-            video = await Video.findByIdAndUpdate(req.params.id, {url: req.body.hlsUrl, status: req.body.workflowStatus}, {returnDocument: 'after'});
-        }
-        console.log(video)
-        return res.status(200).send(video);
-    } catch (err) {
-        console.log("Update Video data from SNS notification: " + err);
+    //     if (req.body.status) {
+    //         video = await Video.findByIdAndUpdate(req.params.id, {status: req.body.status}, {returnDocument: 'after'});
+    //     } else if (req.body.hlsUrl) {
+    //         video = await Video.findByIdAndUpdate(req.params.id, {url: req.body.hlsUrl, status: req.body.workflowStatus}, {returnDocument: 'after'});
+    //     }
+    //     console.log(video)
+    //     return res.status(200).send(video);
+    // } catch (err) {
+    //     console.log("Update Video data from SNS notification: " + err);
 
-        return res.status(500).send(Errors.INTERNAL_ERROR);
-    }
+    //     return res.status(500).send(Errors.INTERNAL_ERROR);
+    // }
 }
