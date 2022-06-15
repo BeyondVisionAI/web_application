@@ -43,7 +43,7 @@ exports.snsEndpoint = async function(req, res)
         req.on('data', function (chunk) {
             chunks.push(chunk);
         });
-        req.on('end', function () {
+        req.on('end', async function () {
             let message = JSON.parse(chunks.join(''));
             let body = JSON.parse(message.Message);
             let video;
