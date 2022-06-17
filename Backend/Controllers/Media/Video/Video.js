@@ -47,10 +47,15 @@ exports.snsEndpoint = async function(req, res)
             let message = JSON.parse(chunks.join(''));
             let body = JSON.parse(message.Message);
             let video;
+
+            console.log('Id update', body.srcVideo.split('.')[0]);
+
             if (body.status) {
                 video = await Video.findByIdAndUpdate(body.srcVideo.split('.')[0], {status: body.status}, {returnDocument: 'after'});
+                console.log('update status')
             } else if (body.hlsUrl) {
                 video = await Video.findByIdAndUpdate(body.srcVideo.split('.')[0], {url: body.hlsUrl, status: body.workflowStatus}, {returnDocument: 'after'});
+                console.log('update url', video);
             }
             res.end();
         });
