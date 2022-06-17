@@ -182,7 +182,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     return (
         <>
             <ContextMenuTrigger id='timeline_menu' >
-                <div className='flex overflow-x-scroll relative
+                <div id="timeline-scrollable" className='flex overflow-x-scroll relative
                 w-screen h-full bg-gray-500 rounded-b-3xl opacity-50 shadow-lg'>
                     {replicaLine}
                     {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
@@ -191,6 +191,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                     style={{width: `${secToPxCoef / 1000000}px`, height: `${canvasHeight}px`}}>
                         {/* {timecodeLineCreator} */}
                         <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/>
+                        <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={2}/>
                     </div>
 
                     {/* <canvas id='canvas' className='bg-black place-self-end'
@@ -208,6 +209,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
             </ContextMenu>
 
             <ContextMenu id="timeline_menu" onShow={e => {
+                var element = document.getElementById("timeline-scrollable")
+                console.log("Left offset is ", element.scrollLeft)
                 var scrollX = e.target.scrollX;
                 var posX = e.detail.position.x;
                 var result = ((scrollX + posX - (16 * 2)) / secToPxCoef * 1000); // -2 rem equals the adjustment of the position
