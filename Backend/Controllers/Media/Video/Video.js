@@ -50,15 +50,12 @@ exports.snsEndpoint = async function(req, res)
             let video;
 
             if (body.srcVideo) {
-                let projectR = await Project.findById(body.srcVideo.split('.')[0])
-                console.log('Project, ', projectR);
+                let projectR = await Project.findById(body.srcVideo.split('.')[0]);
 
                 if (body.status) {
                     video = await Video.findByIdAndUpdate(projectR.videoId, {status: body.status}, {returnDocument: 'after'});
-                    console.log('update status', video);
                 } else if (body.hlsUrl) {
                     video = await Video.findByIdAndUpdate(projectR.videoId, {url: body.hlsUrl, status: body.workflowStatus}, {returnDocument: 'after'});
-                    console.log('update url', video);
                 }
             }
             res.end();

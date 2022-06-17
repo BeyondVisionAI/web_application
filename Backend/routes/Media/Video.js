@@ -14,13 +14,6 @@ module.exports = function(app) {
         video.getVideo
     );
 
-    // app.put('/videosUrl/:id',
-    //     video.putVideoUrl
-    // );
-
-    // app.get('/snsEndpoint',
-    //     video.snsEndpoint
-    // );
     app.post('/snsEndpoint',
         video.snsEndpoint
     );
