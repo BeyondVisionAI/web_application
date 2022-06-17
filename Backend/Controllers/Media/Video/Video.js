@@ -1,5 +1,6 @@
 const { Errors } = require("../../../Models/Errors.js");
 const { Video } = require('../../../Models/Media/Video');
+const { Project } = require("../../../Models/Project.js");
 
 
 exports.getVideo = async function(req, res) {
@@ -48,14 +49,17 @@ exports.snsEndpoint = async function(req, res)
             let body = JSON.parse(message.Message);
             let video;
 
-            console.log('Id update', body.srcVideo.split('.')[0]);
+            if (body.srcVideo) {
+                let projectR = await Project.findById(body.srcVideo.split('.')[0])
+                console.log('Project, ', projectR);
 
-            if (body.status) {
-                video = await Video.findByIdAndUpdate(body.srcVideo.split('.')[0], {status: body.status}, {returnDocument: 'after'});
-                console.log('update status')
-            } else if (body.hlsUrl) {
-                video = await Video.findByIdAndUpdate(body.srcVideo.split('.')[0], {url: body.hlsUrl, status: body.workflowStatus}, {returnDocument: 'after'});
-                console.log('update url', video);
+                if (body.status) {
+                    video = await Video.findByIdAndUpdate(projectR._id, {status: body.status}, {returnDocument: 'after'});
+                    console.log('update status', video);
+                } else if (body.hlsUrl) {
+                    video = await Video.findByIdAndUpdate(projectR._id, {url: body.hlsUrl, status: body.workflowStatus}, {returnDocument: 'after'});
+                    console.log('update url', video);
+                }
             }
             res.end();
         });
