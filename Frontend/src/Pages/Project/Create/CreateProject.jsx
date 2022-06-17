@@ -6,7 +6,7 @@ import VideoData from './VideoData';
 import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideo from './DropVideo';
 import { useHistory } from "react-router-dom";
-import { ReceiveMessage, UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
+import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
 
 export default function CreateProject({ show, onHide }) {
     const [modalStep, setModalStep] = useState(0);
@@ -63,11 +63,6 @@ export default function CreateProject({ show, onHide }) {
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
         }).catch(err => console.error("Upload thumbnail error:", err));
         UploadFileOnS3(video, 'beyondvision-vod-source-km23jds9b71q', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
-        // .on('httpUploadProgress', function(progress) {
-        //     let progressPercentage = Math.round(progress.loaded / progress.total * 100);
-        // https://www.internetkatta.com/develop-progress-bar-for-aws-s3-file-upload-using-javascript
-        //     console.log(progressPercentage);
-        //   })
         .then(async videoRes => {
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,
