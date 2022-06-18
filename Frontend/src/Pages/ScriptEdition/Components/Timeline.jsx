@@ -4,7 +4,7 @@ import '../react-contextmenu.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-import TimecodeLine from './TimecodeLine';
+import TimecodeBlock from './TimecodeBlock';
 
 // temporary duration of a project, so we can do the timeline
 const videoLength = 3600000 / 4;
@@ -16,7 +16,6 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
-    var timecodeArray = [];
 
 
     const addReplica = async function () {
@@ -137,29 +136,15 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     }
 
 
-    const setupTimecodeLine = function () {
-        const nbSeconds = videoLength / 1000;
-
-        for (var i = 0; i < nbSeconds; i++) {
-            timecodeArray.push({
-                videoLength: videoLength,
-                secondToPixelCoef: secToPxCoef,
-                minute: i,
-                zoom: 1
-            });
+    const TimecodeBlockCreator = function () {
+        const nbTCL = videoLength / 60000; // divide it by number of minutes
+        var timecodeArray = [];
+        for (var i = 0; i < nbTCL; i++) {
+            timecodeArray.push(<TimecodeBlock videoLength={videoLength} secondToPixelCoef={secToPxCoef}
+                minute={i+1} />);
         }
+        return timecodeArray;
     }
-    useEffect(() => {
-        setupTimecodeLine();
-    }, []);
-
-
-    const timecodeLineCreator = timecodeArray.map((values) => {
-        return (
-            <TimecodeLine videoLength={values.videoLength} secondToPixelCoef={values.secondToPixelCoef}
-            minute={values.minute} zoom={values.zoom} />
-        )
-    })
 
 
     const replicaLine = replicas.map((replica, index) => {
@@ -185,19 +170,10 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                 <div id="timeline-scrollable" className='flex overflow-x-scroll relative
                 w-screen h-full bg-gray-500 rounded-b-3xl opacity-50 shadow-lg'>
                     {replicaLine}
-                    {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
-                    <div className='p-0 w-full place-self-end flex flex-row justify-between'
-                    // style={{height: `${canvasHeight}px`}}>
+                    <div className='p-0 place-self-end flex flex-row justify-between'
                     style={{width: `${secToPxCoef / 1000000}px`, height: `${canvasHeight}px`}}>
-                        {/* {timecodeLineCreator} */}
-                        <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/>
-                        <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={2}/>
+                        {TimecodeBlockCreator()}
                     </div>
-
-                    {/* <canvas id='canvas' className='bg-black place-self-end'
-                    style={{width: `${secToPxCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
-                        height={canvasHeight}  width={secToPxCoef * videoLength / 10000000} >
-                    </canvas> */}
                 </div>
             </ContextMenuTrigger>
 
@@ -210,16 +186,15 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
 
             <ContextMenu id="timeline_menu" onShow={e => {
                 var element = document.getElementById("timeline-scrollable")
-                console.log("Left offset is ", element.scrollLeft)
-                var scrollX = e.target.scrollX;
+                var scrollX = element.scrollLeft;
                 var posX = e.detail.position.x;
+                console.log(">>> " + e.detail.position.x);
                 var result = ((scrollX + posX - (16 * 2)) / secToPxCoef * 1000); // -2 rem equals the adjustment of the position
                 console.log(`Result is then ${result}s`);
 
                 newReplicaTimestamp = (result * 1000).toFixed(0);
             }}>
                 <MenuItem onClick={addReplica}>
-                 {/* <MenuItem onClick= _ => await addReplica(newReplicaTimestamp)> */}
                     Ajouter une réplique
                 </MenuItem>
             </ContextMenu>
