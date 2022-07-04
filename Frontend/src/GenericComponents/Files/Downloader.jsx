@@ -1,26 +1,21 @@
-import { DownloadFileUrl } from './S3Manager';
+import { DownloadFileUrl, DownloadFileData } from './S3Manager';
 import { useEffect, useState } from 'react';
 import "../Button/Button.css";
 
 export function Downloader(props) {
-    console.log("Downloader")
-    console.log("props :", props);
-    const [url, setURL] = useState('');
-    const [file, setFile] = useState('')
+    const downloadFile = async () => {
+        const data = await DownloadFileData(props.bucket, props.keyName);
+        let blob = new Blob(data, props.fileType);
 
-    useEffect(() => {
-        const DownloadFileUrlData = async () => {
-            const data = await DownloadFileUrl(props.bucket, props.keyName);
-
-            setURL(data);
-        }
-        DownloadFileUrlData();
-        const path = props.keyName; 
-        setFile(path.split('/')[1]);
-    }, []);
+        const url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.download=props.keyName.split('/')[2];
+        a.href=url;
+        a.click();
+    };
     
     return (
-        <a download={file} target="_blank" href={url} style={{backgroundColor: props.bgColor}}  className="button-container" >{props.label}</a>
+        <button style={{backgroundColor: props.bgColor}} className="button-container" onclick={downloadFile()}>{props.label}</button>
     );
 
 }

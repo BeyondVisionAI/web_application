@@ -62,8 +62,10 @@ export default function ManageProject(props) {
                 </div>
                 {/*TODO bien placé les bouttons et ne pas les affiché si il n'existe pas */}
                 <Downloader bucket='bv-finished-products' keyName={`Video/${props.match.params.id}.mp4`}
+                fileType='Video/mp4'
                 label='Download Video' donwload/>
                 <Downloader bucket='bv-finished-products' keyName={`Audio/${props.match.params.id}.mp3`}
+                fileType='audio/mpeg'
                 label='Download Audio' donwload/>
             </div>
         );

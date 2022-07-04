@@ -56,3 +56,26 @@ export async function DownloadFileUrl(bucketName, keyName) {
         return ("")
     }
 }
+
+export async function DownloadFileData(bucketName, keyName) {
+
+    try {
+        let s3 = new AWS.S3();
+        const params = {
+            Bucket: bucketName,
+            Key: keyName,
+        };
+        const data = await new Promise((resolve, reject) => {
+            s3.getObject(params, function (err, url) {
+                if (err) {
+                    reject(err)
+                }
+                resolve(data)
+            })
+        });
+        return (data);
+    } catch (err) {
+        console.log('Error catch', err, err.stack);
+        return ("")
+    }
+}
