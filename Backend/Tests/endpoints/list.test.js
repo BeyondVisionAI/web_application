@@ -173,8 +173,8 @@ describe("Create a list", () => {
         const dbContentListMember = await ListMember.find();
         expect(dbContentListMember.length).toBe(1);
         expect(dbContentListMember[0]).toEqual(expect.objectContaining({
-            userId: userA.userId,
-            listId: res.body._id,
+            userId: mongoose.Types.ObjectId(userA.userId),
+            listId: mongoose.Types.ObjectId(res.body._id),
             rights: Role.OWNER
         }));
     });
@@ -206,8 +206,8 @@ describe("Add project to a list", () => {
         const dbCheck = await ProjectListed.find();
         expect(dbCheck.length).toBe(1);
         expect(dbCheck[0]).toEqual(expect.objectContaining({
-            projectId: String(projectA._id),
-            listId: String(list._id)
+            projectId: mongoose.Types.ObjectId(projectA._id),
+            listId: mongoose.Types.ObjectId(list._id)
         }));
     });
 
@@ -410,7 +410,7 @@ describe("Leave a list", () => {
         expect(res.text).toBe("");
         dbCheck = await ListMember.find();
         expect(dbCheck.length).toBe(1);
-        expect(dbCheck[0].userId).toBe(String(userA.userId));
+        expect(dbCheck[0].userId).toEqual(mongoose.Types.ObjectId(userA.userId));
     });
 
     it("Should fail because user isn't logged in", async () => {
@@ -471,12 +471,12 @@ describe("Get list's members", () => {
         expect(res.body).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
-                    userId: userA.userId,
+                    userId: String(userA.userId),
                     listId: String(list._id),
                     rights: Role.OWNER
                 }),
                 expect.objectContaining({
-                    userId: userB.userId,
+                    userId: String(userB.userId),
                     listId: String(list._id),
                     rights: Role.ADMIN
                 })
@@ -518,13 +518,13 @@ describe("Add new list member", () => {
         expect(dbCheck).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
-                    userId: userA.userId,
-                    listId: String(list._id),
+                    userId: mongoose.Types.ObjectId(userA.userId),
+                    listId: mongoose.Types.ObjectId(list._id),
                     rights: Role.OWNER
                 }),
                 expect.objectContaining({
-                    userId: userB.userId,
-                    listId: String(list._id),
+                    userId: mongoose.Types.ObjectId(userB.userId),
+                    listId: mongoose.Types.ObjectId(list._id),
                     rights: Role.ADMIN
                 })
             ])
@@ -643,8 +643,8 @@ describe("Update role of member in a list", () => {
         }));
         const dbCheck = await ListMember.findOne({listId: list._id, userId: userB.userId});
         expect(dbCheck).toEqual(expect.objectContaining({
-            listId: String(list._id),
-            userId: userB.userId,
+            listId: mongoose.Types.ObjectId(list._id),
+            userId: mongoose.Types.ObjectId(userB.userId),
             rights: Role.WRITE
         }));
     });
@@ -739,13 +739,13 @@ describe("Update role of member in a list", () => {
         const dbCheck = await ListMember.find({listId: list._id});
         expect(dbCheck).toEqual(expect.arrayContaining([
             expect.objectContaining({
-                listId: String(list._id),
-                userId: userA.userId,
+                listId: mongoose.Types.ObjectId(list._id),
+                userId: mongoose.Types.ObjectId(userA.userId),
                 rights: Role.ADMIN
             }),
             expect.objectContaining({
-                listId: String(list._id),
-                userId: userB.userId,
+                listId: mongoose.Types.ObjectId(list._id),
+                userId: mongoose.Types.ObjectId(userB.userId),
                 rights: Role.OWNER
             })
         ]));
@@ -765,8 +765,8 @@ describe("Remove member from List", () => {
         const dbCheck = await ListMember.find();
         expect(dbCheck.length).toBe(1);
         expect(dbCheck[0]).toEqual(expect.objectContaining({
-            listId: String(list._id),
-            userId: userA.userId,
+            listId: mongoose.Types.ObjectId(list._id),
+            userId: mongoose.Types.ObjectId(userA.userId),
             rights: Role.OWNER
         }));
     });

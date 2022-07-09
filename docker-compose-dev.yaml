@@ -10,9 +10,9 @@ services:
     ports:
       - 80:80
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
-      - PORT=80
+      CHOKIDAR_USEPOLLING: "true"
+      NODE_ENV: "development"
+      PORT: 80
     volumes:
       - ./Frontend/src:/src/
       - ./Frontend/public:/public/
@@ -28,10 +28,13 @@ services:
       dockerfile: ./DockerfileDev
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     volumes:
       - ./Backend/index.js:/app/index.js
       - ./Backend/Controllers:/app/Controllers/
       - ./Backend/Models:/app/Models/
+      - ./Backend/Configs:/app/Configs/
       - ./Backend/Routes:/app/Routes/
     networks:
       - api
@@ -82,7 +85,14 @@ services:
     restart: on-failure
     networks:
       - bdd
-
+  
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: stripe-cli
+    network_mode: host
+    environment:
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+    command: listen --forward-to localhost:8080/payment/webhook
 networks:
   api:
   bdd:

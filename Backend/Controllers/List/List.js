@@ -57,8 +57,8 @@ exports.getCustomList = async function(req, res) {
             console.log("List->getCustomList: List doesn't exist");
             return res.status(404).send(Errors.LIST_NOT_FOUND);
         }
-        var result = {"_id": list._id, "name": list.name, "projects": []};
-        const filter = {listId: req.params.listId};
+        var result = { "_id": list._id, "name": list.name, "projects": [] };
+        const filter = { listId: req.params.listId };
         const projectOnList = await ProjectListed.find(filter);
         for (var project of projectOnList) {
             const temp = await Project.getProjectDB(project.projectId);
@@ -84,8 +84,8 @@ exports.getAllCustomLists = async function(req, res) {
                 console.log("List->getAllCustomLists: ListMember.listId \"" + myCustomListMember.listId + "\" doesn't exist in List Collection");
                 continue;
             }
-            var listResult = {"_id": list._id, "name": list.name, "projects": []};
-            const filter = {listId: list._id};
+            var listResult = { "_id": list._id, "name": list.name, "projects": [] };
+            const filter = { listId: list._id };
             const projectOnList = await ProjectListed.find(filter);
             for (var project of projectOnList) {
                 const temp = await Project.getProjectDB(project.projectId);
@@ -177,8 +177,8 @@ exports.removeProjectFromList = async function(req, res) {
 exports.deleteList = async function(req, res) {
     try {
         const listId = req.params.listId;
-        
-        const membersToDelete = await ListMember.find({listId: listId});
+
+        const membersToDelete = await ListMember.find({ listId: listId });
         for (var memberToDelete of membersToDelete)
             await ListMember.deleteOne({ _id: memberToDelete._id });
 

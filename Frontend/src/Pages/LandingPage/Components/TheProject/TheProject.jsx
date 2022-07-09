@@ -14,11 +14,10 @@ const TheProject = () => {
                 filmmakers it’s almost impossible to make 
                 your content available to visually impaired people.
                 Here, at Beyond Vision, we want to give the 
-                possibility to everyone to make his content
-                available to ... " />
+                possibility to every content creator to get their content audio descripted." />
                 <ProjectComponent delay="1000" title="Propel" underTitle="a new way to treat images" number="3" text="One of our biggest goal is to create an
-                Artificial Intelligence that it able to extract
-                meaning from short video clips ..." />
+                Artificial Intelligence that is able to extract
+                meaning from short video clips. This technology could change the audio description field if it came to fruition." />
         </div>
     );
 }

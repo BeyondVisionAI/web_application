@@ -1,11 +1,12 @@
 import React from 'react';
 import "./LandingPage.css"
-import NavBar from './../../GenericComponents/NavBar/NavBar';
 import Home from './Components/Home/Home';
 import TheProject from './Components/TheProject/TheProject';
 import Pricing from './Components/Pricing/Pricing';
 import TheTeam from './Components/TheTeam/TheTeam';
 import Contact from './Components/Contact/Contact';
+import Timeline from './Components/Timeline/Timeline';
+import NavBar from './../../GenericComponents/NavBar/NavBar';
 
 const LandingPage = () => {
     return (
@@ -15,6 +16,7 @@ const LandingPage = () => {
             <TheProject />
             <Pricing />
             <TheTeam />
+            <Timeline />
             <Contact />
         </div>
     );

@@ -1,0 +1,34 @@
+[
+    {
+        "id": 0,
+        "name": "All projects",
+        "movies": [
+            1,
+            2,
+            3,
+            1,
+            2,
+            3
+        ]
+    },
+    {
+        "id": 1,
+        "name": "Projet pour Valentin Hauy",
+        "movies": [
+            3
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Test list",
+        "movies": [
+            2,
+            3
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Empty list",
+        "movies": []
+    }
+]

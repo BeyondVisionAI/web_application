@@ -25,7 +25,7 @@
 
 .input-with-label-error {
     margin-top: 3px;
-    color: rgb(255, 81, 81);
+    color: #ff5151;
     font-weight: 300;
     font-size: 0.8vw;
 }

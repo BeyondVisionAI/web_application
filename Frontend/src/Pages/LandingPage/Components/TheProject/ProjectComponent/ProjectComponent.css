@@ -25,18 +25,107 @@
     font-size: 3vw;
 }
 
-.project-component-container > h2 {
+.project-component-container > .text-container > h2 {
     font-weight: 500;
     font-size: 2.5vw;
 }
 
-.project-component-container > h3 {
+.project-component-container > .text-container > h3 {
     font-weight: 300;
     font-size: 1.4vw;
 }
 
-.project-component-container > p {
+.project-component-container > .text-container > p {
     font-weight: 300;
     font-size: 1vw;
+}
+
+@media only screen and (max-width: 1024px) {
+    .number-container > h1 {
+        font-size: 4vw;
+    }
+    
+    .project-component-container > .text-container > h2 {
+        font-size: 3.4vw;
+    }
+    
+    .project-component-container > .text-container > h3 {
+        font-size: 2vw;
+    }
+    
+    .project-component-container > .text-container > p {
+        font-size: 1.4vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .project-component-container {
+        width: 100%;
+        padding-top: 2vh;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        height: fit-content;
+    }
+
+    .text-container {
+        width: 70%;
+    }
+
+    .number-container {
+        height: 150px;
+        width: 150px;
+        border-radius: 100%;
+    }
+
+    .number-container > h1 {
+        font-size: 5vw;
+    }
+    
+    .project-component-container > .text-container > h2 {
+        font-size: 3.8vw;
+    }
+    
+    .project-component-container > .text-container > h3 {
+        font-size: 2.4vw;
+    }
+    
+    .project-component-container > .text-container > p {
+        font-size: 1.7vw;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .project-component-container {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .text-container {
+        width: 80%;
+    }
+
+    .number-container {
+        height: 100px;
+        width: 100px;
+        border-radius: 100%;
+    }
+
+    .number-container > h1 {
+        font-size: 7vw;
+    }
+    
+    .project-component-container > .text-container > h2 {
+        font-size: 6vw;
+    }
+    
+    .project-component-container > .text-container > h3 {
+        font-size: 4vw;
+    }
+    
+    .project-component-container > .text-container > p {
+        font-size: 3vw;
+    }
 }
 

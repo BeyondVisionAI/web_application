@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,10 @@
     "mongoose": "^6.0.12",
     "multiparty": "^4.2.3",
     "nodemailer": "^6.7.0",
-    "uuid": "^8.3.2"
+    "socket.io": "^4.5.0",
+    "stripe": "^8.205.0",
+    "uuid": "^8.3.2",
+    "validate-currency-code": "^0.1.1"
   },
   "devDependencies": {
     "jest": "^27.4.7",
@@ -44,6 +48,8 @@
       "<rootDir>/Tests/exclude"
     ],
     "verbose": true,
-    "setupFilesAfterEnv": ["<rootDir>/Tests/general/setup.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/Tests/general/setup.js"
+    ]
   }
 }

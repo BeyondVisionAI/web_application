@@ -3,8 +3,16 @@ const { Video } = require('../../../Models/Media/Video');
 
 
 exports.getVideo = async function(req, res) {
-    console.log(req.body);
-    console.log('Get Video on s3');
+    try {
+        let video = await Video.findById(req.params.id);
+
+        if (video)
+            return res.status(200).send(video);
+        return res.status(404).send(Errors.VIDEO_NOT_FOUND);
+    } catch (err) {
+        console.log("Project->getProject: " + err);
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
 };
 
 exports.createVideo = async function(req, res)

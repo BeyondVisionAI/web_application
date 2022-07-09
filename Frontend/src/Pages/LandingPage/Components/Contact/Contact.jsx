@@ -3,38 +3,56 @@ import "./Contact.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const Contact = () => {
-    const [name, setName] = useState(null)
-    const [email, setEmail] = useState(null)
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
     const [message, setMessage] = useState("")
 
     async function sendEmail() {
         if (!name || !email || !message) {
             toast.error("Missing field to send message")
         }
+        try {
+            await axios({
+                method: "POST",
+                data: {
+                    name,
+                    email,
+                    message
+                },
+                withCredentials: true,
+                url: `${process.env.REACT_APP_API_URL}/contactForm`,
+            })
+            toast.success("Email successfully sent !");
+            setName("")
+            setEmail("")
+            setMessage("")
+        } catch (e) {
+            toast.error("Error while sending your email :(")
+        }
     }
 
     return (
-        <div href="contact" id="contact" className="contact-container">
-            <img className="contact-enveloppe" src="/Enveloppe.svg" alt="enveloppe drawing" />
+        <form href="contact" id="contact" className="contact-container">
             <div className="top-line">
                 <div>
                     <label>Your name *</label>
-                    <input type="text" name="name" id="name" onChange={(event) => setName(event.target.value)}/>
+                    <input value={name} type="text" name="name" id="name" onChange={(event) => setName(event.target.value)}/>
                 </div>
                 <div>
                     <label>Your email *</label>
-                    <input type="email" name="email" id="email" onChange={(event) => setEmail(event.target.value)}/>
+                    <input value={email} type="email" name="email" id="email" onChange={(event) => setEmail(event.target.value)}/>
                 </div>
             </div>
             <label>Your message *</label>
             <textarea rows={8} cols={115} value={message} onChange={(event) => setMessage(event.target.value)}/>
-            <div onClick={sendEmail} className="submit-button">
+            <button type='submit' onClick={(e) => {e.preventDefault(); sendEmail()}} className="submit-button">
                 <p>Send</p>
                 <FontAwesomeIcon icon={faPaperPlane} />
-            </div>
-        </div>
+            </button>
+        </form>
     );
 }
  
