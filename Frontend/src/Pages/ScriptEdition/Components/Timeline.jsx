@@ -149,11 +149,11 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
 
     const replicaLine = replicas.map((replica, index) => {
         return (
-            <ContextMenuTrigger id="replica_menu" key={index}>
+            <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
                 <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
                 absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
                     onClick={() => onReplicaSelection(replica._id)} 
-                    onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
+                    onContextMenu={(e) => {e.preventDefault(); onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
                     {/* should be adjustable to the size of the replica (so its length) */}
                     <p>{replica.content.length > 30 ?
                         replica.content.slice(0, 26) + " ..."
@@ -166,9 +166,10 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
 
     return (
         <>
-            <ContextMenuTrigger id='timeline_menu' >
+            <ContextMenuTrigger id='timeline_menu' holdToDisplay={-1}>
                 <div id="timeline-scrollable" className='flex overflow-x-scroll relative
-                w-screen h-full bg-gray-500 rounded-b-3xl opacity-50 shadow-lg'>
+                w-screen h-full bg-gray-500 rounded-b-3xl opacity-50 shadow-lg'
+                onContextMenu={(e) => e.preventDefault()}>
                     {replicaLine}
                     <div className='p-0 place-self-end flex flex-row justify-between'
                     style={{width: `${secToPxCoef / 1000000}px`, height: `${canvasHeight}px`}}>
