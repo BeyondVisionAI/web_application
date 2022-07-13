@@ -128,7 +128,7 @@ export default function ScriptEdition(props) {
                     <div id="page-container" className="w-screen h-5/6 py-2 px-6">
                         <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                             <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{project.title}</h1>
-                            <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base" onClick={() => RedirectToProjectManagement()}>Soumettre</button>
+                            <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base" onClick={() => RedirectToProjectManagement()}>Retour</button>
                         </div>
 
                         <div id="edit-bloc" className="flex h-4/6">

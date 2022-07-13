@@ -3,7 +3,7 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import '../react-contextmenu.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import Draggable from 'react-draggable';
 import TimecodeBlock from './TimecodeBlock';
 
 // temporary duration of a project, so we can do the timeline
@@ -149,17 +149,21 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
 
     const replicaLine = replicas.map((replica, index) => {
         return (
-            <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
-                <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
-                absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
-                    onClick={() => onReplicaSelection(replica._id)} 
-                    onContextMenu={(e) => {e.preventDefault(); onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
-                    {/* should be adjustable to the size of the replica (so its length) */}
-                    <p>{replica.content.length > 30 ?
-                        replica.content.slice(0, 26) + " ..."
-                    :   replica.content}</p>
-                </button>
-            </ContextMenuTrigger>
+            <Draggable axis='x' bounds="parent"> {/* bounds="parent" */} {/*  bounds={{left:-100, right: 100, top: 0, bottom: 0}} */}
+                <div>
+                    <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
+                        <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
+                        absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
+                            onClick={() => onReplicaSelection(replica._id)} 
+                            onContextMenu={(e) => {e.preventDefault(); onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
+                            {/* should be adjustable to the size of the replica (so its length) */}
+                            <p>{replica.content.length > 30 ?
+                                replica.content.slice(0, 26) + " ..."
+                            :   replica.content}</p>
+                        </button>
+                    </ContextMenuTrigger>
+                </div>
+            </Draggable>
         )
     })
 
