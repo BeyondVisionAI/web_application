@@ -16,12 +16,12 @@ module.exports = function(app) {
     //    authMiddleware.authenticateUser,
     //    Shop.getItemById    //OK
     //);
-    app.delete('/shop/items/:itemid',
+    app.delete('/shop/items/:itemId',
         //authMiddleware.authenticateUser,
         Shop.removeMyItem   //OK
     );
 
-    app.get('/shop/items/:itemid',
+    app.get('/shop/items/:itemId',
         //authMiddleware.authenticateUser,
         Shop.getItemById    //OK
     );

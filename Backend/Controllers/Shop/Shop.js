@@ -10,6 +10,8 @@ const { Item } = require("../../Models/shop/Item")
  */
 exports.addItem = async function(req, res) {
     try {
+        // TODO: OWNER ?????? USELESS
+        // TODO: Vérifier que l'item existe pas déjà pour le même utilisateur
         if (!req.body || (!req.body.name || !req.body.owner || !req.body.type ||
             !req.body.genre || !req.body.price || !req.body.language))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
@@ -35,7 +37,7 @@ exports.addItem = async function(req, res) {
         })
         await newItem.save();
 
-        res.status("200").send(newItem);
+        res.status(200).send(newItem);
     } catch (err) {
         console.log("Shop->addItem: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -50,11 +52,12 @@ exports.addItem = async function(req, res) {
  */
 exports.removeMyItem = async function(req, res) {
     try {
-        if ((!req.params.itemid))
+        // TODO: Faut vérifier que l'item appartient bien à l'utilisateur
+        if ((!req.params.itemId))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
         
-        console.log("value = " + req.params.itemid)
-        await Item.deleteOne({ _id: req.params.itemid });
+        console.log("value = " + req.params.itemId)
+        await Item.deleteOne({ _id: req.params.itemId });
 
         return res.status(204).send("");
     } catch (err) {
@@ -65,16 +68,16 @@ exports.removeMyItem = async function(req, res) {
 
 /**
  * get an article by id
- * @param { Request } req { params: itemid }
+ * @param { Request } req { params: itemId }
  * @param { Response } res
  * @returns { response to send }
  */
 exports.getItemById = async function(req, res) {
     try {
-        if ((!req.params.itemid))
+        if ((!req.params.itemId))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
 
-        var item = await Item.findById(req.params.itemid)
+        var item = await Item.findById(req.params.itemId)
 
         if (!item)
             return (res.status(404).send(Errors.ARTICLE_NOT_FOUND));
