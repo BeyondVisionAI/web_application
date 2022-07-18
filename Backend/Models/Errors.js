@@ -50,6 +50,9 @@ const Errors = {
 
     //ReplicaComment :
     REPLICACOMMENT_NOT_FOUND: "REPLICACOMMENT_NOT_FOUND",
+
+    //Shop : 8
+    ARTICLE_NOT_FOUND: "ARTICLE_NOT_FOUND"
 };
 
 exports.Errors = Errors;
