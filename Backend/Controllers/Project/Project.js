@@ -7,8 +7,6 @@ const { ProjectListed } = require("../../Models/list/ProjectListed");
 exports.getProjectDB = async function (projectId) {
     try {
         var project = await Project.findById(projectId);
-        console.log(projectId);
-        console.log(project);
         return project;
     } catch (err) {
         console.log("Project->getProjectDB: " + err);
