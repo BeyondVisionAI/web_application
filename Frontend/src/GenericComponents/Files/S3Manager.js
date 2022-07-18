@@ -4,11 +4,11 @@ AWS.config.setPromisesDependency();
 
 const AWSAccess = {
     accessKeyId: 'AKIAVEXTIW63VUWJ2LT7',
-    secretAccessKey: '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'
+    secretAccessKey: '2VlQ+9P+MstAMD3qsaHDMzqiu46SknNB23qYgHlQ',
+    region: 'us-east-1'
 };
 
-export function UploadFileOnS3(file, bucketnName, region = 'us-east-1', keyName = null)
-{
+export function UploadFileOnS3(file, bucketnName, region = 'us-east-1', keyName = null) {
     try {
         let s3 = new AWS.S3({
             ...AWSAccess,
@@ -33,8 +33,7 @@ export function UploadFileOnS3(file, bucketnName, region = 'us-east-1', keyName 
     }
 }
 
-export async function DownloadFileUrl(bucketName, keyName)
-{
+export async function DownloadFileUrl(bucketName, keyName) {
     try {
         let s3 = new AWS.S3({ ...AWSAccess, region: 'us-east-1' });
         const params = {
@@ -53,5 +52,28 @@ export async function DownloadFileUrl(bucketName, keyName)
     } catch (err) {
         console.log('Error catch', err, err.stack);
         return ("");
+    }
+}
+
+export async function DownloadFileData(bucketName, keyName) {
+
+    try {
+        let s3 = new AWS.S3({ ...AWSAccess, region: 'us-east-1' });
+        const params = {
+            Bucket: bucketName,
+            Key: keyName,
+        };
+        const data = await new Promise((resolve, reject) => {
+            s3.getObject(params, function (err, url) {
+                if (err) {
+                    reject(err)
+                }
+                resolve(data)
+            })
+        });
+        return (data);
+    } catch (err) {
+        console.log('Error catch', err, err.stack);
+        return ("")
     }
 }

@@ -7,6 +7,7 @@ import ProjectStatus from './Widgets/ProjectStatus';
 import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
+import { Downloader } from '../../../GenericComponents/Files/Downloader';
 
 const EDIT = {
     off: 0,
@@ -127,6 +128,9 @@ export default function ManageProject(props) {
                          <Bill />
                      </div>
                  </div>
+                {/*TODO bien placé les bouttons et ne pas les affiché si il n'existe pas */}
+                <Downloader type='video-finished-products' projectId={props.match.params.id} fileName={`Video.mp4`} fileType='video/mp4' label='Download Video' donwload/>
+                <Downloader type='audio-finished-products' projectId={props.match.params.id} fileName={`Audio.mp3`} fileType='audio/mpeg' label='Download Audio' donwload/>
              </div>
         );
     } else {

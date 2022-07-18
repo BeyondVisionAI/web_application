@@ -1,4 +1,4 @@
-module.exports = function(app) {
+module.exports = function (app) {
     // const image = require("./Image");
     const test = require("./Test");
     const user = require("./User");
@@ -11,6 +11,7 @@ module.exports = function(app) {
     const media = require('./Media/Media.js');
     const chat = require('./Chat')
     const mail = require('./Mail')
+    const S3Manager = require('./S3Manager')
 
     chat(app);
     test(app);
@@ -24,4 +25,5 @@ module.exports = function(app) {
     media(app);
     scriptEdition(app);
     mail(app);
+    S3Manager(app);
 }
