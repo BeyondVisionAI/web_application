@@ -1,6 +1,7 @@
 module.exports = function(app) {
     const Shop = require("../Controllers/Shop/Shop");
     const authMiddleware = require("../Controllers/User/authMiddleware");
+    const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
 
     app.get('/shop',
     //    authMiddleware.authenticateUser,
@@ -21,7 +22,25 @@ module.exports = function(app) {
     );
 
     app.get('/shop/items/:itemid',
-    //authMiddleware.authenticateUser,
-    Shop.getItemById    //OK
-);
+        //authMiddleware.authenticateUser,
+        Shop.getItemById    //OK
+    );
+
+    app.get('/cart/:projectId',
+        //authMiddleware.authenticateUser,
+        // collabMiddleware.hasRightAdmin,
+        Shop.getCartFromProject
+    );
+
+    app.post('/cart/:projectId',
+        //authMiddleware.authenticateUser,
+        // collabMiddleware.hasRightAdmin,
+        Shop.addItemToCart
+    );
+
+    app.delete('/cart/:projectId',
+        //authMiddleware.authenticateUser,
+        // collabMiddleware.hasRightAdmin,
+        Shop.removeItemFromCart
+    );
 }
