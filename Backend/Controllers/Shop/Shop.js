@@ -156,7 +156,7 @@ exports.searchItems = async function(req, res) {
 
         if (itemInCart) {
             //Gérer le cas où tu ajoute un item (augmenter la quantité) et que l'item de base a déjà été acheté
-            itemInCart.quantity = itemInCart.quantity + 1;
+            itemInCart.quantity = itemInCart.quantity + req.body.quantity;
             await itemInCart.save();
         } else {
             var itemInCart = new Cart({
@@ -192,6 +192,7 @@ exports.searchItems = async function(req, res) {
         }
 
         item.quantity = item.quantity - req.body.quantity;
+        await item.save();
         if (item.quantity <= 0) {
             await Cart.deleteOne({_id: item.id});
         }
