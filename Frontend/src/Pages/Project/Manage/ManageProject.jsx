@@ -7,6 +7,7 @@ import ProjectStatus from './Widgets/ProjectStatus';
 import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
+import CollaboratorsButton from '../../../GenericComponents/NavBar/CollaboratorsComponents/CollaboratorsButton';
 
 const EDIT = {
     off: 0,
@@ -100,6 +101,7 @@ export default function ManageProject(props) {
         return (
             <div className='w-full h-screen bg-myWhite'>
                 <NavBar />
+                <CollaboratorsButton projectId={props.match.params.id} />
                 {editMode()}
                 <div className='flex w-full h-screen'>
                     <div className='w-2/3 h-full'>
