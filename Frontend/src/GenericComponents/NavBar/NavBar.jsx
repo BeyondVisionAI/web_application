@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import "./NavBar.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import "./NavBar.css"
 
-const NavBar = ({ homeRef, leftButtons, middleButtons, rightButtons }) => {
+const NavBar = ({ homeRef, rightButtons, others }) => {
 
     const [isMenuActive, setIsMenuActive] = useState(false)
     const [wdWidth, setWdWidth] = useState(window.innerWidth)
@@ -25,7 +25,7 @@ const NavBar = ({ homeRef, leftButtons, middleButtons, rightButtons }) => {
             {isMenuActive && <div className='opened-menu'>
                 <p onClick={() => setIsMenuActive(false)} className="navbar-exit">x</p>
                 <div className="navbar-links-container">
-                    {renderButtons(rightButtons)}
+                    {rightButtons && renderButtons(rightButtons)}
                 </div>
             </div>}
         </div>
@@ -33,15 +33,17 @@ const NavBar = ({ homeRef, leftButtons, middleButtons, rightButtons }) => {
     }
 
     function renderButtons(buttons) {
+        if (!buttons) return;
         return buttons.map(button => {
             switch (button.type) {
                 case 'LINK':
-                    return <a onClick={() => setIsMenuActive(false)} href={button.href} className="navbar-link"><span>{button.texte}</span></a>
+                    return <a key={button.texte} onClick={() => setIsMenuActive(false)} href={button.href} className="navbar-link"><span>{button.texte}</span></a>
                 case 'BUTTON':
-                    return <button className="navbar-button" onClick={button.onClick}>{button.texte}</button>
+                    return <button key={button.texte} className="navbar-button" onClick={button.onClick}>{button.texte}</button>
                 default:
                     break;
             }
+            return <></>;
         });
     }
 
@@ -52,9 +54,11 @@ const NavBar = ({ homeRef, leftButtons, middleButtons, rightButtons }) => {
                 <img src="/assets/Logos/Logo small BV.svg" alt="Beyond Vision logo" className="navbar-logo"/>
                 </a>
             </div>
-            <div className="navbar-links-container">
-                {renderButtons(rightButtons)}
-            </div>
+            {rightButtons && (
+                <div className="navbar-links-container">
+                    {renderButtons(rightButtons)}
+                </div>)}
+            {others}
         </div>
     );
 }

@@ -1,10 +1,7 @@
 import NavBar from "../NavBar";
-import { useHistory } from 'react-router-dom';
+import AccountButton from "../../Auth/AccountButton";
 
 export default function NavBarVariante() {
-  const history = useHistory();
-
-  const pushToLogin = () => history.push("/login");
   const rightButtons = [
     {type: 'LINK', href:"#home",texte: "Home"},
     {type: 'LINK', href:"#project", texte: "The Project"},
@@ -12,13 +9,13 @@ export default function NavBarVariante() {
     {type: 'LINK', href:"#aboutus", texte: "About Us"},
     {type: 'LINK', href:"#timeline", texte: "Timeline"},
     {type: 'LINK', href:"#contact", texte: "Contact"},
-    {type: 'BUTTON', onClick: pushToLogin, texte: "Login"},
   ];
 
   return (
     <NavBar
       homeRef='#home'
       rightButtons={rightButtons}
+      others={[AccountButton()]}
     />
   )
 }

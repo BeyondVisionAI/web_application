@@ -61,7 +61,7 @@ export default function EditCollaborators({ projectId, onHide }) {
         let rights = ['OWNER', 'ADMIN', 'WRITE', 'READ', 'KICK'];
 
         return (
-            <select name='right' onChange={(e) => changeRight(collaborator, e.target.value)}>
+            <select name='right' id={collaborator.collaboration._id} onChange={(e) => changeRight(collaborator, e.target.value)}>
                 {rights.map(right => {
                     return (
                         <option value={right} selected={ collaborator.collaboration.rights === right }>
@@ -94,7 +94,7 @@ export default function EditCollaborators({ projectId, onHide }) {
     }, [projectId, needRefresh])
 
     return (
-        <>
+        <div key='editCollaboratorsModal'>
             <div className='justify-center'></div>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                 <div ref={wrapperRef} className="relative w-full my-6 mx-auto max-w-7xl h-5/6">
@@ -122,6 +122,6 @@ export default function EditCollaborators({ projectId, onHide }) {
                 </div>
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
+        </ div>
     );
 }

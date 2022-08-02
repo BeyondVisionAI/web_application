@@ -6,8 +6,7 @@ import ProjectStatus from './Widgets/ProjectStatus';
 import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
-import CollaboratorsButton from '../../../GenericComponents/NavBar/ManageProject/CollaboratorsComponents/CollaboratorsButton';
-import NavBarVariante from '../../../GenericComponents/NavBar/LandingPage/NavBarVariante';
+import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
 
 const EDIT = {
     off: 0,
@@ -100,8 +99,7 @@ export default function ManageProject(props) {
     if (project) {
         return (
             <div className='w-full h-screen bg-myWhite'>
-                <NavBarVariante />
-                <CollaboratorsButton projectId={props.match.params.id} />
+                <NavBarVariante projectId={props.match.params.id} />
                 {editMode()}
                 <div className='flex w-full h-screen'>
                     <div className='w-2/3 h-full'>
