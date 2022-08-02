@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../../../GenericComponents/NavBar/NavBar';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Description from './Widgets/Description';
@@ -7,7 +6,8 @@ import ProjectStatus from './Widgets/ProjectStatus';
 import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
-import CollaboratorsButton from '../../../GenericComponents/NavBar/CollaboratorsComponents/CollaboratorsButton';
+import CollaboratorsButton from '../../../GenericComponents/NavBar/ManageProject/CollaboratorsComponents/CollaboratorsButton';
+import NavBarVariante from '../../../GenericComponents/NavBar/LandingPage/NavBarVariante';
 
 const EDIT = {
     off: 0,
@@ -100,7 +100,7 @@ export default function ManageProject(props) {
     if (project) {
         return (
             <div className='w-full h-screen bg-myWhite'>
-                <NavBar />
+                <NavBarVariante />
                 <CollaboratorsButton projectId={props.match.params.id} />
                 {editMode()}
                 <div className='flex w-full h-screen'>
