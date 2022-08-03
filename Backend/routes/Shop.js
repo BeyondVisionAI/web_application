@@ -12,10 +12,6 @@ module.exports = function(app) {
         //authMiddleware.authenticateUser,
         Shop.addItem    //OK
     );
-    //app.get('/shop/items/:itemid',
-    //    authMiddleware.authenticateUser,
-    //    Shop.getItemById    //OK
-    //);
     app.delete('/shop/items/:itemId',
         //authMiddleware.authenticateUser,
         Shop.removeMyItem   //OK

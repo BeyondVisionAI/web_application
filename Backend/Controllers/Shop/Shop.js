@@ -97,15 +97,12 @@ exports.getItemById = async function(req, res) {
  */
 exports.searchItems = async function(req, res) {
     try {
-        console.log("GO");
-        console.log(req.query)
         if (!req.query.name || !req.query.type || !req.query.minPrice || !req.query.maxPrice || (req.query.minPrice < 0 || req.query.maxPrice < req.query.minPrice) || (req.body.itemsPerPage <= 0 || req.body.pageNb < 0))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
         // TODO Mongo request from query
         var research = {}
 
         if (req.query.name) {
-            console.log("pass");
             research.name = { "$regex": req.query.name, "$options": "i"}
         }
 
