@@ -22,6 +22,16 @@ const task = new Schema({
         enum: ITEMTYPE,
         required: true
     },
+    employeeValidate: {
+        type: Schema.Types.Boolean,
+        default: false,
+        required: true
+    },
+    clientValidate: {
+        type: Schema.Types.Boolean,
+        default: false,
+        required: true
+    }
 });
 
 exports.ITEMTYPE = ITEMTYPE;
