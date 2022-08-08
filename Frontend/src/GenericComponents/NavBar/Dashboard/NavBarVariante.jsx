@@ -13,7 +13,7 @@ export default function NavBarVariante({ input, updateInput }) {
 
   return (
     <NavBar
-        homeRef='home'
+        homeRef='dashboard'
         others={[searchBar, AccountButton()]}
     />
   )
