@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const ReplicaDetails = ({replica, updateReplicaList}) => {
+const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => {
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
@@ -100,7 +100,8 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         setVoiceId(replica.voiceId);
         setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
-    }, [replica]);
+    }, [replica, updateReplicaSelected]);
+
 
     /***
      * COMMENT UPDATE

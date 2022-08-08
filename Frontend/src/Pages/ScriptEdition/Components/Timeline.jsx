@@ -12,10 +12,11 @@ const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
 var secToPxCoef = 150000; // will change if zoom
 
-const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) => {
+const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, toggleReplicaSelected}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
+
 
 
     const addReplica = async function () {
@@ -147,22 +148,71 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     }
 
 
-    const onStopReplicaDrag = function (replicaID) {
-        // timeline elem variables
-        // console.log("end drag with rep ID " + replicaID);
-        var timelineE = document.getElementById("timeline-scrollable");
-        var horizontalScroll = timelineE.scrollLeft;
-        // var timelineLeftPadding = timelineE.getBoundingClientRect().left;
-        // replica square variables
-        var replicaElem = document.getElementById(replicaID);
-        if (replicaElem == null) {
-            console.log("null status")
-            return;
+    const onStopReplicaDrag = async function (replicaID) {
+        try {
+            // timeline elem variables
+            var timelineE = document.getElementById("timeline-scrollable");
+            var horizontalScroll = timelineE.scrollLeft;
+            var timelineLeftPadding = timelineE.getBoundingClientRect().left;
+            // replica square variables
+            var replicaRect = document.getElementById(replicaID).getBoundingClientRect();
+            var result = ((horizontalScroll + replicaRect.left - timelineLeftPadding) / secToPxCoef * 1000);
+            console.log(`New timestamp at ${result}s`);
+            var newTimestamp = (result * 1000).toFixed(0);
+
+            await axios({
+                method: 'PUT',
+                url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/replicas/${replicaID}`,
+                data: {timestamp: newTimestamp},
+                withCredentials: true
+            });
+            await updateReplicaList(projectId);
+        } catch (err) { // TODO check
+            let errLog;
+            // console.error("error : ", err);
+
+            switch (err.response.status) {
+                case 401:
+                    switch (err.response.data) {
+                        case "USER_NOT_LOGIN":
+                            errLog = `Error (${err.response.status}) - User not logged in.`;
+                            break;
+                        case "PROJECT_NOT_YOURS":
+                            errLog = `Error (${err.response.status}) - You are not the owner of this project.`;
+                            break;
+                        case "ROLE_UNAUTHORIZED":
+                            errLog = `Error (${err.response.status}) - Invalid rights.`;
+                            break;
+                        default: errLog = `Error (${err.response.status}).`;
+                            break;
+                    }
+                    break;
+                case 403:
+                    errLog = `Error (${err.response.status}).`;
+                    break;
+                case 404:
+                    switch (err.reponse.data) {
+                        case "PROJECT_NOT_FOUND":
+                            errLog = `Error (${err.response.status}) - Project not found.`;
+                            break;
+                        case "REPLICA_NOT_FOUND":
+                            errLog = `Error (${err.response.status}) - Replica not found.`;
+                            break;
+                        case "REPLICA_NOT_IN_PROJECT":
+                            errLog = `Error (${err.response.status}) - Replica does not belong to the project.`;
+                            break;
+                        default:
+                            errLog = `Error (${err.response.status}).`;
+                            break;
+                    }
+                default/*500*/: errLog = `Error (${err.response.status}) - Internal Error.`; break;
+            }
+
+            toast.error(errLog);
         }
-        var replicaRect = replicaElem.getBoundingClientRect();
-        var result = ((horizontalScroll + replicaRect.left) / secToPxCoef * 1000);
-        console.log(`New timestamp at ${result}s`);
-        var newTimestamp = (result * 1000).toFixed(0);
+        toggleReplicaSelected();
+        // toggleReplicaSelected(0);
+        // toggleReplicaSelected(replicaID);
     }
 
     const replicaLine = replicas.map((replica, index) => {
@@ -172,7 +222,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                 <Draggable axis='x' key={index} bounds={{
                     left: -secToPxCoef * replica.timestamp / 1000000, top: 0,
                     right: (secToPxCoef * videoLength - 1500) / 1000000, bottom: 0
-                }} onStop={onStopReplicaDrag(replica._id)}>
+                }} onStop={() => onStopReplicaDrag(replica._id)}>
                     <div>
                     <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
                         <button id={replica._id} className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white

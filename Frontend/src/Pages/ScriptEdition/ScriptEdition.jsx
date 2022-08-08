@@ -14,6 +14,10 @@ export default function ScriptEdition(props) {
     const [replicaSelected, setReplicaSelected] = useState(null);
     const history = useHistory();
 
+    const [updateReplicaSelected, setUpdateReplicaSelected] = useState(0);
+    const toggleReplicaSelected = () => {setUpdateReplicaSelected(updateReplicaSelected+1)}
+
+
     useEffect(() => {
         const getProject = async function (id) {
             try {
@@ -135,7 +139,7 @@ export default function ScriptEdition(props) {
 
                         <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
                             {replicaSelected !== null ?
-                                <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplicaList={udpateProjectReplica}/>
+                                <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplicaList={udpateProjectReplica} updateReplicaSelected={updateReplicaSelected} />
                             :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
                                     <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
                                 </div>
@@ -148,7 +152,7 @@ export default function ScriptEdition(props) {
                         </div>
 
                         <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
-                           <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} />
+                           <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} toggleReplicaSelected={toggleReplicaSelected} />
                         </div>
                     </div>
                 </div>
