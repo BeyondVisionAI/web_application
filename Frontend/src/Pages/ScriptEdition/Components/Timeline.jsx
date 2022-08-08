@@ -7,9 +7,9 @@ import Draggable from 'react-draggable';
 import TimecodeBlock from './TimecodeBlock';
 
 // temporary duration of a project, so we can do the timeline
-const videoLength = 3600000 / 4;
+const videoLength = 3600000 / 4; // 3600000 / 4; // 15 min
 const canvasHeight = 80;
-// coefficient between seconds (in ms) and pixels : 1 sec = 
+// coefficient between seconds (in ms) and pixels : 1 sec =
 var secToPxCoef = 150000; // will change if zoom
 
 const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) => {
@@ -33,7 +33,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                 data: body,
                 withCredentials: true
             });
-            
+
             await updateReplicaList(projectId);
         } catch (err) { // TODO check
             let errLog;
@@ -141,20 +141,43 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         var timecodeArray = [];
         for (var i = 0; i < nbTCL; i++) {
             timecodeArray.push(<TimecodeBlock videoLength={videoLength} secondToPixelCoef={secToPxCoef}
-                minute={i+1} />);
+                minute={i+1} key={i}/>);
         }
         return timecodeArray;
     }
 
 
+    const onStopReplicaDrag = function (replicaID) {
+        // timeline elem variables
+        // console.log("end drag with rep ID " + replicaID);
+        var timelineE = document.getElementById("timeline-scrollable");
+        var horizontalScroll = timelineE.scrollLeft;
+        // var timelineLeftPadding = timelineE.getBoundingClientRect().left;
+        // replica square variables
+        var replicaElem = document.getElementById(replicaID);
+        if (replicaElem == null) {
+            console.log("null status")
+            return;
+        }
+        var replicaRect = replicaElem.getBoundingClientRect();
+        var result = ((horizontalScroll + replicaRect.left) / secToPxCoef * 1000);
+        console.log(`New timestamp at ${result}s`);
+        var newTimestamp = (result * 1000).toFixed(0);
+    }
+
     const replicaLine = replicas.map((replica, index) => {
         return (
-            <Draggable axis='x' bounds="parent"> {/* bounds="parent" */} {/*  bounds={{left:-100, right: 100, top: 0, bottom: 0}} */}
-                <div>
+            // <Draggable> {/* bounds="parent" */} {/*  bounds={{left:-100, right: 100, top: 0, bottom: 0}} */}
+                // <div>
+                <Draggable axis='x' key={index} bounds={{
+                    left: -secToPxCoef * replica.timestamp / 1000000, top: 0,
+                    right: (secToPxCoef * videoLength - 1500) / 1000000, bottom: 0
+                }} onStop={onStopReplicaDrag(replica._id)}>
+                    <div>
                     <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
-                        <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
+                        <button id={replica._id} className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
                         absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
-                            onClick={() => onReplicaSelection(replica._id)} 
+                            onClick={() => onReplicaSelection(replica._id)}
                             onContextMenu={(e) => {e.preventDefault(); onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
                             {/* should be adjustable to the size of the replica (so its length) */}
                             <p>{replica.content.length > 30 ?
@@ -162,8 +185,10 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                             :   replica.content}</p>
                         </button>
                     </ContextMenuTrigger>
-                </div>
-            </Draggable>
+                    </div>
+                </Draggable>
+                // </div>
+            // </Draggable>
         )
     })
 
