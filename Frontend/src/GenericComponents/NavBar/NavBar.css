@@ -153,3 +153,50 @@
         top: -10px;
     }
 }
+
+.input-search-container {
+    width: 60vw;
+    height: 7vh;
+    position: relative;
+}
+
+.input-search {
+    width: 100%;
+    height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    border: 2px solid #7793ED;
+    border-radius: 46px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 60px;
+    font-family: 'Roboto', 'Oxygen', 'Ubuntu', 'Helvetica Neue', sans-serif;
+    font-weight: 500;
+    font-size: 1.5em;
+    color: black;
+    text-align: center;
+}
+
+.input-search::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.input-search:-moz-placeholder { /* Firefox 18- */
+    color: rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.input-search::-moz-placeholder {  /* Firefox 19+ */
+    color: rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.input-search:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.input-search:focus{
+    outline: none;
+}
