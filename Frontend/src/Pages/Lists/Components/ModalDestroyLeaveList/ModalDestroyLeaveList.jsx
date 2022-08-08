@@ -6,12 +6,6 @@ import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 
 export default function ModalDestroyLeaveList({ refresh, open, close, listId }) {
 
-    const closeOnEscapeKeydown = (e) => {
-        if ((e.charCode || e.keyCode) === 27) {
-            close();
-        }
-    }
-
     const [listName, setListName] = useState("");
     const [role, setRole] = useState("");
     const {currentUser} = useContext(AuthContext);
@@ -91,6 +85,12 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
             }
         };
 
+        const closeOnEscapeKeydown = (e) => {
+            if ((e.charCode || e.keyCode) === 27) {
+                close();
+            }
+        }
+
         if (listId) {
             getListName(listId);
             getRoleInList(listId);
@@ -100,11 +100,11 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
         return function cleanup() {
             document.body.removeEventListener('keydown', closeOnEscapeKeydown);
         }
-    }, [listId]);
+    }, [listId, close, currentUser.userId]);
 
-    const displayData = () => {
-        console.log(role);
-    }
+    // const displayData = () => {
+    //     console.log(role);
+    // }
 
     if (open) {
         return (

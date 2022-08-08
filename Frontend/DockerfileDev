@@ -1,6 +1,8 @@
-FROM node:12.18.4-alpine3.9
+FROM node:18-alpine3.15
+
 COPY . .
-RUN npm install
+ENV NODE_ENV=production
+RUN npm install --legacy-peer-deps --quiet --also=dev
 ENV PORT=80
 ENV CHOKIDAR_USEPOLLING=true
 EXPOSE 80

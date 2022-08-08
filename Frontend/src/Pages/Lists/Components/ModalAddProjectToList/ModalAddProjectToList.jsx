@@ -10,11 +10,7 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
     const [listToAdd, setListToAdd] = useState(-1);
     const [newListName, setNewListName] = useState("");
 
-    const closeOnEscapeKeydown = (e) => {
-        if ((e.charCode || e.keyCode) === 27) {
-            close();
-        }
-    }
+    
 
     const addToList = async () => {
         let button = document.getElementById("create-button");
@@ -91,12 +87,18 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
             }
         };
 
+        const closeOnEscapeKeydown = (e) => {
+            if ((e.charCode || e.keyCode) === 27) {
+                close();
+            }
+        }
+
         getAllCustomLists();
         document.body.addEventListener('keydown', closeOnEscapeKeydown);
         return function cleanup() {
             document.body.removeEventListener('keydown', closeOnEscapeKeydown);
         }
-    }, []);
+    }, [close]);
 
     if (open) {
         return (

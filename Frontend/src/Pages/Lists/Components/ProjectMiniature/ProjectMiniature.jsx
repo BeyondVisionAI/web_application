@@ -100,7 +100,7 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
             console.error(error);
             toast.error('Error while fetching data!');
         }
-    }, []);
+    }, [movie]);
 
     const RedirectToProject = () => {
         history.push(`/project/${movie._id}`);

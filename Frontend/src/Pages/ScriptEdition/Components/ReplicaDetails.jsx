@@ -33,7 +33,8 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         console.log("Text Update change");
         const updateReplicaText = async function () {
             try {
-                const res = await axios({
+                // const res = await axios({
+                await axios({
                     method: 'PUT',
                     data: {
                         content: text,
@@ -156,7 +157,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
             var sStr = seconds < 10 ? "0"+seconds : ""+seconds;
             var msStr= ms >= 100 ? ""+ms : ms >= 10 ? "0"+ms : "00"+ms;
             
-            if (hours == 0)
+            if (hours === 0)
                 return mStr + ':' + sStr + ':' + msStr;
             return hStr + ':' + mStr + ':' + sStr + ':' + msStr;
         }

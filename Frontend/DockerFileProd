@@ -1,8 +1,8 @@
-FROM node:12-alpine as builder
+FROM node:18-alpine3.15 as builder
 
 WORKDIR /app
 COPY . .
-RUN npm install
+RUN npm install --legacy-peer-deps --quiet
 RUN npm run build
 
 FROM node:12-alpine

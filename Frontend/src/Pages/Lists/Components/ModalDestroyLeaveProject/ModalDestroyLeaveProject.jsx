@@ -6,11 +6,7 @@ import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 
 export default function ModalDestroyLeaveProject({ refresh, open, close, projectId }) {
 
-    const closeOnEscapeKeydown = (e) => {
-        if ((e.charCode || e.keyCode) === 27) {
-            close();
-        }
-    }
+    
 
     const [projectName, setProjectName] = useState("");
     const [role, setRole] = useState("");
@@ -91,6 +87,12 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
             }
         };
 
+        const closeOnEscapeKeydown = (e) => {
+            if ((e.charCode || e.keyCode) === 27) {
+                close();
+            }
+        }
+
         if (projectId) {
             getProjectName(projectId);
             getRoleInProject(projectId);
@@ -100,11 +102,11 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
         return function cleanup() {
             document.body.removeEventListener('keydown', closeOnEscapeKeydown);
         }
-    }, [projectId]);
+    }, [projectId, close, currentUser.userId]);
 
-    const displayData = () => {
-        console.log(role);
-    }
+    // const displayData = () => {
+    //     console.log(role);
+    // }
 
     if (open) {
         return (

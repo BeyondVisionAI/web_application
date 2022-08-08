@@ -33,9 +33,9 @@ const Login = () => {
               .catch((err) => {
                 if ((err.response.status === 404)) {
                     toast.error("Invalid email or password")
-                } else if (err.response.status === 401 && err.response.data == "EMAIL_NOT_VERIFIED") {
+                } else if (err.response.status === 401 && err.response.data === "EMAIL_NOT_VERIFIED") {
                     toast.error("Email not verified")
-                } else if (err.response.status === 401 && err.response.data == "INVALID_PASSWORD") {
+                } else if (err.response.status === 401 && err.response.data === "INVALID_PASSWORD") {
                     toast.error("Invalid email or password")
                 } else {
                     toast.error("Error while contacting the server")

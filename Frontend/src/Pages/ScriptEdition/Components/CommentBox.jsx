@@ -52,7 +52,8 @@ const CommentBox = ({comments, replica, updateComments}) => {
         e.preventDefault();
         try {
             let body = {content: newComment};
-            const commentResponse = await axios({
+            // const commentResponse = await axios({
+            await axios({
                 method: 'POST',
                 data: body,
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments/`,
@@ -89,7 +90,8 @@ const CommentBox = ({comments, replica, updateComments}) => {
 
     const deleteComment = async function () {
         try {
-            const res = await axios({
+            // const res = await axios({
+            await axios({
                 method: 'DELETE',
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments/${contextSelectedCommentId}`,
                 withCredentials: true
@@ -130,6 +132,7 @@ const CommentBox = ({comments, replica, updateComments}) => {
                             errLog = `Error (${err.response.status}).`;
                             break;
                     }
+                    break;
                 default/*500*/: errLog = `Error (${err.response.status}) - Internal Error.`; break;
             }
 

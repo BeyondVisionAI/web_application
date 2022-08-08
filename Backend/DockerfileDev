@@ -1,9 +1,9 @@
-FROM node:12-alpine
+FROM node:18-alpine3.15
 
 WORKDIR /app
 COPY . .
+ENV NODE_ENV=production
 RUN npm install -g nodemon
-RUN npm install
-RUN npm install nodemon -g
+RUN npm install --quiet --also=dev
 EXPOSE 8080
 CMD ["nodemon","-L", "-r", "dotenv/config", "index.js", "--unhandled-rejections=strict"]

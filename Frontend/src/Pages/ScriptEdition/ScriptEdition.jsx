@@ -113,7 +113,7 @@ export default function ScriptEdition(props) {
             }
         }
         fetchProjectDetails(props.match.params.id);
-    }, []);
+    }, [props.match.params.id]);
 
     const RedirectToProjectManagement = () => {
         history.push(`/project/${props.match.params.id}`);

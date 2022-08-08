@@ -1,10 +1,10 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import "./NavBar.css";
 
 export default function NavBar({ input, setInput }) {
 
-    const history = useHistory()
+    // const history = useHistory()
 
     return (
         <div className="navbar-container">

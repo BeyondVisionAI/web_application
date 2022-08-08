@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+// import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import ProjectMiniature from '../ProjectMiniature/ProjectMiniature';
 import "./ProjectsList.css";
 import axios from 'axios';
@@ -18,7 +19,7 @@ export default function ProjectsList({ id, list, openAddProjectToList, openRemov
             openDestroyLeaveProject={openDestroyLeaveProject} />);
     }
 
-    const [roleList, setRoleList] = useState('');
+    // const [roleList, setRoleList] = useState('');
 
     useEffect(() => {
         const getMyRoleOnList = async () => {
@@ -32,9 +33,9 @@ export default function ProjectsList({ id, list, openAddProjectToList, openRemov
                     url: `${process.env.REACT_APP_API_URL}/lists/${id}/members`,
                 });
                 res.data.forEach(listMember => {
-                    if (listMember.userId === currentUser.userId) {
-                        setRoleList(listMember.rights);
-                    }
+                    // if (listMember.userId === currentUser.userId) {
+                    //     setRoleList(listMember.rights);
+                    // }
                 });
             } catch (err) {
                 toast.error("Can't get list rights")

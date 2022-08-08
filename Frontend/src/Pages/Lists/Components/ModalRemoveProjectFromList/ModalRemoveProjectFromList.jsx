@@ -5,12 +5,6 @@ import axios from 'axios';
 
 export default function ModalRemoveProjectFromList({ refresh, open, close, projectId, listId }) {
 
-    const closeOnEscapeKeydown = (e) => {
-        if ((e.charCode || e.keyCode) === 27) {
-            close();
-        }
-    }
-
     const [projectName, setProjectName] = useState("");
     const [listName, setListName] = useState("");
 
@@ -63,6 +57,12 @@ export default function ModalRemoveProjectFromList({ refresh, open, close, proje
             }
         }
 
+        const closeOnEscapeKeydown = (e) => {
+            if ((e.charCode || e.keyCode) === 27) {
+                close();
+            }
+        }
+
         if (projectId)
             getProjectName(projectId);
         if (listId)
@@ -72,7 +72,7 @@ export default function ModalRemoveProjectFromList({ refresh, open, close, proje
         return function cleanup() {
             document.body.removeEventListener('keydown', closeOnEscapeKeydown);
         }
-    }, [projectId]);
+    }, [projectId, close, listId]);
 
     if (open) {
         return (

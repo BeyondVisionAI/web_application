@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./PaymentForm.css"
 import { PropTypes } from 'prop-types';
 import axios from "axios"
@@ -54,7 +54,7 @@ const PaymentForm = (props) => {
 
     useEffect(() => {
         getSecret()
-    }, [props.amount, props.currency]);
+    }, [props.amount, props.currency, getSecret]);
 
     if (isLoading) {
         return (

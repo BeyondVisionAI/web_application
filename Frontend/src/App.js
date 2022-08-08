@@ -5,7 +5,7 @@ import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './GenericComponents/Auth/Auth';
-import Dashboard from './Pages/Dashboard/Dashboard';
+// import Dashboard from './Pages/Dashboard/Dashboard';
 import Login from './Pages/Login/Login';
 import PrivateRoute from './GenericComponents/PrivateRoute/PrivateRoute';
 import Page404 from './Pages/Page404/Page404';
@@ -17,7 +17,7 @@ import ResetPassword from './Pages/ResetPassword/ResetPassword';
 import Lists from './Pages/Lists/Lists';
 import ManageProject from './Pages/Project/Manage/ManageProject';
 import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
-import Chat from './Pages/Chat/Chat';
+// import Chat from './Pages/Chat/Chat';
 
 
 function App() {

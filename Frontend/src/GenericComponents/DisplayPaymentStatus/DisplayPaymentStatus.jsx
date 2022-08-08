@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useEffect} from 'react';
 import {useStripe} from '@stripe/react-stripe-js';
 import { toast } from 'react-toastify';
 

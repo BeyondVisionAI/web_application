@@ -31,24 +31,27 @@ const Chat = (props) => {
         return () => {
             socket.emit("leave room");
         }
-    }, [props]);
+    }, [props, socket]);
 
-    useEffect(async () => {
-        console.log("🚀 ~ file: Chat.jsx ~ line 36 ~ useEffect ~ roomID", roomID)
-        if (!roomID) return
-        socket.emit("join room", roomID);
-        try {
-            var res = await axios({
-                method: "GET",
-                withCredentials: true,
-                url: `${process.env.REACT_APP_API_URL}/chat/${roomID}`,
-            })
-            console.log("🚀 ~ file: Chat.jsx ~ line 31 ~ useEffect ~ res", res.data)
-            setMessages([...messages, ...res.data]);
-        } catch (e) {
-            console.error(e)
+    useEffect( () => {
+        async function getChat(params) {
+            console.log("🚀 ~ file: Chat.jsx ~ line 36 ~ useEffect ~ roomID", roomID)
+            if (!roomID) return
+            socket.emit("join room", roomID);
+            try {
+                var res = await axios({
+                    method: "GET",
+                    withCredentials: true,
+                    url: `${process.env.REACT_APP_API_URL}/chat/${roomID}`,
+                })
+                console.log("🚀 ~ file: Chat.jsx ~ line 31 ~ useEffect ~ res", res.data)
+                setMessages([...messages, ...res.data]);
+            } catch (e) {
+                console.error(e)
+            }
         }
-    }, [roomID]);
+        getChat()
+    }, [roomID, messages, socket]);
 
     useEffect(() => {
         scrollToBottomOfMessages()
@@ -80,7 +83,7 @@ const Chat = (props) => {
     }
 
     function onEnterPress (e) {
-        if(e.keyCode == 13 && e.shiftKey == false) {
+        if(e.keyCode === 13 && e.shiftKey === false) {
             e.preventDefault();
             sendMessage(e)
         }

@@ -1,4 +1,5 @@
-import { React, useEffect, useRef, useState } from 'react';
+// import { React, useEffect, useRef, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import '../react-contextmenu.css';
 import axios from 'axios';
@@ -16,11 +17,12 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
-    var timecodeArray = [];
+    // var timecodeArray = [];
+    const [timecodeArray, setTimecodeArray] = useState([])
 
 
     const addReplica = async function () {
-        if (newReplicaTimestamp == -1) return;
+        if (newReplicaTimestamp === -1) return;
         try {
             let body = {
                 content: "",
@@ -28,7 +30,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                 duration: 1500,
                 voiceId: 1
             };
-            const res = await axios({
+            // const res = await axios({
+            await axios({
                 method: 'POST',
                 url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/replicas`,
                 data: body,
@@ -74,6 +77,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                             errLog = `Error (${err.response.status}).`;
                             break;
                     }
+                    break;
                 default/*500*/: errLog = `Error (${err.response.status}) - Internal Error.`; break;
             }
 
@@ -84,7 +88,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
 
     const removeReplica = async function () {
         try {
-            const res = await axios({
+            // const res = await axios({
+            await axios({
                 method: 'DELETE',
                 url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/replicas/${contextSelectedReplicaId}`,
                 withCredentials: true
@@ -129,6 +134,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                             errLog = `Error (${err.response.status}).`;
                             break;
                     }
+                    break;
                 default/*500*/: errLog = `Error (${err.response.status}) - Internal Error.`; break;
             }
 
@@ -137,29 +143,32 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
     }
 
 
-    const setupTimecodeLine = function () {
-        const nbSeconds = videoLength / 1000;
-
-        for (var i = 0; i < nbSeconds; i++) {
-            timecodeArray.push({
-                videoLength: videoLength,
-                secondToPixelCoef: secToPxCoef,
-                minute: i,
-                zoom: 1
-            });
-        }
-    }
+    
     useEffect(() => {
+        const setupTimecodeLine = function () {
+            const nbSeconds = videoLength / 1000;
+            var tmpArray = []
+            for (var i = 0; i < nbSeconds; i++) {
+                tmpArray.push({
+                    videoLength: videoLength,
+                    secondToPixelCoef: secToPxCoef,
+                    minute: i,
+                    zoom: 1
+                });
+            }
+            setTimecodeArray(tmpArray)
+        }
+
         setupTimecodeLine();
     }, []);
 
 
-    const timecodeLineCreator = timecodeArray.map((values) => {
-        return (
-            <TimecodeLine videoLength={values.videoLength} secondToPixelCoef={values.secondToPixelCoef}
-            minute={values.minute} zoom={values.zoom} />
-        )
-    })
+    // const timecodeLineCreator = timecodeArray.map((values) => {
+    //     return (
+    //         <TimecodeLine videoLength={values.videoLength} secondToPixelCoef={values.secondToPixelCoef}
+    //         minute={values.minute} zoom={values.zoom} />
+    //     )
+    // })
 
 
     const replicaLine = replicas.map((replica, index) => {
