@@ -166,7 +166,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
                 data: {timestamp: newTimestamp},
                 withCredentials: true
             });
-            // await updateReplicaList(projectId);
+            updateReplicaList(projectId);
         } catch (err) { // TODO check
             let errLog;
             // console.error("error : ", err);
@@ -219,8 +219,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
                 // <div>
                 <Draggable axis='x' key={index} bounds={{
                     left: -secToPxCoef * replica.timestamp / 1000000, top: 0,
-                    right: (secToPxCoef * videoLength - 1500) / 1000000, bottom: 0
-                }} onStop={() => onStopReplicaDrag(replica._id)}>
+                    right: (secToPxCoef * videoLength - 1500) / 1000000, bottom: 0}}
+                    position={{x: 0, y: 0}} onStop={() => onStopReplicaDrag(replica._id)}>
                     <div>
                     <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
                         <button id={replica._id} className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
