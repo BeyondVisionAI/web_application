@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../../GenericComponents/NavBar/NavBar';
 import ReplicaDetails from './Components/ReplicaDetails';
 import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import Chat from '../Chat/Chat';
+import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 
 
 export default function ScriptEdition(props) {
@@ -128,7 +128,7 @@ export default function ScriptEdition(props) {
         return (
             <>
                 <div className="script-edition-container h-screen w-screen overflow-x-hidden">
-                    <NavBar />
+                    <NavBarVariante projectId={props.match.params.id} />
                     <div id="page-container" className="w-screen h-5/6 py-2 px-6">
                         <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                             <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{project.title}</h1>

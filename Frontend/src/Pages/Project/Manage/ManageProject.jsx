@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../../../GenericComponents/NavBar/NavBar';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Description from './Widgets/Description';
@@ -7,6 +6,7 @@ import ProjectStatus from './Widgets/ProjectStatus';
 import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
+import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
 
 const EDIT = {
     off: 0,
@@ -99,7 +99,7 @@ export default function ManageProject(props) {
     if (project) {
         return (
             <div className='w-full h-screen bg-myWhite'>
-                <NavBar />
+                <NavBarVariante projectId={props.match.params.id} />
                 {editMode()}
                 <div className='flex w-full h-screen'>
                     <div className='w-2/3 h-full'>

@@ -1,0 +1,8 @@
+.user-button {
+    display: flex;
+    align-items: center;
+    height: 7vh;
+    background-color: #7793ED;
+    padding: 10px 30px;
+    border-radius: 33px;
+}
