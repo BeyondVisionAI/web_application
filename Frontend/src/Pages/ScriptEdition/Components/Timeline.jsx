@@ -156,9 +156,9 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
             var timelineLeftPadding = timelineE.getBoundingClientRect().left;
             // replica square variables
             var replicaRect = document.getElementById(replicaID).getBoundingClientRect();
-            var result = ((horizontalScroll + replicaRect.left - timelineLeftPadding) / secToPxCoef * 1000);
+            var result = (((horizontalScroll + replicaRect.left - timelineLeftPadding) / secToPxCoef * 1000)).toFixed(3);
             console.log(`New timestamp at ${result}s`);
-            var newTimestamp = (result * 1000).toFixed(0);
+            var newTimestamp = result * 1000;
 
             await axios({
                 method: 'PUT',
@@ -166,7 +166,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
                 data: {timestamp: newTimestamp},
                 withCredentials: true
             });
-            await updateReplicaList(projectId);
+            // await updateReplicaList(projectId);
         } catch (err) { // TODO check
             let errLog;
             // console.error("error : ", err);
@@ -211,8 +211,6 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
             toast.error(errLog);
         }
         toggleReplicaSelected();
-        // toggleReplicaSelected(0);
-        // toggleReplicaSelected(replicaID);
     }
 
     const replicaLine = replicas.map((replica, index) => {
