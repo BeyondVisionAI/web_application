@@ -123,7 +123,6 @@ export default function ScriptEdition(props) {
         history.push(`/project/${props.match.params.id}`);
     }
 
-
     if (project) {
         return (
             <>
@@ -131,8 +130,8 @@ export default function ScriptEdition(props) {
                     <NavBarVariante projectId={props.match.params.id} />
                     <div id="page-container" className="w-screen h-5/6 py-2 px-6">
                         <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
-                            <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{project.title}</h1>
-                            <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base" onClick={() => RedirectToProjectManagement()}>Retour</button>
+                            <h1 className="text-myBlue w-1/3 inline-flex items-center text-3xl">{project.title}</h1>
+                            <button className="bg-myBlue w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base" onClick={() => RedirectToProjectManagement()}>Retour</button>
                         </div>
 
                         <div id="edit-bloc" className="flex h-4/6">
@@ -152,7 +151,19 @@ export default function ScriptEdition(props) {
                         </div>
 
                         <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
-                           <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} toggleReplicaSelected={toggleReplicaSelected} />
+                           <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
+                           updateReplicaTimestamp={(replicaId, newTimestamp) => {
+                            var replicaCopy = [...replicas];
+                            var idxOfReplica = replicaCopy.findIndex(item => item._id === replicaId)
+                            replicaCopy[idxOfReplica].timestamp = newTimestamp;
+                            setReplicas(replicaCopy)
+                           }}
+                           removeReplicaFromState={(replicaId) => {
+                           var replicaCopy = [...replicas];
+                            replicaCopy.splice(replicaCopy.findIndex(item => item._id === replicaId), 1);
+                            setReplicas(replicaCopy)
+                           }}
+                           replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} toggleReplicaSelected={toggleReplicaSelected} addNewReplica={(replica) => setReplicas([...replicas, replica])} />
                         </div>
                     </div>
                 </div>

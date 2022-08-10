@@ -12,7 +12,7 @@ const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
 var secToPxCoef = 150000; // will change if zoom
 
-const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, toggleReplicaSelected}) => {
+const Timeline = ({replicas, projectId, onReplicaSelection, toggleReplicaSelected, addNewReplica, removeReplicaFromState, updateReplicaTimestamp}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
@@ -35,7 +35,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
                 withCredentials: true
             });
 
-            await updateReplicaList(projectId);
+            addNewReplica(res.data)
+            // await updateReplicaList(projectId);
         } catch (err) { // TODO check
             let errLog;
             console.error("error : ", err);
@@ -90,7 +91,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
                 withCredentials: true
             });
             onReplicaSelection(null);
-            await updateReplicaList(projectId);
+            removeReplicaFromState(contextSelectedReplicaId);
+            // await updateReplicaList(projectId);
         } catch (err) {
             let errLog;
             console.error("error : ", err);
@@ -166,7 +168,8 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList, t
                 data: {timestamp: newTimestamp},
                 withCredentials: true
             });
-            updateReplicaList(projectId);
+            updateReplicaTimestamp(replicaID, newTimestamp)
+            // updateReplicaList(projectId);
         } catch (err) { // TODO check
             let errLog;
             // console.error("error : ", err);

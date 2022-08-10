@@ -3,7 +3,7 @@ import CommentBox from './CommentBox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-
+//TODO: Change updateReplicaList to not GET after POST
 const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => {
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
@@ -106,7 +106,7 @@ const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => 
     /***
      * COMMENT UPDATE
      */
-
+    //TODO: Change updateReplicaComments to not GET after POST
     const updateReplicaComments = async () => {
         try {
             const res = await axios({
