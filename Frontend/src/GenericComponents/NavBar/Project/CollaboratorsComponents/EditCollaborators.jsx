@@ -1,12 +1,15 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import axios from 'axios';
 import UserWithAction from '../../../Auth/UserWithAction';
 import { useEffect } from 'react';
 
+const Change = {
+    noChanges: 0,
+    rightsChanges: 1,
+    kickChanges: 2
+}
 
-export default function EditCollaborators({ projectId, onHide }) {
-    const [collaborators, setCollaborators] = useState([]);
-    const [needRefresh, setNeedRefresh] = useState(false);
+export default function EditCollaborators({ projectId, collaborators, setCollaborators, onHide }) {
     const wrapperRef = useRef(null);
 
     axios.defaults.withCredentials = true;
@@ -25,18 +28,36 @@ export default function EditCollaborators({ projectId, onHide }) {
     }
     useOutsideAlerter(wrapperRef);
 
-    const changeRight = async (collaborator, right) => {
-        let resp = null;
+    const changeCollaborator = (collaboratorId, change) => {
+        let collaboratorsUpdate = [...collaborators];
+        let target = collaboratorsUpdate.findIndex(collaborator => collaborator.collaboration._id === collaboratorId);
 
+        collaboratorsUpdate[target].changes = change;
+        return {collaboratorsUpdate, target};
+    }
+
+    const deleteCollaboration = (collaboratorId) => {
+        let {collaboratorsUpdate} = changeCollaborator(collaboratorId, Change.kickChanges);
+
+        setCollaborators(collaboratorsUpdate);
+    }
+
+    const changeCollaboratorsRight = (collaboratorId, right) => {
+        let { collaboratorsUpdate, target } = changeCollaborator(collaboratorId, Change.rightsChanges);
+
+        collaboratorsUpdate[target].collaboration.rights = right;
+        collaboratorsUpdate[target].collaboration.titleOfCollaboration = right;
+        setCollaborators(collaboratorsUpdate);
+    }
+    // TODO : Verification about changing rights
+
+    const changeRight = async (collaborator, right) => {
         try {
-            if (right === 'KICK')
-                resp = await axios.delete(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collaborator.collaboration._id}`);
-            else
-                resp = await axios.patch(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collaborator.collaboration._id}`, { rights: right });
-            if (resp.status !== 200)
-                console.error(resp);
-            else
-                setNeedRefresh(true);
+            if (right === 'KICK') {
+                deleteCollaboration(collaborator.collaboration._id);
+            } else {
+                changeCollaboratorsRight(collaborator.collaboration._id, right);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -47,11 +68,13 @@ export default function EditCollaborators({ projectId, onHide }) {
 
         try {
             axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: event.target[0].value, titleOfCollaboration: 'Read', rights: 'READ'})
-            .then(res => {
-                if (res.status === 200)
-                    setNeedRefresh(true);
-            });
+            .then(async ({data}) => {
+                let collaboratorsUpdate = [...collaborators];
+                let user = await axios.get(`${process.env.REACT_APP_API_URL}/user/${data.userId}`);
 
+                collaboratorsUpdate.push({ user: user.data, collaboration: data, changes: 0 });
+                setCollaborators(collaboratorsUpdate);
+            })
         } catch (error) {
             console.error(error);
         }
@@ -73,25 +96,31 @@ export default function EditCollaborators({ projectId, onHide }) {
         );
     }
 
-    useEffect(() => {
-        async function getCollaborators () {
+    const pushData = () => {
+        collaborators.forEach(async (collaborator) => {
+            let resp = null;
             try {
-                let newCollaborators = [];
-                let collaborations = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`);
-                for (let collaboration of collaborations.data) {
-                    let user = await axios.get(`${process.env.REACT_APP_API_URL}/user/${collaboration.userId}`);
-
-                    newCollaborators.push({ user: user.data, collaboration: collaboration });
+                switch (collaborator.changes) {
+                    case Change.rightsChanges:
+                        resp = await axios.patch(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collaborator.collaboration._id}`, { rights: collaborator.collaboration.rights });
+                        if (resp.status === 200)
+                            setCollaborators(changeCollaborator(collaborator._id, Change.noChanges).collaboratorsUpdate);
+                        break;
+                    case Change.kickChanges:
+                        resp = await axios.delete(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collaborator.collaboration._id}`);
+                        if (resp.status === 204)
+                            setCollaborators(changeCollaborator(collaborator._id, Change.noChanges).collaboratorsUpdate);
+                        break;
+                    case Change.noChanges:
+                        break;
+                    default:
+                        break;
                 }
-                setCollaborators(newCollaborators);
-                setNeedRefresh(false);
-            } catch (err) {
-                console.error(err);
+            } catch (error) {
+                console.error(error)
             }
-        };
-
-        getCollaborators();
-    }, [projectId, needRefresh])
+        });
+    }
 
     return (
         <div key='editCollaboratorsModal'>
@@ -108,16 +137,17 @@ export default function EditCollaborators({ projectId, onHide }) {
                                 <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">×</span>
                             </button>
                         </div>
-                        {collaborators.map(collaborator => {
-                                return (
-                                    <UserWithAction user={ collaborator.user } child={ () => editRights(collaborator) } />
-                                );
+                        {collaborators.filter((collaborator) => collaborator.changes !== Change.kickChanges).map(collaborator => {
+                            return (
+                                <UserWithAction user={ collaborator.user } child={ () => editRights(collaborator) } />
+                            );
                         })}
                         <form onSubmit={addCollaborator}>
                             <label for="collaboratorEmail">Add collaborator by email:</label>
                             <input type="email" id="collaboratorEmail"/>
                             <button type='submit'>Add</button>
                         </form>
+                        <button onClick={() => pushData()}>Save</button>
                     </div>
                 </div>
             </div>
