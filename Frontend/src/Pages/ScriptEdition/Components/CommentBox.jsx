@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Tooltip from '@mui/material/Tooltip';
 
-const CommentBox = ({comments, replica, updateComments}) => {
+const CommentBox = ({comments, replica, addComment, removeComment}) => {
 
     const [newComment, setNewComment] = useState("");
     const [contextSelectedCommentId, setContextSelectedCommentId] = useState(null);
@@ -59,7 +59,7 @@ const CommentBox = ({comments, replica, updateComments}) => {
                 withCredentials: true
             });
 
-            await updateComments();
+            addComment(commentResponse.data);
         } catch (e) {
             let errMsg = "Error";
             switch (e.response.status) {
@@ -95,7 +95,7 @@ const CommentBox = ({comments, replica, updateComments}) => {
                 withCredentials: true
             });
 
-            await updateComments();
+            removeComment(contextSelectedCommentId);
         } catch (err) {
             let errLog;
 

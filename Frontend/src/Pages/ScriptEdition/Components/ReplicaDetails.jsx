@@ -3,8 +3,7 @@ import CommentBox from './CommentBox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-//TODO: Change updateReplicaList to not GET after POST
-const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => {
+const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) => {
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
@@ -30,7 +29,6 @@ const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => 
     }
 
     useEffect(() => {
-        console.log("Text Update change");
         const updateReplicaText = async function () {
             try {
                 const res = await axios({
@@ -44,9 +42,29 @@ const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => 
                     url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
                     withCredentials: true
                 });
-                updateReplicaList(replica.projectId);
-            } catch (err) {
-                console.error("error => ", err);
+                updateReplicaContent(replica._id, text);
+            } catch (e) {
+                let errMsg = "Error";
+                switch (e.response.status) {
+                    case 401:
+                        switch (e.response.data) {
+                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                            /* errors that fits the 403 to me */
+                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
+                            default: errMsg = "Error (401)."; break;
+                        } break;
+                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                    case 404:
+                        switch (e.response.data) {
+                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
+                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
+                            case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
+                            default: errMsg = "Error (404)."; break;
+                        } break;
+                    default /* 500 */ : errMsg = "Internal Error."; break;
+                }
+                toast.error(errMsg);
+                console.error(e);
             }
         }
 
@@ -58,6 +76,7 @@ const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => 
     }, [isTextUpdated]);
 
     useEffect(() => {
+        // TODO :: this is not cool since it does a backend call each time u move the timestamp
         const fetchReplicaComments = async () => {
             try {
                 const res = await axios({
@@ -106,39 +125,14 @@ const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => 
     /***
      * COMMENT UPDATE
      */
-    //TODO: Change updateReplicaComments to not GET after POST
-    const updateReplicaComments = async () => {
-        try {
-            const res = await axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
-                withCredentials: true
-            });
-            let resComm = Object.values(res.data);
-            setComments(resComm);
-        } catch (e) {
-            let errMsg = "Error";
-            switch (e.response.status) {
-                case 401:
-                    switch (e.response.data) {
-                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                        /* errors that fits the 403 to me */
-                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                        default: errMsg = "Error (401)."; break;
-                    } break;
-                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                case 404:
-                    switch (e.response.data) {
-                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                        case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
-                        default: errMsg = "Error (404)."; break;
-                    } break;
-                default /* 500 */ : errMsg = "Internal Error."; break;
-            }
-            toast.error(errMsg);
-            console.error(e);
-        }
+
+
+    const addComment = (comment) => setComments([...comments, comment]);
+
+    const removeComment = function (commentId) {
+        var commentListCopy = [...comments];
+        commentListCopy.splice(commentListCopy.findIndex(item => item._id === commentId), 1);
+        setComments(commentListCopy);
     }
 
     /***
@@ -219,7 +213,7 @@ const ReplicaDetails = ({replica, updateReplicaList, updateReplicaSelected}) => 
 
             <h3 className="pl-4 text-xl">Commentaires</h3>
             <div id="comment-frame" className="w-fit h-3/6 ml-6 mr-9 overflow-y-auto">
-                <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
+                <CommentBox comments={comments} replica={replica} addComment={addComment} removeComment={removeComment} />
             </div>
 
             <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">

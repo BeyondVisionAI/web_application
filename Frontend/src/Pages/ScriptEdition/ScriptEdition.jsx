@@ -48,40 +48,6 @@ export default function ScriptEdition(props) {
         return null;
     }
 
-    const udpateProjectReplica = async (id) => {
-        try {
-            const res = await axios({
-                method: "GET",
-                url: `${process.env.REACT_APP_API_URL}/projects/${id}/replicas`,
-                withCredentials: true
-            });
-            let resRep = Object.values(res.data);
-            setReplicas(resRep);
-        } catch (e) {
-            let errMsg = "Error";
-            switch (e.response.status) {
-                case 401:
-                    switch (e.response.data) {
-                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                        /* errors that fits the 403 to me */
-                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                        default: errMsg = "Error (401)."; break;
-                    } break;
-                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                case 404:
-                    switch (e.response.data) {
-                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                        default: errMsg = "Error (404)."; break;
-                    } break;
-                default /* 500 */ : errMsg = "Internal Error."; break;
-            }
-            toast.error(errMsg);
-            console.error(e);
-        }
-    }
-
-
     useEffect(() => {
         const fetchProjectDetails = async (id) => {
             try {
@@ -123,6 +89,27 @@ export default function ScriptEdition(props) {
         history.push(`/project/${props.match.params.id}`);
     }
 
+    const updateReplicaContent = function (replicaId, newContent) {
+        var replicaCopy = [...replicas];
+        var idxOfReplica = replicaCopy.findIndex(item => item._id === replicaId);
+        replicaCopy[idxOfReplica].content = newContent;
+        setReplicas(replicaCopy);
+    }
+
+    const updateReplicaTimestamp = function (replicaId, newTimestamp) {
+        var replicaCopy = [...replicas];
+        var idxOfReplica = replicaCopy.findIndex(item => item._id === replicaId);
+        replicaCopy[idxOfReplica].timestamp = newTimestamp;
+        setReplicas(replicaCopy);
+    }
+
+    const removeReplicaFromState = function (replicaId) {
+        var replicaCopy = [...replicas];
+        replicaCopy.splice(replicaCopy.findIndex(item => item._id === replicaId), 1);
+        setReplicas(replicaCopy)
+    }
+
+
     if (project) {
         return (
             <>
@@ -138,7 +125,7 @@ export default function ScriptEdition(props) {
 
                         <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
                             {replicaSelected !== null ?
-                                <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplicaList={udpateProjectReplica} updateReplicaSelected={updateReplicaSelected} />
+                                <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplicaContent={updateReplicaContent} updateReplicaSelected={updateReplicaSelected} />
                             :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
                                     <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
                                 </div>
@@ -152,18 +139,8 @@ export default function ScriptEdition(props) {
 
                         <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
                            <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
-                           updateReplicaTimestamp={(replicaId, newTimestamp) => {
-                            var replicaCopy = [...replicas];
-                            var idxOfReplica = replicaCopy.findIndex(item => item._id === replicaId)
-                            replicaCopy[idxOfReplica].timestamp = newTimestamp;
-                            setReplicas(replicaCopy)
-                           }}
-                           removeReplicaFromState={(replicaId) => {
-                           var replicaCopy = [...replicas];
-                            replicaCopy.splice(replicaCopy.findIndex(item => item._id === replicaId), 1);
-                            setReplicas(replicaCopy)
-                           }}
-                           replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} toggleReplicaSelected={toggleReplicaSelected} addNewReplica={(replica) => setReplicas([...replicas, replica])} />
+                           updateReplicaTimestamp={updateReplicaTimestamp} removeReplicaFromState={removeReplicaFromState} replicas={replicas} projectId={project.id}
+                           onReplicaSelection={updateReplicaAction} toggleReplicaSelected={toggleReplicaSelected} addNewReplica={(replica) => setReplicas([...replicas, replica])} />
                         </div>
                     </div>
                 </div>

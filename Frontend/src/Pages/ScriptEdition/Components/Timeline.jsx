@@ -20,7 +20,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, toggleReplicaSelecte
 
 
     const addReplica = async function () {
-        if (newReplicaTimestamp == -1) return;
+        if (newReplicaTimestamp === -1) return;
         try {
             let body = {
                 content: "",
@@ -35,8 +35,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, toggleReplicaSelecte
                 withCredentials: true
             });
 
-            addNewReplica(res.data)
-            // await updateReplicaList(projectId);
+            addNewReplica(res.data);
         } catch (err) { // TODO check
             let errLog;
             console.error("error : ", err);
@@ -92,7 +91,6 @@ const Timeline = ({replicas, projectId, onReplicaSelection, toggleReplicaSelecte
             });
             onReplicaSelection(null);
             removeReplicaFromState(contextSelectedReplicaId);
-            // await updateReplicaList(projectId);
         } catch (err) {
             let errLog;
             console.error("error : ", err);
@@ -168,8 +166,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, toggleReplicaSelecte
                 data: {timestamp: newTimestamp},
                 withCredentials: true
             });
-            updateReplicaTimestamp(replicaID, newTimestamp)
-            // updateReplicaList(projectId);
+            updateReplicaTimestamp(replicaID, newTimestamp);
         } catch (err) { // TODO check
             let errLog;
             // console.error("error : ", err);
@@ -218,28 +215,24 @@ const Timeline = ({replicas, projectId, onReplicaSelection, toggleReplicaSelecte
 
     const replicaLine = replicas.map((replica, index) => {
         return (
-            // <Draggable> {/* bounds="parent" */} {/*  bounds={{left:-100, right: 100, top: 0, bottom: 0}} */}
-                // <div>
-                <Draggable axis='x' key={index} bounds={{
-                    left: -secToPxCoef * replica.timestamp / 1000000, top: 0,
-                    right: (secToPxCoef * videoLength - 1500) / 1000000, bottom: 0}}
-                    position={{x: 0, y: 0}} onStop={() => onStopReplicaDrag(replica._id)}>
-                    <div>
-                    <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
-                        <button id={replica._id} className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
-                        absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
-                            onClick={() => onReplicaSelection(replica._id)}
-                            onContextMenu={(e) => {e.preventDefault(); onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
-                            {/* should be adjustable to the size of the replica (so its length) */}
-                            <p>{replica.content.length > 30 ?
-                                replica.content.slice(0, 26) + " ..."
-                            :   replica.content}</p>
-                        </button>
-                    </ContextMenuTrigger>
-                    </div>
-                </Draggable>
-                // </div>
-            // </Draggable>
+            <Draggable axis='x' key={index} bounds={{
+                left: -secToPxCoef * replica.timestamp / 1000000, top: 0,
+                right: (secToPxCoef * videoLength - 1500) / 1000000, bottom: 0}}
+                position={{x: 0, y: 0}} onStop={() => onStopReplicaDrag(replica._id)}>
+                <div>
+                <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
+                    <button id={replica._id} className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
+                    absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
+                        onClick={() => onReplicaSelection(replica._id)}
+                        onContextMenu={(e) => {e.preventDefault(); onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
+                        {/* should be adjustable to the size of the replica (so its length) */}
+                        <p>{replica.content.length > 30 ?
+                            replica.content.slice(0, 26) + " ..."
+                        :   replica.content}</p>
+                    </button>
+                </ContextMenuTrigger>
+                </div>
+            </Draggable>
         )
     })
 

@@ -44,6 +44,7 @@ exports.postComment = async function(req, res) {
         });
 
         await newComment.save();
+        await newComment.populate({path: 'author', select: 'firstName lastName'});
         res.status(200).send(newComment);
     } catch (err) {
         console.log("ReplicaComment->postComment : " + err);
