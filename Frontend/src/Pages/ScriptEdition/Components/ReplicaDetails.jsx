@@ -16,6 +16,7 @@ const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) 
     const [characterCount, setCharacterCount] = useState("" + replica.content.length + "/100");
 
     const [isTextUpdated, toggleTextUpdate] = useState(false);
+    const [isSaveButtonDisplayed, setIsSaveButtonDisplayed] = useState(false);
     let replicaTextUpdateTimeout = null;
 
     /***
@@ -25,7 +26,8 @@ const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) 
     const handleReplicaTextChange = async function (event) {
         setCharacterCount(`${event.target.value.length}/100`);
         setText(event.target.value);
-        toggleTextUpdate(!isTextUpdated)
+        toggleTextUpdate(!isTextUpdated);
+        setIsSaveButtonDisplayed(true);
     }
 
     useEffect(() => {
@@ -43,6 +45,7 @@ const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) 
                     withCredentials: true
                 });
                 updateReplicaContent(replica._id, text);
+                setIsSaveButtonDisplayed(false);
             } catch (e) {
                 let errMsg = "Error";
                 switch (e.response.status) {
@@ -186,13 +189,18 @@ const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) 
                 <h3 className="ml-2 text-xl inline-flex items-center">Texte</h3>
                 <h3 className="inline-flex items-center text-l mr-9">{characterCount}</h3>
             </div>
-            <textarea name="replica-text" id="" 
-            value={text} maxLength='100'
-            onChange={handleReplicaTextChange}
-            className="w-11/12 resize-none my-2 ml-4 px-2 py-1 leading-7 text-xl
-            rounded-md border border-solid border-blue-500
-            focus:text-black focus:bg-white focus:border-blue-500 focus:outline-none"
-            ></textarea>
+            <div className="relative pr-0 py-0 w-full">
+                <textarea name="replica-text" id="" 
+                    value={text} maxLength='100'
+                    onChange={handleReplicaTextChange}
+                    className="w-11/12 relative left-4 resize-none px-2 py-1 leading-7 text-xl
+                    rounded-md border border-solid border-blue-500
+                    focus:text-black focus:bg-white focus:border-blue-500 focus:outline-none"
+                    ></textarea>
+                {isSaveButtonDisplayed == true ?
+                    <button className="bg-myBlue absolute bottom-2 right-8 w-min px-1 text-myWhite items-center text-base rounded truncate">Sauvegarder</button>
+                :   <></>}
+            </div>
 
             <div className="w-full flex flex-row justify-between items-center pl-2">
                 <h3 className="ml-2 text-xl inline-flex items-center">Voix</h3>
