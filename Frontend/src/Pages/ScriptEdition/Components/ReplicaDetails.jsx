@@ -217,7 +217,7 @@ const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) 
             </div>
 
             <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
-                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
+                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp.toFixed(0), duration)}</p>
                 <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
             </div>
         </div>
