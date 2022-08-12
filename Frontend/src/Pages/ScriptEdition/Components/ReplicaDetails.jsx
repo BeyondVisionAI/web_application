@@ -30,47 +30,49 @@ const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) 
         setIsSaveButtonDisplayed(true);
     }
 
-    useEffect(() => {
-        const updateReplicaText = async function () {
-            try {
-                const res = await axios({
-                    method: 'PUT',
-                    data: {
-                        content: text,
-                        timestamp: timestamp,
-                        duration: duration,
-                        voiceId: voiceId
-                    },
-                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
-                    withCredentials: true
-                });
-                updateReplicaContent(replica._id, text);
-                setIsSaveButtonDisplayed(false);
-            } catch (e) {
-                let errMsg = "Error";
-                switch (e.response.status) {
-                    case 401:
-                        switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                            /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                            default: errMsg = "Error (401)."; break;
-                        } break;
-                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                    case 404:
-                        switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                            case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
-                            default: errMsg = "Error (404)."; break;
-                        } break;
-                    default /* 500 */ : errMsg = "Internal Error."; break;
-                }
-                toast.error(errMsg);
-                console.error(e);
-            }
-        }
 
+    const updateReplicaText = async function () {
+        try {
+            const res = await axios({
+                method: 'PUT',
+                data: {
+                    content: text,
+                    timestamp: timestamp,
+                    duration: duration,
+                    voiceId: voiceId
+                },
+                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+                withCredentials: true
+            });
+            updateReplicaContent(replica._id, text);
+            setIsSaveButtonDisplayed(false);
+        } catch (e) {
+            let errMsg = "Error";
+            switch (e.response.status) {
+                case 401:
+                    switch (e.response.data) {
+                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                        /* errors that fits the 403 to me */
+                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
+                        default: errMsg = "Error (401)."; break;
+                    } break;
+                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                case 404:
+                    switch (e.response.data) {
+                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
+                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
+                        case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
+                        default: errMsg = "Error (404)."; break;
+                    } break;
+                default /* 500 */ : errMsg = "Internal Error."; break;
+            }
+            toast.error(errMsg);
+            console.error(e);
+        }
+    }
+
+
+    useEffect(() => {
         replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
 
         return () => {
@@ -198,7 +200,8 @@ const ReplicaDetails = ({replica, updateReplicaContent, updateReplicaSelected}) 
                     focus:text-black focus:bg-white focus:border-blue-500 focus:outline-none"
                     ></textarea>
                 {isSaveButtonDisplayed == true ?
-                    <button className="bg-myBlue absolute bottom-2 right-8 w-min px-1 text-myWhite items-center text-base rounded truncate">Sauvegarder</button>
+                    <button className="bg-myBlue absolute bottom-2 right-8 w-min px-1 text-myWhite items-center text-base rounded truncate"
+                    onClick={updateReplicaText}>Sauvegarder</button>
                 :   <></>}
             </div>
 
