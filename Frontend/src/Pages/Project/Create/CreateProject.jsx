@@ -6,7 +6,8 @@ import VideoData from './VideoData';
 import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideo from './DropVideo';
 import { useHistory } from "react-router-dom";
-import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
+// import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
+import Toast from '../../../GenericComponents/Toast/Toast.js';
 
 export default function CreateProject({ show, onHide }) {
     const [modalStep, setModalStep] = useState(0);
@@ -26,6 +27,14 @@ export default function CreateProject({ show, onHide }) {
         {title: 'Informations sur la vidéo', img: <svg class="w-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path class="heroicon-ui" d="M9 4.58V4c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v.58a8 8 0 0 1 1.92 1.11l.5-.29a2 2 0 0 1 2.74.73l1 1.74a2 2 0 0 1-.73 2.73l-.5.29a8.06 8.06 0 0 1 0 2.22l.5.3a2 2 0 0 1 .73 2.72l-1 1.74a2 2 0 0 1-2.73.73l-.5-.3A8 8 0 0 1 15 19.43V20a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.58a8 8 0 0 1-1.92-1.11l-.5.29a2 2 0 0 1-2.74-.73l-1-1.74a2 2 0 0 1 .73-2.73l.5-.29a8.06 8.06 0 0 1 0-2.22l-.5-.3a2 2 0 0 1-.73-2.72l1-1.74a2 2 0 0 1 2.73-.73l.5.3A8 8 0 0 1 9 4.57zM7.88 7.64l-.54.51-1.77-1.02-1 1.74 1.76 1.01-.17.73a6.02 6.02 0 0 0 0 2.78l.17.73-1.76 1.01 1 1.74 1.77-1.02.54.51a6 6 0 0 0 2.4 1.4l.72.2V20h2v-2.04l.71-.2a6 6 0 0 0 2.41-1.4l.54-.51 1.77 1.02 1-1.74-1.76-1.01.17-.73a6.02 6.02 0 0 0 0-2.78l-.17-.73 1.76-1.01-1-1.74-1.77 1.02-.54-.51a6 6 0 0 0-2.4-1.4l-.72-.2V4h-2v2.04l-.71.2a6 6 0 0 0-2.41 1.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>, isDone: false},
         {title: 'Shop', img: <svg class="w-full fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path class="heroicon-ui" d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-2.3-8.7l1.3 1.29 3.3-3.3a1 1 0 0 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-2-2a1 1 0 0 1 1.4-1.42z"/></svg>, isDone: false},
     ]);
+    // axios for Upload Percentage
+    const [thumbnailUpload, setThumbnailUpload] = useState(null);
+    const [videoUpload, setVideoUpload] = useState(null);
+    
+    // Toast Values
+    const [list, setList] = useState([]);
+    const [autoDeleteTime, setAutoDeleteTime] = useState(5);
+
     const history = useHistory();
     axios.defaults.withCredentials = true;
 
@@ -51,35 +60,132 @@ export default function CreateProject({ show, onHide }) {
         setValue(tmp);
     }
 
-    function uploadMedia () {
-        UploadFileOnS3(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
-        .then(async (imageRes) => {
-            let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
-                name: imageRes.Key,
-                desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
-                ETag: imageRes.ETag
-            });
-            handleChange('thumbnailId', thumbnailResponse.data._id);
-            axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
-        }).catch(err => console.error("Upload thumbnail error:", err));
-        UploadFileOnS3(video, 'bv-streaming-video-source-ahnauucgvgsf', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
-        .then(async videoRes => {
-            let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
-                name: videoRes.Key,
-                desc: `Video for ${values.name} type ${values.videoType}`,
-                ETag: videoRes.ETag,
-                url: 'Url Undefined'
-            });
-            handleChange('videoId', videoResponse.data._id);
-            axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
-        }).catch(err => console.error("Upload video error:", err));
+    const showToast = (toastProperties) => {
+        console.log("Test showToaster", toastProperties);
+        setList([...list, toastProperties]);
+    };
+    
+    const setUploadToastChange = (id, percentage) => {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].id === id) {
+                list[i].description = `${percentage} %`;
+            }
+        };
+    };
+
+    const removeToast = (id) => {
+        var newList = list;
+        for (var i = 0; i < newList.length; i++) {
+            if (newList[i].id === id) {
+                newList.splice(i, 1);
+                setList(newList);
+                return;
+            }
+        }
+    };
+
+    async function uploadMedia () {
+        console.log("send Image", image.name, image );
+        // const formDataThumbnail = new FormData();
+        // formDataThumbnail.append('file', image);
+        await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/${values.id}`, { thumbnailData: image, name: image.name, desc: `Thumbnail for ${values.name}` }, {
+            onUploadProgress: (p) => {
+                const percentCompleted = Math.round((p.loaded * 100) / p.total);
+                var id = null;
+                if (thumbnailUpload === null) {
+                    id = Math.floor((Math.random() * 101) + 1);
+                    showToast({
+                        id: id,
+                        title: 'File Uploading : Image',
+                        description: `${percentCompleted} %`,
+                        backgroundColor: '#5bc0de',
+                        icon: "infoIcon"
+                    })
+                } else {
+                    id = thumbnailUpload.id;
+                }
+
+                setThumbnailUpload({id: id, fileName: image.name, percent: percentCompleted,});
+                if (percentCompleted === 100) {
+                    // removeToast(id);
+                    const idSuccess = Math.floor((Math.random() * 101) + 1);
+                    showToast({
+                        id: idSuccess,
+                        title: 'File Upload : Image',
+                        description: 'Success',
+                        backgroundColor: '#5cb85c',
+                        icon: "checkIcon"
+                    });
+                } else {
+                    setUploadToastChange(id, percentCompleted);
+                }
+            }
+        });
+        // UploadFileOnS3(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
+        // .then(async (imageRes) => {
+        //     let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
+        //         name: imageRes.Key,
+        //         desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
+        //         ETag: imageRes.ETag
+        //     });
+        //     handleChange('thumbnailId', thumbnailResponse.data._id);
+        //     axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
+        // }).catch(err => console.error("Upload thumbnail error:", err));
+        
+        console.log("send Video", video.name,  video);
+        // const formDataVideo = new FormData();
+        // formDataVideo.append('file', video);
+        await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/${values.id}`, { videoData: video, name: video.name, desc: `Video for ${values.name} type ${values.videoType}` }, {
+            onUploadProgress: (p) => {
+                const percentCompleted = Math.round((p.loaded * 100) / p.total);
+                var id = null;
+                if (videoUpload === null) {
+                    id = Math.floor((Math.random() * 101) + 1);
+                    showToast({
+                        id: id,
+                        title: 'File Uploading : Video',
+                        description: `${percentCompleted} %`,
+                        backgroundColor: '#5bc0de',
+                        icon: "infoIcon"
+                    })
+                } else {
+                    id = videoUpload.id;
+                }
+
+                setVideoUpload({id: id, fileName: video.name, percent: percentCompleted,});
+                if (percentCompleted === 100) {
+                    // removeToast(id);
+                    const idSuccess = Math.floor((Math.random() * 101) + 1);
+                    showToast({
+                        id: idSuccess,
+                        title: 'File Upload : Video',
+                        description: 'Success',
+                        backgroundColor: '#5cb85c',
+                        icon: "checkIcon"
+                    });
+                } else {
+                    setUploadToastChange(id, percentCompleted);
+                }
+            }
+        });
+        // UploadFileOnS3(video, 'bv-streaming-video-source-ahnauucgvgsf', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
+        // .then(async videoRes => {
+        //     let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
+        //         name: videoRes.Key,
+        //         desc: `Video for ${values.name} type ${values.videoType}`,
+        //         ETag: videoRes.ETag,
+        //         url: 'Url Undefined'
+        //     });
+        //     handleChange('videoId', videoResponse.data._id);
+        //     axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
+        // }).catch(err => console.error("Upload video error:", err));
     }
 
     async function postData () {
         try {
             let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`, { status: 'Stop', ...values, script: null });
             handleChange('id', projectResponse.data._id);
-            uploadMedia();
+            await uploadMedia();
             history.push(`/project/${projectResponse.data._id}`);
         } catch (error) {
             console.error(error);
@@ -151,6 +257,12 @@ export default function CreateProject({ show, onHide }) {
                 </div>
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            <Toast 
+                toastList={list}
+                position={"top-left"}
+                autoDelete={true}
+                autoDeleteTime={autoDeleteTime}
+            />
         </>
     );
 }

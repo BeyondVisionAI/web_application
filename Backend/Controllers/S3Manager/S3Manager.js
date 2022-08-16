@@ -1,5 +1,7 @@
 var AWS = require('aws-sdk');
 const { Errors } = require("../../Models/Errors.js");
+const { Video } = require('../../Models/Media/Video');
+const { Image } = require('../../Models/Media/Image');
 
 AWS.config.setPromisesDependency();
 
@@ -10,7 +12,7 @@ const AWSAccess = {
 };
 
 
-getObject = async function (bucketName, keyName) {
+const getObject = async function (bucketName, keyName) {
     try {
         console.log(`S3 : GetObject - Bucket Name : ${bucketName} - Key Name : ${keyName}`)
         let s3 = new AWS.S3(AWSAccess);
@@ -33,6 +35,31 @@ getObject = async function (bucketName, keyName) {
     }
 }
 
+const uploadObject = async function (bucketName, keyName, file) {
+    try {
+        console.log(`S3 : uploadObject - Bucket Name : ${bucketName} - Key Name : ${keyName}`)
+        let s3 = new AWS.S3(AWSAccess);
+        const params = {
+            Bucket: bucketName,
+            Key: keyName,
+            Body: file
+        };
+
+        const data = await new Promise((resolve, reject) => {
+            s3.upload(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(data);
+            })
+        });
+        return (data);
+    } catch (err) {
+        console.log('Error catch', err);
+        return ({ code: 500, err: err }).promise();
+    }
+}
+
 exports.getFinishedProductVideo = async function (req, res) {
     const projectId = req.params.projectId;
     const data = await getObject("bv-finish-products", `Video/${projectId}.mp4`);
@@ -46,7 +73,8 @@ exports.getFinishedProductVideo = async function (req, res) {
 
 exports.getFinishedProductAudio = async function (req, res) {
     const projectId = req.params.projectId;
-    const data = getObject("bv-finish-products", `Audio/${projectId}.mp3`);
+    const data = await getObject("bv-finish-products", `Audio/${projectId}.mp3`);
+
     if (data === "" || data === null || data === {} || data === undefined) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
@@ -55,10 +83,55 @@ exports.getFinishedProductAudio = async function (req, res) {
     }
 }
 
-//     < Downloader bucket = '' keyName = {``}
-// fileType = 'Video/mp4'
-// label = 'Download Video' donwload />
+exports.postSourceProductVideo = async function (req, res) {
+    console.log("Test Upload Video", req.body);
+    const projectId = req.params.projectId;
+    const videoData = req.body.videoData;
+    const videoDesc = req.body.desc;
+    const videoName = req.body.name;
+    const data = uploadObject("bv-streaming-video-source-ahnauucgvgsf", `${projectId}.${videoName.split(".").pop()}`, videoData);
 
-//     <Downloader bucket='bv-finished-products' keyName={`Audio/${props.match.params.id}.mp3`}
-//         fileType='audio/mpeg'
-//         label='Download Audio' donwload />
+    if (data === "" || data === null || data === {} || data === undefined || data.code === 500 || data.err !== undefined) {
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    } else {
+        try {
+            const newVideo = new Video({
+                name: data.Key,
+                desc: videoDesc,
+                ETag: data.ETag,
+                url: 'Url Undefined'
+            });
+            await newVideo.save();
+            return res.status(200).send("Video save!");
+        } catch (err) {
+            console.log("Video->createVideo: " + err);
+            return res.status(500).send(Errors.INTERNAL_ERROR);
+        }
+    }
+};
+
+exports.postSourceProductThumbnail = async function (req, res) {
+    console.log("Test Upload Image", req.body);
+    const projectId = req.params.projectId;
+    const thumbnailData = req.body.thumbnailData;
+    const thumbnailDesc = req.body.desc;
+    const thumbnailName = req.body.name;
+    const data = uploadObject("bv-thumbnail-project", `${projectId}.${thumbnailName.split(".").pop()}`, thumbnailData);
+
+    if (data === "" || data === null || data === {} || data === undefined || data.code === 500 || data.err !== undefined) {
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    } else {
+        try {
+            const newImage = new Image({
+                name: data.Key,
+                desc: thumbnailDesc + " locate in bv-thumbnail-project bucket",
+                ETag: data.ETag,
+            });
+            await newImage.save();
+            return res.status(200).send("Image save!");
+        } catch (err) {
+            console.log("Video->createVideo: " + err);
+            return res.status(500).send(Errors.INTERNAL_ERROR);
+        }
+    }
+};

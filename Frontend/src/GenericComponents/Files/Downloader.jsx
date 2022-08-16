@@ -35,7 +35,7 @@ async function downloadFile(props) {
 };
 
 export function Downloader(props) {
-    var [isDownload, setIsDownload] = useState(false);
+    const [isDownload, setIsDownload] = useState(false);
     const [buttonText, setButtonText] = useState(props.label);
 
     var handleClick = async () => {
