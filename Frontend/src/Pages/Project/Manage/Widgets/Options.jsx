@@ -28,21 +28,21 @@ export default function Options({ projectId }) {
     <Widget weight='h-1/4' rounded=''>
       <form>
         <div className='h-1/3'>
-          <label className='block inset-y-0 left-0' for='audio'>Audio generation</label>
+          <label className='block inset-y-0 left-0' htmlFor='audio'>Audio generation</label>
           <select className='inset-y-0 right-0 border shadow-sm' name="audioChoices" id="audio" onChange={e => handleOptionsChange(e, 'audio')}>
               { createChoice(audioOption) }
           </select>
         </div>
 
         <div className='h-1/3'>
-          <label className='block inset-y-0 left-0' for='script'>Script generation</label>
+          <label className='block inset-y-0 left-0' htmlFor='script'>Script generation</label>
           <select className='inset-y-0 right-0 border shadow-sm' name="scriptChoices" id="script" onChange={e => handleOptionsChange(e, 'script')}>
               { createChoice(scriptOption) }
           </select>
         </div>
 
         <div className='h-1/3'>
-          <label className='block inset-y-0 left-0' for='checkScript'>Check script</label>
+          <label className='block inset-y-0 left-0' htmlFor='checkScript'>Check script</label>
           <select className='inset-y-0 right-0 border shadow-sm' name="checkScriptChoices" id="checkScript" onChange={e => handleOptionsChange(e, 'checkScript')}>
               { createChoice(checkScriptOption) }
           </select>
