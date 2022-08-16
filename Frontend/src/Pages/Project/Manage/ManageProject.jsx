@@ -82,9 +82,8 @@ export default function ManageProject(props) {
     };
 
 // TODO :
-//   Indentation du text, récupération des: collabo, invoices, bouton mode edit, on load
+//   Indentation du text, récupération des: invoices, bouton mode edit, on load
 //   Cancel scroll barre
-//   Modification de la nav bar
 //   Mettre un temps de chargement quand la donnée n'est pas disponible
 
     if (project) {

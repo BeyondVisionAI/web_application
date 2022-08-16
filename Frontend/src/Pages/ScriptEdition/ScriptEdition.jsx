@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import Chat from '../Chat/Chat';
 import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
+import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 
 
 export default function ScriptEdition(props) {
@@ -17,11 +18,20 @@ export default function ScriptEdition(props) {
     useEffect(() => {
         const getProject = async function (id) {
             try {
+                let videoUrl = undefined;
                 let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`, { withCredentials: true });
+                try {
+                    let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
 
+                    if (video.status === 200)
+                        videoUrl = video.data.url;
+                } catch (error) {
+                    console.log('Video non dispo');
+                }
                 setProject({
                     id: id,
-                    title: projectR.data.name
+                    title: projectR.data.name,
+                    videoUrl: videoUrl
                     // status: projectR.data.status
                 });
             } catch (error) {
@@ -143,7 +153,7 @@ export default function ScriptEdition(props) {
 
                         </div>
                            <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-gray-100">
-                               <img className="object-cover h-10/12" src="/assets/fight_club.jpeg" alt="" />
+                               <VideoPlayer videoUrl={project.videoUrl} />
                            </div>
                         </div>
 
