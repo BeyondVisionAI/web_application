@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 // import ScriptEdition from '../ScriptEdition/ScriptEdition';
 import CreateProject from './Create/CreateProject';
 
-// const projectId = "621c3425d3f549034a3e74a4";
-
 export default function Project() {
     const [modalShow, setShowModal] = useState(false);
 
