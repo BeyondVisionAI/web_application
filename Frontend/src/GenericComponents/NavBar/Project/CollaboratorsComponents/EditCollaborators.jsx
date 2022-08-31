@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import axios from 'axios';
 import UserWithAction from '../../../Auth/UserWithAction';
 import { useEffect } from 'react';
+import "./EditCollaborators.css"
 
 const Change = {
     noChanges: 0,
@@ -84,10 +85,10 @@ export default function EditCollaborators({ projectId, collaborators, setCollabo
         let rights = ['OWNER', 'ADMIN', 'WRITE', 'READ', 'KICK'];
 
         return (
-            <select name='right' id={collaborator.collaboration._id} onChange={(e) => changeRight(collaborator, e.target.value)}>
+            <select className="role-select-container" name='right' id={collaborator.collaboration._id} onChange={(e) => changeRight(collaborator, e.target.value)}>
                 {rights.map(right => {
                     return (
-                        <option value={right} selected={ collaborator.collaboration.rights === right }>
+                        <option className="role-select-option" value={right} selected={ collaborator.collaboration.rights === right }>
                             { right }
                         </option>
                     );
@@ -120,16 +121,17 @@ export default function EditCollaborators({ projectId, collaborators, setCollabo
                 console.error(error)
             }
         });
+        onHide()
     }
 
     return (
         <div key='editCollaboratorsModal'>
             <div className='justify-center'></div>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                <div ref={wrapperRef} className="relative w-full my-6 mx-auto max-w-7xl h-5/6">
-                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none h-full focus:outline-none">
+                <div ref={wrapperRef} className="flex justify-center items-center relative w-full my-6 mx-auto max-w-7xl h-5/6">
+                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-2/6 bg-white outline-none h-full focus:outline-none">
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                            Members
+                            Collaborators
                             <button
                                 className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                                 onClick={() => onHide()}
@@ -137,17 +139,19 @@ export default function EditCollaborators({ projectId, collaborators, setCollabo
                                 <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">×</span>
                             </button>
                         </div>
+                        <div className="collaborator-scrollable-container">
                         {collaborators.filter((collaborator) => collaborator.changes !== Change.kickChanges).map(collaborator => {
                             return (
                                 <UserWithAction user={ collaborator.user } child={ () => editRights(collaborator) } />
                             );
                         })}
-                        <form onSubmit={addCollaborator}>
-                            <label for="collaboratorEmail">Add collaborator by email:</label>
+                        </div>
+                        <form className="add-collaborator-container" onSubmit={addCollaborator}>
+                            <label htmlFor="collaboratorEmail">Add collaborator by email:</label>
                             <input type="email" id="collaboratorEmail"/>
                             <button type='submit'>Add</button>
                         </form>
-                        <button onClick={() => pushData()}>Save</button>
+                        <button className="collaborator-save-button" onClick={() => pushData()}>Save</button>
                     </div>
                 </div>
             </div>

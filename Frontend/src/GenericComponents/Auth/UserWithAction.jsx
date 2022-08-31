@@ -1,10 +1,16 @@
 import React from 'react'
+import "./UserWithAction.css"
 
 export default function UserWithAction({ user, child }) {
   return (
-    <div id={user._id}>
+    <div className="user-with-action-container" id={user._id}>
         {/* <img src={user.logo} alt={`${ user.firstName } logo`} /> */}
-        {`${user.firstName} ${user.lastName}`}
+        <div className="user-with-action-user-container">
+          <div className="user-initial-pic">
+            {`${user.firstName[0]}${user.lastName[0]}`}
+          </div>
+          <p>{`${user.firstName} ${user.lastName}`}</p>
+        </div>
         { child() }
     </div>
   )

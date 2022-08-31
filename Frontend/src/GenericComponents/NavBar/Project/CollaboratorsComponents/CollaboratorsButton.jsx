@@ -27,20 +27,26 @@ export default function CollaboratorsButton( { projectId } ) {
         getCollaborators();
     }, [ projectId ])
 
+    if (!collaborators) {
+        return <h1>Loading...</h1>;
+    }
+
     return (
-            <div>
-                {/* <div classname="collaborator-container">
-                    collaborators.map((collaborator, idx) => {
+            <div style={{marginLeft: "auto", marginRight: "10px"}}>
+                <div onClick={() => setShowModal(true)} className="collaborator-container">
+                    {collaborators.map((collaborator, idx) => {
+                        console.log("🚀 ~ file: CollaboratorsButton.jsx ~ line 42 ~ {collaborators.map ~ collaborator", collaborator)
                         if (idx < 2) {
                             return (
-                                <div classname="collaborator-item">{collaborator.firstName[0]}{collaborator.lastName[0]}</div>
+                                <div key={idx} className="collaborator-item">{collaborator.user.firstName[0]}{collaborator.user.lastName[0]}</div>
                             )
                         } else {
                             return null;
                         }
-                })
-            </div> */}
-            <button onClick={ () => setShowModal(true) }>Collaborators</button>
+                    })}
+                    <div className="collaborator-item">+</div>
+                </div>
+            {/* <button onClick={ () => setShowModal(true) }>Collaborators</button> */}
             {modalShow &&
                 (<EditCollaborators
                     projectId={ projectId }
