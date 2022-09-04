@@ -30,6 +30,7 @@ services:
       - "8080:8080"
     env_file:
       - .env
+      - ./Backend/.env
     volumes:
       - ./Backend/index.js:/app/index.js
       - ./Backend/Controllers:/app/Controllers/
@@ -39,8 +40,6 @@ services:
     networks:
       - api
       - bdd
-    env_file:
-      - ./Backend/.env
     environment:
       - IS_TEST="TRUE"
     restart: on-failure

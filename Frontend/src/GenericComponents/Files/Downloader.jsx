@@ -19,12 +19,12 @@ async function downloadFile(props) {
         response.data = null;
     }
     const data = response.data;
-    console.log("data :", data);
+
+
     if (data !== null && data !== {} && data !== undefined && data !== '') {
-        let blob = new Blob([data], { type: props.fileType });
-        console.log("blob :", blob);
+        const blob = new Blob([data], { encoding:"ANSI", type: "text/plain;charset=ANSI" });
+
         const url = URL.createObjectURL(blob);
-        console.log("url :", url);
         let a = document.createElement('a');
         a.download=props.fileName;
         a.href=url;
