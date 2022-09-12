@@ -3,11 +3,11 @@ import AWS from 'aws-sdk';
 AWS.config.setPromisesDependency();
 
 const AWSAccess = {
-    accessKeyId: 'AKIAVEXTIW63VUWJ2LT7',
-    secretAccessKey: '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'
+    accessKeyId: process.env.REACT_APP_S3_ID,
+    secretAccessKey: process.env.REACT_APP_S3_SECRET
 };
 
-export function UploadFileOnS3(file, bucketnName, region = 'us-east-1', keyName = null)
+export function UploadFileOnS3(file, bucketName, region = process.env.REACT_APP_S3_REGION, keyName = null)
 {
     try {
         let s3 = new AWS.S3({
@@ -15,7 +15,7 @@ export function UploadFileOnS3(file, bucketnName, region = 'us-east-1', keyName 
             region: region
         });
         const params = {
-            Bucket: bucketnName,
+            Bucket: bucketName,
             Key: keyName,
             Body: file
         };
@@ -25,7 +25,7 @@ export function UploadFileOnS3(file, bucketnName, region = 'us-east-1', keyName 
                 return ({ code: 500, err: "S3 Upload issue" + err });
             }
             console.log(`File uploaded successfully. ${data.Location}`);
-            return ({ code: 200 })
+            return ({ code: 200, res: data })
         }).promise();
     } catch (err) {
         console.log('Error catch', err);
