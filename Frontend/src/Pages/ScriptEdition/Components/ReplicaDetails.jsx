@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 
 const ReplicaDetails = ({replica, updateReplica}) => {
+    const [isLoading, setIsLoading] = useState(false)
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
@@ -29,27 +30,27 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         toggleTextUpdate(!isTextUpdated)
     }
 
-    useEffect(() => {
-        console.log("Text Update change");
-        const updateReplicaText = async function () {
-            try {
-                const res = await axios({
-                    method: 'PUT',
-                    data: {
-                        content: text,
-                        timestamp: timestamp,
-                        duration: duration,
-                        voiceId: voiceId
-                    },
-                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
-                    withCredentials: true
-                });
-                updateReplica(res.data)
-            } catch (err) {
-                console.error("error => ", err);
-            }
+    const updateReplicaText = async function () {
+        try {
+            const res = await axios({
+                method: 'PUT',
+                data: {
+                    content: text,
+                    timestamp: timestamp,
+                    duration: duration,
+                    voiceId: voiceId
+                },
+                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+                withCredentials: true
+            });
+            updateReplica(res.data)
+            setIsLoading(false)
+        } catch (err) {
+            console.error("error => ", err);
         }
+    }
 
+    useEffect(() => {
         replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
 
         return () => {
@@ -224,6 +225,9 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             <div id="comment-frame" className="w-fit h-3/6 ml-6 mr-9 overflow-y-auto">
                 <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
             </div>
+            <button
+            onClick={() => {setIsLoading(true);updateReplicaText()}}
+            className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Saving..." : "Save"}</button>
 
             <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
                 <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
