@@ -11,7 +11,7 @@ import ReplicaBox from './ReplicaBox';
 // const videoLength = 3600000 / 4;
 const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
-var secToPxCoef = 150000000000; // will change if zoom
+var secToPxCoef = 300; // will change if zoom
 
 const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplicaList}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
@@ -144,21 +144,17 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
     // }, [player.current]);
 
     useEffect(() => {
-        console.log(duration);
+        const nbSeconds = duration;
+        console.log("🚀 ~ file: Timeline.jsx ~ line 148 ~ useEffect ~ nbSeconds", nbSeconds)
 
-        const setupTimecodeLine = function () {
-            const nbSeconds = (duration * 1000) / 4;
-
-            for (var i = 0; i < nbSeconds; i++) {
-                timecodeArray.push({
-                    videoLength: duration,
-                    secondToPixelCoef: secToPxCoef,
-                    minute: i,
-                    zoom: 1
-                });
-            }
+        for (var i = 0; i < nbSeconds; i++) {
+            timecodeArray.push({
+                videoLength: duration,
+                secondToPixelCoef: secToPxCoef,
+                minute: i,
+                zoom: 1
+            });
         }
-        setupTimecodeLine();
     }, [duration])
 
 
@@ -201,15 +197,15 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
         <>
             <ContextMenuTrigger id='timeline_menu' >
                 <div className='flex overflow-x-scroll relative
-                w-screen h-full bg-gray-500 rounded-b-3xl opacity-50 shadow-lg'>
+                w-screen bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'>
                     {replicaLine}
                     {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
-                    <div className='p-0 w-full place-self-end flex flex-row justify-between'
+                    {/* <div className='p-0 w-full place-self-end flex flex-row justify-between'
                     // style={{height: `${canvasHeight}px`}}>
-                    style={{width: `${secToPxCoef / 1000000}px`, height: `${canvasHeight}px`}}>
+                    style={{width: `${secToPxCoef}px`, height: `${canvasHeight}px`}}> */}
                         {/* {timecodeLineCreator} */}
-                        <TimecodeLine className="" videoLength={duration * 1000} secondToPixelCoef={secToPxCoef} minute={1}/>
-                    </div>
+                        <TimecodeLine className="" videoLength={duration} secondToPixelCoef={secToPxCoef} minute={1}/>
+                    {/* </div> */}
 
                     {/* <canvas id='canvas' className='bg-black place-self-end'
                     style={{width: `${secToPxCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
