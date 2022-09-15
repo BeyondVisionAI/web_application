@@ -47,8 +47,6 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
         drawTimecodeLines();
     }, [videoLength, secondToPixelCoef]);
 
-    console.log(`${secondToPixelCoef * videoLength}px` );
-
     return (
         <canvas id='timecodeCanvas' className='bg-black'
         style={{width: `${secondToPixelCoef * videoLength }px`, height: `${canvasHeight}px`}}

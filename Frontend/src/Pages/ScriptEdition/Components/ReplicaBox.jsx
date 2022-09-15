@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import Draggable from "react-draggable";
+import axios from "axios"
 
-
-export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId }) {
+export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica }) {
     const [playing, setPlaying] = useState(false);
     const [position, setPosition] = useState({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
 
@@ -15,12 +15,20 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             setPlaying(false);
     }, [parameters.timestamp])
 
-    const computeDragDrop = (event, data) => {
+    const computeDragDrop = async (event, data) => {
         let newPos = {...position}
         newPos.x = data.x
         setPosition(newPos)
-        let dropOffSecond = data.x / parameters.secToPxCoef;
-        console.log("🚀 ~ file: ReplicaBox.jsx ~ line 23 ~ computeDragDrop ~ dropOffSecond", dropOffSecond)
+        var newReplica = {...replica}
+        let dropOffMSecond = (data.x / parameters.secToPxCoef) * 1000;
+        newReplica.timestamp = dropOffMSecond
+        await axios({
+            method: 'PUT',
+            url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+            data: {timestamp: dropOffMSecond},
+            withCredentials: true
+        });
+        updateReplica(newReplica)
     }
 
     return (

@@ -179,8 +179,12 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
 
 
     const formatLastEditor = function(person) {
-        var fName = person.firstName;
-        return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+        var fName = person?.firstName;
+        if (fName) {
+            return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+        } else {
+            return ("you")
+        }
     }
 
     return (
