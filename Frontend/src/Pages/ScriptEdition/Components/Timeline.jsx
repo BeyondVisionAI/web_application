@@ -5,19 +5,20 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 import TimecodeLine from './TimecodeLine';
+import ReplicaBox from './ReplicaBox';
 
 // temporary duration of a project, so we can do the timeline
-const videoLength = 3600000 / 4;
+// const videoLength = 3600000 / 4;
 const canvasHeight = 80;
-// coefficient between seconds (in ms) and pixels : 1 sec = 
-var secToPxCoef = 150000; // will change if zoom
+// coefficient between seconds (in ms) and pixels : 1 sec =
+var secToPxCoef = 150000000000; // will change if zoom
 
-const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) => {
+const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplicaList}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
     var timecodeArray = [];
-
+    const [currentTime, setCurrentTime] = useState(0);
 
     const addReplica = async function () {
         if (newReplicaTimestamp == -1) return;
@@ -34,7 +35,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                 data: body,
                 withCredentials: true
             });
-            
+
             await updateReplicaList(projectId);
         } catch (err) { // TODO check
             let errLog;
@@ -136,22 +137,29 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
         }
     }
 
+    // useEffect(() => {
+    //     setVideoLength((player.current.getDuration() / 1000) / 4) // GetDuration doesn't give right value
+    //     setCurrentTime(player.current.getCurrentTime())
+    //     console.log(player.current.getDuration())
+    // }, [player.current]);
 
-    const setupTimecodeLine = function () {
-        const nbSeconds = videoLength / 1000;
-
-        for (var i = 0; i < nbSeconds; i++) {
-            timecodeArray.push({
-                videoLength: videoLength,
-                secondToPixelCoef: secToPxCoef,
-                minute: i,
-                zoom: 1
-            });
-        }
-    }
     useEffect(() => {
+        console.log(duration);
+
+        const setupTimecodeLine = function () {
+            const nbSeconds = (duration * 1000) / 4;
+
+            for (var i = 0; i < nbSeconds; i++) {
+                timecodeArray.push({
+                    videoLength: duration,
+                    secondToPixelCoef: secToPxCoef,
+                    minute: i,
+                    zoom: 1
+                });
+            }
+        }
         setupTimecodeLine();
-    }, []);
+    }, [duration])
 
 
     const timecodeLineCreator = timecodeArray.map((values) => {
@@ -159,26 +167,36 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
             <TimecodeLine videoLength={values.videoLength} secondToPixelCoef={values.secondToPixelCoef}
             minute={values.minute} zoom={values.zoom} />
         )
-    })
+    }) // ICI - Pose d'un element sur la timeline
 
 
     const replicaLine = replicas.map((replica, index) => {
         return (
-            <ContextMenuTrigger id="replica_menu" key={index}>
-                <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
-                absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
-                    onClick={() => onReplicaSelection(replica._id)} 
-                    onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
-                    {/* should be adjustable to the size of the replica (so its length) */}
-                    <p>{replica.content.length > 30 ?
-                        replica.content.slice(0, 26) + " ..."
-                    :   replica.content}</p>
-                </button>
-            </ContextMenuTrigger>
+            <ReplicaBox
+                replica={replica}
+                index={index}
+                parameters={{secToPxCoef: secToPxCoef, timestamp: currentTime}}
+                onReplicaSelection={onReplicaSelection}
+                setSelectedRepId={setSelectedRepId}
+            />
+            // <ContextMenuTrigger id="replica_menu" key={index}>
+            //     <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
+            //     absolute' style={{left: `${secToPxCoef * replica.timestamp / 1000000}px`, width: `${secToPxCoef * replica.duration / 1000000}px`}}
+            //         onClick={() => onReplicaSelection(replica._id)} 
+            //         onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
+            //         {/* should be adjustable to the size of the replica (so its length) */}
+            //         <p>{replica.content.length > 30 ?
+            //             replica.content.slice(0, 26) + " ..."
+            //         :   replica.content}</p>
+            //     </button>
+            //     <audio src='https://d1meq9j1gywa1t.cloudfront.net/Project-Test/001.mp3'>Teste</audio>
+            // </ContextMenuTrigger>
         )
     })
 
 
+    if (!player)
+        return (<h1>Loading</h1>)
     return (
         <>
             <ContextMenuTrigger id='timeline_menu' >
@@ -190,7 +208,7 @@ const Timeline = ({replicas, projectId, onReplicaSelection, updateReplicaList}) 
                     // style={{height: `${canvasHeight}px`}}>
                     style={{width: `${secToPxCoef / 1000000}px`, height: `${canvasHeight}px`}}>
                         {/* {timecodeLineCreator} */}
-                        <TimecodeLine className="" videoLength={videoLength} secondToPixelCoef={secToPxCoef} minute={1}/>
+                        <TimecodeLine className="" videoLength={duration * 1000} secondToPixelCoef={secToPxCoef} minute={1}/>
                     </div>
 
                     {/* <canvas id='canvas' className='bg-black place-self-end'

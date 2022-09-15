@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReplicaDetails from './Components/ReplicaDetails';
 import Timeline from './Components/Timeline';
 import axios from 'axios';
@@ -12,7 +12,9 @@ import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 export default function ScriptEdition(props) {
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
+    const [videoDuration, setVideoDuration] = useState(0);
     const [replicaSelected, setReplicaSelected] = useState(null);
+    const player = useRef(null);
     const history = useHistory();
 
     useEffect(() => {
@@ -153,12 +155,12 @@ export default function ScriptEdition(props) {
 
                         </div>
                            <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-gray-100">
-                               <VideoPlayer videoUrl={project.videoUrl} />
+                               <VideoPlayer videoUrl={project.videoUrl} playerRef={player} setDuration={setVideoDuration} />
                            </div>
                         </div>
 
                         <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
-                           <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} />
+                            <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" player={player} duration={videoDuration} replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplicaList={udpateProjectReplica} />
                         </div>
                     </div>
                 </div>
