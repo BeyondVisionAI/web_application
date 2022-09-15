@@ -18,8 +18,8 @@ const TimecodeBlock = ({videoLength, secondToPixelCoef, minute, zoom}) => {
 
     const drawTimecodeLines = function() {
         const spacing = secondToPixelCoef;
-        var canvas = document.getElementById(`timecodeCanvas_${minute}`);
-        var ctx = canvas.getContext('2d');
+        let canvas = document.getElementById(`timecodeCanvas_${minute}`);
+        let ctx = canvas.getContext('2d');
         fillBackground(ctx, canvas);
         ctx.lineWidth = 1;
         ctx.font = "15px Arial";
@@ -29,8 +29,8 @@ const TimecodeBlock = ({videoLength, secondToPixelCoef, minute, zoom}) => {
 
         ctx.beginPath();
 
-        for (var second = 0; second < 60; second++) {
-            drawLine(ctx, spacing * second , 0.5);
+        for (let second = 0; second < 60; second++) {
+            drawLine(ctx, spacing * second, 0.5);
             if (second != 0 && second % 10 == 0)
                 ctx.fillText(`${second}s`, spacing * second - 7.5, 30);
             // ms
@@ -50,9 +50,9 @@ const TimecodeBlock = ({videoLength, secondToPixelCoef, minute, zoom}) => {
     console.log(`${secondToPixelCoef * videoLength}px` );
 
     return (
-        <canvas id='timecodeCanvas' className='bg-black'
-        style={{width: `${secondToPixelCoef * videoLength }px`, height: `${canvasHeight}px`}}
-        width={secondToPixelCoef * videoLength} height={canvasHeight}>
+        <canvas id={`timecodeCanvas_${minute}`} className='bg-black'
+         style={{width: `${secondToPixelCoef * videoLength }px`, height: `${canvasHeight}px`}}
+         width={secondToPixelCoef * videoLength} height={canvasHeight}>
         </canvas>
     )
 }
