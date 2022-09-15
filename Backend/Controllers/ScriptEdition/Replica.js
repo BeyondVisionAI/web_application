@@ -46,6 +46,7 @@ exports.createReplica = async function(req, res) {
         });
 
         await newReplica.save();
+        await newReplica.populate({path: 'lastEditor', select: 'firstName lastName'})
         res.status(200).send(newReplica);
     } catch (err) {
         console.log("Replica->createReplica : " + err);

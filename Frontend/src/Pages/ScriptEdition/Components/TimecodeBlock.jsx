@@ -3,7 +3,7 @@ import { React, useEffect } from 'react';
 const canvasHeight = 80;
 
 
-const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
+const TimecodeBlock = ({videoLength, secondToPixelCoef, minute, zoom}) => {
 
     const drawLine = function(ctx, xCoordinate, heightCoef) {
         ctx.moveTo(xCoordinate, canvasHeight);
@@ -18,7 +18,7 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
 
     const drawTimecodeLines = function() {
         const spacing = secondToPixelCoef;
-        var canvas = document.getElementById('timecodeCanvas');
+        var canvas = document.getElementById(`timecodeCanvas_${minute}`);
         var ctx = canvas.getContext('2d');
         fillBackground(ctx, canvas);
         ctx.lineWidth = 1;
@@ -30,7 +30,7 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
         ctx.beginPath();
 
         for (var second = 0; second < 60; second++) {
-            drawLine(ctx, spacing * second, 0.5);
+            drawLine(ctx, spacing * second , 0.5);
             if (second != 0 && second % 10 == 0)
                 ctx.fillText(`${second}s`, spacing * second - 7.5, 30);
             // ms
@@ -57,4 +57,4 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
     )
 }
 
-export default TimecodeLine;
+export default TimecodeBlock;
