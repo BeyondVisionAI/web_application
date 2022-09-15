@@ -51,7 +51,7 @@ export default function ScriptEdition(props) {
     const getReplicaFromId = (id) => {
         for (var i = 0; i < replicas.length; i++) {
             if (replicas[i]._id === id) {
-                console.log("🚀 ~ file: ScriptEdition.jsx ~ line 56 ~ getReplicaFromId ~ replicas[i]", replicas[i])
+                // console.log("🚀 ~ file: ScriptEdition.jsx ~ line 56 ~ getReplicaFromId ~ replicas[i]", replicas[i])
                 return replicas[i];
             }
         }
@@ -92,13 +92,19 @@ export default function ScriptEdition(props) {
     }
 
     const updateReplica = (newReplica) => {
-        console.log("🚀 ~ file: ScriptEdition.jsx ~ line 93 ~ updateReplica ~ newReplica", newReplica)
+        // console.log("🚀 ~ file: ScriptEdition.jsx ~ line 93 ~ updateReplica ~ newReplica", newReplica)
         var newReplicas = [...replicas]
         if (newReplicas.findIndex((item) => item._id === newReplica._id) !== -1) {
             newReplicas[newReplicas.findIndex((item) => item._id === newReplica._id)] = newReplica;
         } else {
             newReplicas.push(newReplica)
         }
+        setReplicas(newReplicas)
+    }
+
+    const removeReplica = (replicaID) => {
+        var newReplicas = [...replicas]
+        newReplicas.splice(newReplicas.findIndex((item) => item._id === replicaID), 1)
         setReplicas(newReplicas)
     }
 
@@ -173,7 +179,7 @@ export default function ScriptEdition(props) {
                         </div>
 
                         <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
-                            <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" player={player} duration={videoDuration} replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplica={updateReplica} />
+                            <Timeline className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg" player={player} duration={videoDuration} replicas={replicas} projectId={project.id} onReplicaSelection={updateReplicaAction} updateReplica={updateReplica} removeReplicaFromState={removeReplica}/>
                         </div>
                     </div>
                 </div>

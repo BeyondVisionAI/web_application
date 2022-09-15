@@ -14,7 +14,7 @@ const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
 var secToPxCoef = 300; // will change if zoom
 
-const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplica}) => {
+const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
@@ -91,8 +91,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
                 withCredentials: true
             });
             onReplicaSelection(null);
-            // TODO CREATE removeReplica that takes replica id and removes it from array
-            // await updateReplicaList(projectId);
+            removeReplicaFromState(contextSelectedReplicaId);
         } catch (err) {
             let errLog;
             console.error("error : ", err);
