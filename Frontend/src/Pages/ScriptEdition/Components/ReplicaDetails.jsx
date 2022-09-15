@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const ReplicaDetails = ({replica, updateReplicaList}) => {
+const ReplicaDetails = ({replica, updateReplica}) => {
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
@@ -44,7 +44,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                     url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
                     withCredentials: true
                 });
-                updateReplicaList(replica.projectId);
+                updateReplica(res.data)
             } catch (err) {
                 console.error("error => ", err);
             }
