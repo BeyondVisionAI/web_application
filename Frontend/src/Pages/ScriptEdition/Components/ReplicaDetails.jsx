@@ -107,38 +107,20 @@ const ReplicaDetails = ({replica, updateReplica}) => {
      * COMMENT UPDATE
      */
 
-    const updateReplicaComments = async () => {
-        try {
-            const res = await axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
-                withCredentials: true
-            });
-            let resComm = Object.values(res.data);
-            setComments(resComm);
-        } catch (e) {
-            let errMsg = "Error";
-            switch (e.response.status) {
-                case 401:
-                    switch (e.response.data) {
-                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                        /* errors that fits the 403 to me */
-                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                        default: errMsg = "Error (401)."; break;
-                    } break;
-                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                case 404:
-                    switch (e.response.data) {
-                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                        case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
-                        default: errMsg = "Error (404)."; break;
-                    } break;
-                default /* 500 */ : errMsg = "Internal Error."; break;
-            }
-            toast.error(errMsg);
-            console.error(e);
+    const updateComments = (newComment) => {
+        var newComments = [...comments]
+        if (newComments.findIndex((item) => item._id === newComment._id) !== -1) {
+            newComments[newComments.findIndex((item) => item._id === newComment._id)] = newComment;
+        } else {
+            newComments.push(newComment)
         }
+        setComments(newComments)
+    }
+
+    const removeComment = (commentID) => {
+        var newComments = [...comments]
+        newComments.splice(newComments.findIndex((item) => item._id === commentID), 1)
+        setComments(newComments)
     }
 
     /***
@@ -151,7 +133,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             var minutes = Math.floor((t - (hours * 3600000)) / 60000);
             var seconds = Math.floor((t - (hours * 3600000) - (minutes * 60000)) / 1000);
             var ms = t - (hours * 3600000) - (minutes * 60000) - (seconds * 1000);
-        
+
             var hStr = hours < 10 ? "0"+hours : ""+hours;
             var mStr = minutes < 10 ? "0"+minutes : ""+minutes;
             var sStr = seconds < 10 ? "0"+seconds : ""+seconds;
@@ -213,6 +195,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 border border-solid border-blue-300 rounded
                 transition ease-in-out
                 focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
+                    {/* TODO FETCH THESE INFO FROM BACKEND */}
                     <option value="toto">toto</option>
                     <option value="plop">plop</option>
                     <option value="foo">foo</option>
@@ -223,7 +206,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
 
             <h3 className="pl-4 text-xl">Commentaires</h3>
             <div id="comment-frame" className="w-fit h-3/6 ml-6 mr-9 overflow-y-auto">
-                <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
+                <CommentBox comments={comments} replica={replica} updateComments={updateComments} removeComment={removeComment}/>
             </div>
             <button
             onClick={() => {setIsLoading(true);updateReplicaText()}}
