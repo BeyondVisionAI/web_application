@@ -286,7 +286,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, to
     return (
         <>
             <ContextMenuTrigger id='timeline_menu' >
-                <div className='flex overflow-x-scroll relative
+                <div className='flex overflow-x-scroll overflow-y-hidden relative
                 w-screen bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'>
                     {replicaLine}
                     {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
