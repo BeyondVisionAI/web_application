@@ -4,6 +4,7 @@ import '../react-contextmenu.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+
 import TimecodeLine from './TimecodeLine';
 import ReplicaBox from './ReplicaBox';
 
@@ -198,19 +199,10 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
             <ContextMenuTrigger id='timeline_menu' >
                 <div className='flex overflow-x-scroll overflow-y-hidden relative
                 w-screen bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'>
-                    {replicaLine}
-                    {/* Peut-être pas nécessaire, car on va créer une timeline qui permettra l'ajout dynamique */}
-                    {/* <div className='p-0 w-full place-self-end flex flex-row justify-between'
-                    // style={{height: `${canvasHeight}px`}}>
-                    style={{width: `${secToPxCoef}px`, height: `${canvasHeight}px`}}> */}
-                        {/* {timecodeLineCreator} */}
-                        <TimecodeLine className="" videoLength={duration} secondToPixelCoef={secToPxCoef} minute={1}/>
-                    {/* </div> */}
-
-                    {/* <canvas id='canvas' className='bg-black place-self-end'
-                    style={{width: `${secToPxCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
-                        height={canvasHeight}  width={secToPxCoef * videoLength / 10000000} >
-                    </canvas> */}
+                    <div className='flex flex-row items-start'>
+                        {replicaLine}
+                    </div>
+                    <TimecodeLine className="" videoLength={duration} secondToPixelCoef={secToPxCoef} minute={1}/>
                 </div>
             </ContextMenuTrigger>
 
@@ -224,7 +216,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
             <ContextMenu id="timeline_menu" onShow={e => {
                 var scrollX = e.target.scrollX;
                 var posX = e.detail.position.x;
-                var result = ((scrollX + posX - (16 * 2)) / secToPxCoef * 1000); // -2 rem equals the adjustment of the position
+                var result = ((scrollX + posX - (16 * 2)) / secToPxCoef); // -2 rem equals the adjustment of the position
                 console.log(`Result is then ${result}s`);
 
                 newReplicaTimestamp = (result * 1000).toFixed(0);

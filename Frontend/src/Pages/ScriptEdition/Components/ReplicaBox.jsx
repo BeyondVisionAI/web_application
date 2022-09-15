@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player';
 import { ContextMenuTrigger } from 'react-contextmenu';
+import Draggable from "react-draggable";
+
 
 export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId }) {
-    console.log("🚀 ~ file: ReplicaBox.jsx ~ line 6 ~ ReplicaBox ~ parameters", parameters)
-    console.log("🚀 ~ file: ReplicaBox.jsx ~ line 6 ~ ReplicaBox ~ replica", replica)
     const [playing, setPlaying] = useState(false);
-
-    console.log(parameters)
+    const [position, setPosition] = useState({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
 
     useEffect(() => {
         if (!playing) // and curseur is on the box
@@ -16,18 +15,30 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             setPlaying(false);
     }, [parameters.timestamp])
 
+    const computeDragDrop = (event, data) => {
+        let newPos = {...position}
+        newPos.x = data.x
+        setPosition(newPos)
+        let dropOffSecond = data.x / parameters.secToPxCoef;
+        console.log("🚀 ~ file: ReplicaBox.jsx ~ line 23 ~ computeDragDrop ~ dropOffSecond", dropOffSecond)
+    }
+
     return (
         <ContextMenuTrigger id="replica_menu" key={index}>
-            <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
-                    absolute' style={{left: `${parameters.secToPxCoef * replica.timestamp / 1000}px`, width: `${parameters.secToPxCoef * replica.duration / 1000}px`}}
-                        onClick={() => onReplicaSelection(replica._id)}
-                        onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
-                        {/* should be adjustable to the size of the replica (so its length) */}
-                        <p>{replica.content.length > 30 ?
-                            replica.content.slice(0, 26) + " ..."
-                        :   replica.content}</p>
-            </button>
-            <ReactPlayer url='https://d1meq9j1gywa1t.cloudfront.net/Project-Test/001.mp3' playing={ playing } />
+            <Draggable
+            axis='x'
+            position={position}
+            onStop={computeDragDrop}
+            >
+                <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
+                        absolute' style={{width: `${parameters.secToPxCoef * replica.duration / 1000}px`}}
+                            onClick={() => onReplicaSelection(replica._id)}
+                            onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
+                            {/* should be adjustable to the size of the replica (so its length) */}
+                            <p className='truncate'>{replica.content}</p>
+                </button>
+            </Draggable>
+            {/* <ReactPlayer url='https://d1meq9j1gywa1t.cloudfront.net/Project-Test/001.mp3' playing={ playing } /> */}
         </ContextMenuTrigger>
   )
 }

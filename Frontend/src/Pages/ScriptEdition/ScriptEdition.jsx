@@ -164,7 +164,7 @@ export default function ScriptEdition(props) {
                         </div>
                     </div>
                 </div>
-                <Chat projectId={props.match.params.id}/>
+                {/* <Chat projectId={props.match.params.id}/> */}
             </>
         )
     } else {
