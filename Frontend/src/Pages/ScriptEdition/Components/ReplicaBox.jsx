@@ -20,24 +20,36 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
     }, [parameters.secToPxCoef]);
 
     const isReplicaCollided = function(replicasPositions, startTimestamp, endTimestamp) {
-        for (otherReplica in replicasPositions) {
-            if (otherReplica.end < startTimestamp || otherReplica.start > endTimestamp) // no collision
+        for (var otherReplica of replicasPositions) {
+            if (replica._id === otherReplica.id)
                 continue;
-            else
+
+            if (otherReplica.end > endTimestamp) { // trying to position the replica on the left-side of the other replica : 2 cases
+                if (endTimestamp > otherReplica.start) { // meaning the end of replica will be between oR.start and oR.end === OVERLAP
+                    return true;
+                } // else no overlap, it is correctly positioned on the left side of the other replica
+            }
+            if (otherReplica.start < startTimestamp) {// trying to position the replica on the right-side of the other replica : 2 cases
+                if (startTimestamp < otherReplica.end) { //meaning the start of replica will be between oR.end and oR.start === OVERLAP
+                    return true;
+                } // else no overlap, it is correctly positioned on the left side of the other replica
+            }
+            if (startTimestamp <= otherReplica.start && endTimestamp >= otherReplica.end) // Last case : if the replica covers a shorter other replica
                 return true;
         }
         return false;
     }
 
     const computeDragDrop = async (event, data) => {
-        if (isReplicaCollided(replicasPositions, replica.timestamp, replica.timestamp + replica.duration))
+        let dropOffMSecond = parseInt(((data.x / parameters.secToPxCoef) * 1000).toFixed());
+        if (isReplicaCollided(replicasPositions, dropOffMSecond, dropOffMSecond + parseInt(replica.duration)))
             return false;
         let newPos = {...position}
         newPos.x = data.x
         setPosition(newPos)
         var newReplica = {...replica}
-        let dropOffMSecond = (data.x / parameters.secToPxCoef) * 1000;
-        dropOffMSecond = dropOffMSecond.toFixed()
+        // let dropOffMSecond = (data.x / parameters.secToPxCoef) * 1000;
+        // dropOffMSecond = parseInt(dropOffMSecond.toFixed())
         newReplica.timestamp = dropOffMSecond
         await axios({
             method: 'PUT',

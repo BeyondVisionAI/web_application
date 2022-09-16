@@ -161,13 +161,13 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
     }, [duration])
 
     useEffect(() => {
-        var newReplica = {
-            _id: replica._id,
-            start: replica.timestamp,
-            end: replica.timestamp + replica.duration
-        }
-        replicasPositions.push(newReplica);
-    }, [replicasPositions])
+        let rPos = []
+        replicas.forEach(replica => {
+            rPos.push({id: replica._id, start: replica.timestamp, end: replica.timestamp + replica.duration})
+        });
+        setReplicasPositions(rPos)
+    }, [replicas]);
+
 
     const replicaLine = replicas.map((replica, index) => {
         return (
