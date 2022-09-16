@@ -181,7 +181,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
                 <button className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef + 100)}>+</button>
                 <button disabled={secToPxCoef === 100 ? true: false} className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef - 100)}>-</button>
             </div>
-            <ContextMenuTrigger id='timeline_menu' >
+            <ContextMenuTrigger id='timeline_menu' holdToDisplay={-1}>
                 <div className='flex overflow-x-scroll overflow-y-hidden relative
                 w-screen bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'>
                     <div className='flex flex-row items-start'>
