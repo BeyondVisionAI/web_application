@@ -4,7 +4,7 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import Draggable from "react-draggable";
 import axios from "axios"
 
-export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, replicasPositions }) {
+export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions }) {
     const [playing, setPlaying] = useState(false);
     const [position, setPosition] = useState({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
 
@@ -54,6 +54,8 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             axis='x'
             position={position}
             onStop={computeDragDrop}
+            // grid={[parameters.secToPxCoef / 10, 0]}
+            bounds={{left: 0, right: parameters.secToPxCoef * (videoDuration - (replica.duration / 1000))}}
             >
                 <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
                         absolute' style={{width: `${parameters.secToPxCoef * replica.duration / 1000}px`}}
