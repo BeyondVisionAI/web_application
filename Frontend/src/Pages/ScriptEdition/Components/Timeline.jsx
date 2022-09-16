@@ -26,6 +26,10 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
 
     const addReplica = async function () {
         if (newReplicaTimestamp == -1) return;
+        else if (newReplicaTimestamp >= duration - 1500) {
+            toast.error("Error - You cannot create a replica outside of the scope of the video.");
+            return;
+        }
         try {
             let body = {
                 content: "",

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import Draggable from "react-draggable";
-import axios from "axios"
+import axios from "axios";
+import { toast } from 'react-toastify';
+
 
 export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions }) {
     const [playing, setPlaying] = useState(false);
@@ -42,8 +44,10 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
 
     const computeDragDrop = async (event, data) => {
         let dropOffMSecond = parseInt(((data.x / parameters.secToPxCoef) * 1000).toFixed());
-        if (isReplicaCollided(replicasPositions, dropOffMSecond, dropOffMSecond + parseInt(replica.duration)))
+        if (isReplicaCollided(replicasPositions, dropOffMSecond, dropOffMSecond + parseInt(replica.duration))) {
+            toast.error("Error - You cannot overlap 2 replicas.")
             return false;
+        }
         let newPos = {...position}
         newPos.x = data.x
         setPosition(newPos)
