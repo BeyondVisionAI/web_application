@@ -4,7 +4,7 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import Draggable from "react-draggable";
 import axios from "axios"
 
-export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica }) {
+export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, replicasPositions }) {
     const [playing, setPlaying] = useState(false);
     const [position, setPosition] = useState({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
 
@@ -19,7 +19,19 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
         setPosition({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
     }, [parameters.secToPxCoef]);
 
+    const isReplicaCollided = function(replicasPositions, startTimestamp, endTimestamp) {
+        for (otherReplica in replicasPositions) {
+            if (otherReplica.end < startTimestamp || otherReplica.start > endTimestamp) // no collision
+                continue;
+            else
+                return true;
+        }
+        return false;
+    }
+
     const computeDragDrop = async (event, data) => {
+        if (isReplicaCollided(replicasPositions, replica.timestamp, replica.timestamp + replica.duration))
+            return false;
         let newPos = {...position}
         newPos.x = data.x
         setPosition(newPos)

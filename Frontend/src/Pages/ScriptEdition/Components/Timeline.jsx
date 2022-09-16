@@ -17,10 +17,12 @@ const canvasHeight = 80;
 const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     const [secToPxCoef, setSecToPxCoef] = useState(100);
+    const [replicasPositions, setReplicasPositions] = useState([]);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
     var timecodeArray = [];
     const [currentTime, setCurrentTime] = useState(0);
+
 
     const addReplica = async function () {
         if (newReplicaTimestamp == -1) return;
@@ -158,6 +160,15 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
         }
     }, [duration])
 
+    useEffect(() => {
+        var newReplica = {
+            _id: replica._id,
+            start: replica.timestamp,
+            end: replica.timestamp + replica.duration
+        }
+        replicasPositions.push(newReplica);
+    }, [replicasPositions])
+
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ReplicaBox
@@ -167,6 +178,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
                 onReplicaSelection={onReplicaSelection}
                 setSelectedRepId={setSelectedRepId}
                 updateReplica={updateReplica}
+                replicasPositions={replicasPositions}
             />
         )
     })
