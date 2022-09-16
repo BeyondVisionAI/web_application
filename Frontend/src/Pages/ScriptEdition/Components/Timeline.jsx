@@ -1,4 +1,4 @@
-import { React, useEffect, useRef, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import '../react-contextmenu.css';
 import axios from 'axios';
@@ -12,10 +12,11 @@ import ReplicaBox from './ReplicaBox';
 // const videoLength = 3600000 / 4;
 const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
-var secToPxCoef = 300; // will change if zoom
+// var secToPxCoef = 300; // will change if zoom
 
 const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
+    const [secToPxCoef, setSecToPxCoef] = useState(100);
     // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var newReplicaTimestamp = -1;
     var timecodeArray = [];
@@ -138,7 +139,15 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
     }
 
     useEffect(() => {
+        if (!duration) return
         const nbSeconds = duration;
+        let SecToPx = 100
+        const windowWidth = window.innerWidth;
+        while (duration < windowWidth / SecToPx) {
+            SecToPx += 100
+        }
+        setSecToPxCoef(SecToPx)
+        console.log("🚀 ~ file: Timeline.jsx ~ line 144 ~ useEffect ~ SecToPx", SecToPx)
         for (var i = 0; i < nbSeconds; i++) {
             timecodeArray.push({
                 videoLength: duration,
@@ -148,14 +157,6 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
             });
         }
     }, [duration])
-
-
-    const timecodeLineCreator = timecodeArray.map((values) => {
-        return (
-            <TimecodeLine videoLength={values.videoLength} secondToPixelCoef={values.secondToPixelCoef}
-            minute={values.minute} zoom={values.zoom} />
-        )
-    })
 
     const replicaLine = replicas.map((replica, index) => {
         return (
@@ -174,7 +175,11 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
     if (!player)
         return (<h1>Loading</h1>)
     return (
-        <>
+        <div className='flex flex-col w-full'>
+            <div className='flex flex-row items-end justify-end mb-2'>
+                <button className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef + 100)}>+</button>
+                <button className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef - 100)}>-</button>
+            </div>
             <ContextMenuTrigger id='timeline_menu' >
                 <div className='flex overflow-x-scroll overflow-y-hidden relative
                 w-screen bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'>
@@ -203,7 +208,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
                     Ajouter une réplique
                 </MenuItem>
             </ContextMenu>
-        </>
+        </div>
     )
 }
 
