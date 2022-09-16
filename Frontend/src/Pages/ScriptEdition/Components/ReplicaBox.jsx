@@ -36,7 +36,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
     }
 
     return (
-        <ContextMenuTrigger id="replica_menu" key={index}>
+        <ContextMenuTrigger id="replica_menu" key={index} holdToDisplay={-1}>
             <Draggable
             axis='x'
             position={position}
