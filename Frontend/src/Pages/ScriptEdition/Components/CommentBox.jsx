@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
@@ -8,6 +8,7 @@ const CommentBox = ({comments, replica, updateComments, removeComment}) => {
 
     const [newComment, setNewComment] = useState("");
     const [contextSelectedCommentId, setContextSelectedCommentId] = useState(null);
+    const bottomOfMessageRef = useRef(null);
 
     /***
      * FORMAT FUNCTIONS
@@ -51,6 +52,10 @@ const CommentBox = ({comments, replica, updateComments, removeComment}) => {
             </ContextMenuTrigger>
         )
     }), [comments]);
+
+    useEffect(() => {
+        bottomOfMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, [comments]);
 
     const postComment = async function (e) {
         e.preventDefault();
@@ -153,6 +158,9 @@ const CommentBox = ({comments, replica, updateComments, removeComment}) => {
                         rounded-md border border-solid border-blue-800
                         bg-gray-200 resize-none
                         focus:text-black focus:border-blue-800 focus:outline-none" />
+                </div>
+                <div style={{ float:"left", clear: "both" }}
+                    ref={bottomOfMessageRef}>
                 </div>
             </form>
 

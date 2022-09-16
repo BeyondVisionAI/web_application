@@ -25,6 +25,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
         setPosition(newPos)
         var newReplica = {...replica}
         let dropOffMSecond = (data.x / parameters.secToPxCoef) * 1000;
+        dropOffMSecond = dropOffMSecond.toFixed()
         newReplica.timestamp = dropOffMSecond
         await axios({
             method: 'PUT',
@@ -47,7 +48,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
                             onClick={() => onReplicaSelection(replica._id)}
                             onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
                             {/* should be adjustable to the size of the replica (so its length) */}
-                            <p className='truncate'>{replica.content}</p>
+                            <p className='truncate px-4'>{replica.content}</p>
                 </button>
             </Draggable>
             {/* <ReactPlayer url='https://d1meq9j1gywa1t.cloudfront.net/Project-Test/001.mp3' playing={ playing } /> */}
