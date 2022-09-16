@@ -15,6 +15,10 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             setPlaying(false);
     }, [parameters.timestamp])
 
+    useEffect(() => {
+        setPosition({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
+    }, [parameters.secToPxCoef]);
+
     const computeDragDrop = async (event, data) => {
         let newPos = {...position}
         newPos.x = data.x
