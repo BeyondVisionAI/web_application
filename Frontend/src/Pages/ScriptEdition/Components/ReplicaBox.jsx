@@ -42,6 +42,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             axis='x'
             position={position}
             onStop={computeDragDrop}
+            // grid={[parameters.secToPxCoef / 10, 0]}
             bounds={{left: 0, right: parameters.secToPxCoef * (videoDuration - (replica.duration / 1000))}}
             >
                 <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white

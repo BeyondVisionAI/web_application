@@ -216,8 +216,8 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Saving..." : "Save"}</button>
 
             <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
-                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
-                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
+                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top truncate">{formatTimestamp(timestamp, duration)}</p>
+                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
             </div>
         </div>
         </>
