@@ -7,23 +7,44 @@ module.exports = function (app) {
     ** S3Manager Routes
     */
 
-    app.get("/S3Manger/finished-product/video/:projectId",
+    app.get("/S3Manger/finished-product/video/url/:projectId",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        S3Manager.getFinishedProductVideo);
+        S3Manager.getUrlFinishedProductVideo);
 
-    app.get("/S3Manger/finished-product/audio/:projectId",
-        authMiddleware.authenticateUser,
-        collabMiddleware.isCollab,
-        S3Manager.getFinishedProductAudio);
 
-    app.post("/S3Manger/source-product/video/:projectId",
-        authMiddleware.authenticateUser,
-        collabMiddleware.isCollab,
-        S3Manager.postSourceProductVideo);
+    // app.get("/S3Manger/finished-product/video/:projectId",
+    //     authMiddleware.authenticateUser,
+    //     collabMiddleware.isCollab,
+    //     S3Manager.getFinishedProductVideo);
 
-    app.post("/S3Manger/source-product/thumbnail/:projectId",
+    app.get("/S3Manger/finished-product/audio/url/:projectId",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        S3Manager.postSourceProductThumbnail);
+        S3Manager.getUrlFinishedProductAudio);
+
+    // app.get("/S3Manger/finished-product/audio/:projectId",
+    //     authMiddleware.authenticateUser,
+    //     collabMiddleware.isCollab,
+    //     S3Manager.getFinishedProductAudio);
+
+    app.get("/S3Manger/source-product/video/url/:projectId",
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        S3Manager.getUrlSourceProductVideo);
+
+    // app.post("/S3Manger/source-product/video/:projectId",
+    //     authMiddleware.authenticateUser,
+    //     collabMiddleware.isCollab,
+    //     S3Manager.postSourceProductVideo);
+
+    app.get("/S3Manger/source-product/thumbnail/url/:projectId",
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        S3Manager.getUrlSourceProductThumbnail);
+
+    // app.post("/S3Manger/source-product/thumbnail/:projectId",
+    //     authMiddleware.authenticateUser,
+    //     collabMiddleware.isCollab,
+    //     S3Manager.postSourceProductThumbnail);
 }

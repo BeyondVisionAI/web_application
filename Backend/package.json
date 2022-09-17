@@ -27,6 +27,7 @@
     "fs": "0.0.1-security",
     "handlebars": "^4.7.7",
     "jsonwebtoken": "^8.5.1",
+    "mime": "^3.0.0",
     "mongoose": "^6.0.12",
     "multiparty": "^4.2.3",
     "nodemailer": "^6.7.0",

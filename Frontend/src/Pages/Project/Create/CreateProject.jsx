@@ -88,39 +88,62 @@ export default function CreateProject({ show, onHide }) {
         console.log("send Image", image.name, image );
         // const formDataThumbnail = new FormData();
         // formDataThumbnail.append('file', image);
-        await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/${values.id}`, { thumbnailData: image, name: image.name, desc: `Thumbnail for ${values.name}` }, {
-            onUploadProgress: (p) => {
-                const percentCompleted = Math.round((p.loaded * 100) / p.total);
-                var id = null;
-                if (thumbnailUpload === null) {
-                    id = Math.floor((Math.random() * 101) + 1);
-                    showToast({
-                        id: id,
-                        title: 'File Uploading : Image',
-                        description: `${percentCompleted} %`,
-                        backgroundColor: '#5bc0de',
-                        icon: "infoIcon"
-                    })
-                } else {
-                    id = thumbnailUpload.id;
-                }
 
-                setThumbnailUpload({id: id, fileName: image.name, percent: percentCompleted,});
-                if (percentCompleted === 100) {
-                    // removeToast(id);
-                    const idSuccess = Math.floor((Math.random() * 101) + 1);
-                    showToast({
-                        id: idSuccess,
-                        title: 'File Upload : Image',
-                        description: 'Success',
-                        backgroundColor: '#5cb85c',
-                        icon: "checkIcon"
-                    });
-                } else {
-                    setUploadToastChange(id, percentCompleted);
-                }
-            }
-        });
+        //TODO Upload by getting a signedUrl from the Back End to Upload the Thumbnail directly on the front
+        
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/url/${values.id}`, { name: image.name });
+        const urlThumbnailUpload = response.data;
+        await fetch(urlThumbnailUpload, {
+            method: "PUT",
+            body: image,
+        }).then(async (imageRes) => {
+            let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
+                name: imageRes.Key,
+                desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
+                ETag: imageRes.ETag
+            });
+            handleChange('thumbnailId', thumbnailResponse.data._id);
+            axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
+        }).catch(err => console.error("Upload thumbnail error:", err));;
+
+        //TODO Upload by sending the data to Back End
+
+        // await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/${values.id}`, { thumbnailData: image, name: image.name, desc: `Thumbnail for ${values.name}` }, {
+        //     onUploadProgress: (p) => {
+        //         const percentCompleted = Math.round((p.loaded * 100) / p.total);
+        //         var id = null;
+        //         if (thumbnailUpload === null) {
+        //             id = Math.floor((Math.random() * 101) + 1);
+        //             showToast({
+        //                 id: id,
+        //                 title: 'File Uploading : Image',
+        //                 description: `${percentCompleted} %`,
+        //                 backgroundColor: '#5bc0de',
+        //                 icon: "infoIcon"
+        //             })
+        //         } else {
+        //             id = thumbnailUpload.id;
+        //         }
+
+        //         setThumbnailUpload({id: id, fileName: image.name, percent: percentCompleted,});
+        //         if (percentCompleted === 100) {
+        //             // removeToast(id);
+        //             const idSuccess = Math.floor((Math.random() * 101) + 1);
+        //             showToast({
+        //                 id: idSuccess,
+        //                 title: 'File Upload : Image',
+        //                 description: 'Success',
+        //                 backgroundColor: '#5cb85c',
+        //                 icon: "checkIcon"
+        //             });
+        //         } else {
+        //             setUploadToastChange(id, percentCompleted);
+        //         }
+        //     }
+        // });
+        
+        //TODO Upload by sending the data to Back End
+
         // UploadFileOnS3(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
         // .then(async (imageRes) => {
         //     let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
@@ -131,43 +154,67 @@ export default function CreateProject({ show, onHide }) {
         //     handleChange('thumbnailId', thumbnailResponse.data._id);
         //     axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
         // }).catch(err => console.error("Upload thumbnail error:", err));
-        
+
         console.log("send Video", video.name,  video);
         // const formDataVideo = new FormData();
         // formDataVideo.append('file', video);
-        await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/${values.id}`, { videoData: video, name: video.name, desc: `Video for ${values.name} type ${values.videoType}` }, {
-            onUploadProgress: (p) => {
-                const percentCompleted = Math.round((p.loaded * 100) / p.total);
-                var id = null;
-                if (videoUpload === null) {
-                    id = Math.floor((Math.random() * 101) + 1);
-                    showToast({
-                        id: id,
-                        title: 'File Uploading : Video',
-                        description: `${percentCompleted} %`,
-                        backgroundColor: '#5bc0de',
-                        icon: "infoIcon"
-                    })
-                } else {
-                    id = videoUpload.id;
-                }
 
-                setVideoUpload({id: id, fileName: video.name, percent: percentCompleted,});
-                if (percentCompleted === 100) {
-                    // removeToast(id);
-                    const idSuccess = Math.floor((Math.random() * 101) + 1);
-                    showToast({
-                        id: idSuccess,
-                        title: 'File Upload : Video',
-                        description: 'Success',
-                        backgroundColor: '#5cb85c',
-                        icon: "checkIcon"
-                    });
-                } else {
-                    setUploadToastChange(id, percentCompleted);
-                }
-            }
-        });
+        //TODO Upload by getting a signedUrl from the Back End to Upload the Video directly on the front
+        
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/url/${values.id}`, { name: video.name });
+        const urlVideoUpload = response.data;
+        await fetch(urlVideoUpload, {
+            method: "PUT",
+            body: video,
+        }).then(async videoRes => {
+            let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
+                name: videoRes.Key,
+                desc: `Video for ${values.name} type ${values.videoType}`,
+                ETag: videoRes.ETag,
+                url: 'Url Undefined'
+            });
+            handleChange('videoId', videoResponse.data._id);
+            axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
+        }).catch(err => console.error("Upload video error:", err));
+
+        //TODO Upload by sending the data to Back End
+
+        // await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/${values.id}`, { videoData: video, name: video.name, desc: `Video for ${values.name} type ${values.videoType}` }, {
+        //     onUploadProgress: (p) => {
+        //         const percentCompleted = Math.round((p.loaded * 100) / p.total);
+        //         var id = null;
+        //         if (videoUpload === null) {
+        //             id = Math.floor((Math.random() * 101) + 1);
+        //             showToast({
+        //                 id: id,
+        //                 title: 'File Uploading : Video',
+        //                 description: `${percentCompleted} %`,
+        //                 backgroundColor: '#5bc0de',
+        //                 icon: "infoIcon"
+        //             })
+        //         } else {
+        //             id = videoUpload.id;
+        //         }
+
+        //         setVideoUpload({id: id, fileName: video.name, percent: percentCompleted,});
+        //         if (percentCompleted === 100) {
+        //             // removeToast(id);
+        //             const idSuccess = Math.floor((Math.random() * 101) + 1);
+        //             showToast({
+        //                 id: idSuccess,
+        //                 title: 'File Upload : Video',
+        //                 description: 'Success',
+        //                 backgroundColor: '#5cb85c',
+        //                 icon: "checkIcon"
+        //             });
+        //         } else {
+        //             setUploadToastChange(id, percentCompleted);
+        //         }
+        //     }
+        // });
+
+        //TODO Directly Uploading the Video from teh front with Id and secret on the front
+
         // UploadFileOnS3(video, 'bv-streaming-video-source-ahnauucgvgsf', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
         // .then(async videoRes => {
         //     let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
