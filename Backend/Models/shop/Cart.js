@@ -1,5 +1,10 @@
 const { model, Schema } = require("mongoose");
 
+const ITEMTYPE = [
+    'AUDIODESCRIPTOR',
+    'CORRECTOR'
+];
+
 const cart = new Schema({
     projectId: {
         type: Schema.Types.ObjectId,
@@ -19,6 +24,11 @@ const cart = new Schema({
     quantity: {
         type: Number,
         default: 1,
+        required: true
+    },
+    type: {
+        type: String,
+        enum: ITEMTYPE,
         required: true
     }
 });

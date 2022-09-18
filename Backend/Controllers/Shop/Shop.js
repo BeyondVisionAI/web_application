@@ -12,9 +12,12 @@ exports.addItem = async function(req, res) {
     try {
         // TODO: OWNER ?????? USELESS
         // TODO: Vérifier que l'item existe pas déjà pour le même utilisateur
+        
         if (!req.body || (!req.body.name || !req.body.owner || !req.body.type ||
-            !req.body.genre || !req.body.price || !req.body.language))
+            !req.body.genre || !req.body.price || !req.body.language)) {
+                console.log("ok2")
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+            }
         
         const language = [];
 
@@ -56,10 +59,9 @@ exports.removeMyItem = async function(req, res) {
         if ((!req.params.itemId))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
         
-        console.log("value = " + req.params.itemId)
         await Item.deleteOne({ _id: req.params.itemId });
 
-        return res.status(204).send("");
+        return res.status(204).send("Item deleted");
     } catch (err) {
         console.log("Shop->removeMyItem: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -97,18 +99,40 @@ exports.getItemById = async function(req, res) {
  */
 exports.searchItems = async function(req, res) {
     try {
-        if (!req.query.name || !req.query.type || !req.query.minPrice || !req.query.maxPrice || (req.query.minPrice < 0 || req.query.maxPrice < req.query.minPrice) || (req.body.itemsPerPage <= 0 || req.body.pageNb < 0))
+        if ((!req.body.itemsPerPage || !req.body.pageNb) && (req.body.itemsPerPage <= 0 || req.body.pageNb <= 0))
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        // TODO Mongo request from query
+        
         var research = {}
+        var price = {}
+        var out = []
+        var check_price = false
+        var start = ((req.body.itemsPerPage * req.body.pageNb) - req.body.itemsPerPage)
 
         if (req.query.name) {
             research.name = { "$regex": req.query.name, "$options": "i"}
         }
+        if (req.query.type) {
+            research.type = req.query.type
+        }
+        if (req.query.minPrice) {
+            price.$gte = req.query.minPrice
+            check_price = true
+        }
+        if (req.query.maxPrice) {
+            price.$lte = req.query.maxPrice
+            check_price = true
+        }
+        if (check_price) {
+            research.price = price
+        }
 
         const items = await Item.find(research);
 
-        return (res.status(200).send(items));
+        for (var i = start; (i < items.length) && (out.length < req.body.itemsPerPage); i++) {
+            out.push(items[i])
+        }
+
+        return (res.status(200).send(out));
     } catch (err) {
         console.log("Shop->searchItems: " + err);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
@@ -141,29 +165,28 @@ exports.searchItems = async function(req, res) {
  */
  exports.addItemToCart = async function(req, res) {
     try {
-        if (!req.params.projectId || !req.body.itemId || !req.body.quantity || req.body.quantity <= 0)
+        if (!req.params.projectId || !req.body.itemId)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
 
-        var item = await Item.findOne({id: req.body.itemId});
+        var item = await Item.findOne({_id: req.body.itemId});
         if (!item) {
             return (res.status(404).send(Errors.ARTICLE_NOT_FOUND));
         }
 
-        var itemInCart = await Cart.findOne({projectId: req.params.projectId, itemId: req.body.itemId});
+        if (item.type == "CORRECTOR") {
+            var itemInCart = await Cart.findOneAndUpdate({projectId: req.params.projectId, type: "CORRECTOR"}, {itemId: req.body.itemId, bought: false, quantity: 0}, {new: true});
+            if (itemInCart)
+                return (res.status(200).send(itemInCart));
+        }
 
-        if (itemInCart) {
-            //Gérer le cas où tu ajoute un item (augmenter la quantité) et que l'item de base a déjà été acheté
-            itemInCart.quantity = itemInCart.quantity + req.body.quantity;
-            await itemInCart.save();
-        } else {
             var itemInCart = new Cart({
                 projectId: req.params.projectId,
                 itemId: req.body.itemId,
                 bought: false,
-                quantity: req.body.quantity
+                quantity: 0,
+                type: item.type
             });
             await itemInCart.save();
-        }
 
         return (res.status(200).send(itemInCart));
     } catch (err) {
@@ -174,27 +197,23 @@ exports.searchItems = async function(req, res) {
 
 /**
  * remove project's cart
- * @param { Request } req { params: projectId; body: itemId, quantity }
+ * @param { Request } req { params: projectId; body: itemId }
  * @param { Response } res
  * @returns { response to send }
  */
  exports.removeItemFromCart = async function(req, res) {
     try {
-        if (!req.params.projectId || !req.body.itemId || !req.body.quantity || req.body.quantity <= 0)
+        if (!req.params.projectId || !req.body.itemId)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
 
         var item = await Cart.findOne({projectId: req.params.projectId, itemId: req.body.itemId});
-        if (!item || req.body.quantity > item.quantity) {
+        if (!item) {
             return (res.status(404).send(Errors.CART_NOT_FOUND));
         }
 
-        item.quantity = item.quantity - req.body.quantity;
-        await item.save();
-        if (item.quantity <= 0) {
-            await Cart.deleteOne({_id: item.id});
-        }
+        await Cart.deleteOne({_id: item.id});
 
-        return (res.status(200).send(""));
+        return (res.status(200).send("Deleted"));
     } catch (err) {
         console.log("Shop->removeItemFromCart: " + err);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));

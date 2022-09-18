@@ -13,6 +13,8 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       NODE_ENV: "development"
       PORT: 80
+    env_file:
+      - .env
     volumes:
       - ./Frontend/src:/src/
       - ./Frontend/public:/public/
@@ -41,6 +43,8 @@ services:
       - bdd
     environment:
       - IS_TEST="TRUE"
+    env_file:
+      - .env
     restart: on-failure
 
   mongodb:

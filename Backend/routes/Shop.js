@@ -5,8 +5,7 @@ module.exports = function(app) {
 
     app.get('/shop',
     //    authMiddleware.authenticateUser,
-        // TODO j'arrive pas chopper les params dans l'url alaid (je les ai retiré de la route pour l'instant parce que c'était full bs)
-        Shop.searchItems
+        Shop.searchItems //OK
     );
     app.post('/shop/items',
         //authMiddleware.authenticateUser,
@@ -25,13 +24,13 @@ module.exports = function(app) {
     app.get('/cart/:projectId',
         //authMiddleware.authenticateUser,
         // collabMiddleware.hasRightAdmin,
-        Shop.getCartFromProject
+        Shop.getCartFromProject //OK
     );
 
     app.post('/cart/:projectId',
         //authMiddleware.authenticateUser,
         // collabMiddleware.hasRightAdmin,
-        Shop.addItemToCart
+        Shop.addItemToCart //Ok
     );
 
     app.delete('/cart/:projectId',
