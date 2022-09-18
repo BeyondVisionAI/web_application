@@ -98,7 +98,7 @@ exports.deleteProject = async function (req, res) {
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
         await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
-        await Project.deleteMany({ _id: { $in: req.body.projectIds }});
+        await Project.deleteMany({ _id: { $in: req.body.projectIds } });
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -114,7 +114,7 @@ exports.deleteProject = async function (req, res) {
  */
 exports.updateProject = async function (req, res) {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, {returnDocument: 'after'});
+        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, { returnDocument: 'after' });
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);

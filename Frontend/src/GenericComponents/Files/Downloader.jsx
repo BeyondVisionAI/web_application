@@ -13,10 +13,10 @@ async function downloadFile(props) {
 
     if (props.type === 'video-finished-products') {
         console.log("Video");
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/finished-product/video/url/${props.projectId}`);
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/finished-product/video/download-url/${props.projectId}`);
     } else if (props.type === 'audio-finished-products') {
         console.log("Audio");
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/finished-product/audio/url/${props.projectId}`);
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/finished-product/audio/download-url/${props.projectId}`);
     } else {
         console.log(`Null ?, type : ${props.type}`);
         response.data = null;
@@ -24,10 +24,18 @@ async function downloadFile(props) {
     const url = response.data;
 
     if (url !== null && url !== {} && url !== undefined && url !== '') {
-        let a = document.createElement('a');
-        a.download=props.fileName;
-        a.href=url;
-        a.click();
+        response = await axios.get(url);
+        var data = response.data;
+        if (data !== null && data !== {} && data !== undefined && data !== '') {
+            var blob = new Blob([response.data]);
+            var blobUrl = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.download=props.fileName;
+            a.href=blobUrl;
+            // a.href=url;
+            a.click();
+            
+        }
     }
 }
 

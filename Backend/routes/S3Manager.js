@@ -7,10 +7,10 @@ module.exports = function (app) {
     ** S3Manager Routes
     */
 
-    app.get("/S3Manger/finished-product/video/url/:projectId",
+    app.get("/S3Manger/finished-product/video/download-url/:projectId",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        S3Manager.getUrlFinishedProductVideo);
+        S3Manager.getDownloadUrlFinishedProductVideo);
 
 
     // app.get("/S3Manger/finished-product/video/:projectId",
@@ -18,30 +18,40 @@ module.exports = function (app) {
     //     collabMiddleware.isCollab,
     //     S3Manager.getFinishedProductVideo);
 
-    app.get("/S3Manger/finished-product/audio/url/:projectId",
+    app.get("/S3Manger/finished-product/audio/download-url/:projectId",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        S3Manager.getUrlFinishedProductAudio);
+        S3Manager.getDownloadUrlFinishedProductAudio);
 
     // app.get("/S3Manger/finished-product/audio/:projectId",
     //     authMiddleware.authenticateUser,
     //     collabMiddleware.isCollab,
     //     S3Manager.getFinishedProductAudio);
 
-    app.get("/S3Manger/source-product/video/url/:projectId",
+    app.get("/S3Manger/source-product/video/download-url/:projectId/:name",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        S3Manager.getUrlSourceProductVideo);
+        S3Manager.getDownloadUrlSourceProductVideo);
+
+    app.get("/S3Manger/source-product/video/upload-url/:projectId/:name",
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        S3Manager.getUploadUrlSourceProductVideo);
 
     // app.post("/S3Manger/source-product/video/:projectId",
     //     authMiddleware.authenticateUser,
     //     collabMiddleware.isCollab,
     //     S3Manager.postSourceProductVideo);
 
-    app.get("/S3Manger/source-product/thumbnail/url/:projectId",
+    app.get("/S3Manger/source-product/thumbnail/download-url/:projectId/:name",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        S3Manager.getUrlSourceProductThumbnail);
+        S3Manager.getDownloadUrlSourceProductThumbnail);
+
+    app.get("/S3Manger/source-product/thumbnail/upload-url/:projectId/:name",
+        authMiddleware.authenticateUser,
+        collabMiddleware.isCollab,
+        S3Manager.getUploadUrlSourceProductThumbnail);
 
     // app.post("/S3Manger/source-product/thumbnail/:projectId",
     //     authMiddleware.authenticateUser,

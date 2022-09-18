@@ -20,7 +20,7 @@ const getUrlUploadObject = async function (bucketName, keyName) {
             ACL: "public-read",
             Bucket: bucketName,
             Key: keyName,
-            ContentType: mime.lookup(keyName),
+            ContentType: mime.getType(keyName),
         };
 
         const data = await new Promise((resolve, reject) => {
@@ -107,7 +107,8 @@ const getUrlObject = async function (bucketName, keyName) {
 //     }
 // }
 
-exports.getUrlFinishedProductVideo = async function (req, res) {
+exports.getDownloadUrlFinishedProductVideo = async function (req, res) {
+    console.log("Download Finished Product Video", req.params);
     const projectId = req.params.projectId;
     const url = await getUrlObject("bv-finish-products", `Video/${projectId}.mp4`);
     if (url === "" || url === null || url === {} || url === undefined) {
@@ -128,7 +129,8 @@ exports.getUrlFinishedProductVideo = async function (req, res) {
 //     }
 // }
 
-exports.getUrlFinishedProductAudio = async function (req, res) {
+exports.getDownloadUrlFinishedProductAudio = async function (req, res) {
+    console.log("Download Finished Product Audio", req.params);
     const projectId = req.params.projectId;
     const url = await getUrlObject("bv-finish-products", `Audio/${projectId}.mp3`);
     if (url === "" || url === null || url === {} || url === undefined) {
@@ -150,10 +152,21 @@ exports.getUrlFinishedProductAudio = async function (req, res) {
 //     }
 // }
 
-exports.getUrlSourceProductVideo = async function (req, res) {
-    console.log("Test Upload Video", req.body);
+exports.getDownloadUrlSourceProductVideo = async function (req, res) {
+    console.log("Download Source Product Video", req.params);
+    const name = req.params.name;
+    const url = await getUrlObject("bv-streaming-video-source-ahnauucgvgsf", `${name}`);
+    if (url === "" || url === null || url === {} || url === undefined) {
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    } else {
+        return res.status(200).send(url);
+    }
+}
+
+exports.getUploadUrlSourceProductVideo = async function (req, res) {
+    console.log("Upload Video", req.params);
     const projectId = req.params.projectId;
-    const videoName = req.body.name;
+    const videoName = req.params.name;
     const url = await getUrlUploadObject("bv-streaming-video-source-ahnauucgvgsf", `${projectId}.${videoName.split(".").pop()}`);
     if (url === "" || url === null || url === {} || url === undefined) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -189,10 +202,21 @@ exports.getUrlSourceProductVideo = async function (req, res) {
 //     }
 // }
 
+exports.getDownloadUrlSourceProductThumbnail = async function (req, res) {
+    console.log("Download Image", req.params);
+    const name = req.params.name;
+    const url = await getUrlObject("bv-thumbnail-project", `${name}`);
+    if (url === "" || url === null || url === {} || url === undefined) {
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    } else {
+        return res.status(200).send(url);
+    }
+}
+
 exports.getUrlSourceProductThumbnail = async function (req, res) {
-    console.log("Test Upload Image", req.body);
+    console.log("Upload Image", req.params);
     const projectId = req.params.projectId;
-    const thumbnailName = req.body.name;
+    const thumbnailName = req.params.name;
     const url = await getUrlUploadObject("bv-thumbnail-project", `${projectId}.${thumbnailName.split(".").pop()}`);
     if (url === "" || url === null || url === {} || url === undefined) {
         return res.status(500).send(Errors.INTERNAL_ERROR);

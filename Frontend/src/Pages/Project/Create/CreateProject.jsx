@@ -6,7 +6,6 @@ import VideoData from './VideoData';
 import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideo from './DropVideo';
 import { useHistory } from "react-router-dom";
-// import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
 import Toast from '../../../GenericComponents/Toast/Toast.js';
 
 export default function CreateProject({ show, onHide }) {
@@ -91,12 +90,14 @@ export default function CreateProject({ show, onHide }) {
 
         //TODO Upload by getting a signedUrl from the Back End to Upload the Thumbnail directly on the front
         
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/url/${values.id}`, { name: image.name });
-        const urlThumbnailUpload = response.data;
-        await fetch(urlThumbnailUpload, {
-            method: "PUT",
-            body: image,
-        }).then(async (imageRes) => {
+        try {
+            const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/upload-url/${values.id}/${image.name}`);
+            const urlThumbnailUpload = responseThumbnail.data;
+            console.log("Thumbnail Url :", urlThumbnailUpload);
+            const imageRes = await axios.post(urlThumbnailUpload, {
+                body: image,
+            });
+            console.error("Upload thumbnail Finished - sending info of the file");
             let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
                 name: imageRes.Key,
                 desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
@@ -104,8 +105,9 @@ export default function CreateProject({ show, onHide }) {
             });
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
-        }).catch(err => console.error("Upload thumbnail error:", err));;
-
+        } catch (err) {
+            console.error("Upload thumbnail error:", err)
+        }
         //TODO Upload by sending the data to Back End
 
         // await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/${values.id}`, { thumbnailData: image, name: image.name, desc: `Thumbnail for ${values.name}` }, {
@@ -161,12 +163,14 @@ export default function CreateProject({ show, onHide }) {
 
         //TODO Upload by getting a signedUrl from the Back End to Upload the Video directly on the front
         
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/url/${values.id}`, { name: video.name });
-        const urlVideoUpload = response.data;
-        await fetch(urlVideoUpload, {
-            method: "PUT",
-            body: video,
-        }).then(async videoRes => {
+        try {
+            const responseVideo = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/upload-url/${values.id}/${video.name}`);
+            const urlVideoUpload = responseVideo.data;
+            console.log("Video Url :", urlVideoUpload);
+            const videoRes = await axios.post(urlVideoUpload, {
+                body: video,
+            });
+            console.error("Upload video Finished - sending info of the file");
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,
                 desc: `Video for ${values.name} type ${values.videoType}`,
@@ -175,8 +179,9 @@ export default function CreateProject({ show, onHide }) {
             });
             handleChange('videoId', videoResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
-        }).catch(err => console.error("Upload video error:", err));
-
+        } catch (err) {
+            console.error("Upload video error:", err);
+        }
         //TODO Upload by sending the data to Back End
 
         // await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/${values.id}`, { videoData: video, name: video.name, desc: `Video for ${values.name} type ${values.videoType}` }, {

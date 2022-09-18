@@ -2,8 +2,7 @@
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com) [![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
 
-Le but de notre projet est de créer une plateforme d'automatisation de la création de l'audiodescription fiable et rapide afin que les déficients visuels puissent avoir plus de contenu adapté à leurs besoins.
-Cette partie est consacrée à la plateforme web qui permettra aux utilisateurs d'effectuer de l'audiodescription le plus facilement possible.
+Le but de notre projet est de créer une plateforme d'automatisation de la création de l'audiodescription fiable et rapide afin que les déficients visuels puissent avoir plus de contenu adapté à leurs besoins. Cette partie est consacrée à la plateforme web qui permettra aux utilisateurs d'effectuer de l'audiodescription le plus facilement possible.
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -38,8 +37,7 @@ Pour ce projet nous avons utilisé les technologies suivantes:
 
 ##### Pour les utilisateurs de Windows !!
 
-Windows ajout souvant des '\r' dans certain fichier, ils peuvent empécher le build.
-Pour résoudre le problème il suffit de lancer la commande suivante:
+Windows ajout souvant des '\r' dans certain fichier, ils peuvent empécher le build. Pour résoudre le problème il suffit de lancer la commande suivante:
 
 ```console
 foo@bar:~$ dos2unix .docker/mongo-express/docker-entrypoint.sh
@@ -49,8 +47,7 @@ foo@bar:~$ dos2unix .docker/mongo-express/docker-entrypoint.sh
 
 ##### Configuration
 
-Avant de lancer l'application il faudra creer plusieurs .env
-Le premier, celui du frontend devra contenir ces variables:
+Avant de lancer l'application il faudra creer plusieurs .env Le premier, celui du frontend devra contenir ces variables:
 
 ```txt
 REACT_APP_API_URL="urltoapi"
@@ -76,8 +73,7 @@ WEBSITE_URL=UrlWhereWebsiteIsHosted
 
 ##### Version de Développement :
 
-Afin de lancer le projet en mode développement il vous faudra avoir docker ainsi que docker compose sur votre machine.
-Vous pouvez suivre ces tutoriels afin de les installer:
+Afin de lancer le projet en mode développement il vous faudra avoir docker ainsi que docker compose sur votre machine. Vous pouvez suivre ces tutoriels afin de les installer:
 
 - [Installer Docker](https://docs.docker.com/get-docker/)
 - [Installer Docker Compose](https://docs.docker.com/compose/install/)
@@ -104,8 +100,7 @@ Vous aurez ensuite accès aux fonctionnalités aux adresses suivantes:
 
 ##### Version de Production :
 
-Afin de lancer le projet en mode développement il vous faudra avoir docker ainsi que docker compose sur votre machine.
-Vous pouvez suivre ces tutoriels afin de les installer:
+Afin de lancer le projet en mode développement il vous faudra avoir docker ainsi que docker compose sur votre machine. Vous pouvez suivre ces tutoriels afin de les installer:
 
 - [Installer Docker](https://docs.docker.com/get-docker/)
 - [Installer Docker Compose](https://docs.docker.com/compose/install/)

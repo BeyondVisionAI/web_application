@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
-import { DownloadFileUrl, UploadFileOnS3 } from '../../../../GenericComponents/Files/S3Manager';
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import UploadFile from '../../../../GenericComponents/Files/UploadFile';
 import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWithLabel';
@@ -25,7 +24,8 @@ export default function Description({ editing, setEditing, updateProjectValues, 
             async function getThumbnailProject(projId) {
                 try {
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projId}/${thumbnailId}`);
-                    let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
+                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/download-url/${props.projectId}/${image.data.name}`);
+                    let url = response.data;
                     setThumbnail(url);
                 } catch (err) {
                     console.error(`Getting file ${thumbnailId} on S3`, err);
@@ -63,20 +63,25 @@ export default function Description({ editing, setEditing, updateProjectValues, 
     }, [image]);
 
     useEffect(() => {
-        function updateThumbnail() {
-            let bucket = 'bv-thumbnail-project';
-
-            UploadFileOnS3(image, bucket, 'us-east-1', `${projectId}.${image.name.split(".").pop()}`)
-            .then(async (imageRes) => {
-                let thumbnailResponse = await axios.put(`${process.env.REACT_APP_API_URL}/images/${thumbnailId}`, {
-                    name: imageRes.Key,
-                    desc: `Thumbnail for ${tmpProject.name} locate in ${bucket} bucket`,
-                    ETag: imageRes.ETag,
+        async function updateThumbnail() {
+            try {
+                const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/upload-url/${values.id}/${image.name}`);
+                const urlThumbnailUpload = responseThumbnail.data;
+                console.log("Thumbnail Url :", urlThumbnailUpload);
+                const imageRes = await axios.post(urlThumbnailUpload, {
+                    body: image,
                 });
-                console.log(thumbnailResponse.data);
-                if (thumbnailResponse.status !== 200)
-                    console.error("Update image db error");
-            }).catch(err => console.error("Upload thumbnail error:", err));
+                console.error("Upload thumbnail Finished - sending info of the file");
+                let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
+                    name: imageRes.Key,
+                    desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
+                    ETag: imageRes.ETag
+                });
+                handleChange('thumbnailId', thumbnailResponse.data._id);
+                axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
+            } catch (err) {
+                console.error("Upload thumbnail error:", err)
+            }
         }
 
         async function updateProject () {

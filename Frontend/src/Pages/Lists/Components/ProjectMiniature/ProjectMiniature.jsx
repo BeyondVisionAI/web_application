@@ -5,7 +5,6 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
-import { DownloadFileUrl } from '../../../../GenericComponents/Files/S3Manager';
 
 export default function ProjectMiniature({ idList, movie, openAddProjectToList, openRemoveProjectFromList, openDestroyLeaveProject }) {
 
@@ -87,7 +86,9 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
             async function getThumbnailProject(projId) {
                 try {
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${movie._id}/${movie.thumbnailId}`);
-                    let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
+
+                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/download-url/${props.projectId}/${image.data.name}`);
+                    let url = response.data;
                     setThumbnail(url);
                 } catch (err) {
                     console.error(`Getting file ${"thumbnailId"} on S3`, err);
