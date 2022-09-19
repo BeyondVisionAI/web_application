@@ -22,20 +22,42 @@ async function downloadFile(props) {
         response.data = null;
     }
     const url = response.data;
+    
+    
+    axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
+    // axios({
+    //     url: url,
+    //     method: 'GET',
+    //     responseType: 'blob',
+    // }).then((response) => {
+    //     const href = URL.createObjectURL(response.data);
+    
+    //     // create "a" HTLM element with href to file & click
+    //     const link = document.createElement('a');
+    //     link.href = href;
+    //     link.setAttribute('download', 'file.pdf'); //or any other extension
+    //     document.body.appendChild(link);
+    //     link.click();
+    
+    //     // clean up "a" element & remove ObjectURL
+    //     document.body.removeChild(link);
+    //     URL.revokeObjectURL(url);
+    // });
 
     if (url !== null && url !== {} && url !== undefined && url !== '') {
-        response = await axios.get(url);
-        var data = response.data;
-        if (data !== null && data !== {} && data !== undefined && data !== '') {
-            var blob = new Blob([response.data]);
-            var blobUrl = URL.createObjectURL(blob);
+        // axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
+        // response = await axios.get(url);
+        // var data = response.data;
+        // if (data !== null && data !== {} && data !== undefined && data !== '') {
+        //     var blob = new Blob([response.data]);
+            // var blobUrl = URL.createObjectURL(blob);
             let a = document.createElement('a');
             a.download=props.fileName;
-            a.href=blobUrl;
-            // a.href=url;
+            // a.href=blobUrl;
+            a.href=url;
             a.click();
             
-        }
+        // }
     }
 }
 

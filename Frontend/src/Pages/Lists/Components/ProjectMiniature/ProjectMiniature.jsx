@@ -83,11 +83,10 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
 
     useEffect(() => {
         try {
-            async function getThumbnailProject(projId) {
+            async function getThumbnailProject() {
                 try {
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${movie._id}/${movie.thumbnailId}`);
-
-                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/download-url/${props.projectId}/${image.data.name}`);
+                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/download-url/${image.data.name}`);
                     let url = response.data;
                     setThumbnail(url);
                 } catch (err) {
@@ -95,7 +94,7 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
                 }
             }
             if (true || "thumbnailId")
-                getThumbnailProject("projectId");
+                getThumbnailProject();
             console.log(movie);
         } catch (error) {
             console.error(error);

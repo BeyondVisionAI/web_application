@@ -28,12 +28,12 @@ module.exports = function (app) {
     //     collabMiddleware.isCollab,
     //     S3Manager.getFinishedProductAudio);
 
-    app.get("/S3Manger/source-product/video/download-url/:projectId/:name",
+    app.get("/S3Manger/source-product/video/download-url/:name",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
         S3Manager.getDownloadUrlSourceProductVideo);
 
-    app.get("/S3Manger/source-product/video/upload-url/:projectId/:name",
+    app.get("/S3Manger/source-product/video/upload-url/:name",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
         S3Manager.getUploadUrlSourceProductVideo);
@@ -43,12 +43,12 @@ module.exports = function (app) {
     //     collabMiddleware.isCollab,
     //     S3Manager.postSourceProductVideo);
 
-    app.get("/S3Manger/source-product/thumbnail/download-url/:projectId/:name",
+    app.get("/S3Manger/source-product/thumbnail/download-url/:name",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
         S3Manager.getDownloadUrlSourceProductThumbnail);
 
-    app.get("/S3Manger/source-product/thumbnail/upload-url/:projectId/:name",
+    app.get("/S3Manger/source-product/thumbnail/upload-url/:name",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
         S3Manager.getUploadUrlSourceProductThumbnail);

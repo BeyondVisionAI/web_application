@@ -154,8 +154,8 @@ exports.getDownloadUrlFinishedProductAudio = async function (req, res) {
 
 exports.getDownloadUrlSourceProductVideo = async function (req, res) {
     console.log("Download Source Product Video", req.params);
-    const name = req.params.name;
-    const url = await getUrlObject("bv-streaming-video-source-ahnauucgvgsf", `${name}`);
+    const videoName = req.params.name;
+    const url = await getUrlObject("bv-streaming-video-source-ahnauucgvgsf", videoName);
     if (url === "" || url === null || url === {} || url === undefined) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
@@ -165,9 +165,8 @@ exports.getDownloadUrlSourceProductVideo = async function (req, res) {
 
 exports.getUploadUrlSourceProductVideo = async function (req, res) {
     console.log("Upload Video", req.params);
-    const projectId = req.params.projectId;
     const videoName = req.params.name;
-    const url = await getUrlUploadObject("bv-streaming-video-source-ahnauucgvgsf", `${projectId}.${videoName.split(".").pop()}`);
+    const url = await getUrlUploadObject("bv-streaming-video-source-ahnauucgvgsf", videoName);
     if (url === "" || url === null || url === {} || url === undefined) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
@@ -204,8 +203,8 @@ exports.getUploadUrlSourceProductVideo = async function (req, res) {
 
 exports.getDownloadUrlSourceProductThumbnail = async function (req, res) {
     console.log("Download Image", req.params);
-    const name = req.params.name;
-    const url = await getUrlObject("bv-thumbnail-project", `${name}`);
+    const thumbnailName = req.params.name;
+    const url = await getUrlObject("bv-thumbnail-project", thumbnailName);
     if (url === "" || url === null || url === {} || url === undefined) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
@@ -213,11 +212,10 @@ exports.getDownloadUrlSourceProductThumbnail = async function (req, res) {
     }
 }
 
-exports.getUrlSourceProductThumbnail = async function (req, res) {
+exports.getUploadUrlSourceProductThumbnail = async function (req, res) {
     console.log("Upload Image", req.params);
-    const projectId = req.params.projectId;
     const thumbnailName = req.params.name;
-    const url = await getUrlUploadObject("bv-thumbnail-project", `${projectId}.${thumbnailName.split(".").pop()}`);
+    const url = await getUrlUploadObject("bv-thumbnail-project", thumbnailName);
     if (url === "" || url === null || url === {} || url === undefined) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {

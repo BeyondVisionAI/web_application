@@ -91,12 +91,19 @@ export default function CreateProject({ show, onHide }) {
         //TODO Upload by getting a signedUrl from the Back End to Upload the Thumbnail directly on the front
         
         try {
-            const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/upload-url/${values.id}/${image.name}`);
+            const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/upload-url/${values.id}.${image.name.split(".").pop()}`);
             const urlThumbnailUpload = responseThumbnail.data;
             console.log("Thumbnail Url :", urlThumbnailUpload);
-            const imageRes = await axios.post(urlThumbnailUpload, {
+            axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+            const imageRes = await axios({
+                url: urlThumbnailUpload,
                 body: image,
+                method: 'PUT'
             });
+
+            // const imageRes = await axios.post(urlThumbnailUpload, {
+            //     body: image,
+            // });
             console.error("Upload thumbnail Finished - sending info of the file");
             let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
                 name: imageRes.Key,
@@ -164,12 +171,18 @@ export default function CreateProject({ show, onHide }) {
         //TODO Upload by getting a signedUrl from the Back End to Upload the Video directly on the front
         
         try {
-            const responseVideo = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/upload-url/${values.id}/${video.name}`);
+            const responseVideo = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/upload-url/${values.id}.${video.name.split(".").pop()}`);
             const urlVideoUpload = responseVideo.data;
             console.log("Video Url :", urlVideoUpload);
-            const videoRes = await axios.post(urlVideoUpload, {
+            axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+            const videoRes = await axios({
+                url: urlVideoUpload,
                 body: video,
+                method: 'PUT'
             });
+            // const videoRes = await axios.post(urlVideoUpload, {
+            //     body: video,
+            // });
             console.error("Upload video Finished - sending info of the file");
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,

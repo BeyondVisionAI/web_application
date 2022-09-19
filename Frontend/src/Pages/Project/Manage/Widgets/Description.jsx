@@ -24,7 +24,7 @@ export default function Description({ editing, setEditing, updateProjectValues, 
             async function getThumbnailProject(projId) {
                 try {
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projId}/${thumbnailId}`);
-                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/download-url/${props.projectId}/${image.data.name}`);
+                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/download-url/${image.data.name}`);
                     let url = response.data;
                     setThumbnail(url);
                 } catch (err) {
@@ -65,20 +65,24 @@ export default function Description({ editing, setEditing, updateProjectValues, 
     useEffect(() => {
         async function updateThumbnail() {
             try {
-                const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/upload-url/${values.id}/${image.name}`);
+                const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/upload-url/${projectId}.${image.name.split(".").pop()}}`);
                 const urlThumbnailUpload = responseThumbnail.data;
                 console.log("Thumbnail Url :", urlThumbnailUpload);
-                const imageRes = await axios.post(urlThumbnailUpload, {
+                axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+                const imageRes = await axios({
+                    url: urlThumbnailUpload,
                     body: image,
+                    method: 'PUT'
                 });
                 console.error("Upload thumbnail Finished - sending info of the file");
-                let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
+                let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images${thumbnailId}`, {
                     name: imageRes.Key,
-                    desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
-                    ETag: imageRes.ETag
+                    desc: `Thumbnail for ${tmpProject.name} locate in bv-thumbnail-project bucket`,
+                    ETag: imageRes.ETag,
                 });
-                handleChange('thumbnailId', thumbnailResponse.data._id);
-                axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
+                console.log(thumbnailResponse.data);
+                if (thumbnailResponse.status !== 200)
+                    console.error("Update image db error");
             } catch (err) {
                 console.error("Upload thumbnail error:", err)
             }
