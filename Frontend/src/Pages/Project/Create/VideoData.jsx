@@ -13,22 +13,22 @@ export default function VideoData({ nextStep, prevStep, handleChange, values }) 
     }
 
     return (
-        <form class="w-full h-full">
-            <div class="flex p-6">
-                <div class="w-1/2 px-3">
+        <form className="w-full h-full">
+            <div className="flex p-6">
+                <div className="w-1/2 px-3">
                     <InputWithLabel defaultValue={ values.description } placeholder="Résumé de la vidéo" type="textarea" label="Résumé court de la vidéo" onChange={ resume => handleChange('description', resume) } />
                 </div>
-                <div class="w-1/4"></div>
-                <div class="w-1/4 px-3">
-                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="videoType">
+                <div className="w-1/4"></div>
+                <div className="w-1/4 px-3">
+                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="videoType">
                         Genre de la vidéo
                     </label>
-                    <select class="block appearance-none w-full bg-white border border-gray-400 hover:bg-gray-50 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id='videoType' defaultValue={ values.videoType } onChange={(e) => handleChange('videoType', e.target.value)}>
+                    <select className="block appearance-none w-full bg-white border border-gray-400 hover:bg-gray-50 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" id='videoType' defaultValue={ values.videoType } onChange={(e) => handleChange('videoType', e.target.value)}>
                         {types.map((element) => (<option key={element}>{element}</option>))}
                     </select>
                 </div>
             </div>
-            <div class="text-gray-500 text-sm absolute bottom-0 p-10">
+            <div className="text-gray-500 text-sm absolute bottom-0 p-10">
                 <h1>Les informations fournies ci-dessus nous aiderons à audio-décrire votre vidéo plus éfficacement.</h1>
             </div>
             <div className="absolute bottom-0 right-0 p-6">

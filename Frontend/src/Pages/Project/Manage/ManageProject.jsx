@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../../../GenericComponents/NavBar/NavBar';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Description from './Widgets/Description';
@@ -7,6 +6,7 @@ import ProjectStatus from './Widgets/ProjectStatus';
 import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
+import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
 
 const EDIT = {
     off: 0,
@@ -19,32 +19,23 @@ export default function ManageProject(props) {
     const [editing, setEditing] = useState(EDIT.off);
     const history = useHistory();
 
-    // const playerRef = React.useRef(null);
-    // const handlePlayerReady = (player) => {
-    //   playerRef.current = player;
-
-    //   player.on('waiting', () => {
-    //     player.log('player is waiting');
-    //   });
-    //   player.on('dispose', () => {
-    //     player.log('player will dispose');
-    //   });
-    // };
-
     axios.defaults.withCredentials = true;
     useEffect(() => {
         async function getProject(id) {
             try {
-                let videoUrl = undefined;
+                let videoUrl = null;
                 let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`);
                 try {
-                    let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`);
+                    if (projectR.data.videoId) {
+                        let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`);
 
-                    if (video.status === 200)
-                        videoUrl = `https://d10lu3tsncvjck.cloudfront.net/${video.data.name}`;
+                        if (video.status === 200 && video.data.url)
+                            videoUrl = video.data.url;
+                    }
                 } catch (error) {
-                    console.log('Video non dispo');
+                    console.error(error);
                 }
+
                 setProject({
                     name: projectR.data.name,
                     status: projectR.data.status,
@@ -99,7 +90,7 @@ export default function ManageProject(props) {
     if (project) {
         return (
             <div className='w-full h-screen bg-myWhite'>
-                <NavBar />
+                <NavBarVariante projectId={props.match.params.id} />
                 {editMode()}
                 <div className='flex w-full h-screen'>
                     <div className='w-2/3 h-full'>
@@ -114,7 +105,6 @@ export default function ManageProject(props) {
                         />
                         <VideoPlayer
                             videoUrl={project.videoUrl}
-                            // onReady={handlePlayerReady}
                         />
                      </div>
                      <div className='h-full w-1/3 rounded-xl'>

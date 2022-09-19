@@ -43,7 +43,7 @@ export default function Description({ editing, setEditing, updateProjectValues, 
     function dispThumbnail() {
         if (thumbnail)
             return (<img className='object-scale-down w-2/4' src={ thumbnail } alt='thumbnail'></img>);
-        return (<div class="flex flex-wrap shadow-xl rounded"></div>);
+        return (<div className="flex flex-wrap shadow-xl rounded">Uploading ...</div>);
     };
     // TODO: Loading
 

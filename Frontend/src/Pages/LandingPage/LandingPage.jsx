@@ -6,12 +6,12 @@ import Pricing from './Components/Pricing/Pricing';
 import TheTeam from './Components/TheTeam/TheTeam';
 import Contact from './Components/Contact/Contact';
 import Timeline from './Components/Timeline/Timeline';
-import NavBar from './../../GenericComponents/NavBar/NavBar';
+import NavBarVariante from '../../GenericComponents/NavBar/LandingPage/NavBarVariante';
 
 const LandingPage = () => {
     return (
         <div className="landing-page-container">
-            <NavBar />
+            <NavBarVariante />
             <Home />
             <TheProject />
             <Pricing />
@@ -21,5 +21,5 @@ const LandingPage = () => {
         </div>
     );
 }
- 
+
 export default LandingPage;
