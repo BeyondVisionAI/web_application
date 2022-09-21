@@ -4,7 +4,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const ReplicaDetails = ({replica, updateReplicaList}) => {
+const ReplicaDetails = ({replica, updateReplica}) => {
+    const [isLoading, setIsLoading] = useState(false)
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
@@ -29,27 +30,27 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
         toggleTextUpdate(!isTextUpdated)
     }
 
-    useEffect(() => {
-        console.log("Text Update change");
-        const updateReplicaText = async function () {
-            try {
-                const res = await axios({
-                    method: 'PUT',
-                    data: {
-                        content: text,
-                        timestamp: timestamp,
-                        duration: duration,
-                        voiceId: voiceId
-                    },
-                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
-                    withCredentials: true
-                });
-                updateReplicaList(replica.projectId);
-            } catch (err) {
-                console.error("error => ", err);
-            }
+    const updateReplicaText = async function () {
+        try {
+            const res = await axios({
+                method: 'PUT',
+                data: {
+                    content: text,
+                    timestamp: timestamp,
+                    duration: duration,
+                    voiceId: voiceId
+                },
+                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+                withCredentials: true
+            });
+            updateReplica(res.data)
+            setIsLoading(false)
+        } catch (err) {
+            console.error("error => ", err);
         }
+    }
 
+    useEffect(() => {
         replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
 
         return () => {
@@ -106,38 +107,20 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
      * COMMENT UPDATE
      */
 
-    const updateReplicaComments = async () => {
-        try {
-            const res = await axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
-                withCredentials: true
-            });
-            let resComm = Object.values(res.data);
-            setComments(resComm);
-        } catch (e) {
-            let errMsg = "Error";
-            switch (e.response.status) {
-                case 401:
-                    switch (e.response.data) {
-                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                        /* errors that fits the 403 to me */
-                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                        default: errMsg = "Error (401)."; break;
-                    } break;
-                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                case 404:
-                    switch (e.response.data) {
-                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                        case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
-                        default: errMsg = "Error (404)."; break;
-                    } break;
-                default /* 500 */ : errMsg = "Internal Error."; break;
-            }
-            toast.error(errMsg);
-            console.error(e);
+    const updateComments = (newComment) => {
+        var newComments = [...comments]
+        if (newComments.findIndex((item) => item._id === newComment._id) !== -1) {
+            newComments[newComments.findIndex((item) => item._id === newComment._id)] = newComment;
+        } else {
+            newComments.push(newComment)
         }
+        setComments(newComments)
+    }
+
+    const removeComment = (commentID) => {
+        var newComments = [...comments]
+        newComments.splice(newComments.findIndex((item) => item._id === commentID), 1)
+        setComments(newComments)
     }
 
     /***
@@ -145,12 +128,15 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
      */
 
     const formatTimestamp = function (t, d) {
+        
+        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 154 ~ formatTimestamp ~ t", t)
+        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 153 ~ formatTimestamp ~ d", d)
         const msToTimecode = function(t) {
             var hours = Math.floor(t / 3600000);
             var minutes = Math.floor((t - (hours * 3600000)) / 60000);
             var seconds = Math.floor((t - (hours * 3600000) - (minutes * 60000)) / 1000);
             var ms = t - (hours * 3600000) - (minutes * 60000) - (seconds * 1000);
-        
+
             var hStr = hours < 10 ? "0"+hours : ""+hours;
             var mStr = minutes < 10 ? "0"+minutes : ""+minutes;
             var sStr = seconds < 10 ? "0"+seconds : ""+seconds;
@@ -161,8 +147,8 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
             return hStr + ':' + mStr + ':' + sStr + ':' + msStr;
         }
 
-        var start = msToTimecode(t);
-        var end = msToTimecode(t + d);
+        var start = msToTimecode(parseInt(t));
+        var end = msToTimecode(parseInt(t) + d);
 
         return "[" + start + "] - [" + end + "] (" + d / 1000 + "s)";
     }
@@ -179,8 +165,12 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
 
 
     const formatLastEditor = function(person) {
-        var fName = person.firstName;
-        return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+        var fName = person?.firstName;
+        if (fName) {
+            return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+        } else {
+            return ("you")
+        }
     }
 
     return (
@@ -208,6 +198,7 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
                 border border-solid border-blue-300 rounded
                 transition ease-in-out
                 focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
+                    {/* TODO FETCH THESE INFO FROM BACKEND */}
                     <option value="toto">toto</option>
                     <option value="plop">plop</option>
                     <option value="foo">foo</option>
@@ -217,13 +208,16 @@ const ReplicaDetails = ({replica, updateReplicaList}) => {
             </div>
 
             <h3 className="pl-4 text-xl">Commentaires</h3>
-            <div id="comment-frame" className="w-fit h-3/6 bg-red-200 ml-6 mr-9 overflow-y-auto">
-                <CommentBox comments={comments} replica={replica} updateComments={updateReplicaComments} />
+            <div id="comment-frame" className="w-fit h-3/6 ml-6 mr-9 overflow-y-auto">
+                <CommentBox comments={comments} replica={replica} updateComments={updateComments} removeComment={removeComment}/>
             </div>
+            <button
+            onClick={() => {setIsLoading(true);updateReplicaText()}}
+            className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Saving..." : "Save"}</button>
 
             <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
-                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top">{formatTimestamp(timestamp, duration)}</p>
-                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
+                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top truncate">{formatTimestamp(timestamp, duration)}</p>
+                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
             </div>
         </div>
         </>

@@ -40,12 +40,20 @@ const Errors = {
     IMAGE_NOT_FOUND: "IMAGE_NOT_FOUND",
     IMAGE_NOT_YOURS: "IMAGE_NOT_YOURS",
 
+    //Video : 9
+    VIDEO_NOT_FOUND: "VIDEO_NOT_FOUND",
+    VIDEO_NOT_YOURS: "VIDEO_NOT_YOURS",
+
     //Replica : 7
     REPLICA_NOT_FOUND: "REPLICA_NOT_FOUND",
     REPLICA_NOT_IN_PROJECT: "REPLICA_NOT_IN_PROJECT",
 
-    //ReplicaComment : 
+    //ReplicaComment :
     REPLICACOMMENT_NOT_FOUND: "REPLICACOMMENT_NOT_FOUND",
+
+    //Shop : 8
+    ARTICLE_NOT_FOUND: "ARTICLE_NOT_FOUND",
+    CART_NOT_FOUND: "CART_NOT_FOUND"
 };
 
 exports.Errors = Errors;

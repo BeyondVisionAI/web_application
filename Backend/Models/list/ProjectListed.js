@@ -1,8 +1,16 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const projectListed = new mongoose.Schema({
-    projectId: String,
-    listId: String
+const projectListed = new Schema({
+    projectId: {
+        type: Schema.Types.ObjectId,
+        ref: "Project",
+        required: true
+    },
+    listId: {
+        type: Schema.Types.ObjectId,
+        ref: "List",
+        required: true
+    }
 });
 
-exports.ProjectListed = mongoose.model("ProjectListed", projectListed);
+exports.ProjectListed = model("ProjectListed", projectListed);

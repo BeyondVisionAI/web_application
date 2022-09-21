@@ -14,8 +14,11 @@ import EmailVerificatn from './Pages/EmailVerification/EmailVerification';
 import Register from './Pages/Register/Register';
 import AskForPasswordChange from './Pages/AskForPasswordChange/AskForPasswordChange';
 import ResetPassword from './Pages/ResetPassword/ResetPassword';
+import Lists from './Pages/Lists/Lists';
 import ManageProject from './Pages/Project/Manage/ManageProject';
 import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
+import Chat from './Pages/Chat/Chat';
+
 
 function App() {
   return (
@@ -24,7 +27,8 @@ function App() {
         <AuthProvider>
           <BrowserRouter>
             <Switch>
-              <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
+              <PrivateRoute exact path="/dashboard" component={Lists} />
               <Route exact path="/" component={LandingPage} />
               <PrivateRoute exact path="/project" component={Project} />
               <PrivateRoute exact path="/project/:id" component={ManageProject} />

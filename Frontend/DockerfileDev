@@ -2,5 +2,6 @@ FROM node:12.18.4-alpine3.9
 COPY . .
 RUN npm install
 ENV PORT=80
+ENV CHOKIDAR_USEPOLLING=true
 EXPOSE 80
 CMD ["npm", "start"]

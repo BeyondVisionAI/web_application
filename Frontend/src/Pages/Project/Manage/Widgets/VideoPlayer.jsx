@@ -1,11 +1,15 @@
 import React from 'react';
 import Widget from '../../../../GenericComponents/Widget/Widget';
+import ReactPlayer from 'react-player';
 
-export default function VideoPlayer({ videoUrl }) {
+export const VideoPlayer = ({ videoUrl, playerRef, setDuration }) => {
+  if (videoUrl === 'Undefined')
+    return (<Widget weight='h-1/5' rounded='rounded-b-lg'>Uploading ...</Widget>)
 
   return (
     <Widget weight='h-1/5' rounded='rounded-b-lg'>
-        {videoUrl}
+      <ReactPlayer url={videoUrl} ref={ playerRef } controls={true} onDuration={setDuration}/>
     </Widget>
-  )
+  );
 }
+export default VideoPlayer;

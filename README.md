@@ -54,6 +54,11 @@ Le premier, celui du frontend devra contenir ces variables:
 
 ```txt
 REACT_APP_API_URL="urltoapi"
+REACT_APP_STRIPE_CLIENT_KEY=""
+REACT_APP_S3_ID=""
+REACT_APP_S3_SECRET=""
+REACT_APP_S3_REGION=""
+
 ```
 
 Le second, celui du backend devra contenir ces variables:

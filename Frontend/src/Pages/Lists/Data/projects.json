@@ -1,0 +1,80 @@
+[
+    {
+        "id": 1,
+        "project-name": "Fight club",
+        "last-edit": "10",
+        "last-edit-unit": "minutes",
+        "picture": "animal.jpg",
+        "status": "ok",
+        "collaborators": [
+            {
+                "name": "Pierre",
+                "id": 1,
+                "icon": "random.png",
+                "role": "Realisator"
+            },
+            {
+                "name": "Jean",
+                "id": 3,
+                "icon": "toto.jpg",
+                "role": "Productor"
+            },
+            {
+                "name": "George",
+                "id": 2,
+                "icon": "batman.png",
+                "role": "Actor"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "project-name": "Pirates des Caraïbes",
+        "last-edit": "1",
+        "last-edit-unit": "hour",
+        "picture": "beach.jpg",
+        "status": "ok",
+        "collaborators": [
+            {
+                "name": "Pierre",
+                "id": 1,
+                "icon": "random.png",
+                "role": "Realisator"
+            },
+            {
+                "name": "Jean",
+                "id": 3,
+                "icon": "toto.jpg",
+                "role": "Actor"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "project-name": "Amélie Poulain",
+        "last-edit": "2",
+        "last-edit-unit": "hours",
+        "picture": "building.jpg",
+        "status": "error",
+        "collaborators": [
+            {
+                "name": "Pierre",
+                "id": 1,
+                "icon": "random.png",
+                "role": "Realisator"
+            },
+            {
+                "name": "George",
+                "id": 2,
+                "icon": "batman.png",
+                "role": "Actor"
+            },
+            {
+                "name": "Jean",
+                "id": 3,
+                "icon": "toto.jpg",
+                "role": "Productor"
+            }
+        ]
+    }
+]

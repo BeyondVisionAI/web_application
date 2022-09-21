@@ -1,0 +1,12 @@
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-label {
+    color: #7793ED;
+    font-weight: bold;
+}
