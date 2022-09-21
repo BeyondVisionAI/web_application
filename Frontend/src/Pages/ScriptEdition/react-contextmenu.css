@@ -21,6 +21,10 @@
     z-index: 9999;
 }
 
+.react-contextmenu-wrapper {
+    height: 80px;
+}
+
 .react-contextmenu-item {
     background: 0 0;
     border: 0;

@@ -16,6 +16,6 @@ module.exports = function(app) {
     app.post('/user/changePassword', Auth.changePassword)
 
     app.get('/user/me', Middleware.authenticateUser, User.getUser)
-
+    
     app.get('/user/:userId', Middleware.authenticateUser, User.getUserById)
 }

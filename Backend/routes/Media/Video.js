@@ -13,4 +13,8 @@ module.exports = function(app) {
         collabMiddleware.isCollab,
         video.getVideo
     );
+
+    app.post('/snsEndpoint',
+        video.snsEndpoint
+    );
 }

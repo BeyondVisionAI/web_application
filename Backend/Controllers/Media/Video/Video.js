@@ -1,5 +1,6 @@
 const { Errors } = require("../../../Models/Errors.js");
 const { Video } = require('../../../Models/Media/Video');
+const { Project } = require("../../../Models/Project.js");
 
 
 exports.getVideo = async function(req, res) {
@@ -32,6 +33,36 @@ exports.createVideo = async function(req, res)
         return res.status("200").send(newVideo);
     } catch (err) {
         console.log("Video->createVideo: " + err);
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+}
+
+exports.snsEndpoint = async function(req, res)
+{
+    try {
+        let chunks = [];
+        req.on('data', function (chunk) {
+            chunks.push(chunk);
+        });
+        req.on('end', async function () {
+            let message = JSON.parse(chunks.join(''));
+            let body = JSON.parse(message.Message);
+            let video;
+
+            if (body.srcVideo) {
+                let projectR = await Project.findById(body.srcVideo.split('.')[0]);
+
+                if (body.status) {
+                    video = await Video.findByIdAndUpdate(projectR.videoId, {status: body.status}, {returnDocument: 'after'});
+                } else if (body.hlsUrl) {
+                    video = await Video.findByIdAndUpdate(projectR.videoId, {url: body.hlsUrl, status: body.workflowStatus}, {returnDocument: 'after'});
+                }
+            }
+            res.end();
+        });
+    } catch (err) {
+        console.log("Update Video data from SNS notification: " + err);
+
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }

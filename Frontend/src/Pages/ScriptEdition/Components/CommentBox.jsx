@@ -1,21 +1,26 @@
-import {React, useState} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Tooltip from '@mui/material/Tooltip';
 
-const CommentBox = ({comments, replica, updateComments}) => {
+const CommentBox = ({comments, replica, updateComments, removeComment}) => {
 
     const [newComment, setNewComment] = useState("");
     const [contextSelectedCommentId, setContextSelectedCommentId] = useState(null);
+    const bottomOfMessageRef = useRef(null);
 
     /***
      * FORMAT FUNCTIONS
      */
 
-    const formatAuthor = function(person) {
-        var fName = person.firstName;
-        return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+     const formatAuthor = function(person) {
+        var fName = person?.firstName;
+        if (fName) {
+            return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
+        } else {
+            return ("you")
+        }
     }
 
     const formatDate = function(time) {
@@ -28,7 +33,7 @@ const CommentBox = ({comments, replica, updateComments}) => {
     }
 
 
-    const commentList = comments.map((comment, index) => {
+    const commentList = React.useMemo(() => comments.map((comment, index) => {
         return (
             <ContextMenuTrigger id="comment_ctm" key={index}>
                 <Tooltip title={`Écrit par ${formatAuthor(comment.author)} le ${formatDate(comment.date)}`}>
@@ -46,7 +51,11 @@ const CommentBox = ({comments, replica, updateComments}) => {
                 </Tooltip>
             </ContextMenuTrigger>
         )
-    });
+    }), [comments]);
+
+    useEffect(() => {
+        bottomOfMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, [comments]);
 
     const postComment = async function (e) {
         e.preventDefault();
@@ -58,8 +67,7 @@ const CommentBox = ({comments, replica, updateComments}) => {
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments/`,
                 withCredentials: true
             });
-
-            await updateComments();
+            updateComments(commentResponse.data);
         } catch (e) {
             let errMsg = "Error";
             switch (e.response.status) {
@@ -95,7 +103,7 @@ const CommentBox = ({comments, replica, updateComments}) => {
                 withCredentials: true
             });
 
-            await updateComments();
+            removeComment(contextSelectedCommentId);
         } catch (err) {
             let errLog;
 
@@ -150,6 +158,9 @@ const CommentBox = ({comments, replica, updateComments}) => {
                         rounded-md border border-solid border-blue-800
                         bg-gray-200 resize-none
                         focus:text-black focus:border-blue-800 focus:outline-none" />
+                </div>
+                <div style={{ float:"left", clear: "both" }}
+                    ref={bottomOfMessageRef}>
                 </div>
             </form>
 

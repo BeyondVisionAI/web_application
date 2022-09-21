@@ -10,14 +10,14 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
         ctx.lineTo(xCoordinate, canvasHeight - canvasHeight * heightCoef);
         ctx.stroke();
     }
-    
+
     const fillBackground = function(ctx, canvas) {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     const drawTimecodeLines = function() {
-        const spacing = secondToPixelCoef / 1000;
+        const spacing = secondToPixelCoef;
         var canvas = document.getElementById('timecodeCanvas');
         var ctx = canvas.getContext('2d');
         fillBackground(ctx, canvas);
@@ -45,12 +45,12 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
 
     useEffect(() => {
         drawTimecodeLines();
-    }, []);
+    }, [videoLength, secondToPixelCoef]);
 
     return (
         <canvas id='timecodeCanvas' className='bg-black'
-        style={{width: `${secondToPixelCoef * videoLength / 10000000}px`, height: `${canvasHeight}px`}}
-        width={9000} height={canvasHeight}>
+        style={{width: `${secondToPixelCoef * videoLength }px`, height: `${canvasHeight}px`}}
+        width={secondToPixelCoef * videoLength} height={canvasHeight}>
         </canvas>
     )
 }

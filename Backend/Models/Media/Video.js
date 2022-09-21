@@ -7,8 +7,8 @@ const video = new Schema({
     url: String,
     status: {
         type: String,
-        enum: ['Error', 'Posted', 'InProgress'],
-        default: 'Error',
+        enum: ['Default', 'Error', 'Posted', 'InProgress'],
+        default: 'Default',
         required: true
     },
     progression: Number

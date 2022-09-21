@@ -13,6 +13,8 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       NODE_ENV: "development"
       PORT: 80
+    env_file:
+      - ./Frontend/.env
     volumes:
       - ./Frontend/src:/src/
       - ./Frontend/public:/public/

@@ -20,7 +20,7 @@ const ResetPassword = () => {
         setUID(new URLSearchParams(location.search).get("verifUID"))
     }, [location]);
 
-    
+
     async function makeChange() {
         const regexPassword = new RegExp(passRegex);
         if (password !== confirmPassword) {
@@ -69,5 +69,5 @@ const ResetPassword = () => {
         </div>
     );
 }
- 
+
 export default ResetPassword;
