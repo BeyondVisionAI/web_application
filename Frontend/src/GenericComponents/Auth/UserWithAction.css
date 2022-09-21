@@ -1,0 +1,33 @@
+.user-with-action-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0% 5%;
+    align-items: center;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.user-with-action-user-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-with-action-user-container > p {
+    margin-left: 10px;
+}
+
+.user-initial-pic {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #7793ED;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 100%;
+    color: white;
+    font-weight: 600;
+}
