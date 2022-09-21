@@ -13,6 +13,8 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       NODE_ENV: "development"
       PORT: 80
+    env_file:
+      - ./Frontend/.env
     volumes:
       - ./Frontend/src:/src/
       - ./Frontend/public:/public/
@@ -28,8 +30,6 @@ services:
       dockerfile: ./DockerfileDev
     ports:
       - "8080:8080"
-    env_file:
-      - .env
     volumes:
       - ./Backend/index.js:/app/index.js
       - ./Backend/Controllers:/app/Controllers/
