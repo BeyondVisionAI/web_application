@@ -7,8 +7,7 @@ const user = new mongoose.Schema({
   password: String,
   email: String,
   isEmailConfirmed: { type :Boolean, default: false },
-  verificationUID: { type: String, default: uuidv4() },
-  employee : { type :Boolean, default: false }
+  verificationUID: { type: String, default: uuidv4() }
 });
 
 exports.User = mongoose.model("User", user);

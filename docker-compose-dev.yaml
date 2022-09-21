@@ -14,7 +14,7 @@ services:
       NODE_ENV: "development"
       PORT: 80
     env_file:
-      - .env
+      - ./Frontend/.env
     volumes:
       - ./Frontend/src:/src/
       - ./Frontend/public:/public/
@@ -30,8 +30,6 @@ services:
       dockerfile: ./DockerfileDev
     ports:
       - "8080:8080"
-    env_file:
-      - .env
     volumes:
       - ./Backend/index.js:/app/index.js
       - ./Backend/Controllers:/app/Controllers/
@@ -41,10 +39,10 @@ services:
     networks:
       - api
       - bdd
+    env_file:
+      - ./Backend/.env
     environment:
       - IS_TEST="TRUE"
-    env_file:
-      - .env
     restart: on-failure
 
   mongodb:

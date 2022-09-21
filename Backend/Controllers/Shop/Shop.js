@@ -1,6 +1,6 @@
 const { Errors } = require("../../Models/Errors.js");
 const { Cart } = require("../../Models/shop/Cart.js");
-const { Item } = require("../../Models/shop/Item")
+const { Item, ITEMTYPE } = require("../../Models/shop/Item")
 
 /**
  * add an item in the Beyond Vision catalog
@@ -15,7 +15,6 @@ exports.addItem = async function(req, res) {
         
         if (!req.body || (!req.body.name || !req.body.owner || !req.body.type ||
             !req.body.genre || !req.body.price || !req.body.language)) {
-                console.log("ok2")
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
             }
         
@@ -56,7 +55,7 @@ exports.addItem = async function(req, res) {
 exports.removeMyItem = async function(req, res) {
     try {
         // TODO: Faut vérifier que l'item appartient bien à l'utilisateur
-        if ((!req.params.itemId))
+        if (!req.params.itemId)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
         
         await Item.deleteOne({ _id: req.params.itemId });
@@ -173,8 +172,8 @@ exports.searchItems = async function(req, res) {
             return (res.status(404).send(Errors.ARTICLE_NOT_FOUND));
         }
 
-        if (item.type == "CORRECTOR") {
-            var itemInCart = await Cart.findOneAndUpdate({projectId: req.params.projectId, type: "CORRECTOR"}, {itemId: req.body.itemId, bought: false, quantity: 0}, {new: true});
+        if (item.type == ITEMTYPE[1]) {
+            var itemInCart = await Cart.findOneAndUpdate({projectId: req.params.projectId, type: ITEMTYPE[1]}, {itemId: req.body.itemId, bought: false, quantity: 0}, {new: true});
             if (itemInCart)
                 return (res.status(200).send(itemInCart));
         }
