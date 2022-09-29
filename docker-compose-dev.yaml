@@ -23,6 +23,7 @@ services:
   server:
     depends_on:
       - "mongodb"
+      - "minio"
     build:
       context: ./Backend/
       dockerfile: ./DockerfileDev
@@ -84,7 +85,7 @@ services:
     restart: on-failure
     networks:
       - bdd
-  
+
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
@@ -92,6 +93,20 @@ services:
     environment:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
     command: listen --forward-to localhost:8080/payment/webhook
+
+  minio:
+    image: minio/minio
+    container_name: minio-storage
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    expose:
+      - 9000
+      - 9001
+    volumes:
+      - ./.docker/storage/minio:/data
+    command: server /data --console-address ":9001"
+
 networks:
   api:
   bdd:

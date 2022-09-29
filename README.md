@@ -97,6 +97,7 @@ Vous aurez ensuite accès aux fonctionnalités aux adresses suivantes:
 - http://localhost → Plateforme Web
 - http://localhost:8080 → Server Web
 - http://localhost:8081 → Inspecteur de bdd
+- http://localhost:9001 → Minio Storage Console
 
 ##### Version de Production :
 
