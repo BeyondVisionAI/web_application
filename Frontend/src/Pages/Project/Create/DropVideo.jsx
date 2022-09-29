@@ -14,6 +14,7 @@ export default function DropVideo({ video, setVideo, nextStep, handleChange, val
                 setData={ setVideo }
                 isFill={video ? true : false}
                 types=".mov, .mp4, .wav"
+                text="Drag and drop your video !"
                 other={ video ? <p className="relative z-20 cursor-pointer text-blue-500 hover:text-blue-600 block">{ video.name }</p> : null }
                 />
             </div>
