@@ -24,9 +24,9 @@ export default function VideoData({ nextStep, prevStep, handleChange, values }) 
     }, [selectedType, description]);
 
     return (
-        <form className="w-full h-full">
+        <form onSubmit={e => e.preventDefault()} className="w-full h-full">
             <div className="flex p-6">
-                <div className="w-1/2 px-3">
+                <div className="w-3/4 px-3">
                     <InputWithLabel defaultValue={ values.description } placeholder="Résumé de la vidéo" type="textarea" label="Résumé court de la vidéo" onChange={setDescription} />
                 </div>
                 <div className="w-1/4"></div>

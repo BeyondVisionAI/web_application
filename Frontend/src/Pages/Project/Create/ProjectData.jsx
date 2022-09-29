@@ -5,7 +5,6 @@ import ThumbnailDisplay from './ThumbnailDisplay';
 
 export default function ProjectData({ image, setImage, nextStep, prevStep, handleChange, values }) {
     const [thumbnail, setThumbnail] = useState(null);
-    console.log("🚀 ~ file: ProjectData.jsx ~ line 8 ~ ProjectData ~ thumbnail", thumbnail)
     const [title, setTitle] = useState(values.title || '');
     const [localImage, setLocalImage] = useState(null);
     const [areAllRequiredFieldsFilled, setAreAllRequiredFieldsFilled] = useState(false)
@@ -38,9 +37,9 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
     }, [localImage]);
 
     useEffect(() => {
-        if (title.length > 0 && localImage) setAreAllRequiredFieldsFilled(true)
+        if (title.length > 0 && thumbnail) setAreAllRequiredFieldsFilled(true)
         else setAreAllRequiredFieldsFilled(false)
-    }, [title, localImage]);
+    }, [title, thumbnail]);
 
     return (
         <form className="flex w-full h-full">
