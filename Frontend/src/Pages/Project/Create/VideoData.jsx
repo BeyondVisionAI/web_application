@@ -1,11 +1,11 @@
 import React from 'react';
 import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 
-export default function VideoData({ nextStep, prevStep, handleChange, values }) {
+export default function VideoData({ prevStep, handleChange, values, postData }) {
     const types = ["Aucun", "Dramatique", "Humoristique"];
     const next = e => {
         e.preventDefault();
-        nextStep();
+        postData();
     }
     const prev = e => {
         e.preventDefault();
