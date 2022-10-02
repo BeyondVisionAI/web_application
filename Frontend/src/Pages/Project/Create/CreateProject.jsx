@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import Payment from './Payment';
 import ProjectData from './ProjectData';
 import VideoData from './VideoData';
 import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
@@ -97,7 +96,7 @@ export default function CreateProject({ show, onHide }) {
                 );
             case 2:
                 return (
-                    <VideoData nextStep={ nextStep } prevStep={ prevStep } handleChange={ handleChange } values={ values }/>
+                    <VideoData prevStep={ prevStep } handleChange={ handleChange } values={ values } postData={ postData }/>
                 );
             default:
                 return (
