@@ -199,6 +199,14 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
 
     const timeCodeLines = generateTimeCodeLines();
 
+    const onTimelineClick = (e) => {
+        if (e.detail === 2) {
+            var timelineScroll = document.getElementById('timeline-container').scrollLeft
+            let result = (e.clientX + timelineScroll) / secToPxCoef
+            setNewSecondsFromCursor(result - 0.25)
+        }
+    }
+
 
     return (
         <div className='flex flex-col items-start justify-start w-full overflow-x-hidden'>
@@ -207,7 +215,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
                 <button disabled={secToPxCoef === 30 ? true: false} className={`${secToPxCoef === 30 ? 'bg-gray-500 cursor-not-allowed' : 'bg-myBlue'} flex items-center justify-center w-8 h-8 rounded-full text-white`} onClick={() => setSecToPxCoef(secToPxCoef - 10)}>-</button>
             </div>
             <ContextMenuTrigger id='timeline_menu' holdToDisplay={-1}>
-                <div className='flex overflow-x-scroll overflow-y-hidden relative
+                <div id="timeline-container" onClick={onTimelineClick} className='flex overflow-x-scroll overflow-y-hidden relative
                 w-full m-0 bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'>
                     <div className='flex flex-row items-start'>
                         {replicaLine}
