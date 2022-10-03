@@ -25,7 +25,6 @@ const TimelineCursor = ({secondsPlayed, secondToPixelRatio, setNewSecondsFromCur
     }, [secondToPixelRatio, secondsPlayed]);
 
     useEffect(() => {
-        console.log("🚀 ~ file: TimelineCursor.jsx ~ line 29 ~ useEffect ~ cursorRef", cursorRef)
         cursorRef?.current?.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
     }, [position]);
 
