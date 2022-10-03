@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 import TimecodeLine from './TimecodeLine';
 import ReplicaBox from './ReplicaBox';
+import TimelineCursor from './TimelineCursor';
 
 // temporary duration of a project, so we can do the timeline
 // const videoLength = 3600000 / 4;
@@ -14,7 +15,7 @@ const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
 // var secToPxCoef = 300; // will change if zoom
 
-const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState}) => {
+const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     const [secToPxCoef, setSecToPxCoef] = useState(100);
     const [replicasPositions, setReplicasPositions] = useState([]);
@@ -24,8 +25,6 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
 
 
     const addReplica = async function () {
-        console.log("🚀 ~ file: Timeline.jsx ~ line 29 ~ addReplica ~ newReplicaTimestamp", newReplicaTimestamp)
-        console.log("🚀 ~ file: Timeline.jsx ~ line 31 ~ addReplica ~ duration", duration)
         if (newReplicaTimestamp === -1) return;
         else if (newReplicaTimestamp / 1000 >= duration) {
             toast.error("Error - You cannot create a replica outside of the scope of the video.");
@@ -190,7 +189,6 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
 
     const generateTimeCodeLines = () => {
         let d = duration;
-        console.log("🚀 ~ file: Timeline.jsx ~ line 193 ~ generateTimeCodeLines ~ d", d)
         let timecodeLines = []
         for (let i = 1; d > 0; i++, d -= 60) {
             var durationLeft = duration - ((i - 1) * 60)
@@ -202,10 +200,8 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
     const timeCodeLines = generateTimeCodeLines();
 
 
-    if (!player)
-        return (<h1>Loading</h1>)
     return (
-        <div className='flex flex-col w-full'>
+        <div className='flex flex-col w-full overflow-x-hidden'>
             <div className='flex flex-row items-end justify-end mb-2'>
                 <button className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef + 10)}>+</button>
                 <button disabled={secToPxCoef === 30 ? true: false} className={`${secToPxCoef === 30 ? 'bg-gray-500 cursor-not-allowed' : 'bg-myBlue'} flex items-center justify-center w-8 h-8 rounded-full text-white mr-4`} onClick={() => setSecToPxCoef(secToPxCoef - 10)}>-</button>
@@ -219,7 +215,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
                     <div className='flex flex-row w-full'>
                         {timeCodeLines}
                     </div>
-                    
+                    <TimelineCursor secondToPixelRatio={secToPxCoef} secondsPlayed={playedSeconds} setNewSecondsFromCursor={setNewSecondsFromCursor}/>
                 </div>
             </ContextMenuTrigger>
 
