@@ -149,7 +149,7 @@ export default function ScriptEdition(props) {
                            </div>
                         </div>
 
-                        <div className="flex h-1/3 w-full px-2 pb-6 mt-2">
+                        <div className="flex h-1/3 w-full pb-6 mt-2">
                             <Timeline
                             className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
                             playedSeconds={playedSeconds}
