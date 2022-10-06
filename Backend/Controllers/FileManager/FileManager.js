@@ -7,3 +7,35 @@ export function getSignedUrl(req, res) {
         MinioManager.getSignedUrl(req, res);
     }
 }
+
+/**
+ *
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+ export function getUrlDownloadObject(objectType, keyName) {
+    if (process.env.LOCAL_FILE_MANAGER == true) {
+        const S3Manager = require("./S3Manager/S3Manager");
+        return S3Manager.getUrlDownloadObject(objectType, keyName)
+    } else {
+        const MinioManager = require("./MinioManager/MinioManager");
+        return MinioManager.getUrlDownloadObject(objectType, keyName);
+    }
+}
+
+/**
+ *
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+export function removeObject(objectType, keyName) {
+    if (process.env.LOCAL_FILE_MANAGER == true) {
+        const S3Manager = require("./S3Manager/S3Manager");
+        return S3Manager.removeObject(objectType, keyName)
+    } else {
+        const MinioManager = require("./MinioManager/MinioManager");
+        return MinioManager.removeObject(objectType, keyName);
+    }
+}

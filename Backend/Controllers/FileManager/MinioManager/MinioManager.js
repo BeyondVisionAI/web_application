@@ -11,16 +11,42 @@ const minioClient = new Minio.Client({
 });
 
 const bucketsName = {
-    bucketVideoSource: 'bv-streaming-video-source',
-    bucketThumbnail: 'bv-thumbnail-project',
-    bucketAudio: 'bv-replicas',
-    bucketFinishedProduct: 'bv-finished-products'
+    'source-video': 'bv-streaming-video-source',
+    'thumbnail': 'bv-thumbnail-project',
+    'audio': 'bv-replicas',
+    'finished-video': 'bv-finished-products'
 }
 
-const getUrlUploadObject = async function (bucketName, keyName) {
+/**
+ * Change the keyName if is a finished object
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns String
+ */
+const isFinishedMedia = async function(objectType, keyName) {
+    switch (objectType) {
+        case 'finished-video':
+            keyName = 'Video/' + keyName;
+            break;
+        case 'finished-audio':
+            keyName = 'Audio/' + keyName;
+            break;
+        default:
+            return keyName;
+    }
+}
+
+/**
+ * Get presigned url of keyname to upload
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+const getUrlUploadObject = async function (objectType, keyName) {
     try {
+        let bucketName = bucketsName[objectType];
         const url = await new PromisePromise((resolve, reject) => {
-            minioClient.PresignedPutObject(bucketName, keyName, 24*60*60, (err, presignedUrl) => {
+            minioClient.PresignedPutObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
                     if (err)
                         reject(err);
                     resolve(presignedUrl);
@@ -34,10 +60,17 @@ const getUrlUploadObject = async function (bucketName, keyName) {
     }
 }
 
-const getUrlDownloadObject = async function (bucketName, keyName) {
+/**
+ * Get presigned url of keyname to download
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+const getUrlDownloadObject = async function (objectType, keyName) {
     try {
+        let bucketName = bucketsName[objectType];
         const url = await new PromisePromise((resolve, reject) => {
-                minioClient.PresignedGetObject(bucketName, keyName, 24*60*60, (err, presignedUrl) => {
+                minioClient.PresignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
                     if (err)
                         reject(err);
                     resolve(presignedUrl);
@@ -51,10 +84,19 @@ const getUrlDownloadObject = async function (bucketName, keyName) {
     }
 }
 
-const removeObject = async function (bucketName, keyName) {
+
+/**
+ * Remove object
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+exports.removeObject = async function (objectType, keyName) {
     try {
+        let bucketName = bucketsName[objectType];
+
         const returnValues = await new PromisePromise((resolve, reject) => {
-                minioClient.removeObject(bucketName, keyName, (err) => {
+                minioClient.removeObject(bucketName, isFinishedMedia(objectType, keyName), (err) => {
                     if (err)
                         reject(err);
                     resolve("Object successfully removed");
@@ -69,41 +111,16 @@ const removeObject = async function (bucketName, keyName) {
 };
 
 exports.getSignedUrl = async function (req, res) {
-    let objectName = req.params.objectName;
-    const objectType = req.params.objectType;
-    const operationType = req.params.operationType;
-    let objectBucket = '';
+    const { objectName, objectType, operationType } = req.params;
     let returnValues = '';
     console.log(`${operationType} : ${objectType} with the name : ${objectName}`);
 
-    switch (objectType) {
-        case 'source-video':
-            objectBucket = bucketsName.bucketVideoSource;
-            break;
-        case 'thumbnail':
-            objectBucket = bucketsName.bucketVideoSource;
-            break;
-        case 'audio':
-            objectBucket = bucketsName.bucketAudio;
-            break;
-        case 'finished-video':
-            objectName = 'Video/' + objectName;
-            objectBucket = bucketsName.bucketFinishedProduct;
-            break;
-        case 'finished-audio':
-            objectName = 'Audio/' + objectName;
-            objectBucket = bucketsName.bucketFinishedProduct;
-            break;
-    }
     switch (operationType) {
         case 'Download':
-            returnValues = getUrlDownloadObject(objectBucket, objectName);
+            returnValues = getUrlDownloadObject(objectType, objectName);
             break;
         case 'Upload':
-            returnValues = getUrlUploadObject(objectBucket, objectName);
-            break;
-        case 'Remove':
-            returnValues = removeObject(objectBucket, objectName);
+            returnValues = getUrlUploadObject(objectType, objectName);
             break;
     }
 

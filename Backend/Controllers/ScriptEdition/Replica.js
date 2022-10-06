@@ -1,8 +1,15 @@
 const { Errors } = require("../../Models/Errors.js");
 const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
+const { removeObject, getUrlDownloadObject } = require("../FileManager/FileManager")
 
-createAudio = async (replica) => {
+
+/**
+ * Call ServerIA to create audio
+ * @param {Replica} replica
+ * @returns true or throw Error
+ */
+const createAudio = async (replica) => {
     try {
         const response = await fetch(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
             method: 'post',
@@ -26,15 +33,33 @@ createAudio = async (replica) => {
     }
 }
 
+/**
+ * Get download url and put in returned replica
+ * @param {Replica} replica
+ * @returns Replica + audio download url
+ */
+const getReplicaAudioUrl = async (replica) => {
+    try {
+        const data = await getUrlDownloadObject('audio', replica.audioName);
+
+        console.log(data);
+        return {...replica, url: data}
+    } catch(error) {
+        console.error(error);
+    }
+}
+
 exports.getProjectReplicas = async function(req, res) {
     try {
         // var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
         var script = await Replica.find({projectId: req.params.projectId}).
             populate({path: 'lastEditor', select: 'firstName lastName'}).
             sort({timestamp: "asc"});
-        // TODO: Ajout de l'url lors de la récupération
-        // Si l'url n'est pas dispo mettre un message en front et faire un systeme de refresh
-        res.status(200).send(script);
+        let scriptWithUrls = script.map(async (replica) => {
+            return getReplicaAudioUrl(replica);
+        })
+
+        res.status(200).send(scriptWithUrls);
     } catch (err) {
         console.log("Replica->getProjectReplicas : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -44,11 +69,10 @@ exports.getProjectReplicas = async function(req, res) {
 
 exports.getProjectReplica = async function(req, res) {
     try {
-        var replica = await Replica.findById(req.params.replicaId).
+        let replica = await Replica.findById(req.params.replicaId).
             populate({path: 'lastEditor', select: 'firstName lastName'});
-            // TODO: Ajout de l'url lors de la récupération
-            // Si l'url n'est pas dispo mettre un message en front et faire un systeme de refresh
-        res.status(200).send(replica);
+        let replicaWithUrl = getReplicaAudioUrl(replica);
+        res.status(200).send(replicaWithUrl);
     } catch (err) {
         console.log("Replica->getProjectReplica : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -62,7 +86,6 @@ exports.createReplica = async function(req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-
         const newReplica = new Replica({
             projectId: req.params.projectId,
             content: req.body.content,
@@ -72,6 +95,7 @@ exports.createReplica = async function(req, res) {
             lastEditor: req.user.userId,
             lastEditDate: Date.now()
         });
+        newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
 
         await newReplica.save();
         createAudio(newReplica);
@@ -131,7 +155,7 @@ exports.deleteReplica = async function(req, res) {
         if (!replicaToDelete) {
             return res.status(404).send(Errors.REPLICA_NOT_FOUND);
         }
-        // TODO: Delete audio on s3
+        await removeObject('audio', replicaToDelete.audioName);
         await replicaToDelete.deleteOne();
         const attachedCommentsDeleted = await ReplicaComment.deleteMany({replicaId: req.params.replicaId});
         if (attachedCommentsDeleted > 0) console.log(`${attachedCommentsDeleted} comments deleted with the removed replica`);

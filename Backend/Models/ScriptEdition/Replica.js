@@ -6,6 +6,7 @@ const replica = new Schema({
         ref: "Project",
         required: true
     },
+    audioName: String,
     content: String,
     timestamp: Number,
     duration: Number,

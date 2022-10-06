@@ -7,26 +7,53 @@ const { Image } = require('../../Models/Media/Image');
 AWS.config.setPromisesDependency();
 
 const AWSAccess = {
-    accessKeyId: 'AKIAVEXTIW63VUWJ2LT7',
-    secretAccessKey: '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',
+    accessKeyId: process.env.S3_ID,
+    secretAccessKey: process.env.S3_SECRET,
     region: 'us-east-1'
 };
 
 const bucketsName = {
-    bucketVideoSource: 'bv-streaming-video-source-ahnauucgvgsf',
-    bucketThumbnail: 'bv-thumbnail-project',
-    bucketAudio: 'bv-replicas',
-    bucketFinishedProduct: 'bv-finish-products'
+    'source-video': 'bv-streaming-video-source-ahnauucgvgsf',
+    'thumbnail': 'bv-thumbnail-project',
+    'audio': 'bv-replicas',
+    'finished-video': 'bv-finish-products'
 }
 
-const getUrlUploadObject = async function (bucketName, keyName) {
+/**
+ * Change the keyName if is a finished object
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns String
+ */
+ const isFinishedMedia = async function(objectType, keyName) {
+    switch (objectType) {
+        case 'finished-video':
+            keyName = 'Video/' + keyName;
+            break;
+        case 'finished-audio':
+            keyName = 'Audio/' + keyName;
+            break;
+        default:
+            return keyName;
+    }
+}
+
+/**
+ * Get presigned url of keyname to upload
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+ export const getUrlUploadObject = async function (objectType, keyName) {
     try {
-        console.log(`S3 : uploadObject - Bucket Name : ${bucketName} - Key Name : ${keyName}`)
+        let bucketName = bucketsName[objectType];
         let s3 = new AWS.S3(AWSAccess);
+
+        console.log(`S3 : uploadObject - Bucket Name : ${bucketName} - Key Name : ${isFinishedMedia(objectType, keyName)}`)
         const params = {
             ACL: "public-read",
             Bucket: bucketName,
-            Key: keyName,
+            Key: isFinishedMedia(objectType, keyName),
             ContentType: mime.getType(keyName),
         };
 
@@ -44,13 +71,21 @@ const getUrlUploadObject = async function (bucketName, keyName) {
     }
 }
 
-const getUrlDownloadObject = async function (bucketName, keyName) {
+/**
+ * Get presigned url of keyname to download
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+export const getUrlDownloadObject = async function (objectType, keyName) {
     try {
-        console.log(`S3 : GetObject - Bucket Name : ${bucketName} - Key Name : ${keyName}`)
+        let bucketName = bucketsName[objectType];
         let s3 = new AWS.S3(AWSAccess);
-        params = {
+
+        console.log(`S3 : GetObject - Bucket Name : ${bucketName} - Key Name : ${isFinishedMedia(objectType, keyName)}`)
+        const params = {
             Bucket: bucketName,
-            Key: keyName
+            Key: isFinishedMedia(objectType, keyName)
         };
         const url = await new Promise((resolve, reject) => {
             s3.getSignedUrl('getObject', params, function (err, url) {
@@ -66,15 +101,31 @@ const getUrlDownloadObject = async function (bucketName, keyName) {
     }
 }
 
-const removeObject = async function (bucketName, keyName) {
+
+/**
+ *
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @param {String} keyName the media name
+ * @returns
+ */
+exports.removeObject = async function (objectType, keyName) {
     try {
         let s3 = new AWS.S3(AWSAccess);
+        let bucketName = bucketsName[objectType];
+
+        switch (objectType) {
+            case 'finished-video':
+                keyName = 'Video/' + keyName;
+                break;
+            case 'finished-audio':
+                keyName = 'Audio/' + keyName;
+                break;
+        }
 
         const params = {
             Bucket: bucketName,
             Key: keyName
         };
-
         const returnValues = await new PromisePromise((resolve, reject) => {
                 s3.deleteObject(params, function (err, data) {
                     if (err)
@@ -91,41 +142,16 @@ const removeObject = async function (bucketName, keyName) {
 };
 
 exports.getSignedUrl = async function (req, res) {
-    console.log("Download Url Object", req.params);
-    let objectName = req.params.objectName;
-    const objectType = req.params.objectType;
-    const operationType = req.params.operationType;
-    let objectBucket = '';
+    const { objectName, objectType, operationType } = req.params;
     let returnValues = '';
 
-    switch (objectType) {
-        case 'source-video':
-            objectBucket = bucketsName.bucketVideoSource;
-            break;
-        case 'thumbnail':
-            objectBucket = bucketsName.bucketVideoSource;
-            break;
-        case 'audio':
-            objectBucket = bucketsName.bucketAudio;
-            break;
-        case 'finished-video':
-            objectName = 'Video/' + objectName;
-            objectBucket = bucketsName.bucketFinishedProduct;
-            break;
-        case 'finished-audio':
-            objectName = 'Audio/' + objectName;
-            objectBucket = bucketsName.bucketFinishedProduct;
-            break;
-    }
+    console.log("Download Url Object", req.params);
     switch (operationType) {
         case 'Download':
-            returnValues = getUrlDownloadObject(objectBucket, objectName);
+            returnValues = getUrlDownloadObject(objectType, objectName);
             break;
         case 'Upload':
-            returnValues = getUrlUploadObject(objectBucket, objectName);
-            break;
-        case 'Remove':
-            returnValues = removeObject(objectBucket, objectName);
+            returnValues = getUrlUploadObject(objectType, objectName);
             break;
     }
 
