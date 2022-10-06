@@ -1,9 +1,10 @@
 FROM node:12-alpine
 
 WORKDIR /app
-COPY . .
+COPY ./package.json .
 RUN npm install -g nodemon
 RUN npm install
 RUN npm install nodemon -g
+COPY . .
 EXPOSE 8080
 CMD ["nodemon","-L", "-r", "dotenv/config", "index.js", "--unhandled-rejections=strict"]
