@@ -14,6 +14,7 @@ import TimelineCursor from './TimelineCursor';
 const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
 // var secToPxCoef = 300; // will change if zoom
+const MIN_ZOOM = 30;
 
 const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
@@ -212,7 +213,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
         <div className='flex flex-col items-start justify-start w-full overflow-x-hidden'>
             <div className='flex flex-row items-end justify-end mb-2 -mr-12 w-full'>
                 <button className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef + 10)}>+</button>
-                <button disabled={secToPxCoef === 30 ? true: false} className={`${secToPxCoef === 30 ? 'bg-gray-500 cursor-not-allowed' : 'bg-myBlue'} flex items-center justify-center w-8 h-8 rounded-full text-white`} onClick={() => setSecToPxCoef(secToPxCoef - 10)}>-</button>
+                <button disabled={secToPxCoef === MIN_ZOOM ? true: false} className={`${secToPxCoef === MIN_ZOOM ? 'bg-gray-500 cursor-not-allowed' : 'bg-myBlue'} flex items-center justify-center w-8 h-8 rounded-full text-white`} onClick={() => setSecToPxCoef(secToPxCoef - 10)}>-</button>
             </div>
             <ContextMenuTrigger id='timeline_menu' holdToDisplay={-1}>
                 <div id="timeline-container" onClick={onTimelineClick} className='flex overflow-x-scroll overflow-y-hidden relative
