@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import Chat from '../Chat/Chat';
 import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
+import AudioPlayer from './Components/AudioPlayer';
 
 
 export default function ScriptEdition(props) {
@@ -16,6 +17,7 @@ export default function ScriptEdition(props) {
     const [replicaSelected, setReplicaSelected] = useState(null);
     const [playedSeconds, setPlayedSeconds] = useState(0);
     const [newSecondsFromCursor, setNewSecondsFromCursor] = useState(null)
+    const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
     useEffect(() => {
@@ -115,7 +117,6 @@ export default function ScriptEdition(props) {
         history.push(`/project/${props.match.params.id}`);
     }
 
-
     if (project) {
         return (
             <>
@@ -145,6 +146,7 @@ export default function ScriptEdition(props) {
                                setPlayedSecondsInParent={setPlayedSeconds}
                                newSecondsFromCursor={newSecondsFromCursor}
                                resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                               setIsPlaying={setIsPlaying}
                                />
                            </div>
                         </div>
@@ -162,6 +164,13 @@ export default function ScriptEdition(props) {
                             setNewSecondsFromCursor={setNewSecondsFromCursor}
                             />
                         </div>
+                        <AudioPlayer
+                        replicas={replicas}
+                        playedSeconds={playedSeconds}
+                        newSecondsFromCursor={newSecondsFromCursor}
+                        resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                        triggerPause={!isPlaying}
+                        />
                     </div>
                 </div>
                 {/* <Chat projectId={props.match.params.id}/> */}
