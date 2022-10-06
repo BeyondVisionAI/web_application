@@ -22,7 +22,6 @@
     "aws-sdk": "^2.1092.0",
     "axios": "^0.21.1",
     "js-cookie": "^3.0.1",
-    "minio": "^7.0.32",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "postcss": "^8",
     "react": "^17.0.1",
