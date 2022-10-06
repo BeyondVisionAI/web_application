@@ -78,10 +78,10 @@ exports.getSignedUrl = async function (req, res) {
     }
     switch (operationType) {
         case 'Download':
-            url = getUrlDownloadObject(objectName, objectBucket);
+            url = getUrlDownloadObject(objectBucket, objectName);
             break;
         case 'Upload':
-            url = getUrlUploadObject(objectName, objectBucket);
+            url = getUrlUploadObject(objectBucket, objectName);
             break;
     }
 

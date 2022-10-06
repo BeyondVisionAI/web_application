@@ -2,10 +2,6 @@
 import { useState } from 'react';
 import "../Button/Button.css";
 import axios from 'axios';
-const AWS = require('aws-sdk')
-
-const s3 = new AWS.S3()
-AWS.config.update({accessKeyId: 'your access key', secretAccessKey: 'you secret key'})
 
 async function downloadFile(props) {
     axios.defaults.withCredentials = true;
@@ -13,17 +9,16 @@ async function downloadFile(props) {
 
     if (props.type === 'video-finished-products') {
         console.log("Video");
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/finished-product/video/download-url/${props.projectId}`);
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manager/Download/finished-video/${props.projectId + '.mp4'}`);
     } else if (props.type === 'audio-finished-products') {
         console.log("Audio");
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/finished-product/audio/download-url/${props.projectId}`);
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manager/Download/finished-audio/${props.projectId} + '.mp3'`);
     } else {
         console.log(`Null ?, type : ${props.type}`);
         response.data = null;
     }
     const url = response.data;
-    
-    
+
     axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
     // axios({
     //     url: url,
@@ -31,14 +26,14 @@ async function downloadFile(props) {
     //     responseType: 'blob',
     // }).then((response) => {
     //     const href = URL.createObjectURL(response.data);
-    
+
     //     // create "a" HTLM element with href to file & click
     //     const link = document.createElement('a');
     //     link.href = href;
     //     link.setAttribute('download', 'file.pdf'); //or any other extension
     //     document.body.appendChild(link);
     //     link.click();
-    
+
     //     // clean up "a" element & remove ObjectURL
     //     document.body.removeChild(link);
     //     URL.revokeObjectURL(url);
@@ -56,7 +51,6 @@ async function downloadFile(props) {
             // a.href=blobUrl;
             a.href=url;
             a.click();
-            
         // }
     }
 }
@@ -64,7 +58,6 @@ async function downloadFile(props) {
 export function Downloader(props) {
     const [isDownload, setIsDownload] = useState(false);
     const [buttonText, setButtonText] = useState(props.label);
-    
 
     var handleClick = async () => {
         if (!isDownload) {

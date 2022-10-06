@@ -24,7 +24,7 @@ export default function Description({ editing, setEditing, updateProjectValues, 
             async function getThumbnailProject(projId) {
                 try {
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projId}/${thumbnailId}`);
-                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manager/source-product/thumbnail/download-url/${image.data.name}`);
+                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manager/Download/thumbnail/${image.data.name}`);
                     let url = response.data;
                     setThumbnail(url);
                 } catch (err) {
@@ -65,7 +65,7 @@ export default function Description({ editing, setEditing, updateProjectValues, 
     useEffect(() => {
         async function updateThumbnail() {
             try {
-                const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/upload-url/${projectId}.${image.name.split(".").pop()}}`);
+                const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manager/Upload/thumbnail/${projectId}.${image.name.split(".").pop()}}`);
                 const urlThumbnailUpload = responseThumbnail.data;
                 console.log("Thumbnail Url :", urlThumbnailUpload);
                 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
