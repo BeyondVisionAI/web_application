@@ -143,3 +143,4 @@ Si vous souhaitez contribuer, créez votre branche et faites des pull requests s
 ## License
 
 Ce projet est sous licence `exemple: WTFTPL` - voir le fichier [LICENSE.md](LICENSE.md) pour plus d'informations
+

@@ -97,15 +97,16 @@ services:
   minio:
     image: minio/minio
     container_name: minio-storage
+    restart: on-failure
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./.docker/storage/minio:/data
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    expose:
-      - 9000
-      - 9001
-    volumes:
-      - ./.docker/storage/minio:/data
-    command: server /data --console-address ":9001"
+    command: server .docker/storage/minio/data --console-address ":9001"
 
 networks:
   api:

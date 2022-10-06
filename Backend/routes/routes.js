@@ -1,3 +1,4 @@
+const S3Manager = require("./S3Manager");
 module.exports = function (app) {
     // const image = require("./Image");
     const test = require("./Test");
@@ -12,6 +13,7 @@ module.exports = function (app) {
     const chat = require('./Chat')
     const mail = require('./Mail')
     const S3Manager = require('./S3Manager')
+    const MinioManager = require('./MinioManager')
 
     chat(app);
     test(app);
@@ -26,4 +28,5 @@ module.exports = function (app) {
     scriptEdition(app);
     mail(app);
     S3Manager(app);
+    MinioManager(app);
 }
