@@ -66,13 +66,37 @@ const getUrlDownloadObject = async function (bucketName, keyName) {
     }
 }
 
+const removeObject = async function (bucketName, keyName) {
+    try {
+        let s3 = new AWS.S3(AWSAccess);
+
+        const params = {
+            Bucket: bucketName,
+            Key: keyName
+        };
+
+        const returnValues = await new PromisePromise((resolve, reject) => {
+                s3.deleteObject(params, function (err, data) {
+                    if (err)
+                        reject(err);
+                    resolve("Object successfully removed");
+                })
+            }
+        )
+        return (returnValues)
+    } catch (err) {
+        console.log('Error catch', err);
+        return ({ code: 500, err: err }).promise();
+    }
+};
+
 exports.getSignedUrl = async function (req, res) {
     console.log("Download Url Object", req.params);
     let objectName = req.params.objectName;
     const objectType = req.params.objectType;
     const operationType = req.params.operationType;
     let objectBucket = '';
-    let url = '';
+    let returnValues = '';
 
     switch (objectType) {
         case 'source-video':
@@ -95,16 +119,19 @@ exports.getSignedUrl = async function (req, res) {
     }
     switch (operationType) {
         case 'Download':
-            url = getUrlDownloadObject(objectBucket, objectName);
+            returnValues = getUrlDownloadObject(objectBucket, objectName);
             break;
         case 'Upload':
-            url = getUrlUploadObject(objectBucket, objectName);
+            returnValues = getUrlUploadObject(objectBucket, objectName);
+            break;
+        case 'Remove':
+            returnValues = removeObject(objectBucket, objectName);
             break;
     }
 
-    if (url === "" || url === {} || url === undefined || url.code === 500) {
+    if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
-        return res.status(200).send(url);
+        return res.status(200).send(returnValues);
     }
 }

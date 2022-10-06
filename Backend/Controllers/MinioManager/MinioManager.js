@@ -27,6 +27,7 @@ const getUrlUploadObject = async function (bucketName, keyName) {
                 })
             }
         )
+        return (url);
     } catch (err) {
         console.log('Error catch', err);
         return ({ code: 500, err: err }).promise();
@@ -43,19 +44,37 @@ const getUrlDownloadObject = async function (bucketName, keyName) {
                 })
             }
         )
+        return (url);
     } catch (err) {
         console.log('Error catch', err);
         return ({ code: 500, err: err }).promise();
     }
 }
 
+const removeObject = async function (bucketName, keyName) {
+    try {
+        const returnValues = await new PromisePromise((resolve, reject) => {
+                minioClient.removeObject(bucketName, keyName, (err) => {
+                    if (err)
+                        reject(err);
+                    resolve("Object successfully removed");
+                })
+            }
+        )
+        return (returnValues)
+    } catch (err) {
+        console.log('Error catch', err);
+        return ({ code: 500, err: err }).promise();
+    }
+};
+
 exports.getSignedUrl = async function (req, res) {
-    console.log("Download Url Object", req.params);
     let objectName = req.params.objectName;
     const objectType = req.params.objectType;
     const operationType = req.params.operationType;
     let objectBucket = '';
-    let url = '';
+    let returnValues = '';
+    console.log(`${operationType} : ${objectType} with the name : ${objectName}`);
 
     switch (objectType) {
         case 'source-video':
@@ -78,16 +97,19 @@ exports.getSignedUrl = async function (req, res) {
     }
     switch (operationType) {
         case 'Download':
-            url = getUrlDownloadObject(objectBucket, objectName);
+            returnValues = getUrlDownloadObject(objectBucket, objectName);
             break;
         case 'Upload':
-            url = getUrlUploadObject(objectBucket, objectName);
+            returnValues = getUrlUploadObject(objectBucket, objectName);
+            break;
+        case 'Remove':
+            returnValues = removeObject(objectBucket, objectName);
             break;
     }
 
-    if (url === "" || url === {} || url === undefined || url.code === 500) {
+    if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
-        return res.status(200).send(url);
+        return res.status(200).send(returnValues);
     }
 }
