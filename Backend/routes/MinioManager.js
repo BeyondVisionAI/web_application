@@ -1,6 +1,3 @@
-const authMiddleware = require("../Controllers/User/authMiddleware");
-const collabMiddleware = require("../Controllers/Collaboration/collabMiddleware");
-const MinioManager = require("../Controllers/MinioManager/MinioManager");
 module.exports = function (app) {
     const authMiddleware = require("../Controllers/User/authMiddleware");
     const collabMiddleware = require("../Controllers/Collaboration/collabMiddleware");
