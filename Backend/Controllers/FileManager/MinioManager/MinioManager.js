@@ -1,7 +1,7 @@
 const Minio = require('minio');
-const { Errors } = require("../../Models/Errors.js");
-const { Video } = require('../../Models/Media/Video');
-const { Image } = require('../../Models/Media/Image');
+const { Errors } = require("../../../Models/Errors.js");
+const { Video } = require('../../../Models/Media/Video');
+const { Image } = require('../../../Models/Media/Image');
 
 const minioClient = new Minio.Client({
     endPoint: process.env.MINIO_URL,

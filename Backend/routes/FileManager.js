@@ -1,13 +1,13 @@
 module.exports = function (app) {
     const authMiddleware = require('../Controllers/User/authMiddleware');
     const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
-    const S3Manager = require("../Controllers/S3Manager/S3Manager");
+    const FileManager = require("../Controllers/FileManager/FileManager");
     /*
-    ** S3Manager Routes
+    ** FileManager Routes
     */
 
-    app.get("/S3Manager/:operationType/:objectType/:objectName",
+    app.get("/FileManager/:operationType/:objectType/:objectName",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        S3Manager.getSignedUrl());
+        FileManager.getSignedUrl);
 }

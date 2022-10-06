@@ -1,5 +1,5 @@
-const { Errors } = require("../../../Models/Errors.js");
-const { Image } = require('../../../Models/Media/Image');
+const { Errors } = require("../../../../Models/Errors.js");
+const { Image } = require('../../../../Models/Media/Image');
 
 exports.getImage = async function(req, res) {
     try {
