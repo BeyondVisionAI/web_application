@@ -90,6 +90,7 @@ export default function CreateProject({ show, onHide }) {
         
         try {
             const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/FileManager/Download/thumbnail/${values.id}.${image.name.split(".").pop()}`);
+            // Le call au dessus retire le .img c'est bon ?
             const urlThumbnailUpload = responseThumbnail.data;
             console.log("Thumbnail Url :", urlThumbnailUpload);
             axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';

@@ -46,7 +46,7 @@ exports.snsEndpoint = async function(req, res)
         req.on('end', async function () {
             let message = JSON.parse(chunks.join(''));
             let body = JSON.parse(message.Message);
-            let video;
+            var video;
 
             if (body.srcVideo) {
                 let projectR = await Project.findById(body.srcVideo.split('.')[0]);

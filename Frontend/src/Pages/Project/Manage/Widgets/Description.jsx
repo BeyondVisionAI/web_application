@@ -25,6 +25,7 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                 try {
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projId}/${thumbnailId}`);
                     let response = await axios.get(`${process.env.REACT_APP_API_URL}/FileManager/Download/thumbnail/${image.data.name}`);
+                    // TODO: Get url in image directly
                     let url = response.data;
                     setThumbnail(url);
                 } catch (err) {
