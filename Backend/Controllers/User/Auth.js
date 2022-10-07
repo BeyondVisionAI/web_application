@@ -88,7 +88,8 @@ exports.login = async function (req, res) {
       res.cookie("token", userJWT, {
         httpOnly: true,
         sameSite: 'none',
-        secure: true
+        secure: true,
+        domain: req.headers.origin.includes('localhost') ? null: req.headers.origin
       });
       return res.status(200).send("Success");
     } else {
