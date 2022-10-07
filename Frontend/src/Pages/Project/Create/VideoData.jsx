@@ -2,7 +2,17 @@ import React from 'react';
 import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 
 export default function VideoData({ prevStep, handleChange, values, postData }) {
-    const types = ["Aucun", "Dramatique", "Humoristique"];
+    const types = [
+        "Aucun",
+        "Aventure",
+        "Action",
+        "Drame",
+        "Jeunesse",
+        "Musical",
+        "Policier",
+        "Science fiction",
+        "Horreur"
+    ];
     const next = e => {
         e.preventDefault();
         postData();
