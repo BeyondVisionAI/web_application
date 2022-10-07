@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import "./NavBar.css"
+import { AuthContext } from '../Auth/Auth';
 
 const NavBar = ({ homeRef, rightButtons, others }) => {
-
+    const {currentUser, logout} = useContext(AuthContext);
     const [isMenuActive, setIsMenuActive] = useState(false)
     const [wdWidth, setWdWidth] = useState(window.innerWidth)
 
@@ -59,6 +60,7 @@ const NavBar = ({ homeRef, rightButtons, others }) => {
                     {renderButtons(rightButtons)}
                 </div>)}
             {others}
+            {currentUser && <FontAwesomeIcon style={{marginLeft: '-10vw', color: 'red', cursor:'pointer'}} icon={faSignOutAlt} onClick={logout} />}
         </div>
     );
 }
