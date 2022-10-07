@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 
-export default function VideoData({ nextStep, prevStep, handleChange, values }) {
+export default function VideoData({ prevStep, handleChange, values, postData }) {
     const types = ["Aucun", "Dramatique", "Humoristique"];
     const [selectedType, setSelectedType] = useState(null);
     const [description, setDescription] = useState(null)
