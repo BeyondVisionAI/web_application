@@ -3,7 +3,17 @@ import { useState, useEffect } from 'react';
 import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 
 export default function VideoData({ prevStep, handleChange, values, postData }) {
-    const types = ["Aucun", "Dramatique", "Humoristique"];
+    const types = [
+        "Aucun",
+        "Aventure",
+        "Action",
+        "Drame",
+        "Jeunesse",
+        "Musical",
+        "Policier",
+        "Science fiction",
+        "Horreur"
+    ];
     const [selectedType, setSelectedType] = useState(null);
     const [description, setDescription] = useState(null)
     const [areAllRequiredFieldsFilled, setAreAllRequiredFieldsFilled] = useState(false)
