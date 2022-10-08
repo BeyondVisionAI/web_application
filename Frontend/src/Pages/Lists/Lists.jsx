@@ -164,17 +164,24 @@ export default function Lists() {
                     projectId={projectToModify}></ModalDestroyLeaveProject>
                 <ModalDestroyLeaveList refresh={setRefreshKey} open={destroyLeaveListPopupOpen} close={handleCloseDestroyLeaveListPopup}
                     listId={listToModify}></ModalDestroyLeaveList>
-                <button
-                className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => setShowModal(true)}
-            >Create project</button>
-            {modalShow ? (
-                <CreateProject
-                    show={modalShow}
-                    onHide={() => setShowModal(false)}
-                />
-            ): null}
+
+                <div className='flex justify-end p-1 sticky top-24 z-10'>
+                    <button
+                    className="bg-myBlue text-white active:bg-myBlack
+                        flex justify-center items-center h-12 w-12 mr-4
+                        font-bold uppercase text-xl rounded-full shadow outline-none
+                        hover:shadow-lg focus:outline-none ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowModal(true)}
+                    >+</button>
+                </div>
+
+                {modalShow ? (
+                    <CreateProject
+                        show={modalShow}
+                        onHide={() => setShowModal(false)}
+                    />
+                ): null}
 
                 {
                     myProjectsList.movies.length > 0 ?
