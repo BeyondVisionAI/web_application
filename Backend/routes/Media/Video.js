@@ -1,5 +1,5 @@
 module.exports = function(app) {
-    const video = require('../../Controllers/Media/Video/Video')
+    const video = require('../../Controllers/FileManager/Media/Video/Video')
     const authMiddleware = require('../../Controllers/User/authMiddleware');
     const collabMiddleware = require('../../Controllers/Collaboration/collabMiddleware');
 

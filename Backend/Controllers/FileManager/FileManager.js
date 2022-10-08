@@ -1,4 +1,4 @@
-export function getSignedUrl(req, res) {
+function getSignedUrl(req, res) {
     if (process.env.LOCAL_FILE_MANAGER == true) {
         const S3Manager = require("./S3Manager/S3Manager");
         S3Manager.getSignedUrl(req, res)
@@ -14,7 +14,7 @@ export function getSignedUrl(req, res) {
  * @param {String} keyName the media name
  * @returns
  */
- export function getUrlDownloadObject(objectType, keyName) {
+ function getUrlDownloadObject(objectType, keyName) {
     if (process.env.LOCAL_FILE_MANAGER == true) {
         const S3Manager = require("./S3Manager/S3Manager");
         return S3Manager.getUrlDownloadObject(objectType, keyName)
@@ -30,7 +30,7 @@ export function getSignedUrl(req, res) {
  * @param {String} keyName the media name
  * @returns
  */
-export function removeObject(objectType, keyName) {
+function removeObject(objectType, keyName) {
     if (process.env.LOCAL_FILE_MANAGER == true) {
         const S3Manager = require("./S3Manager/S3Manager");
         return S3Manager.removeObject(objectType, keyName)
@@ -39,3 +39,9 @@ export function removeObject(objectType, keyName) {
         return MinioManager.removeObject(objectType, keyName);
     }
 }
+
+module.exports = {
+    getSignedUrl,
+    getUrlDownloadObject,
+    removeObject
+};

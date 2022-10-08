@@ -130,3 +130,8 @@ exports.getSignedUrl = async function (req, res) {
         return res.status(200).send(returnValues);
     }
 }
+
+module.exports = {
+    getUrlDownloadObject,
+    getUrlUploadObject
+};

@@ -44,7 +44,7 @@ const bucketsName = {
  * @param {String} keyName the media name
  * @returns
  */
- export const getUrlUploadObject = async function (objectType, keyName) {
+const getUrlUploadObject = async function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
         let s3 = new AWS.S3(AWSAccess);
@@ -77,7 +77,7 @@ const bucketsName = {
  * @param {String} keyName the media name
  * @returns
  */
-export const getUrlDownloadObject = async function (objectType, keyName) {
+const getUrlDownloadObject = async function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
         let s3 = new AWS.S3(AWSAccess);
@@ -161,3 +161,8 @@ exports.getSignedUrl = async function (req, res) {
         return res.status(200).send(returnValues);
     }
 }
+
+module.exports = {
+    getUrlDownloadObject,
+    getUrlUploadObject
+};

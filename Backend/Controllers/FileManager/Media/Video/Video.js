@@ -1,6 +1,6 @@
-const { Errors } = require("../../../Models/Errors.js");
-const { Video } = require('../../../Models/Media/Video');
-const { Project } = require("../../../Models/Project.js");
+const { Errors } = require('../../../../Models/Errors');
+const { Video } = require('../../../../Models/Media/Video');
+const { Project } = require("../../../../Models/Project.js");
 
 
 exports.getVideo = async function (req, res) {
