@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const ThumbnailDisplay = ({thumbnail, removeThumbnail}) => {
-    console.log("🚀 ~ file: ThumbnailDisplay.jsx ~ line 6 ~ ThumbnailDisplay ~ thumbnail", thumbnail)
-    console.log("🚀 ~ file: ThumbnailDisplay.jsx ~ line 11 ~ useEffect ~ thumbnail.type", thumbnail.type)
     const [isHovered, setIsHovered] = useState(false)
     const [image, setImage] = useState(null)
 
