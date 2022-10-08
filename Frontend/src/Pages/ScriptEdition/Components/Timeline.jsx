@@ -7,26 +7,27 @@ import { toast } from 'react-toastify';
 
 import TimecodeLine from './TimecodeLine';
 import ReplicaBox from './ReplicaBox';
+import TimelineCursor from './TimelineCursor';
 
 // temporary duration of a project, so we can do the timeline
 // const videoLength = 3600000 / 4;
 const canvasHeight = 80;
 // coefficient between seconds (in ms) and pixels : 1 sec =
 // var secToPxCoef = 300; // will change if zoom
+const MIN_ZOOM = 30;
 
-const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState}) => {
+const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     const [secToPxCoef, setSecToPxCoef] = useState(100);
     const [replicasPositions, setReplicasPositions] = useState([]);
-    // const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
-    var newReplicaTimestamp = -1;
+    const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var timecodeArray = [];
     const [currentTime, setCurrentTime] = useState(0);
 
 
     const addReplica = async function () {
-        if (newReplicaTimestamp == -1) return;
-        else if (newReplicaTimestamp >= duration - 1500) {
+        if (newReplicaTimestamp === -1) return;
+        else if (newReplicaTimestamp / 1000 >= duration) {
             toast.error("Error - You cannot create a replica outside of the scope of the video.");
             return;
         }
@@ -153,7 +154,6 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
             SecToPx += 100
         }
         setSecToPxCoef(SecToPx)
-        console.log("🚀 ~ file: Timeline.jsx ~ line 144 ~ useEffect ~ SecToPx", SecToPx)
         for (var i = 0; i < nbSeconds; i++) {
             timecodeArray.push({
                 videoLength: duration,
@@ -188,22 +188,63 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
         )
     })
 
+    const generateTimeCodeLines = () => {
+        let d = duration;
+        let timecodeLines = []
+        for (let i = 1; d > 0; i++, d -= 60) {
+            var durationLeft = duration - ((i - 1) * 60)
+            timecodeLines.push(
+                <TimecodeLine
+                className=""
+                videoLength={durationLeft}
+                secondToPixelCoef={secToPxCoef}
+                minute={i}/>
+            );
+        }
+        return timecodeLines
+    }
 
-    if (!player)
-        return (<h1>Loading</h1>)
+    const timeCodeLines = generateTimeCodeLines();
+
+    const onTimelineClick = (e) => {
+        if (e.detail === 2) {
+            var timelineScroll = document.getElementById('timeline-container').scrollLeft
+            let result = (e.clientX + timelineScroll) / secToPxCoef
+            setNewSecondsFromCursor(result - 0.25)
+        }
+    }
+
+
     return (
-        <div className='flex flex-col w-full'>
-            <div className='flex flex-row items-end justify-end mb-2'>
-                <button className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef + 100)}>+</button>
-                <button disabled={secToPxCoef === 100 ? true: false} className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4' onClick={() => setSecToPxCoef(secToPxCoef - 100)}>-</button>
+        <div className='flex flex-col items-start justify-start w-full overflow-x-hidden'>
+            <div className='flex flex-row items-end justify-end mb-2 -mr-12 w-full'>
+                <button
+                className='bg-myBlue flex items-center justify-center w-8 h-8 rounded-full text-white mr-4'
+                onClick={() => setSecToPxCoef(secToPxCoef + 10)}>+</button>
+                <button
+                disabled={secToPxCoef === MIN_ZOOM ? true: false}
+                className={`${secToPxCoef === MIN_ZOOM ? 'bg-gray-500 cursor-not-allowed' : 'bg-myBlue'} flex items- 
+                   center justify-center w-8 h-8 rounded-full text-white`}
+                onClick={() => setSecToPxCoef(secToPxCoef - 10)}>-</button>
             </div>
             <ContextMenuTrigger id='timeline_menu' holdToDisplay={-1}>
-                <div className='flex overflow-x-scroll overflow-y-hidden relative
-                w-screen bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'>
+                <div
+                id="timeline-container"
+                onClick={onTimelineClick}
+                className='flex overflow-x-scroll overflow-y-hidden relative
+                    w-full m-0 bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'
+                    >
                     <div className='flex flex-row items-start'>
                         {replicaLine}
                     </div>
-                    <TimecodeLine className="" videoLength={duration} secondToPixelCoef={secToPxCoef} minute={1}/>
+                    <div className='flex flex-row w-full'>
+                        {timeCodeLines}
+                    </div>
+                    <TimelineCursor
+                    secondToPixelRatio={secToPxCoef}
+                    secondsPlayed={playedSeconds}
+                    setNewSecondsFromCursor={setNewSecondsFromCursor}
+                    />
                 </div>
             </ContextMenuTrigger>
 
@@ -218,7 +259,7 @@ const Timeline = ({player, duration, replicas, projectId, onReplicaSelection, up
                 var scrollX = e.target.scrollX;
                 var posX = e.detail.position.x;
                 var result = ((scrollX + posX - (16 * 2)) / secToPxCoef); // -2 rem equals the adjustment of the position
-                newReplicaTimestamp = (result * 1000).toFixed(0);
+                setNewReplicaTimestamp((result * 1000).toFixed(0))
             }}>
                 <MenuItem onClick={addReplica}>
                  {/* <MenuItem onClick= _ => await addReplica(newReplicaTimestamp)> */}

@@ -23,6 +23,7 @@
 
 .react-contextmenu-wrapper {
     height: 80px;
+    width: 100%;
 }
 
 .react-contextmenu-item {

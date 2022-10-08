@@ -40,6 +40,28 @@ const InputWithLabel = (props) => {
         }
     }
 
+    if (props.type === 'textarea') {
+        return(
+            <div className="input-with-label-container">
+                <label className="input-with-label-label">{props.label}</label>
+                <textarea
+                onChange={e => {
+                    props.onChange(e.target.value);
+                    setText(e.target.value);
+                }}
+                className="input-with-label-input"
+                placeholder={props.placeholder}
+                onBlur={checkValidity}
+                name={props.label}
+                id={props.label}
+                value={text}
+                >
+                </textarea>
+                {isValid ? null: <p className="input-with-label-error">{props.errorMessage}</p>}
+            </div>
+        )
+    }
+
     return (
         <div className="input-with-label-container">
             <label className="input-with-label-label">{props.label}</label>

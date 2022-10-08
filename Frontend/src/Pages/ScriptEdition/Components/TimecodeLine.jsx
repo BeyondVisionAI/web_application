@@ -18,7 +18,7 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
 
     const drawTimecodeLines = function() {
         const spacing = secondToPixelCoef;
-        var canvas = document.getElementById('timecodeCanvas');
+        var canvas = document.getElementById(`timecodeCanvas-${minute}`);
         var ctx = canvas.getContext('2d');
         fillBackground(ctx, canvas);
         ctx.lineWidth = 1;
@@ -32,7 +32,7 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
         for (var second = 0; second < 60; second++) {
             drawLine(ctx, spacing * second, 0.5);
             if (second != 0 && second % 10 == 0)
-                ctx.fillText(`${second}s`, spacing * second - 7.5, 30);
+                ctx.fillText(`${minute - 1}:${second}`, spacing * second + 15, 30);
             // ms
             drawLine(ctx, spacing * second + spacing * 0.25, 0.2);
             drawLine(ctx, spacing * second + spacing * 0.5, 0.2);
@@ -40,7 +40,7 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
         }
         drawLine(ctx, spacing * 60, 0.8);
         ctx.textAlign = 'end';
-        ctx.fillText(`${minute}m`, spacing * 60 - 2, 30);
+        ctx.fillText(`${minute}:00`, spacing * 60, 30);
     }
 
     useEffect(() => {
@@ -48,9 +48,9 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
     }, [videoLength, secondToPixelCoef]);
 
     return (
-        <canvas id='timecodeCanvas' className='bg-black'
-        style={{width: `${secondToPixelCoef * videoLength }px`, height: `${canvasHeight}px`}}
-        width={secondToPixelCoef * videoLength} height={canvasHeight}>
+        <canvas id={`timecodeCanvas-${minute}`} className='bg-black'
+        style={{width: `${videoLength > 60 ? 60 * secondToPixelCoef : secondToPixelCoef * videoLength }px`, height: `${canvasHeight}px`}}
+        width={videoLength > 60 ? 60 * secondToPixelCoef : secondToPixelCoef * videoLength} height={canvasHeight}>
         </canvas>
     )
 }
