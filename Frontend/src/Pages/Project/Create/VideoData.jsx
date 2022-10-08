@@ -21,7 +21,7 @@ export default function VideoData({ prevStep, handleChange, values, postData }) 
         e.preventDefault();
         handleChange('videoType', selectedType)
         handleChange('description', description)
-        nextStep();
+        postData();
     }
     const prev = e => {
         e.preventDefault();
