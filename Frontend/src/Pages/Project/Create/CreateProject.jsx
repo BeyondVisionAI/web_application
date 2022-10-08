@@ -251,6 +251,7 @@ export default function CreateProject({ show, onHide }) {
             handleChange('id', projectResponse.data._id);
             await uploadMedia();
             history.push(`/project/${projectResponse.data._id}`);
+            onHide()
         } catch (error) {
             console.error(error);
         }

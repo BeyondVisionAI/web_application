@@ -4,8 +4,10 @@ import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithL
 import ThumbnailDisplay from './ThumbnailDisplay';
 
 export default function ProjectData({ image, setImage, nextStep, prevStep, handleChange, values }) {
+    console.log("🚀 ~ file: ProjectData.jsx ~ line 7 ~ ProjectData ~ image", image)
+    console.log("🚀 ~ file: ProjectData.jsx ~ line 7 ~ ProjectData ~ values", values)
     const [thumbnail, setThumbnail] = useState(null);
-    const [title, setTitle] = useState(values.title || '');
+    const [title, setTitle] = useState(values.name || '');
     const [localImage, setLocalImage] = useState(null);
     const [areAllRequiredFieldsFilled, setAreAllRequiredFieldsFilled] = useState(false)
 
@@ -37,21 +39,21 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
     }, [localImage]);
 
     useEffect(() => {
-        if (title.length > 0 && thumbnail) setAreAllRequiredFieldsFilled(true)
+        if (title.length > 0 && (thumbnail || image)) setAreAllRequiredFieldsFilled(true)
         else setAreAllRequiredFieldsFilled(false)
-    }, [title, thumbnail]);
+    }, [title, thumbnail, image]);
 
     return (
         <form className="flex w-full h-full">
             <div className="flex flex-wrap w-2/3">
                 <div className="w-2/3 h-1/5 px-3 mb-6">
-                    <InputWithLabel defaultValue={ values.title } placeholder="Title" type="text" label="Title" onChange={setTitle} />
+                    <InputWithLabel defaultValue={ values.name } placeholder="Title" type="text" label="Title" onChange={setTitle} />
                 </div>
             </div>
             <div className="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded items-center justify-center">
-                {!thumbnail && <UploadFile text="Drag and drop your thumbnail !" setData={ setLocalImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>}
+                {(!thumbnail && !image) && <UploadFile text="Drag and drop your thumbnail !" setData={ setLocalImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>}
 
-                { thumbnail && <ThumbnailDisplay thumbnail={thumbnail} removeThumbnail={() => setThumbnail(null)} />}
+                { (thumbnail || image) && <ThumbnailDisplay thumbnail={image || thumbnail} removeThumbnail={() => {setThumbnail(null); setImage(null)}} />}
             </div>
             <div className="absolute bottom-0 right-0 p-6">
                 <button

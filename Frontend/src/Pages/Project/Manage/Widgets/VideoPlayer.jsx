@@ -20,7 +20,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
   }, [playing]);
 
   useEffect(() => {
-    setPlayedSecondsInParent(playedSeconds / 1000)
+    if (setPlayedSecondsInParent) setPlayedSecondsInParent(playedSeconds / 1000)
   }, [playedSeconds, setPlayedSecondsInParent]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
       url={videoUrl}
       ref={ playerRef }
       controls={true}
-      onDuration={setDuration}
+      onDuration={setDuration ? setDuration : null}
       onBuffer={() => setPlaying(false)}
       onBufferEnd={() => setPlaying(true)}
       onSeek={second => setPlayedSeconds(second * 1000)}
