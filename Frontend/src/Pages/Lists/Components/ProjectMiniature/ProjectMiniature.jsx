@@ -88,7 +88,7 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${movie._id}/${movie.thumbnailId}`);
                     let response = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/Download/thumbnail/${image.data.name.split(".").pop()}`);
                     // TODO: Get url in image directly
-                    let url = response.data;
+                    let url = response.data.url;
                     setThumbnail(url);
                 } catch (err) {
                     console.error(`Getting file ${"thumbnailId"} on S3`, err);

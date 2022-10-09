@@ -26,7 +26,7 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${projId}/${thumbnailId}`);
                     let response = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/Download/thumbnail/${image.data.name.split(".").pop()}`);
                     // TODO: Get url in image directly
-                    let url = response.data;
+                    let url = response.data.url;
                     setThumbnail(url);
                 } catch (err) {
                     console.error(`Getting file ${thumbnailId} on S3`, err);
@@ -67,9 +67,8 @@ export default function Description({ editing, setEditing, updateProjectValues, 
         async function updateThumbnail() {
             try {
                 const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/Upload/thumbnail/${projectId}.${image.name.split(".").pop()}}`);
-                const urlThumbnailUpload = responseThumbnail.data;
+                const urlThumbnailUpload = responseThumbnail.data.url;
                 console.log("🚀 ~ file: Description.jsx ~ line 71 ~ updateThumbnail ~ urlThumbnailUpload", urlThumbnailUpload)
-                axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
                 const imageRes = await axios({
                     url: urlThumbnailUpload,
                     body: image,

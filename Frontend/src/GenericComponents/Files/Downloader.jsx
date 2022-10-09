@@ -17,7 +17,7 @@ async function downloadFile(props) {
         console.log(`Null ?, type : ${props.type}`);
         response.data = null;
     }
-    const url = response.data;
+    const url = response.data.url;
 
     axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
     // axios({

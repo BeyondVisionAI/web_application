@@ -91,7 +91,7 @@ export default function CreateProject({ show, onHide }) {
         try {
             const responseThumbnail = await axios.post(`${process.env.REACT_APP_API_URL}/mediaManager/Upload/thumbnail`, {objectName: `${values.id}.${image.name.split(".").pop()}`});
             // Le call au dessus retire le .img c'est bon ?
-            const urlThumbnailUpload = responseThumbnail.data;
+            const urlThumbnailUpload = responseThumbnail.data.url;
             console.log("Thumbnail Url :", urlThumbnailUpload);
             axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
             const imageRes = await axios({
@@ -171,7 +171,7 @@ export default function CreateProject({ show, onHide }) {
         
         try {
             const responseVideo = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/source-product/video/upload-url/${values.id}.${video.name.split(".").pop()}`);
-            const urlVideoUpload = responseVideo.data;
+            const urlVideoUpload = responseVideo.data.url;
             console.log("Video Url :", urlVideoUpload);
             axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
             const videoRes = await axios({
