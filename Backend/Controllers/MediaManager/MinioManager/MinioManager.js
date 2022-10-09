@@ -1,7 +1,5 @@
 const Minio = require('minio');
 const { Errors } = require("../../../Models/Errors.js");
-const { Video } = require('../../../Models/Media/Video');
-const { Image } = require('../../../Models/Media/Image');
 
 const minioClient = new Minio.Client({
     endPoint: process.env.MINIO_ENDPOINT,
@@ -41,7 +39,7 @@ const isFinishedMedia = function(objectType, keyName) {
  * Get presigned url of keyname to upload
  * @param {String} objectType source-video, thumbnail, audio or finished-video
  * @param {String} keyName the media name
- * @returns {Promise<String> | { code: Number, err: Error}}
+ * @returns {Promise<String> | { err: Error}}
  */
 const getUrlUploadObject = function (objectType, keyName) {
     try {
@@ -51,7 +49,7 @@ const getUrlUploadObject = function (objectType, keyName) {
         return (url);
     } catch (err) {
         console.log('Error catch', err);
-        return ({ code: 500, err: err });
+        return ({ error: err });
     }
 }
 
@@ -59,7 +57,7 @@ const getUrlUploadObject = function (objectType, keyName) {
  * Get presigned url of keyname to download
  * @param {String} objectType source-video, thumbnail, audio or finished-video
  * @param {String} keyName the media name
- * @returns {Promise<String> | { code: Number, err: Error}}
+ * @returns {Promise<String> | { err: Error}}
  */
 const getUrlDownloadObject = function (objectType, keyName) {
     try {
@@ -69,7 +67,7 @@ const getUrlDownloadObject = function (objectType, keyName) {
         return (url);
     } catch (err) {
         console.log('Error catch', err);
-        return ({ code: 500, err: err });
+        return ({ error: err });
     }
 }
 
@@ -78,18 +76,17 @@ const getUrlDownloadObject = function (objectType, keyName) {
  * Remove object
  * @param {String} objectType source-video, thumbnail, audio or finished-video
  * @param {String} keyName the media name
- * @returns {Promise<Void> | { code: Number, err: Error}}
+ * @returns {Promise<Void> | { err: Error}}
  */
 exports.removeObject = function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
-
         const returnValues = minioClient.removeObject(bucketName, isFinishedMedia(objectType, keyName))
 
         return (returnValues)
     } catch (err) {
         console.log('Error catch', err);
-        return ({ code: 500, err: err });
+        return ({ error: err });
     }
 };
 
@@ -109,7 +106,7 @@ async function getSignedUrl(req, res) {
     }
 
     if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
-        return res.status(500).send(Errors.INTERNAL_ERROR);
+        return res.status(500).send(returnValues);
     } else {
         return res.status(200).send({url: returnValues});
     }
