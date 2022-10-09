@@ -46,17 +46,13 @@ const isFinishedMedia = function(objectType, keyName) {
 const getUrlUploadObject = async function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
-        const url = minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60);
-
-        console.log("🚀 ~ file: MinioManager.js ~ line 74 ~ getUrlDownloadObject ~ url", url);
-        // const url = await new Promise((resolve, reject) => {
-        //     minioClient.presignedPutObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
-        //             if (err)
-        //                 reject(err);
-        //             resolve(presignedUrl);
-        //         })
-        //     }
-        // )
+        const url = await new Promise((resolve, reject) => {
+            minioClient.presignedPutObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
+                    if (err)
+                        reject(err);
+                    resolve(presignedUrl);
+            });
+        });
         return (url);
     } catch (err) {
         console.log('Error catch', err);
@@ -74,14 +70,12 @@ const getUrlDownloadObject = async function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
         const url = await new Promise((resolve, reject) => {
-                minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
-                    console.log("🚀 ~ file: MinioManager.js ~ line 75 ~ minioClient.presignedGetObject ~ presignedUrl", presignedUrl);
-                    if (err)
-                        reject(err);
-                    resolve(presignedUrl);
-                })
-            }
-        )
+            minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
+                if (err)
+                    reject(err);
+                resolve(presignedUrl);
+            });
+        });
         return (url);
     } catch (err) {
         console.log('Error catch', err);
@@ -101,13 +95,12 @@ exports.removeObject = async function (objectType, keyName) {
         let bucketName = bucketsName[objectType];
 
         const returnValues = await new Promise((resolve, reject) => {
-                minioClient.removeObject(bucketName, isFinishedMedia(objectType, keyName), (err) => {
-                    if (err)
-                        reject(err);
-                    resolve("Object successfully removed");
-                })
-            }
-        )
+            minioClient.removeObject(bucketName, isFinishedMedia(objectType, keyName), (err) => {
+                if (err)
+                    reject(err);
+                resolve("Object successfully removed");
+            });
+        });
         return (returnValues)
     } catch (err) {
         console.log('Error catch', err);
@@ -130,7 +123,7 @@ async function getSignedUrl(req, res) {
             break;
     }
 
-    if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues?.code === 500) {
+    if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
         return res.status(200).send(returnValues);
