@@ -6,8 +6,8 @@ const { Image } = require('../../../Models/Media/Image');
 const minioClient = new Minio.Client({
     endPoint: process.env.MINIO_ENDPOINT,
     port: parseInt(process.env.MINIO_PORT),
-    useSSL: true,
-    accesKey: process.env.MINIO_ACCESS_KEY,
+    useSSL: false,
+    accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY
 });
 
@@ -123,6 +123,7 @@ async function getSignedUrl(req, res) {
             break;
     }
 
+    console.log("🚀 ~ file: MinioManager.js ~ line 121 ~ getSignedUrl ~ returnValues", returnValues);
     if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     } else {
