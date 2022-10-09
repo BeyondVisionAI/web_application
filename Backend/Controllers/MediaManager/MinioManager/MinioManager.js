@@ -1,13 +1,11 @@
 const Minio = require('minio');
 const { Errors } = require("../../../Models/Errors.js");
-const { Video } = require('../../../Models/Media/Video');
-const { Image } = require('../../../Models/Media/Image');
 
 const minioClient = new Minio.Client({
     endPoint: process.env.MINIO_ENDPOINT,
     port: parseInt(process.env.MINIO_PORT),
-    useSSL: true,
-    accesKey: process.env.MINIO_ACCESS_KEY,
+    useSSL: false,
+    accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY
 });
 
@@ -41,22 +39,17 @@ const isFinishedMedia = function(objectType, keyName) {
  * Get presigned url of keyname to upload
  * @param {String} objectType source-video, thumbnail, audio or finished-video
  * @param {String} keyName the media name
- * @returns
+ * @returns {Promise<String> | { err: Error}}
  */
-const getUrlUploadObject = async function (objectType, keyName) {
+const getUrlUploadObject = function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
-        const url = await new Promise((resolve, reject) => {
-            minioClient.presignedPutObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
-                    if (err)
-                        reject(err);
-                    resolve(presignedUrl);
-            });
-        });
+        const url = minioClient.presignedPutObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60)
+
         return (url);
     } catch (err) {
         console.log('Error catch', err);
-        return ({ code: 500, err: err });
+        return ({ error: err });
     }
 }
 
@@ -64,22 +57,17 @@ const getUrlUploadObject = async function (objectType, keyName) {
  * Get presigned url of keyname to download
  * @param {String} objectType source-video, thumbnail, audio or finished-video
  * @param {String} keyName the media name
- * @returns
+ * @returns {Promise<String> | { err: Error}}
  */
-const getUrlDownloadObject = async function (objectType, keyName) {
+const getUrlDownloadObject = function (objectType, keyName) {
     try {
-        let bucketName = bucketsName[objectType];
-        const url = await new Promise((resolve, reject) => {
-            minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
-                if (err)
-                    reject(err);
-                resolve(presignedUrl);
-            });
-        });
+        const bucketName = bucketsName[objectType];
+        const url = minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60);
+
         return (url);
     } catch (err) {
         console.log('Error catch', err);
-        return ({ code: 500, err: err });
+        return ({ error: err });
     }
 }
 
@@ -88,23 +76,17 @@ const getUrlDownloadObject = async function (objectType, keyName) {
  * Remove object
  * @param {String} objectType source-video, thumbnail, audio or finished-video
  * @param {String} keyName the media name
- * @returns
+ * @returns {Promise<Void> | { err: Error}}
  */
-exports.removeObject = async function (objectType, keyName) {
+exports.removeObject = function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
+        const returnValues = minioClient.removeObject(bucketName, isFinishedMedia(objectType, keyName))
 
-        const returnValues = await new Promise((resolve, reject) => {
-            minioClient.removeObject(bucketName, isFinishedMedia(objectType, keyName), (err) => {
-                if (err)
-                    reject(err);
-                resolve("Object successfully removed");
-            });
-        });
         return (returnValues)
     } catch (err) {
         console.log('Error catch', err);
-        return ({ code: 500, err: err }).promise();
+        return ({ error: err });
     }
 };
 
@@ -116,17 +98,17 @@ async function getSignedUrl(req, res) {
 
     switch (operationType) {
         case 'Download':
-            returnValues = getUrlDownloadObject(objectType, objectName);
+            returnValues = await getUrlDownloadObject(objectType, objectName);
             break;
         case 'Upload':
-            returnValues = getUrlUploadObject(objectType, objectName);
+            returnValues = await getUrlUploadObject(objectType, objectName);
             break;
     }
 
     if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
-        return res.status(500).send(Errors.INTERNAL_ERROR);
+        return res.status(500).send(returnValues);
     } else {
-        return res.status(200).send(returnValues);
+        return res.status(200).send({url: returnValues});
     }
 }
 
