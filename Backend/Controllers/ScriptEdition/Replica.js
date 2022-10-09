@@ -1,7 +1,7 @@
 const { Errors } = require("../../Models/Errors.js");
 const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
-const { removeObject, getUrlDownloadObject } = require("../FileManager/FileManager")
+const { removeObject, getUrlDownloadObject } = require("../MediaManager/MediaManager")
 
 
 /**

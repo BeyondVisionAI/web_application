@@ -1,4 +1,4 @@
-function getSignedUrl(req, res) {
+function getSignedUrl(req, res) {    
     if (process.env.LOCAL_FILE_MANAGER == true) {
         const S3Manager = require("./S3Manager/S3Manager");
         S3Manager.getSignedUrl(req, res)

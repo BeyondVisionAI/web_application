@@ -1,5 +1,5 @@
 module.exports = function(app) {
-    const image = require('../../Controllers/FileManager/Media/Image/Image');
+    const image = require('../../Controllers/MediaManager/Media/Image/Image');
     const authMiddleware = require('../../Controllers/User/authMiddleware');
     const collabMiddleware = require('../../Controllers/Collaboration/collabMiddleware');
 

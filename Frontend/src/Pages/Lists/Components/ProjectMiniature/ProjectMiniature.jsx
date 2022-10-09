@@ -86,7 +86,7 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
             async function getThumbnailProject() {
                 try {
                     let image = await axios.get(`${process.env.REACT_APP_API_URL}/images/${movie._id}/${movie.thumbnailId}`);
-                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/FileManager/Download/thumbnail/${image.data.name}`);
+                    let response = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/Download/thumbnail/${image.data.name.split(".").pop()}`);
                     // TODO: Get url in image directly
                     let url = response.data;
                     setThumbnail(url);

@@ -9,10 +9,10 @@ async function downloadFile(props) {
 
     if (props.type === 'video-finished-products') {
         console.log("Video");
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/FileManager/Download/finished-video/${props.projectId + '.mp4'}`);
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/Download/finished-video/${props.projectId + '.mp4'}`);
     } else if (props.type === 'audio-finished-products') {
         console.log("Audio");
-        response = await axios.get(`${process.env.REACT_APP_API_URL}/FileManager/Download/finished-audio/${props.projectId} + '.mp3'`);
+        response = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/Download/finished-audio/${props.projectId} + '.mp3'`);
     } else {
         console.log(`Null ?, type : ${props.type}`);
         response.data = null;

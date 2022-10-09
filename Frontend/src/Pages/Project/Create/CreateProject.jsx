@@ -89,7 +89,7 @@ export default function CreateProject({ show, onHide }) {
         //TODO Upload by getting a signedUrl from the Back End to Upload the Thumbnail directly on the front
         
         try {
-            const responseThumbnail = await axios.get(`${process.env.REACT_APP_API_URL}/FileManager/Download/thumbnail/${values.id}.${image.name.split(".").pop()}`);
+            const responseThumbnail = await axios.post(`${process.env.REACT_APP_API_URL}/mediaManager/Download/thumbnail`, {objectName: `${values.id}.${image.name.split(".").pop()}`});
             // Le call au dessus retire le .img c'est bon ?
             const urlThumbnailUpload = responseThumbnail.data;
             console.log("Thumbnail Url :", urlThumbnailUpload);
@@ -170,7 +170,7 @@ export default function CreateProject({ show, onHide }) {
         //TODO Upload by getting a signedUrl from the Back End to Upload the Video directly on the front
         
         try {
-            const responseVideo = await axios.get(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/upload-url/${values.id}.${video.name.split(".").pop()}`);
+            const responseVideo = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/source-product/video/upload-url/${values.id}.${video.name.split(".").pop()}`);
             const urlVideoUpload = responseVideo.data;
             console.log("Video Url :", urlVideoUpload);
             axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';

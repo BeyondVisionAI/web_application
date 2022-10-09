@@ -72,7 +72,7 @@ exports.createProject = async function (req, res) {
         });
         await newProject.save();
         await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
-        res.status("200").send(newProject);
+        res.status(200).send(newProject);
     } catch (err) {
         console.log("Project->createProject: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);

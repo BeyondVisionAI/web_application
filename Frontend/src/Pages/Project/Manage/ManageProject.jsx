@@ -27,6 +27,7 @@ export default function ManageProject(props) {
             try {
                 let videoUrl = null;
                 let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`);
+                
                 try {
                     if (projectR.data.videoId) {
                         let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`);

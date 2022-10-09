@@ -128,9 +128,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
      */
 
     const formatTimestamp = function (t, d) {
-        
-        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 154 ~ formatTimestamp ~ t", t)
-        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 153 ~ formatTimestamp ~ d", d)
         const msToTimecode = function(t) {
             var hours = Math.floor(t / 3600000);
             var minutes = Math.floor((t - (hours * 3600000)) / 60000);

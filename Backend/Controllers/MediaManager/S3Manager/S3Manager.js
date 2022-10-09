@@ -142,7 +142,8 @@ exports.removeObject = async function (objectType, keyName) {
 };
 
 exports.getSignedUrl = async function (req, res) {
-    const { objectName, objectType, operationType } = req.params;
+    const { objectType, operationType } = req.params;
+    const { objectName } = req.body;
     let returnValues = '';
 
     console.log("Download Url Object", req.params);

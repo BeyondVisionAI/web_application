@@ -4,8 +4,6 @@ import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithL
 import ThumbnailDisplay from './ThumbnailDisplay';
 
 export default function ProjectData({ image, setImage, nextStep, prevStep, handleChange, values }) {
-    console.log("🚀 ~ file: ProjectData.jsx ~ line 7 ~ ProjectData ~ image", image)
-    console.log("🚀 ~ file: ProjectData.jsx ~ line 7 ~ ProjectData ~ values", values)
     const [thumbnail, setThumbnail] = useState(null);
     const [title, setTitle] = useState(values.name || '');
     const [localImage, setLocalImage] = useState(null);
