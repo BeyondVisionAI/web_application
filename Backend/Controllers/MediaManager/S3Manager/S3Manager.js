@@ -126,7 +126,7 @@ exports.removeObject = async function (objectType, keyName) {
             Bucket: bucketName,
             Key: keyName
         };
-        const returnValues = await new PromisePromise((resolve, reject) => {
+        const returnValues = await new Promise((resolve, reject) => {
                 s3.deleteObject(params, function (err, data) {
                     if (err)
                         reject(err);
