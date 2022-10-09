@@ -1,3 +1,4 @@
+const Project = require("../Controllers/Project/Project");
 module.exports = function (app) {
     const Project = require('../Controllers/Project/Project');
     const authMiddleware = require('../Controllers/User/authMiddleware');
@@ -28,4 +29,9 @@ module.exports = function (app) {
 
     app.post('/projects/:projectId/setStatus',
         Project.setStatus);
+
+    app.post('/projects/:projectId/generationIA',
+        authMiddleware.authenticateUser,
+        collabMiddleware.hasRightAdmin,
+        Project.generationIA);
 }

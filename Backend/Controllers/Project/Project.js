@@ -143,7 +143,7 @@ exports.setStatus = async function (req, res) {
     try {
         if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        var project = await Project.findById(req.params.projectId);
+        let project = await Project.findById(req.params.projectId);
 
         if (!project)
             return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
@@ -168,4 +168,29 @@ exports.setStatus = async function (req, res) {
         console.log("Project->setStatus: " + err);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
+}
+
+exports.generationIA = async function (req, res) {
+    let returnCode = 200;
+    let returnMessage = ""
+    try {
+        if (!req.body.typeGeneration) {
+            throw Errors.BAD_REQUEST_BAD_INFOS;
+        }
+        let Project = await Project.findById(req.params.projectId);
+        if ((Project.ActualStep === 'ActionRetrieve' || Project.ActualStep === 'FaceRecognition') && Project.status === 'InProgress') {
+            returnMessage = 'Generation IA is in progress';
+        } else {
+            if (req.body.typeGeneration === 'ActionRetrieve') {
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`);
+            } else if (req.body.typeGeneration === 'FaceRecognition') {
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`);
+            }
+        }
+    } catch (err) {
+        console.log("Project->setStatus: " + err);
+        returnCode = 400;
+        returnMessage = err;
+    }
+    return (res.status(returnCode).send(returnMessage));
 }
