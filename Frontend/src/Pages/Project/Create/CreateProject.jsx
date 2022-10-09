@@ -89,7 +89,7 @@ export default function CreateProject({ show, onHide }) {
         //TODO Upload by getting a signedUrl from the Back End to Upload the Thumbnail directly on the front
         
         try {
-            const responseThumbnail = await axios.post(`${process.env.REACT_APP_API_URL}/mediaManager/Download/thumbnail`, {objectName: `${values.id}.${image.name.split(".").pop()}`});
+            const responseThumbnail = await axios.post(`${process.env.REACT_APP_API_URL}/mediaManager/Upload/thumbnail`, {objectName: `${values.id}.${image.name.split(".").pop()}`});
             // Le call au dessus retire le .img c'est bon ?
             const urlThumbnailUpload = responseThumbnail.data;
             console.log("Thumbnail Url :", urlThumbnailUpload);
