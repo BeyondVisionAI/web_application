@@ -69,14 +69,14 @@ export default function ManageProject(props) {
         if (editing === EDIT.off)
             return (
                 <>
-                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => RedirectToEdit()}>Editor</button>
-                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.on)}>Configurations</button>
+                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mx-5 mt-3 ease-linear transition-all duration-150" onClick={() => RedirectToEdit()}>Editor</button>
+                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mx-5 mt-3 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.on)}>Configurations</button>
                 </>
             );
         return (
             <>
-                <button className="bg-myBlack text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.off)}>Cancel</button>
-                <button className="bg-myBlue text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.update)}>Done</button>
+                <button className="bg-myBlack text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mx-5 mt-3 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.off)}>Cancel</button>
+                <button className="bg-myBlue text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mx-5 mt-3 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.update)}>Done</button>
             </>
         );
     };
@@ -90,7 +90,9 @@ export default function ManageProject(props) {
         return (
             <div className='w-full h-screen bg-myWhite'>
                 <NavBarVariante projectId={props.match.params.id} />
-                {editMode()}
+                <div className='w-full flex justify-center'>
+                    {editMode()}
+                </div>
                 <div className='flex w-full h-screen'>
                     <div className='w-2/3 h-full'>
                         <Description
