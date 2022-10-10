@@ -107,13 +107,13 @@ export default function ManageProject(props) {
                         />
                      </div>
                      <div className='h-full w-1/3 rounded-xl'>
-                         <ProjectStatus
+                         {/* <ProjectStatus
                              actualStep={project.actualStep}
                          />
                          <Options
                              projectId={props.match.params.id}
                          />
-                         <Bill />
+                         <Bill /> */}
                      </div>
                  </div>
              </div>
