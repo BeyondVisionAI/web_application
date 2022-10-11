@@ -10,7 +10,7 @@ export function GenerationIA(props) {
         if (!isDownload) {
             setIsDownload(true);
             setButtonText("Generating...");
-            axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/generationIA`, { typeGeneration: props.typeGeneration })
+            axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.projectId}/generationIA`, { typeGeneration: props.typeGeneration })
             setIsDownload(false);
             setButtonText(props.label);
         }

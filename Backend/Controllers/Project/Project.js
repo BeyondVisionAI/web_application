@@ -3,6 +3,7 @@ const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
+const axios = require("axios")
 
 exports.getProjectDB = async function (projectId) {
     try {
@@ -177,8 +178,8 @@ exports.generationIA = async function (req, res) {
         if (!req.body.typeGeneration) {
             throw Errors.BAD_REQUEST_BAD_INFOS;
         }
-        let Project = await Project.findById(req.params.projectId);
-        if ((Project.ActualStep === 'ActionRetrieve' || Project.ActualStep === 'FaceRecognition') && Project.status === 'InProgress') {
+        let project = await Project.findById(req.params.projectId);
+        if ((project.ActualStep === 'ActionRetrieve' || project.ActualStep === 'FaceRecognition') && project.status === 'InProgress') {
             returnMessage = 'Generation IA is in progress';
         } else {
             if (req.body.typeGeneration === 'ActionRetrieve') {
