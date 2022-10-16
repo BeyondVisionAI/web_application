@@ -116,9 +116,7 @@ exports.removeObject = async function (objectType, keyName) {
     }
 };
 
-async function getSignedUrl(req, res) {
-    const { objectType, operationType } = req.params;
-    const { objectName } = req.body;
+async function getSignedUrl(operationType, objectType, objectName) {
     let returnValues = '';
     console.log(`${operationType} : ${objectType} with the name : ${objectName}`);
 
@@ -131,10 +129,10 @@ async function getSignedUrl(req, res) {
             break;
     }
 
-    if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues?.code === 500) {
-        return res.status(500).send(Errors.INTERNAL_ERROR);
+    if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
+        return (Errors.INTERNAL_ERROR);
     } else {
-        return res.status(200).send(returnValues);
+        return (returnValues);
     }
 }
 

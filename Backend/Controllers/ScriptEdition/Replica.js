@@ -2,7 +2,7 @@ const { Errors } = require("../../Models/Errors.js");
 const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
 const { removeObject, getUrlDownloadObject } = require("../MediaManager/MediaManager")
-
+const axios = require("axios");
 
 /**
  * Call ServerIA to create audio
@@ -11,25 +11,33 @@ const { removeObject, getUrlDownloadObject } = require("../MediaManager/MediaMan
  */
 const createAudio = async (replica) => {
     try {
-        const response = await fetch(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
-            method: 'post',
-            body: JSON.stringify({
+        replica.status = 'InProgress';
+        replica.actualStep = 'Voice';
+        await replica.save();
+        const response = await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`,
+            {
                 projectId: replica.projectId,
                 voiceId: replica.voiceId,
                 text: replica.text,
                 replicaId: replica._id
-            })
-        });
+            });
         switch (response.status) {
             case 200:
+                replica.status = 'Done';
+                replica.actualStep = 'Voice';
+                await replica.save();
                 return true;
             case 400:
+                replica.status = 'Error';
+                replica.actualStep = 'Voice';
+                await replica.save();
                 throw Errors(response)
             default:
                 break;
         }
     } catch(error) {
         console.error(error);
+        return false;
     }
 }
 
@@ -46,6 +54,20 @@ const getReplicaAudioUrl = async (replica) => {
         return {...replica, url: data}
     } catch(error) {
         console.error(error);
+    }
+}
+
+exports.getProjectReplicas = async function(projectId) {
+    try {
+        // var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
+        var replicas = await Replica.find({projectId: req.params.projectId}).
+        populate({path: 'lastEditor', select: 'firstName lastName'}).
+        sort({timestamp: "asc"});
+
+        return (replicas);
+    } catch (err) {
+        console.log("Replica->getProjectReplicas : " + err);
+        return (Errors.INTERNAL_ERROR);
     }
 }
 
@@ -92,6 +114,8 @@ exports.createReplica = async function(req, res) {
             timestamp: req.body.timestamp,
             duration: req.body.duration,
             voiceId: req.body.voiceId,
+            actualStep: 'Created',
+            status: 'Done',
             lastEditor: req.user.userId,
             lastEditDate: Date.now()
         });
@@ -133,6 +157,8 @@ exports.updateReplica = async function(req, res) {
             hasChanged = true;
         }
         if (hasChanged) {
+            replica.actualStep = 'Updated';
+            replica.status = 'Done';
             replica.lastEditDate = new Date();
             replica.lastEditor = req.user.userId;
             await replica.save();
