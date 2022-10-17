@@ -171,8 +171,9 @@ exports.setStatus = async function (req, res) {
         if (project.statusType === 'Done' && project.ActualStep === 'VoiceGeneration') {
             let signedUrlVideoSource = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
             let signedUrlFinishedAudio = MediaManager.getSignedUrlObject('Download', 'finished-audio', req.params.projectId + '.mp3');
+            let signedUrlFinishedVideo = MediaManager.getSignedUrlObject('Upload', 'finished-video', req.params.projectId + '.mp4');
 
-            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId, signedUrlVideoSource: signedUrlVideoSource, signedUrlFinishedAudio: signedUrlFinishedAudio })
+            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId, signedUrlVideoSource: signedUrlVideoSource, signedUrlFinishedAudio: signedUrlFinishedAudio, signedUrlFinishedVideo: signedUrlFinishedVideo })
         }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
@@ -183,7 +184,7 @@ exports.setStatus = async function (req, res) {
 
 exports.generationIA = async function (req, res) {
     let returnCode = 200;
-    let returnMessage = ""
+    let returnMessage = "";
     try {
         if (!req.body.typeGeneration) {
             throw Errors.BAD_REQUEST_BAD_INFOS;
@@ -247,9 +248,10 @@ exports.finishedEdition = async function (req, res) {
             }
             audiosInfo.append(audioObject);
         }
+        let signedUrlFinishedAudio = MediaManager.getSignedUrlObject('Upload', 'finished-audio', req.params.projectId + '.mp4');
 
         //TODO voir ce que marco a besoin au niveau des audios (url et etc...)
-        axios.post(`${process.env.SERVER_IA_URL}/GenerationAudio`, { projectId: req.params.projectId, audiosInfo: audiosInfo });
+        axios.post(`${process.env.SERVER_IA_URL}/GenerationAudio`, { projectId: req.params.projectId, audiosInfo: audiosInfo, signedUrlFinishedAudio: signedUrlFinishedAudio });
     } catch (err) {
         console.log("Project->setStatus: " + err);
         returnCode = 400;
