@@ -235,13 +235,13 @@ exports.finishedEdition = async function (req, res) {
                 if (!createAudio(replica))
                     throw Errors.INTERNAL_ERROR;
                 else {
-                    let returnValue = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
+                    let returnValue = MediaManager.getSignedUrlObject('Download', 'replica', req.params.projectId + '.mp3');
                     if (returnValue === Errors.INTERNAL_ERROR)
                         throw (Errors.INTERNAL_ERROR);
                     audioObject.signedUrl = returnValue;
                 }
             } else {
-                let returnValue = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
+                let returnValue = MediaManager.getSignedUrlObject('Download', 'replica', req.params.projectId + '.mp3');
                 if (returnValue === Errors.INTERNAL_ERROR)
                     throw (Errors.INTERNAL_ERROR);
                 audioObject.signedUrl = returnValue;
