@@ -18,6 +18,7 @@ const TheTeam = () => {
                 <Member name="CLAIN Dimitri" picture="/ag.png" position="Web Developer / Web Designer" />
                 <Member name="FERTIN Timothe" picture="/ag.png" position="Web Developer" />
             </div>
+            <img src="/assets/group-beyond-vision.jpg" data-aos="slide-left" className="group-picture" alt="Beyond Vision" />
             <div data-aos="slide-right" className="line">
                 <Member name="VAN KERCKVOORDE Paul" picture="/ag.png" position="Web Developer / QA" />
                 <Member name="LAURET Marc-Olivier" picture="/ag.png" position="Web Developer" />
