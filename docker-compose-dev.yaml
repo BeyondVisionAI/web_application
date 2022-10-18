@@ -139,6 +139,7 @@ services:
       /usr/bin/mc policy set private myminio/bv-replicas;
       exit 0;
       "
+
 networks:
   api:
   bdd:
