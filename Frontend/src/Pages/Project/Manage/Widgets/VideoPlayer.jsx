@@ -36,8 +36,10 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
     return (<Widget weight='h-1/5' rounded='rounded-b-lg'>Uploading ...</Widget>)
 
   return (
-    <Widget weight='h-1/5' rounded='rounded-b-lg'>
+    <div className="h-full drop-shadow-xl">
       <ReactPlayer
+      width='100%'
+      height='100%'
       url={videoUrl}
       ref={ playerRef }
       controls={true}
@@ -49,7 +51,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
       onPlay={() => setPlaying(true)}
       onPause={() => setPlaying(false)}
       />
-    </Widget>
+    </div>
   );
 }
 export default VideoPlayer;

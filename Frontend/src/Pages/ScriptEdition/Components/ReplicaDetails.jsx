@@ -142,7 +142,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             var sStr = seconds < 10 ? "0"+seconds : ""+seconds;
             var msStr= ms >= 100 ? ""+ms : ms >= 10 ? "0"+ms : "00"+ms;
             
-            if (hours == 0)
+            if (hours === 0)
                 return mStr + ':' + sStr + ':' + msStr;
             return hStr + ':' + mStr + ':' + sStr + ':' + msStr;
         }
@@ -174,7 +174,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     }
 
     return (
-        <>
         <div className="h-full w-full flex flex-col justify-around">
             <h1 className="text-blue-400 text-2xl text-center">Détails</h1>
             <div className="w-full flex flex-row justify-between items-center pl-2">
@@ -220,7 +219,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
             </div>
         </div>
-        </>
     )
 }
 
