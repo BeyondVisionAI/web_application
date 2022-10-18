@@ -134,7 +134,7 @@ export default function ScriptEdition(props) {
                         </div>
 
                         <div className="flex flex-row gap-3 edit-bloc">
-                            <div id="menu-detail" className="bg-white w-2/5 shadow-lg rounded-xl">                                
+                            <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">                                
                                 {replicaSelected !== null ?
                                     <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
                                 :   <EmptyReplicaDetails/>
