@@ -8,6 +8,7 @@ import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
 import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
 import { Downloader } from '../../../GenericComponents/Files/Downloader';
+import { GenerationIA } from '../../../GenericComponents/GenerationIA/GenerationIA';
 //TODO: Mettre le download button dans la navbar ?
 
 const EDIT = {
@@ -120,6 +121,7 @@ export default function ManageProject(props) {
                      </div>
                  </div>
                 {/*TODO bien placé les bouttons et ne pas les affiché si il n'existe pas */}
+                <GenerationIA typeGeneration='ActionRetrieve' projectId={props.match.params.id} label='Generation Action'/>
                 <Downloader type='video-finished-products' projectId={props.match.params.id} fileName={`Video.mp4`} fileType='video/mp4' label='Download Video' donwload/>
                 <Downloader type='audio-finished-products' projectId={props.match.params.id} fileName={`Audio.mp3`} fileType='audio/mpeg' label='Download Audio' donwload/>
              </div>

@@ -1,5 +1,19 @@
 const { model, Schema } = require("mongoose");
 
+const enumStatus = [
+    'Error',
+    'Stop',
+    'InProgress',
+    'Done'
+];
+
+const enumActualStep = [
+    'Created',
+    'Updated',
+    'Voice',
+    'Removed'
+];
+
 const replica = new Schema({
     projectId: {
         type: Schema.Types.ObjectId,
@@ -11,6 +25,18 @@ const replica = new Schema({
     timestamp: Number,
     duration: Number,
     voiceId: String,
+    actualStep: {
+        type: String,
+        enum: enumActualStep,
+        default: enumActualStep[1],
+        required: true
+    },
+    status: {
+        type: String,
+        enum: enumStatus,
+        default: enumStatus[2],
+        required: true
+    },
     lastEditor: {
         type: Schema.Types.ObjectId,
         ref: "User",

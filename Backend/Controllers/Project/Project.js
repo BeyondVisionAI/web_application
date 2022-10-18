@@ -3,6 +3,10 @@ const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
+const { Replica } = require("../../Models/ScriptEdition/Replica");
+const { getProjectReplicas, createAudio } = require("../ScriptEdition/Replica");
+const axios = require("axios")
+const MediaManager = require("../MediaManager/MediaManager");
 
 exports.getProjectDB = async function (projectId) {
     try {
@@ -143,7 +147,7 @@ exports.setStatus = async function (req, res) {
     try {
         if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        var project = await Project.findById(req.params.projectId);
+        let project = await Project.findById(req.params.projectId);
 
         if (!project)
             return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
@@ -162,10 +166,98 @@ exports.setStatus = async function (req, res) {
         else if (req.body.statusType === 'Done')
             project.progress = 100;
 
+
         await project.save();
+        console.log("Actual Step:", project.ActualStep, "statusType :", project.statusType)
+        if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
+            let signedUrlVideoSource = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
+            let signedUrlFinishedAudio = MediaManager.getSignedUrlObject('Download', 'finished-audio', req.params.projectId + '.mp3');
+            let signedUrlFinishedVideo = MediaManager.getSignedUrlObject('Upload', 'finished-video', req.params.projectId + '.mp4');
+
+            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId, signedUrlVideoSource: signedUrlVideoSource, signedUrlFinishedAudio: signedUrlFinishedAudio, signedUrlFinishedVideo: signedUrlFinishedVideo })
+        }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
         console.log("Project->setStatus: " + err);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
+}
+
+exports.generationIA = async function (req, res) {
+    let returnCode = 200;
+    let returnMessage = "";
+    try {
+        if (!req.body.typeGeneration) {
+            throw Errors.BAD_REQUEST_BAD_INFOS;
+        }
+        let project = await Project.findById(req.params.projectId);
+        if ((project.ActualStep === 'ActionRetrieve' || project.ActualStep === 'FaceRecognition') && project.status === 'InProgress') {
+            returnMessage = 'Generation IA is in progress';
+        } else {
+            let signedUrl = "";
+            // let signedUrl = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
+            if (req.body.typeGeneration === 'ActionRetrieve') {
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { downloadUrl: signedUrl });
+            } else if (req.body.typeGeneration === 'FaceRecognition') {
+                // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`, { downloadUrl: signedUrl });
+            }
+        }
+    } catch (err) {
+        console.log("Project->setStatus: " + err);
+        returnCode = 400;
+        returnMessage = err;
+    }
+    return (res.status(returnCode).send(returnMessage));
+}
+
+exports.finishedEdition = async function (req, res) {
+    let returnCode = 200;
+    let returnMessage = "La generation des Audio sont en cours...";
+    try {
+        replicas = getProjectReplicas(req.params.projectId);
+        if (replicas === Errors.INTERNAL_ERROR) {
+            throw Errors.INTERNAL_ERROR;
+        } else if ((await replicas).length === 0) {
+            returnCode = 400;
+            returnMessage = "Error : Il n'y a aucun audio a générer.";
+        }
+        let audiosInfo = []
+        let audioObject = {
+            id: '',
+            timeStamp: .0,
+            duration: .0,
+            signedUrl: ''
+        }
+        for (replica in replicas) {
+            audioObject.id = replica.id;
+            audioObject.timeStamp = replica.id;
+            audioObject.duration = replica.id;
+            if (replica.status !== 'Done' && replicas.actualStep !== 'Voice') {
+                if (!createAudio(replica))
+                    throw Errors.INTERNAL_ERROR;
+                else {
+                    let returnValue = MediaManager.getSignedUrlObject('Download', 'replica', req.params.projectId + '.mp3');
+                    if (returnValue === Errors.INTERNAL_ERROR)
+                        throw (Errors.INTERNAL_ERROR);
+                    audioObject.signedUrl = returnValue;
+                }
+            } else {
+                let returnValue = MediaManager.getSignedUrlObject('Download', 'replica', req.params.projectId + '.mp3');
+                if (returnValue === Errors.INTERNAL_ERROR)
+                    throw (Errors.INTERNAL_ERROR);
+                audioObject.signedUrl = returnValue;
+            }
+            audiosInfo.append(audioObject);
+        }
+        let signedUrlFinishedAudio = MediaManager.getSignedUrlObject('Upload', 'finished-audio', req.params.projectId + '.mp4');
+
+        //TODO voir ce que marco a besoin au niveau des audios (url et etc...)
+        axios.post(`${process.env.SERVER_IA_URL}/GenerationAudio`, { projectId: req.params.projectId, audiosInfo: audiosInfo, signedUrlFinishedAudio: signedUrlFinishedAudio });
+    } catch (err) {
+        console.log("Project->setStatus: " + err);
+        returnCode = 400;
+        returnMessage = err;
+    }
+    return (res.status(returnCode).send(returnMessage));
 }

@@ -1,11 +1,30 @@
-function getSignedUrl(req, res) {    
-    if (process.env.LOCAL_FILE_MANAGER == true) {
-        const S3Manager = require("./S3Manager/S3Manager");
-        S3Manager.getSignedUrl(req, res)
-    } else {
-        const MinioManager = require("./MinioManager/MinioManager");
-        MinioManager.getSignedUrl(req, res);
-    }
+const { Errors } = require("../../Models/Errors.js");
+const S3Manager = require("./S3Manager/S3Manager");
+const MinioManager = require("./MinioManager/MinioManager");
+
+async function getSignedUrlObject(operationType, objectType, objectName) {
+    if (process.env.LOCAL_FILE_MANAGER == true)
+        return (await S3Manager.getSignedUrl(operationType, objectType, objectName));
+    else
+        return (await MinioManager.getSignedUrl(operationType, objectType, objectName));
+}
+
+/**
+ *
+ * @param {String} objectType source-video, thumbnail, audio or finished-video
+ * @body {String} keyName the media name
+ * @returns
+ */
+async function getSignedUrl(req, res) {
+    const { objectType, operationType } = req.params;
+    const { objectName } = req.body;
+    let returnCode = 200;
+    let returnValues = await getSignedUrlObject(operationType, objectType, objectName)
+
+    if (returnValues === Errors.INTERNAL_ERROR || returnValues === {} || returnValues === undefined)
+        returnCode = 500;
+    console.log(returnValues);
+    return res.status(returnCode).send(returnValues);
 }
 
 /**
@@ -16,10 +35,8 @@ function getSignedUrl(req, res) {
  */
  function getUrlDownloadObject(objectType, keyName) {
     if (process.env.LOCAL_FILE_MANAGER == true) {
-        const S3Manager = require("./S3Manager/S3Manager");
         return S3Manager.getUrlDownloadObject(objectType, keyName)
     } else {
-        const MinioManager = require("./MinioManager/MinioManager");
         return MinioManager.getUrlDownloadObject(objectType, keyName);
     }
 }
@@ -42,6 +59,7 @@ function removeObject(objectType, keyName) {
 
 module.exports = {
     getSignedUrl,
+    getSignedUrlObject,
     getUrlDownloadObject,
     removeObject
 };

@@ -44,8 +44,12 @@ const isFinishedMedia = function(objectType, keyName) {
 const getUrlUploadObject = function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
-        const url = minioClient.presignedPutObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60)
-
+        const url = minioClient.presignedUrl('PUT', bucketName, keyName, 24 * 60 * 60, function(err, presignedUrl) {
+                if (err)
+                    throw(err);
+            }
+        );
+        console.log("🚀 ~ file: MinioManager.js ~ line 51 ~ url ~ url", url)
         return (url);
     } catch (err) {
         console.log('Error catch', err);
@@ -61,9 +65,11 @@ const getUrlUploadObject = function (objectType, keyName) {
  */
 const getUrlDownloadObject = function (objectType, keyName) {
     try {
-        const bucketName = bucketsName[objectType];
-        const url = minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60);
-
+        let bucketName = bucketsName[objectType];
+        const url = minioClient.presignedUrl('GET', bucketName, keyName, 24 * 60 * 60, function(err, presignedUrl) {
+            if (err)
+                throw err;
+        });
         return (url);
     } catch (err) {
         console.log('Error catch', err);
@@ -90,9 +96,7 @@ exports.removeObject = function (objectType, keyName) {
     }
 };
 
-async function getSignedUrl(req, res) {
-    const { objectType, operationType } = req.params;
-    const { objectName } = req.body;
+async function getSignedUrl(operationType, objectType, objectName) {
     let returnValues = '';
     console.log(`${operationType} : ${objectType} with the name : ${objectName}`);
 
@@ -106,9 +110,9 @@ async function getSignedUrl(req, res) {
     }
 
     if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
-        return res.status(500).send(returnValues);
+        return (Errors.INTERNAL_ERROR);
     } else {
-        return res.status(200).send({url: returnValues});
+        return (returnValues);
     }
 }
 

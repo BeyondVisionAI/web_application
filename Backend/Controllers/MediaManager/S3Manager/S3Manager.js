@@ -1,8 +1,8 @@
 var AWS = require('aws-sdk');
 const mime = require('mime');
-const { Errors } = require("../../Models/Errors.js");
-const { Video } = require('../../Models/Media/Video');
-const { Image } = require('../../Models/Media/Image');
+const { Errors } = require("../../../Models/Errors.js");
+const { Video } = require('../../../Models/Media/Video');
+const { Image } = require('../../../Models/Media/Image');
 
 AWS.config.setPromisesDependency();
 
@@ -141,11 +141,9 @@ exports.removeObject = async function (objectType, keyName) {
     }
 };
 
-exports.getSignedUrl = async function (req, res) {
-    const { objectType, operationType } = req.params;
-    const { objectName } = req.body;
-    let returnValues = '';
 
+exports.getSignedUrl = async function (operationType, objectType, objectName) {
+    let returnValues;
     console.log("Download Url Object", req.params);
     switch (operationType) {
         case 'Download':
@@ -157,9 +155,9 @@ exports.getSignedUrl = async function (req, res) {
     }
 
     if (returnValues === "" || returnValues === {} || returnValues === undefined || returnValues.code === 500) {
-        return res.status(500).send(Errors.INTERNAL_ERROR);
+        return Errors.INTERNAL_ERROR;
     } else {
-        return res.status(200).send(returnValues);
+        return returnValues;
     }
 }
 
