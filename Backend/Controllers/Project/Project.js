@@ -168,7 +168,8 @@ exports.setStatus = async function (req, res) {
 
 
         await project.save();
-        if (project.statusType === 'Done' && project.ActualStep === 'VoiceGeneration') {
+        console.log("Actual Step:", project.ActualStep, "statusType :", project.statusType)
+        if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
             let signedUrlVideoSource = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
             let signedUrlFinishedAudio = MediaManager.getSignedUrlObject('Download', 'finished-audio', req.params.projectId + '.mp3');
             let signedUrlFinishedVideo = MediaManager.getSignedUrlObject('Upload', 'finished-video', req.params.projectId + '.mp4');
@@ -193,7 +194,8 @@ exports.generationIA = async function (req, res) {
         if ((project.ActualStep === 'ActionRetrieve' || project.ActualStep === 'FaceRecognition') && project.status === 'InProgress') {
             returnMessage = 'Generation IA is in progress';
         } else {
-            let signedUrl = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
+            let signedUrl = "";
+            // let signedUrl = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
             if (req.body.typeGeneration === 'ActionRetrieve') {
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { downloadUrl: signedUrl });
             } else if (req.body.typeGeneration === 'FaceRecognition') {

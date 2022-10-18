@@ -2,11 +2,13 @@ const Minio = require('minio');
 const { Errors } = require("../../../Models/Errors.js");
 const { Video } = require('../../../Models/Media/Video');
 const { Image } = require('../../../Models/Media/Image');
+const axios = require('axios')
+const Fs = require('fs');
 
 const minioClient = new Minio.Client({
     endPoint: process.env.MINIO_ENDPOINT,
     port: parseInt(process.env.MINIO_PORT),
-    useSSL: true,
+    useSSL: false,
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY
 });
@@ -46,17 +48,13 @@ const isFinishedMedia = function(objectType, keyName) {
 const getUrlUploadObject = async function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
-        const url = await minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60);
-
-        console.log("🚀 ~ file: MinioManager.js ~ line 74 ~ getUrlDownloadObject ~ url", url);
-        // const url = await new Promise((resolve, reject) => {
-        //     minioClient.presignedPutObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
-        //             if (err)
-        //                 reject(err);
-        //             resolve(presignedUrl);
-        //         })
-        //     }
-        // )
+        const url = await new Promise((resolve, reject) => {
+            minioClient.presignedUrl('PUT', bucketName, keyName, 24 * 60 * 60, function(err, presignedUrl) {
+                if (err)
+                    reject(err);
+                resolve(presignedUrl);
+            });
+        });
         return (url);
     } catch (err) {
         console.log('Error catch', err);
@@ -73,16 +71,11 @@ const getUrlUploadObject = async function (objectType, keyName) {
 const getUrlDownloadObject = async function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
-        const url = await minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60);
-        // const url = await new Promise((resolve, reject) => {
-        //         minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60, (err, presignedUrl) => {
-        //             console.log("🚀 ~ file: MinioManager.js ~ line 75 ~ minioClient.presignedGetObject ~ presignedUrl", presignedUrl);
-        //             if (err)
-        //                 reject(err);
-        //             resolve(presignedUrl);
-        //         })
-        //     }
-        // )
+        const url = await minioClient.presignedUrl('GET', bucketName, keyName, 24 * 60 * 60, function(err, presignedUrl) {
+            if (err)
+                throw err;
+        });
+        // const url = await minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60);
         return (url);
     } catch (err) {
         console.log('Error catch', err);
