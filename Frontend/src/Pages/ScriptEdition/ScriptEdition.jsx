@@ -34,7 +34,7 @@ export default function ScriptEdition(props) {
                 } catch (error) {
                     console.error('Video non dispo');
                 }
-                videoUrl = '/Marco_Destruction.mp4'
+                // videoUrl = '/Marco_Destruction.mp4'
                 setProject({
                     id: id,
                     title: projectR.data.name,

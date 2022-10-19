@@ -37,6 +37,7 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
     const [roleProject, setRoleProject] = useState('');
     const [roleList, setRoleList] = useState('');
     const [thumbnail, setThumbnail] = useState('');
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         const getMyRoleOnProject = async () => {

@@ -49,7 +49,7 @@ export default function CreateProject({ show, onHide }) {
         setValue(tmp);
     }
 
-    function uploadMedia () {
+    async function uploadMedia () {
         UploadFileOnS3(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
         .then(async (imageRes) => {
             let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
@@ -60,6 +60,7 @@ export default function CreateProject({ show, onHide }) {
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
         }).catch(err => console.error("Upload thumbnail error:", err));
+
         UploadFileOnS3(video, 'beyondvision-vod-source-km23jds9b71q', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
         .then(async videoRes => {
             let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
@@ -77,7 +78,7 @@ export default function CreateProject({ show, onHide }) {
         try {
             let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`, { status: 'Stop', ...values, script: null });
             handleChange('id', projectResponse.data._id);
-            uploadMedia();
+            await uploadMedia();
             history.push(`/project/${projectResponse.data._id}`);
             onHide()
         } catch (error) {
