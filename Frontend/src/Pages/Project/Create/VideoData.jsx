@@ -2,8 +2,18 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 
-export default function VideoData({ nextStep, prevStep, handleChange, values }) {
-    const types = ["Aucun", "Dramatique", "Humoristique"];
+export default function VideoData({ prevStep, handleChange, values, postData }) {
+    const types = [
+        "Aucun",
+        "Aventure",
+        "Action",
+        "Drame",
+        "Jeunesse",
+        "Musical",
+        "Policier",
+        "Science fiction",
+        "Horreur"
+    ];
     const [selectedType, setSelectedType] = useState(null);
     const [description, setDescription] = useState(null)
     const [areAllRequiredFieldsFilled, setAreAllRequiredFieldsFilled] = useState(false)
@@ -11,7 +21,7 @@ export default function VideoData({ nextStep, prevStep, handleChange, values }) 
         e.preventDefault();
         handleChange('videoType', selectedType)
         handleChange('description', description)
-        nextStep();
+        postData();
     }
     const prev = e => {
         e.preventDefault();

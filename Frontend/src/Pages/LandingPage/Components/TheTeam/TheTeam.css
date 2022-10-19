@@ -17,5 +17,16 @@
     justify-content: space-between;
     flex-wrap: wrap;
     max-width: 100%;
-    padding-top: 5vh;
+    /* padding-top: 5vh; */
+}
+
+.team-container > h1 {
+    padding-bottom: 5vh;
+}
+
+.group-picture {
+    width: 75%;
+    padding: 5vh 0;
+    /* border-radius: 25%;
+    border: thick blueviolet; */
 }

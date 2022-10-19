@@ -56,7 +56,7 @@ export default function Dashboard() {
             setCreatePayment(true)
         }
     }
-    
+
     return (
         <div>
             {isRedirectFromPayment && <Elements stripe={stripePromise}><DisplayPaymentStatus /></Elements>}

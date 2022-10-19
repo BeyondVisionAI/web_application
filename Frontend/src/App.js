@@ -9,7 +9,6 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 import Login from './Pages/Login/Login';
 import PrivateRoute from './GenericComponents/PrivateRoute/PrivateRoute';
 import Page404 from './Pages/Page404/Page404';
-import Project from './Pages/Project/Project';
 import EmailVerificatn from './Pages/EmailVerification/EmailVerification';
 import Register from './Pages/Register/Register';
 import AskForPasswordChange from './Pages/AskForPasswordChange/AskForPasswordChange';
@@ -30,7 +29,6 @@ function App() {
               {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
               <PrivateRoute exact path="/dashboard" component={Lists} />
               <Route exact path="/" component={LandingPage} />
-              <PrivateRoute exact path="/project" component={Project} />
               <PrivateRoute exact path="/project/:id" component={ManageProject} />
               <PrivateRoute exact path="/project/:id/edit" component={ScriptEdition} />
               <Route exact path="/login" component={Login} />

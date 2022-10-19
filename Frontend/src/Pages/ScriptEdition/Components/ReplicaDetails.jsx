@@ -138,16 +138,17 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             var mStr = minutes < 10 ? "0"+minutes : ""+minutes;
             var sStr = seconds < 10 ? "0"+seconds : ""+seconds;
             var msStr= ms >= 100 ? ""+ms : ms >= 10 ? "0"+ms : "00"+ms;
-
-            if (hours == 0)
+            
+            if (hours === 0)
                 return mStr + ':' + sStr + ':' + msStr;
             return hStr + ':' + mStr + ':' + sStr + ':' + msStr;
         }
 
-        var start = msToTimecode(parseInt(t));
-        var end = msToTimecode(parseInt(t) + d);
+        return msToTimecode(parseInt(t));
+        // var start = msToTimecode(parseInt(t));
+        // var end = msToTimecode(parseInt(t) + d);
 
-        return "[" + start + "] - [" + end + "] (" + d / 1000 + "s)";
+        // return "[" + start + "] - [" + end + "] (" + d / 1000 + "s)";
     }
 
 
@@ -171,7 +172,66 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     }
 
     return (
-        <>
+        <div className="h-full w-full flex flex-col justify-around py-2 px-6">
+            <h1 className="text-blue-400 text-2xl text-center">Paramètres de la réplique</h1>
+            <div>
+                <div className="w-full flex flex-row justify-between items-center">
+                    <h3 className="section-title">Texte :</h3>
+                    <h3>-/100</h3>
+                </div>
+                <textarea name="replica-text" id="" 
+                    value={text} maxLength='100' rows={3}
+                    onChange={handleReplicaTextChange}
+                    className="w-full resize-none px-2 py-1 leading-7 text-xl
+                    rounded-md border border-solid border-blue-500
+                    focus:text-black focus:bg-white focus:border-blue-500 focus:outline-none"
+                    ></textarea>
+            </div>
+            <div>
+                <div className="w-full flex flex-row justify-between items-center mb-1">
+                    <h3 className="section-title">Voix :</h3>
+                    <select name="voiceSelection" id="" selected={voiceId}
+                    className="inline-flex items-center form-select form-select-lg
+                    w-1/2 p-2 text-xl 
+                    border border-solid border-blue-300 rounded
+                    transition ease-in-out
+                    focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
+                        {/* TODO FETCH THESE INFO FROM BACKEND */}
+                        <option value="Anthony">Anthony</option>
+                        <option value="Théo">Théo</option>
+                        <option value="Marie">Marie</option>
+                        <option value="Léo">Léa</option>
+                        <option value="addVoice">Ajouter une voix</option>
+                    </select>
+                </div>
+
+                <div className="w-full flex flex-row justify-between items-center mt-1">
+                    <h3 className="section-title">Commence à :</h3>
+                    <input type='text' defaultValue={formatTimestamp(timestamp, duration)} disabled='true'
+                        className="inline-flex items-center
+                        w-1/2 p-2 text-base
+                        border border-solid border-blue-300 rounded">
+                    </input>
+                </div>
+            </div>
+
+            <h3 className="section-title">Commentaires :</h3>
+            <div id="comment-frame" className="w-full h-1/6 overflow-y-auto">
+                <CommentBox comments={comments} replica={replica} updateComments={updateComments} removeComment={removeComment}/>
+            </div>
+            <button
+            onClick={() => {setIsLoading(true);updateReplicaText()}}
+            className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Saving..." : "Save"}</button>
+
+            {/* <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
+                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top truncate">{formatTimestamp(timestamp, duration)}</p>
+                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
+            </div> */}
+        </div>
+    )
+
+        /*
+            return (
         <div className="h-full w-full flex flex-col justify-around">
             <h1 className="text-blue-400 text-2xl text-center">Détails</h1>
             <div className="w-full flex flex-row justify-between items-center pl-2">
@@ -195,7 +255,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 border border-solid border-blue-300 rounded
                 transition ease-in-out
                 focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
-                    {/* TODO FETCH THESE INFO FROM BACKEND */}
                     <option value="toto">toto</option>
                     <option value="plop">plop</option>
                     <option value="foo">foo</option>
@@ -217,8 +276,8 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
             </div>
         </div>
-        </>
     )
+                */
 }
 
 export default ReplicaDetails;

@@ -21,7 +21,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
   }, [playing]);
 
   useEffect(() => {
-    setPlayedSecondsInParent(playedSeconds / 1000)
+    if (setPlayedSecondsInParent) setPlayedSecondsInParent(playedSeconds / 1000)
   }, [playedSeconds, setPlayedSecondsInParent]);
 
   useEffect(() => {
@@ -41,12 +41,14 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
     return (<Widget weight='h-1/5' rounded='rounded-b-lg'>Uploading ...</Widget>)
 
   return (
-    <Widget weight='h-1/5' rounded='rounded-b-lg'>
+    <div className="h-full drop-shadow-xl">
       <ReactPlayer
+      width='100%'
+      height='100%'
       url={videoUrl}
       ref={ playerRef }
       controls={true}
-      onDuration={setDuration}
+      onDuration={setDuration ? setDuration : null}
       onBuffer={() => setPlaying(false)}
       onBufferEnd={() => setPlaying(true)}
       onSeek={second => setPlayedSeconds(second * 1000)}
@@ -54,7 +56,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
       onPlay={() => setPlaying(true)}
       onPause={() => setPlaying(false)}
       />
-    </Widget>
+    </div>
   );
 }
 export default VideoPlayer;
