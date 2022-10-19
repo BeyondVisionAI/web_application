@@ -144,6 +144,7 @@ exports.getAllProjects = async function (req, res) {
  * @returns { response to send }
  */
 exports.setStatus = async function (req, res) {
+    console.log('Route Set Status');
     try {
         if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
@@ -168,8 +169,9 @@ exports.setStatus = async function (req, res) {
 
 
         await project.save();
-        console.log("Actual Step:", project.ActualStep, "statusType :", project.statusType)
+        console.log("Project:", project);
         if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
+            console.log("A");
             let signedUrlVideoSource = MediaManager.getSignedUrlObject('Download', 'source-video', req.params.projectId + '.mp4');
             let signedUrlFinishedAudio = MediaManager.getSignedUrlObject('Download', 'finished-audio', req.params.projectId + '.mp3');
             let signedUrlFinishedVideo = MediaManager.getSignedUrlObject('Upload', 'finished-video', req.params.projectId + '.mp4');
@@ -184,6 +186,7 @@ exports.setStatus = async function (req, res) {
 }
 
 exports.generationIA = async function (req, res) {
+    console.log('Route generation IA');
     let returnCode = 200;
     let returnMessage = "";
     try {
@@ -204,7 +207,7 @@ exports.generationIA = async function (req, res) {
             }
         }
     } catch (err) {
-        console.log("Project->setStatus: " + err);
+        console.log("Project->Generation IA: " + err);
         returnCode = 400;
         returnMessage = err;
     }
@@ -212,6 +215,7 @@ exports.generationIA = async function (req, res) {
 }
 
 exports.finishedEdition = async function (req, res) {
+    console.log('Route Finished Edtion');
     let returnCode = 200;
     let returnMessage = "La generation des Audio sont en cours...";
     try {
@@ -255,7 +259,7 @@ exports.finishedEdition = async function (req, res) {
         //TODO voir ce que marco a besoin au niveau des audios (url et etc...)
         axios.post(`${process.env.SERVER_IA_URL}/GenerationAudio`, { projectId: req.params.projectId, audiosInfo: audiosInfo, signedUrlFinishedAudio: signedUrlFinishedAudio });
     } catch (err) {
-        console.log("Project->setStatus: " + err);
+        console.log("Project->Finished Edition: " + err);
         returnCode = 400;
         returnMessage = err;
     }
