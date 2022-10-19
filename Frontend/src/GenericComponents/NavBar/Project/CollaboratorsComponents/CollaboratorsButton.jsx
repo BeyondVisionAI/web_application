@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import EditCollaborators from './EditCollaborators';
 import "./CollaboratorsButton.css"
 
-export default function CollaboratorsButton( { projectId } ) {
+export default function CollaboratorsButton( { projectId, isEditable } ) {
     // const [notifications, setNotifications] = useState(0);
     const [modalShow, setShowModal] = useState(false);
     const [collaborators, setCollaborators] = useState(null);
@@ -22,6 +22,7 @@ export default function CollaboratorsButton( { projectId } ) {
                 setCollaborators(newCollaborators);
             } catch (err) {
                 console.error(err);
+                setCollaborators([])
             }
         }
         getCollaborators();
@@ -33,7 +34,9 @@ export default function CollaboratorsButton( { projectId } ) {
 
     return (
             <div style={{marginLeft: "auto", marginRight: "10px"}}>
-                <div onClick={() => setShowModal(true)} className="collaborator-container">
+                <div onClick={() => isEditable ? setShowModal(true) : null} className={`collaborator-container ${isEditable && 'editable'}`} >
+                    <div className="collaborator-item">AG</div>
+                    <div className="collaborator-item">DC</div>
                     {collaborators.map((collaborator, idx) => {
                         console.log("🚀 ~ file: CollaboratorsButton.jsx ~ line 42 ~ {collaborators.map ~ collaborator", collaborator)
                         if (idx < 2) {
@@ -44,7 +47,7 @@ export default function CollaboratorsButton( { projectId } ) {
                             return null;
                         }
                     })}
-                    <div className="collaborator-item">+</div>
+                    {isEditable && <div className="collaborator-item">+</div>}
                 </div>
             {/* <button onClick={ () => setShowModal(true) }>Collaborators</button> */}
             {modalShow &&
