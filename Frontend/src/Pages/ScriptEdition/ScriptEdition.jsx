@@ -10,6 +10,7 @@ import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariant
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
+import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 
 
 export default function ScriptEdition(props) {
@@ -30,7 +31,7 @@ export default function ScriptEdition(props) {
                     let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
 
                     if (video.status === 200)
-                        videoUrl = video.data.url;
+                        videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
                 } catch (error) {
                     console.error('Video non dispo');
                 }
