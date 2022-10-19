@@ -12,7 +12,7 @@ const TheTeam = () => {
     return (
         <div href="aboutus" id="aboutus" className="team-container">
             <h1>The Team</h1>
-            <div data-aos="slide-left" className="line">
+            <div data-aos="slide-right" className="line">
                 <Member name="GAIGNARD Alex" picture="/ag.png" position="Web Developer / CI-CD" />
                 <Member name="MENARD Leo" picture="/ag.png" position="Web Developer / IA" />
                 <Member name="CLAIN Dimitri" picture="/ag.png" position="Web Developer / Web Designer" />
