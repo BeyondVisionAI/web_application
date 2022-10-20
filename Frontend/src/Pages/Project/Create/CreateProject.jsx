@@ -89,17 +89,24 @@ export default function CreateProject({ show, onHide }) {
         //TODO Upload by getting a signedUrl from the Back End to Upload the Thumbnail directly on the front
         
         try {
-            const responseThumbnail = await axios.post(`${process.env.REACT_APP_API_URL}/mediaManager/Upload/thumbnail`, {objectName: `${values.id}.${image.name.split(".").pop()}`});
-            // Le call au dessus retire le .img c'est bon ?
+            const responseThumbnail = await axios.post(`${process.env.REACT_APP_API_URL}/mediaManager/Upload/thumbnail`, {objectName: `${values.id}.${image.name.split(".").pop()}`}, { withCredentials: true });
             const urlThumbnailUpload = responseThumbnail.data;
             console.log("Thumbnail Url :", urlThumbnailUpload);
             // axios.defaults.headers.put['Access-Control-Allow-Origin'] = '*';
-            const data = image.read();
-            console.log("Image :", data);
+            // axios.defaults.headers.put["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept";
             const imageRes = await axios({
                 url: urlThumbnailUpload,
-                body: data,
-                method: 'PUT'
+                body: image,
+                method: 'PUT',
+                headers: {
+                    'Content-Type': `${image.type}`,
+                    'x-amz-acl': 'private-read',
+                    'Access-Control-Allow-Origin': 'http://localhost',
+                    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                }
+            }, (err) => {
+                if (err)
+                    throw err;
             });
 
             // const imageRes = await axios.post(urlThumbnailUpload, {
@@ -116,74 +123,24 @@ export default function CreateProject({ show, onHide }) {
         } catch (err) {
             console.error("Upload thumbnail error:", err)
         }
-        //TODO Upload by sending the data to Back End
-
-        // await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/thumbnail/${values.id}`, { thumbnailData: image, name: image.name, desc: `Thumbnail for ${values.name}` }, {
-        //     onUploadProgress: (p) => {
-        //         const percentCompleted = Math.round((p.loaded * 100) / p.total);
-        //         var id = null;
-        //         if (thumbnailUpload === null) {
-        //             id = Math.floor((Math.random() * 101) + 1);
-        //             showToast({
-        //                 id: id,
-        //                 title: 'File Uploading : Image',
-        //                 description: `${percentCompleted} %`,
-        //                 backgroundColor: '#5bc0de',
-        //                 icon: "infoIcon"
-        //             })
-        //         } else {
-        //             id = thumbnailUpload.id;
-        //         }
-
-        //         setThumbnailUpload({id: id, fileName: image.name, percent: percentCompleted,});
-        //         if (percentCompleted === 100) {
-        //             // removeToast(id);
-        //             const idSuccess = Math.floor((Math.random() * 101) + 1);
-        //             showToast({
-        //                 id: idSuccess,
-        //                 title: 'File Upload : Image',
-        //                 description: 'Success',
-        //                 backgroundColor: '#5cb85c',
-        //                 icon: "checkIcon"
-        //             });
-        //         } else {
-        //             setUploadToastChange(id, percentCompleted);
-        //         }
-        //     }
-        // });
-        
-        //TODO Upload by sending the data to Back End
-
-        // UploadFileOnS3(image, 'bv-thumbnail-project', 'us-east-1', `${values.id}.${image.name.split(".").pop()}`)
-        // .then(async (imageRes) => {
-        //     let thumbnailResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images`, {
-        //         name: imageRes.Key,
-        //         desc: `Thumbnail for ${values.name} locate in ${imageRes.bucket} bucket`,
-        //         ETag: imageRes.ETag
-        //     });
-        //     handleChange('thumbnailId', thumbnailResponse.data._id);
-        //     axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
-        // }).catch(err => console.error("Upload thumbnail error:", err));
-
-        console.log("send Video", video.name,  video);
-        // const formDataVideo = new FormData();
-        // formDataVideo.append('file', video);
 
         //TODO Upload by getting a signedUrl from the Back End to Upload the Video directly on the front
         
         try {
-            const responseVideo = await axios.get(`${process.env.REACT_APP_API_URL}/mediaManager/Upload/source-video`, {objectName: `${values.id}.${video.name.split(".").pop()}`});
+            const responseVideo = await axios.post(`${process.env.REACT_APP_API_URL}/mediaManager/Upload/source-video`, {objectName: `${values.id}.${video.name.split(".").pop()}`});
             const urlVideoUpload = responseVideo.data;
             console.log("Video Url :", urlVideoUpload);
-            // axios.defaults.headers.put['Access-Control-Allow-Origin'] = '*';
+            axios.defaults.headers.put['Access-Control-Allow-Origin'] = '*';
+            axios.defaults.headers.put["Access-Control-Allow-Headers"] = "X-Requested-With";
             const videoRes = await axios({
                 url: urlVideoUpload,
                 body: video,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                },
                 method: 'PUT'
             });
-            // const videoRes = await axios.put(urlVideoUpload, {
-            //     body: video,
-            // });
             console.error("Upload video Finished - sending info of the file");
             let videoResponse = await axios.put(`${process.env.REACT_APP_API_URL}/videos`, {
                 name: videoRes.Key,
@@ -196,55 +153,6 @@ export default function CreateProject({ show, onHide }) {
         } catch (err) {
             console.error("Upload video error:", err);
         }
-        //TODO Upload by sending the data to Back End
-
-        // await axios.post(`${process.env.REACT_APP_API_URL}/S3Manger/source-product/video/${values.id}`, { videoData: video, name: video.name, desc: `Video for ${values.name} type ${values.videoType}` }, {
-        //     onUploadProgress: (p) => {
-        //         const percentCompleted = Math.round((p.loaded * 100) / p.total);
-        //         var id = null;
-        //         if (videoUpload === null) {
-        //             id = Math.floor((Math.random() * 101) + 1);
-        //             showToast({
-        //                 id: id,
-        //                 title: 'File Uploading : Video',
-        //                 description: `${percentCompleted} %`,
-        //                 backgroundColor: '#5bc0de',
-        //                 icon: "infoIcon"
-        //             })
-        //         } else {
-        //             id = videoUpload.id;
-        //         }
-
-        //         setVideoUpload({id: id, fileName: video.name, percent: percentCompleted,});
-        //         if (percentCompleted === 100) {
-        //             // removeToast(id);
-        //             const idSuccess = Math.floor((Math.random() * 101) + 1);
-        //             showToast({
-        //                 id: idSuccess,
-        //                 title: 'File Upload : Video',
-        //                 description: 'Success',
-        //                 backgroundColor: '#5cb85c',
-        //                 icon: "checkIcon"
-        //             });
-        //         } else {
-        //             setUploadToastChange(id, percentCompleted);
-        //         }
-        //     }
-        // });
-
-        //TODO Directly Uploading the Video from teh front with Id and secret on the front
-
-        // UploadFileOnS3(video, 'bv-streaming-video-source-ahnauucgvgsf', 'us-east-1', `${values.id}.${video.name.split(".").pop()}`)
-        // .then(async videoRes => {
-        //     let videoResponse = await axios.post(`${process.env.REACT_APP_API_URL}/videos`, {
-        //         name: videoRes.Key,
-        //         desc: `Video for ${values.name} type ${values.videoType}`,
-        //         ETag: videoRes.ETag,
-        //         url: 'Url Undefined'
-        //     });
-        //     handleChange('videoId', videoResponse.data._id);
-        //     axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
-        // }).catch(err => console.error("Upload video error:", err));
     }
 
     async function postData () {
