@@ -2,12 +2,13 @@ const Minio = require('minio');
 const { Errors } = require("../../../Models/Errors.js");
 const { Video } = require('../../../Models/Media/Video');
 const { Image } = require('../../../Models/Media/Image');
-const axios = require('axios')
-const Fs = require('fs');
+const axios = require('axios');
+const mime = require('mime');
 
 const minioClient = new Minio.Client({
     endPoint: process.env.MINIO_ENDPOINT,
     port: parseInt(process.env.MINIO_PORT),
+    region: 'eu-west-1',
     useSSL: false,
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY
@@ -71,9 +72,12 @@ const getUrlUploadObject = async function (objectType, keyName) {
 const getUrlDownloadObject = async function (objectType, keyName) {
     try {
         let bucketName = bucketsName[objectType];
-        const url = await minioClient.presignedUrl('GET', bucketName, keyName, 24 * 60 * 60, function(err, presignedUrl) {
-            if (err)
-                throw err;
+        const url = await new Promise((resolve, reject) => {
+            minioClient.presignedUrl('GET', bucketName, keyName, 24 * 60 * 60, function(err, presignedUrl) {
+                if (err)
+                    reject(err);
+                resolve(presignedUrl);
+            });
         });
         // const url = await minioClient.presignedGetObject(bucketName, isFinishedMedia(objectType, keyName), 24*60*60);
         return (url);
