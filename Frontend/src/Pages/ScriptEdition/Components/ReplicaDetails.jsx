@@ -164,7 +164,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         return new Date(time).toLocaleDateString("fr-FR", dateOptions);
     }
 
-
     const formatLastEditor = function(person) {
         var fName = person?.firstName;
         if (fName) {
@@ -172,6 +171,15 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         } else {
             return ("you")
         }
+    }
+    const getVoices = async function() {
+        const returnValue = await axios.get(`${process.env.REACT_IA_API_URL}/Voice/RetrieveVoices`);
+        const options = returnValue.data;
+        return (options.map(function (mark, i) {
+            return <option key={mark.id} value={mark.nameID}>
+                {mark.nameID}
+            </option>
+        }));
     }
 
     return (
@@ -199,12 +207,12 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                     border border-solid border-blue-300 rounded
                     transition ease-in-out
                     focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
-                        {/* TODO FETCH THESE INFO FROM BACKEND */}
-                        <option value="Anthony">Anthony</option>
+                        {getVoices()}
+                        {/* <option value="Anthony">Anthony</option>
                         <option value="Théo">Théo</option>
                         <option value="Marie">Marie</option>
                         <option value="Léo">Léa</option>
-                        <option value="addVoice">Ajouter une voix</option>
+                        <option value="addVoice">Ajouter une voix</option> */}
                     </select>
                 </div>
 
