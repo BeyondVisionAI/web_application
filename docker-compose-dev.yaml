@@ -110,35 +110,35 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    command: server .docker/storage/minio --console-address ":9001"
+    command: server data --console-address ":9001"
     networks:
       - api
 
-  mc:
-    container_name: minio-mc
-    image: minio/mc
-    depends_on:
-      - minio
-    volumes:
-      - "./minio-mc.txt:/tmp/minio-mc.txt"
-    networks:
-      - api
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    entrypoint: >
-      /bin/sh -c "
-      until (/usr/bin/mc config host add myminio http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}) do echo '...waiting...' && sleep 1; done;
-      /usr/bin/mc mb myminio/bv-finished-products;
-      /usr/bin/mc policy set private myminio/bv-finished-products;
-      /usr/bin/mc mb myminio/bv-streaming-video-source;
-      /usr/bin/mc policy set private myminio/bv-streaming-video-source;
-      /usr/bin/mc mb myminio/bv-thumbnail-project;
-      /usr/bin/mc policy set private myminio/bv-thumbnail-project;
-      /usr/bin/mc mb myminio/bv-replicas;
-      /usr/bin/mc policy set private myminio/bv-replicas;
-      exit 0;
-      "
+  # mc:
+  #   container_name: minio-mc
+  #   image: minio/mc
+  #   depends_on:
+  #     - minio
+  #   volumes:
+  #     - "./minio-mc.txt:/tmp/minio-mc.txt"
+  #   networks:
+  #     - api
+  #   environment:
+  #     MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+  #     MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #     until (/usr/bin/mc config host add myminio http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}) do echo '...waiting...' && sleep 1; done;
+  #     /usr/bin/mc mb myminio/bv-finished-products;
+  #     /usr/bin/mc policy set private myminio/bv-finished-products;
+  #     /usr/bin/mc mb myminio/bv-streaming-video-source;
+  #     /usr/bin/mc policy set private myminio/bv-streaming-video-source;
+  #     /usr/bin/mc mb myminio/bv-thumbnail-project;
+  #     /usr/bin/mc policy set private myminio/bv-thumbnail-project;
+  #     /usr/bin/mc mb myminio/bv-replicas;
+  #     /usr/bin/mc policy set private myminio/bv-replicas;
+  #     exit 0;
+  #     "
 
 networks:
   api:
