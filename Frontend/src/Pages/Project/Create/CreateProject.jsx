@@ -80,6 +80,7 @@ export default function CreateProject({ show, onHide }) {
             handleChange('id', projectResponse.data._id);
             await uploadMedia();
             history.push(`/project/${projectResponse.data._id}`);
+            await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectResponse.data._id}/generationIA`, { typeGeneration: 'ActionRetrieve' });
             onHide()
         } catch (error) {
             console.error(error);

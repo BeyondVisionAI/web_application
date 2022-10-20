@@ -11,6 +11,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     const [timestamp, setTimestamp] = useState(replica.timestamp);
     const [duration, setDuration] = useState(replica.duration);
     const [voiceId, setVoiceId] = useState(replica.voiceId);
+    const [voiceOption, setVoiceOption] = useState([]);
 
     // additional infos 
     const [lastEdit, setLastEdit] = useState(replica.lastEditDate);
@@ -49,6 +50,25 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             console.error("error => ", err);
         }
     }
+    useEffect(() => {
+        const retrieveVoices = async () => {
+            try {
+                const response = await axios.get(`http://172.17.0.1:8082/Voice/RetrieveVoices`);
+                const datas = response.data;
+                console.log("Option :", datas);
+                const options = datas.map(function (mark, i) {
+                    return (<option key={mark.id} value={mark.nameID}>
+                        {mark.nameID}
+                    </option>);
+                });
+                console.log("Option :", options);
+                setVoiceOption(options);
+            } catch (err) {
+                console.error("Replica Error :", err);
+            }
+        }
+        retrieveVoices();
+    }, []);
 
     useEffect(() => {
         replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
@@ -73,26 +93,46 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 switch (e.response.status) {
                     case 401:
                         switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                            case "USER_NOT_LOGIN":
+                                errMsg = "Error (401) - User is not logged in.";
+                                break;
                             /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                            default: errMsg = "Error (401)."; break;
-                        } break;
-                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                            case "PROJECT_NOT_YOURS":
+                                errMsg = "Error (401) - No collaboration found between the userId and the project.";
+                                break;
+                            default:
+                                errMsg = "Error (401).";
+                                break;
+                        }
+                        break;
+                    case 403:
+                        errMsg = "Error (403) - User has no right to access the content.";
+                        break;
                     case 404:
                         switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                            case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
-                            default: errMsg = "Error (404)."; break;
-                        } break;
-                    default /* 500 */ : errMsg = "Internal Error."; break;
+                            case "PROJECT_NOT_FOUND":
+                                errMsg = "Error (404) - Missing project.";
+                                break;
+                            case "REPLICA_NOT_FOUND":
+                                errMsg = "Error (404) - Missing replica.";
+                                break;
+                            case "REPLICA_NOT_IN_PROJECT":
+                                errMsg = "Error (404) - Invalid replica, does not belong to the project.";
+                                break;
+                            default:
+                                errMsg = "Error (404).";
+                                break;
+                        }
+                        break;
+                    default /* 500 */
+                    :
+                        errMsg = "Internal Error.";
+                        break;
                 }
                 toast.error(errMsg);
                 console.error(e);
             }
         }
-
         fetchReplicaComments();
         setText(replica.content);
         setCharacterCount(`${replica.content.length}/100`);
@@ -128,9 +168,9 @@ const ReplicaDetails = ({replica, updateReplica}) => {
      */
 
     const formatTimestamp = function (t, d) {
-        
-        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 154 ~ formatTimestamp ~ t", t)
-        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 153 ~ formatTimestamp ~ d", d)
+
+        // console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 154 ~ formatTimestamp ~ t", t)
+        // console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 153 ~ formatTimestamp ~ d", d)
         const msToTimecode = function(t) {
             var hours = Math.floor(t / 3600000);
             var minutes = Math.floor((t - (hours * 3600000)) / 60000);
@@ -172,15 +212,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             return ("you")
         }
     }
-    const getVoices = async function() {
-        const returnValue = await axios.get(`${process.env.REACT_IA_API_URL}/Voice/RetrieveVoices`);
-        const options = returnValue.data;
-        return (options.map(function (mark, i) {
-            return <option key={mark.id} value={mark.nameID}>
-                {mark.nameID}
-            </option>
-        }));
-    }
 
     return (
         <div className="h-full w-full flex flex-col justify-around py-2 px-6">
@@ -206,8 +237,9 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                     w-1/2 p-2 text-xl 
                     border border-solid border-blue-300 rounded
                     transition ease-in-out
-                    focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
-                        {getVoices()}
+                    focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
+                    onChange={() => {}}>
+                        {voiceOption}
                         {/* <option value="Anthony">Anthony</option>
                         <option value="Théo">Théo</option>
                         <option value="Marie">Marie</option>

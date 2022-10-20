@@ -181,22 +181,26 @@ exports.generationIA = async function (req, res) {
     console.log('Route generation IA');
     let returnCode = 200;
     let returnMessage = "";
+    let project = await Project.findById(req.params.projectId);
     try {
         if (!req.body.typeGeneration) {
             throw Errors.BAD_REQUEST_BAD_INFOS;
         }
-        let project = await Project.findById(req.params.projectId);
         if ((project.ActualStep === 'ActionRetrieve' || project.ActualStep === 'FaceRecognition') && project.status === 'InProgress') {
             returnMessage = 'Generation IA is in progress';
         } else {
             if (req.body.typeGeneration === 'ActionRetrieve') {
+                project.ActualStep = 'ActionRetrieve';
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { projectId: req.params.projectId });
             } else if (req.body.typeGeneration === 'FaceRecognition') {
+                project.ActualStep = 'FaceRecognition';
                 // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`, { projectId: req.params.projectId });
             }
         }
     } catch (err) {
+        project.status = 'Error';
+        await project.save();
         console.log("Project->Generation IA: " + err);
         returnCode = 400;
         returnMessage = err;

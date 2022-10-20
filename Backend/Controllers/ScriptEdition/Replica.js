@@ -11,33 +11,36 @@ const axios = require("axios");
  */
 const createAudio = async (replica) => {
     try {
-        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+        const { projectId, voiceId, content, _id } = replica;
         replica.status = 'InProgress';
         replica.actualStep = 'Voice';
         await replica.save();
-        const response = await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`,
-            {
-                projectId: replica.projectId,
-                voiceId: replica.voiceId,
-                text: replica.text,
-                replicaId: replica._id
-            });
-        switch (response.status) {
-            case 200:
+        if (content.length > 0) {
+            let url = `${process.env.SERVER_IA_URL}/Voice/TextToSpeech`;
+            // console.log('Text to speech :', replica, 'url :', url);
+            console.log(url);
+            axios.post(url, {
+                projectId: projectId,
+                voiceId: voiceId,
+                text: content,
+                replicaId: _id
+            }).then(() => {
                 replica.status = 'Done';
                 replica.actualStep = 'Voice';
-                await replica.save();
-                return true;
-            case 400:
+                replica.save();
+                console.log('Replica->ceateAudio : Done')
+            })
+            .catch((err) => {
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
-                await replica.save();
-                throw Errors(response)
-            default:
-                break;
+                replica.save();
+                throw err;
+            });
+        } else {
+            console.log('Replica content null');
         }
     } catch (error) {
-        console.error(error);
+        console.error("Replica->Create Audio :", error);
         return false;
     }
 }
@@ -123,7 +126,7 @@ exports.createReplica = async function (req, res) {
         newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
 
         await newReplica.save();
-        createAudio(newReplica);
+        await createAudio(newReplica);
         res.status(200).send(newReplica);
     } catch (err) {
         console.log("Replica->createReplica : " + err);
@@ -164,7 +167,7 @@ exports.updateReplica = async function (req, res) {
             replica.lastEditor = req.user.userId;
             await replica.save();
             if (needAudioChanged) {
-                createAudio(replica);
+                await createAudio(replica);
             }
         }
         return res.status(200).send(replica);
