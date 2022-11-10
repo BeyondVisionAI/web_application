@@ -16,9 +16,8 @@ const createAudio = async (replica) => {
             replica.status = 'InProgress';
             replica.actualStep = 'Voice';
             await replica.save();
-            let url = `${process.env.SERVER_IA_URL}/Voice/TextToSpeech`;
             
-            axios.post(url, {
+            axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
                 projectId: projectId,
                 voiceId: voiceId,
                 text: content,
@@ -175,8 +174,6 @@ exports.updateReplica = async function (req, res) {
             hasChanged = true;
         }
         if (hasChanged) {
-            replica.actualStep = 'Updated';
-            replica.status = 'Done';
             replica.lastEditDate = new Date();
             replica.lastEditor = req.user.userId;
             await replica.save();

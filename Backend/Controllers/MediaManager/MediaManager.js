@@ -40,18 +40,12 @@ exports.DownloadFileUrl = async function (bucketName, keyName) {
             Bucket: bucketName,
             Key: keyName,
         };
-        const url = await new Promise((resolve, reject) => {
-            s3.getSignedUrl('getObject', params, function (err, url) {
-                if (err) {
-                    reject(err);
-                }
-                resolve(url);
-            })
-        });
+        const url = await s3.getSignedUrl('getObject', params);
+        
         return (url);
     } catch (err) {
         console.log('Error catch', err, err.stack);
-        return ("");
+        return (null);
     }
 }
 

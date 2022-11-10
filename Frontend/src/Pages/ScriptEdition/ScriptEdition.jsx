@@ -133,15 +133,6 @@ export default function ScriptEdition(props) {
                             <CircleButton url="/user-icon.png" size='30px'/>
                         </div>
                     </div>
-                    <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg"> {/* TODO: Fix videoPLayer */}
-                            <VideoPlayer
-                                videoUrl={project.videoUrl}
-                                setDuration={setVideoDuration}
-                                setPlayedSecondsInParent={setPlayedSeconds}
-                                newSecondsFromCursor={newSecondsFromCursor}
-                                resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
-                                setIsPlaying={setIsPlaying}/>
-                    </div>
                     <div className="flex flex-row gap-3 edit-bloc">
                         <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">                                
                             {replicaSelected !== null ?
@@ -149,7 +140,7 @@ export default function ScriptEdition(props) {
                             :   <EmptyReplicaDetails/>
                             }
                         </div>
-                        {/* <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg"> TODO: Uncomment
+                        <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
                             <VideoPlayer
                                 videoUrl={project.videoUrl}
                                 setDuration={setVideoDuration}
@@ -157,29 +148,29 @@ export default function ScriptEdition(props) {
                                 newSecondsFromCursor={newSecondsFromCursor}
                                 resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
                                 setIsPlaying={setIsPlaying}/>
-                        </div> */}
-
-                        <div className="flex h-1/3 w-full pb-6 mt-2">
-                            <Timeline
-                            className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
-                            playedSeconds={playedSeconds}
-                            duration={videoDuration}
-                            replicas={replicas}
-                            projectId={project.id}
-                            onReplicaSelection={updateReplicaAction}
-                            updateReplica={updateReplica}
-                            removeReplicaFromState={removeReplica}
-                            setNewSecondsFromCursor={setNewSecondsFromCursor}
-                            />
                         </div>
-                        <AudioPlayer
-                        replicas={replicas}
+                    </div>
+
+                    <div className="flex h-1/3 w-full pb-6 mt-2">
+                        <Timeline
+                        className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
                         playedSeconds={playedSeconds}
-                        newSecondsFromCursor={newSecondsFromCursor}
-                        resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
-                        triggerPause={!isPlaying}
+                        duration={videoDuration}
+                        replicas={replicas}
+                        projectId={project.id}
+                        onReplicaSelection={updateReplicaAction}
+                        updateReplica={updateReplica}
+                        removeReplicaFromState={removeReplica}
+                        setNewSecondsFromCursor={setNewSecondsFromCursor}
                         />
                     </div>
+                    <AudioPlayer
+                    replicas={replicas}
+                    playedSeconds={playedSeconds}
+                    newSecondsFromCursor={newSecondsFromCursor}
+                    resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                    triggerPause={!isPlaying}
+                    />
                 </div>
                 {/* <Chat projectId={props.match.params.id}/> */}
             </div>
