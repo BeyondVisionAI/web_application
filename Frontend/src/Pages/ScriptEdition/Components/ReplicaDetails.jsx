@@ -2,6 +2,7 @@ import {React, useEffect, useState } from "react";
 import CommentBox from './CommentBox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import './ReplicaDetails.css'
 
 
 const ReplicaDetails = ({replica, updateReplica}) => {
@@ -204,7 +205,10 @@ const ReplicaDetails = ({replica, updateReplica}) => {
 
     return (
         <div className="h-full w-full flex flex-col justify-around py-2 px-6">
+            {/* Titre */}
             <h1 className="text-blue-400 text-2xl text-center">Paramètres de la réplique</h1>
+
+            {/* Texte */}
             <div>
                 <div className="w-full flex flex-row justify-between items-center">
                     <h3 className="section-title">Texte :</h3>
@@ -213,18 +217,20 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 <textarea name="replica-text" id="" 
                     value={text} maxLength='100' rows={3}
                     onChange={handleReplicaTextChange}
-                    className="w-full resize-none px-2 py-1 leading-7 text-xl
+                    className="w-full resize-none px-2 py-1 text-base
                     rounded-md border border-solid border-blue-500
                     focus:text-black focus:bg-white focus:border-blue-500 focus:outline-none"
                     ></textarea>
             </div>
+
+            {/* Voix */}
             <div>
                 <div className="w-full flex flex-row justify-between items-center mb-1">
                     <h3 className="section-title">Voix :</h3>
                     <select name="voiceSelection" id=""
                     value={voiceOption[voiceOption.findIndex(item => item.id === parseInt(voiceId))]?.nameID}
                     className="inline-flex items-center form-select form-select-lg
-                    w-1/2 p-2 text-xl 
+                    w-1/2 p-2 text-base 
                     border border-solid border-blue-300 rounded
                     transition ease-in-out
                     focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
@@ -237,6 +243,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                     </select>
                 </div>
 
+                {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
                     <h3 className="section-title">Commence à :</h3>
                     <input type='text' defaultValue={formatTimestamp(timestamp, duration)} disabled='true'
@@ -247,8 +254,11 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 </div>
             </div>
 
-            <h3 className="section-title">Commentaires :</h3>
-            <div id="comment-frame" className="w-full h-1/6 overflow-y-auto">
+            <div className="w-full flex flex-row justify-between items-center">
+                <h3 className="section-title">Commentaires:</h3>
+                <h3>{ comments.length }</h3>
+            </div>
+            <div id="comment-frame" className="wrapper">
                 <CommentBox comments={comments} replica={replica} updateComments={updateComments} removeComment={removeComment}/>
             </div>
             <button
