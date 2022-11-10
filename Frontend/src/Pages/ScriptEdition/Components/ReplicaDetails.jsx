@@ -53,7 +53,8 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     useEffect(() => {
         const retrieveVoices = async () => {
             try {
-                const response = await axios.get(`http://172.17.0.1:8082/Voice/RetrieveVoices`);
+                // TODO: Fix Connection
+                const response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`);
                 const datas = response.data;
                 console.log("Option :", datas);
                 const options = datas.map(function (mark, i) {
@@ -168,9 +169,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
      */
 
     const formatTimestamp = function (t, d) {
-
-        // console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 154 ~ formatTimestamp ~ t", t)
-        // console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 153 ~ formatTimestamp ~ d", d)
         const msToTimecode = function(t) {
             var hours = Math.floor(t / 3600000);
             var minutes = Math.floor((t - (hours * 3600000)) / 60000);

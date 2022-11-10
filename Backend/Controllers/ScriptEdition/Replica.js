@@ -23,7 +23,11 @@ const createAudio = async (replica) => {
                 text: content,
                 replicaId: _id
             })
-            .then(() => {
+            .then((response) => {
+                if (response.status != 200) {
+                    throw Error(response.data);
+                }
+                replica.duration = response.data.audioDuration;
                 replica.status = 'Done';
                 replica.actualStep = 'Voice';
                 replica.save();
@@ -50,10 +54,12 @@ const createAudio = async (replica) => {
  */
 const getReplicaAudioUrl = async (replica) => {
     try {
-        const data = await DownloadFileUrl('bv-replicas', replica.audioName);
+        if (replica.status != 'Done' || replica.actualStep != 'Voice') {
+            return replica
+        }
+        const url = await DownloadFileUrl('bv-replicas', `${replica.projectId}/${replica._id}.mp3`);
 
-        console.log(data);
-        return { ...replica, url: data }
+        return url
     } catch (error) {
         console.error(error);
     }
@@ -61,12 +67,18 @@ const getReplicaAudioUrl = async (replica) => {
 
 exports.getProjectReplicas = async function (projectId) {
     try {
-        // var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
-        var replicas = await Replica.find({ projectId: req.params.projectId }).
+        var script = await Replica.find({ projectId: projectId }).
             populate({ path: 'lastEditor', select: 'firstName lastName' }).
             sort({ timestamp: "asc" });
 
-        return (replicas);
+        let scriptWithUrls = []
+        for(let replica in script) {
+            if (replica) {
+                scriptWithUrls.push({...script[replica]._doc, audioUrl: await getReplicaAudioUrl(script[replica])});
+            }
+        }
+
+        return (scriptWithUrls);
     } catch (err) {
         console.log("Replica->getProjectReplicas : " + err);
         return (Errors.INTERNAL_ERROR);
@@ -75,13 +87,15 @@ exports.getProjectReplicas = async function (projectId) {
 
 exports.getProjectReplicas = async function (req, res) {
     try {
-        // var script = await Replica.find({projectId: req.params.projectId}).sort({timestamp: "asc"});
-        var script = await Replica.find({ projectId: req.params.projectId }).
-            populate({ path: 'lastEditor', select: 'firstName lastName' }).
-            sort({ timestamp: "asc" });
-        let scriptWithUrls = script.map(async (replica) => {
-            return getReplicaAudioUrl(replica);
-        })
+        var script = await Replica.find({ projectId: req.params.projectId })
+            .populate({ path: 'lastEditor', select: 'firstName lastName' })
+            .sort({ timestamp: "asc" });
+        let scriptWithUrls = []
+        for(let replica in script) {
+            if (replica) {
+                scriptWithUrls.push({...script[replica]._doc, audioUrl: await getReplicaAudioUrl(script[replica])});
+            }
+        }
 
         res.status(200).send(scriptWithUrls);
     } catch (err) {
@@ -95,7 +109,8 @@ exports.getProjectReplica = async function (req, res) {
     try {
         let replica = await Replica.findById(req.params.replicaId).
             populate({ path: 'lastEditor', select: 'firstName lastName' });
-        let replicaWithUrl = getReplicaAudioUrl(replica);
+        let replicaWithUrl = {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)};
+
         res.status(200).send(replicaWithUrl);
     } catch (err) {
         console.log("Replica->getProjectReplica : " + err);
@@ -124,7 +139,6 @@ exports.createReplica = async function (req, res) {
         newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
 
         await newReplica.save();
-        console.log("🚀 ~ file: Replica.js ~ line 129 ~ newReplica", newReplica);
         await createAudio(newReplica);
         res.status(200).send(newReplica);
     } catch (err) {
@@ -166,7 +180,6 @@ exports.updateReplica = async function (req, res) {
             replica.lastEditor = req.user.userId;
             await replica.save();
             if (needAudioChanged) {
-                console.log("🚀 ~ file: Replica.js ~ line 173 ~ replica", replica)
                 await createAudio(replica);
             }
         }
