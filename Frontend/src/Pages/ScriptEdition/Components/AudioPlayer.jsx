@@ -40,8 +40,6 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
 
     useEffect(() => {
         if (playedSeconds * 1000 >= currentReplica?.timestamp && !isPlaying) {
-            console.log(`PLAYING FOR AUDIO ${currentReplica.content}`);
-            console.log("🚀 ~ file: AudioPlayer.jsx ~ line 46 ~ useEffect ~ currentReplicaAudio", currentReplicaAudio)
             currentReplicaAudio?.play()
             setIsPlaying(true)
         }

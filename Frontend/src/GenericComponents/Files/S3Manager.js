@@ -3,9 +3,8 @@ import AWS from 'aws-sdk';
 AWS.config.setPromisesDependency();
 
 const AWSAccess = {
-    // TODO IMPORTANT!!!!!! FAIRE DES VARIABLES D'ENV
-    accessKeyId: 'AKIAVEXTIW63VUWJ2LT7',
-    secretAccessKey: '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'
+    accessKeyId: process.env.REACT_APP_S3_ID,
+    secretAccessKey: process.env.REACT_APP_S3_SECRET
 };
 
 export function UploadFileOnS3(file, bucketName, region = process.env.REACT_APP_S3_REGION, keyName = null)
@@ -37,7 +36,8 @@ export function UploadFileOnS3(file, bucketName, region = process.env.REACT_APP_
 export async function DownloadFileUrl(bucketName, keyName)
 {
     try {
-        let s3 = new AWS.S3({ ...AWSAccess, region: 'us-east-1' });
+        let s3 = new AWS.S3({ ...AWSAccess, region: process.env.REACT_APP_S3_REGION });
+
         const params = {
             Bucket: bucketName,
             Key: keyName,
