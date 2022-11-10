@@ -12,23 +12,21 @@ const axios = require("axios");
 const createAudio = async (replica) => {
     try {
         const { projectId, voiceId, content, _id } = replica;
-        replica.status = 'InProgress';
-        replica.actualStep = 'Voice';
-        await replica.save();
         if (content.length > 0) {
+            replica.status = 'InProgress';
+            replica.actualStep = 'Voice';
+            await replica.save();
             let url = `${process.env.SERVER_IA_URL}/Voice/TextToSpeech`;
-            // console.log('Text to speech :', replica, 'url :', url);
-            console.log(url);
             axios.post(url, {
                 projectId: projectId,
                 voiceId: voiceId,
                 text: content,
                 replicaId: _id
-            }).then(() => {
+            })
+            .then(() => {
                 replica.status = 'Done';
                 replica.actualStep = 'Voice';
                 replica.save();
-                console.log('Replica->ceateAudio : Done')
             })
             .catch((err) => {
                 replica.status = 'Error';
@@ -126,6 +124,7 @@ exports.createReplica = async function (req, res) {
         newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
 
         await newReplica.save();
+        console.log("🚀 ~ file: Replica.js ~ line 129 ~ newReplica", newReplica);
         await createAudio(newReplica);
         res.status(200).send(newReplica);
     } catch (err) {
@@ -167,6 +166,7 @@ exports.updateReplica = async function (req, res) {
             replica.lastEditor = req.user.userId;
             await replica.save();
             if (needAudioChanged) {
+                console.log("🚀 ~ file: Replica.js ~ line 173 ~ replica", replica)
                 await createAudio(replica);
             }
         }
