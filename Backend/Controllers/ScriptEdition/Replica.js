@@ -17,6 +17,7 @@ const createAudio = async (replica) => {
             replica.actualStep = 'Voice';
             await replica.save();
             let url = `${process.env.SERVER_IA_URL}/Voice/TextToSpeech`;
+            
             axios.post(url, {
                 projectId: projectId,
                 voiceId: voiceId,

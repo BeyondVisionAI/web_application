@@ -53,17 +53,8 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     useEffect(() => {
         const retrieveVoices = async () => {
             try {
-                // TODO: Fix Connection
                 const response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`);
-                const datas = response.data;
-                console.log("Option :", datas);
-                const options = datas.map(function (mark, i) {
-                    return (<option key={mark.id} value={mark.nameID}>
-                        {mark.nameID}
-                    </option>);
-                });
-                console.log("Option :", options);
-                setVoiceOption(options);
+                setVoiceOption(response.data);
             } catch (err) {
                 console.error("Replica Error :", err);
             }
@@ -230,19 +221,19 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             <div>
                 <div className="w-full flex flex-row justify-between items-center mb-1">
                     <h3 className="section-title">Voix :</h3>
-                    <select name="voiceSelection" id="" selected={voiceId}
+                    <select name="voiceSelection" id=""
+                    value={voiceOption[voiceOption.findIndex(item => item.id === parseInt(voiceId))]?.nameID}
                     className="inline-flex items-center form-select form-select-lg
                     w-1/2 p-2 text-xl 
                     border border-solid border-blue-300 rounded
                     transition ease-in-out
                     focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
-                    onChange={() => {}}>
-                        {voiceOption}
-                        {/* <option value="Anthony">Anthony</option>
-                        <option value="Théo">Théo</option>
-                        <option value="Marie">Marie</option>
-                        <option value="Léo">Léa</option>
-                        <option value="addVoice">Ajouter une voix</option> */}
+                    onChange={(e) => {setVoiceId(voiceOption[voiceOption.findIndex(item => item.nameID === e.target.value)]?.id)}}>
+                        {voiceOption.map((option => (
+                            <option key={option.id} value={option.nameID}>
+                                {option.nameID}
+                            </option>
+                        )))}
                     </select>
                 </div>
 

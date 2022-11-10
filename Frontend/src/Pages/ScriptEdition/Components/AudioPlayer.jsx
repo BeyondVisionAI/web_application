@@ -65,13 +65,11 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
         }
         setIsPlaying(false)
         if (idx === -1) {
-            console.log("IN === -1");
             setCurrentReplica(null)
             setCurrentReplicaAudio(null)
             return
         }
         if (idx === 0) {
-            console.log("IN === 0");
             if (!sortedReplicas.length) return
             setCurrentReplica(sortedReplicas[0])
             setCurrentReplicaAudio(new Audio(sortedReplicas[0]?.audioUrl))
@@ -80,13 +78,11 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
             return
         }
         if (idx + 1 < sortedReplicas.length) {
-            console.log("IN IF");
             setCurrentReplicaAudio(nextReplicaAudio)
             setCurrentReplica(sortedReplicas[idx])
             setNextReplicaAudio(new Audio(sortedReplicas[idx + 1]?.audioUrl))
             setNextReplicaIndex(idx + 1)
         } else {
-            console.log("IN ELSE");
             setCurrentReplicaAudio(nextReplicaAudio)
             setCurrentReplica(replicas[idx])
             setNextReplicaAudio(null)
