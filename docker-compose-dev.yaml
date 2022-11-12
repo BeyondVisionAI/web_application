@@ -24,6 +24,8 @@ services:
     restart: on-failure
 
   server:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - "mongodb"
     build:
