@@ -1,15 +1,18 @@
 import React from 'react';
 import PricingElement from './PricingElement/PricingElement';
+import { useTranslation } from 'react-i18next';
 import "./Pricing.css"
 
 const Pricing = () => {
+    const { t } = useTranslation('translation', {keyPrefix: 'landingPage.pricing'});
+
     return (
         <div href="pricing" id="pricing" className="pricing-container">
-            <PricingElement animation="fade-right" delay="500" isMainElement={false} buttonMessage="FREE" title="Free Plan" listElements={["Up to 5 projects", "5 minutes long video maximum", , "Watermark Beyond Vision"]} />
-            <PricingElement animation="zoom-in" delay="0" isMainElement={true} buttonMessage="€5.99/month" title="Basic Plan" listElements={["Up to 10 projects", "Collaborative projects", "Export the finished videos without watermark"]} />
-            <PricingElement animation="fade-left" delay="500" isMainElement={false} buttonMessage="€7.99/month" title="Pro Plan" listElements={["Unlimited projects", "Voice shop advantages", "Certified audiodescription review", "Export the finished videos in 4K"]} />
+            <PricingElement animation="fade-right" delay="500" isMainElement={false} buttonMessage={t('freePlan.priceLabel')} title={t('freePlan.name')} listElements={[t('freePlan.nProjects'), t('freePlan.5min'), , t('freePlan.watermark')]} />
+            <PricingElement animation="zoom-in" delay="0" isMainElement={true} buttonMessage={t('basicPlan.priceLabel')} title={t('basicPlan.name')} listElements={[t('basicPlan.nProjects'), t('basicPlan.collaboration'), t('basicPlan.no-watermark')]} />
+            <PricingElement animation="fade-left" delay="500" isMainElement={false} buttonMessage={t('proPlan.priceLabel')} title={t('proPlan.name')} listElements={[t('proPlan.nProjects'), t('proPlan.voice-shop'), t('proPlan.AD-review'), t('proPlan.4K')]} />
         </div>
     );
 }
- 
+
 export default Pricing;
