@@ -1,0 +1,45 @@
+.custom-checkbox-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.custom-checkbox-checkbox-container {
+    display: flex;
+    flex-direction: column;
+    width: 2vw;
+    height: 2vw;
+    border: 3px solid #7793ED;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-checkbox-checkbox-active {
+    display: flex;
+    flex-direction: column;
+    padding: 3px;
+    width: 1.3vw;
+    height: 1.3vw;
+    background-color:  #7793ED;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 100ms ease-in;
+}
+
+.custom-checkbox-checkbox-active-visible {
+    opacity: 1;
+}
+
+.custom-checkbox-checkbox-label {
+    color: black;
+    font-weight: 500;
+    font-size: 1.2vw;
+    margin-left: 10px;
+}

@@ -8,7 +8,7 @@
 }
 
 .dashboard-cards-container {
-    padding: 5vh 4vw;
+    padding: 1vh 4vw;
     width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -35,5 +35,20 @@
 
 .dashboard-inner-container {
     position: relative;
-    height: auto;
+    height: 100%;
+}
+
+.dashboard-inner-container-title {
+    padding: 1vh 4vw;
+    color: black;
+    font-weight: 500;
+    font-size: 1.6vw;
+}
+
+.dashboard-folder-container {
+    padding: 1vh 4vw;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3vh 0;
 }

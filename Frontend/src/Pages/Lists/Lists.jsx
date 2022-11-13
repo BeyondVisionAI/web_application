@@ -7,6 +7,7 @@ import CreateProject from '../Project/Create/CreateProject';
 import ProjectDrawer from './Components/ProjectDrawer/ProjectDrawer';
 import ProjectMiniature from './Components/ProjectMiniature/ProjectMiniature';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import FolderCard from './Components/FolderCard/FolderCard';
 export default function Lists() {
 
     const [projects, setProjects] = useState([])
@@ -88,10 +89,17 @@ export default function Lists() {
                 )} */}
 
                 <div className='dashboard-inner-container'>
+                    <h1 className='dashboard-inner-container-title'>Recent Projects</h1>
                     <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer}/>
                     <div className='dashboard-cards-container'>
-                        {[...Array(20)].map(project => {
+                        {[...Array(4)].map(project => {
                             return <ProjectMiniature project={projects[0]} openDrawer={() => handleOpenDrawer(projects[0])} />
+                        })}
+                    </div>
+                    <h1 className='dashboard-inner-container-title'>Folders</h1>
+                    <div className='dashboard-folder-container'>
+                        {[...Array(30)].map(project => {
+                            return <FolderCard folder={null} />
                         })}
                     </div>
                 </div>
