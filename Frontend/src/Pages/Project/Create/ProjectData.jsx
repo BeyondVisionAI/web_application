@@ -70,6 +70,7 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
                     {types.map((element) => (<option key={element}>{element}</option>))}
                 </select>
             </div>
+            {/* TODO: ADD Add collaborator label */}
 
             <div className="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded items-center justify-center">
                 {(!thumbnail && !image) && <UploadFile text="Drag and drop your thumbnail !" setData={ setLocalImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>}
