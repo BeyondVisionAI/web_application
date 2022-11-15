@@ -1,5 +1,6 @@
 import React from 'react';
 import UploadFile from '../../../GenericComponents/Files/UploadFile';
+import VideoPlayer from '../Manage/Widgets/VideoPlayer';
 
 export default function DropVideo({ video, setVideo, nextStep, handleChange, values }) {
     const onClick = e => {
@@ -7,16 +8,28 @@ export default function DropVideo({ video, setVideo, nextStep, handleChange, val
         nextStep();
     }
 
-  return (
+    return (
         <form className='h-full'>
             <div className="relative group w-full h-64 flex justify-center items-center">
-                <UploadFile
-                setData={ setVideo }
-                isFill={video ? true : false}
-                types=".mov, .mp4, .wav"
-                text="Drag and drop your video !"
-                other={ video ? <p className="relative z-20 cursor-pointer text-blue-500 hover:text-blue-600 block">{ video.name }</p> : null }
-                />
+                { !video ?
+                    <UploadFile
+                    setData={ setVideo }
+                    isFill={video ? true : false}
+                    types=".mov, .mp4, .wav"
+                    text="Drag and drop your video !"
+                    other={ video ? <p className="relative z-20 cursor-pointer text-blue-500 hover:text-blue-600 block">{ video.name }</p> : null }
+                    />
+                    :
+                    <div className='flex-col'>
+                        <VideoPlayer videoUrl={video}/> {/* TODO: Fix le lecteur de vidéo */}
+                        <div className='flex-row justify-between bg-black rounded-b'>
+                            <p className="input-with-label-label text-white inline-block align-middle">
+                                Genre de la vidéo
+                            </p>
+                            <button className='text-red-700 left-0 inline-block align-middle' onClick={() => setVideo(null)}>X</button>
+                        </div>
+                    </div>
+                }
             </div>
             <div className="absolute bottom-0 right-0 p-6">
                 <button
@@ -29,5 +42,5 @@ export default function DropVideo({ video, setVideo, nextStep, handleChange, val
                 </button>
             </div>
         </form>
-  );
+    );
 }

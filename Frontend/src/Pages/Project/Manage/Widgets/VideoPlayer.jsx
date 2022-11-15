@@ -33,7 +33,8 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
   }, [newSecondsFromCursor, resetNewSecondsFromCursor]);
 
   useEffect(() => {
-    setIsPlaying(playing)
+    if (setIsPlaying)
+      setIsPlaying(playing)
   }, [playing]);
 
 
