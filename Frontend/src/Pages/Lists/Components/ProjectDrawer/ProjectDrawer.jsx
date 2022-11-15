@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import CollaboratorsButton from "../../../../GenericComponents/NavBar/Project/CollaboratorsComponents/CollaboratorsButton";
 import FolderListSelectable from "./Components/FolderListSelectable";
 import "./ProjectDrawer.css"
-
+import { FaPen } from "react-icons/fa";
+import { FiScissors } from "react-icons/fi";
 const ProjectDrawer = ({project, isOpen, closeDrawer}) => {
     const divRef = useRef(null)
 
@@ -18,8 +19,24 @@ const ProjectDrawer = ({project, isOpen, closeDrawer}) => {
         };
       }, [divRef]);
 
+      const escFunction = useCallback((event) => {
+        if (event.key === "Escape") {
+          closeDrawer()
+        }
+      }, []);
+      useEffect(() => {
+        document.addEventListener("keydown", escFunction, false);
+        return () => {
+          document.removeEventListener("keydown", escFunction, false);
+        };
+      }, []);
+
     return (
         <div ref={divRef} className={`project-drawer-container ${isOpen && 'project-drawer-container-active'}`}>
+          <div className="project-drawer-editor-icons-container">
+            <div className="project-drawer-editor-icon-container"><FiScissors className="project-drawer-editor-icon"/></div>
+            <div className="project-drawer-editor-icon-container"><FaPen className="project-drawer-editor-icon"/></div>
+          </div>
             <img src='https://lumiere-a.akamaihd.net/v1/images/image_83011738.jpeg?region=0,0,540,810' className='project-drawer-thumbnail'/>
             <div className="project-drawer-editor-container">
                 <CollaboratorsButton projectId={project?._id} isEditable/>

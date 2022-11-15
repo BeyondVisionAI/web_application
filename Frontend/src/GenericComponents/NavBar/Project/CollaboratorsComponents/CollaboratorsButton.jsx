@@ -35,10 +35,9 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
     return (
             <div style={{marginLeft: "auto", marginRight: "10px"}}>
                 <div onClick={() => isEditable ? setShowModal(true) : null} className={`collaborator-container ${isEditable && 'editable'}`} >
-                    <div className="collaborator-item">AG</div>
-                    <div className="collaborator-item">DC</div>
+                 <div className="collaborator-item">AG</div>
+                 <div className="collaborator-item">DC</div>
                     {collaborators.map((collaborator, idx) => {
-                        console.log("🚀 ~ file: CollaboratorsButton.jsx ~ line 42 ~ {collaborators.map ~ collaborator", collaborator)
                         if (idx < 2) {
                             return (
                                 <div key={idx} className="collaborator-item">{collaborator.user.firstName[0]}{collaborator.user.lastName[0]}</div>

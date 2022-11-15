@@ -8,12 +8,16 @@ import ProjectDrawer from './Components/ProjectDrawer/ProjectDrawer';
 import ProjectMiniature from './Components/ProjectMiniature/ProjectMiniature';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import FolderCard from './Components/FolderCard/FolderCard';
+import AddFolderModal from './Components/AddFolderModal/AddFolderModal';
+import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 export default function Lists() {
 
-    const [projects, setProjects] = useState([])
+    const [recentProjects, setRecentProjects] = useState([1, 2])
+    const [folders, setFolders] = useState([1, 2, 3])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedProject, setSelectedProject] = useState(null)
     const [isProjectCreationModelOpen, setIsProjectCreationModalOpen] = useState(false)
+    const [isFolderCreationModelOpen, setIsFolderCreationModalOpen] = useState(false)
 
     const [isFinished, setIsFinished] = useState(false);
 
@@ -22,22 +26,8 @@ export default function Lists() {
     }, []);
 
     useEffect(() => {
-        const getMyProjects = async () => {
-            try {
-                // setMyProjectsList({ id: 0, name: "My projects", movies: [] });
-                var res = await axios({
-                    method: "GET",
-                    withCredentials: true,
-                    url: `${process.env.REACT_APP_API_URL}/lists/mine`,
-                });
-                setIsFinished(true);
-                setProjects(res.data)
-            } catch (err) {
-                toast.error("Email couldn't be verified, try again later")
-                setIsFinished(true)
-            }
-        };
-        getMyProjects()
+        // TODO: Fetch Recent Projects
+        // TODO: Fetch Folders
     }, []);
 
     const handleOpenDrawer = (project) => {
@@ -54,58 +44,65 @@ export default function Lists() {
         setIsDrawerOpen(false)
     }
 
-    const handleOpenModal = () => {
+    const handleOpenProjectModal = () => {
         const bodyElement = document.getElementById('dashboard-container')
         disableBodyScroll(bodyElement)
         setIsProjectCreationModalOpen(true)
     }
 
-    const handleCloseModal = () => {
+    const handleCloseProjectModal = () => {
         const bodyElement = document.getElementById('dashboard-container')
         enableBodyScroll(bodyElement)
         setIsProjectCreationModalOpen(false)
     }
 
-    if (!isFinished) {
-        return (
-            <h1>loading...</h1>
-        );
-    } else {
-        return (
-            <div id="dashboard-container" className="dashboard-container">
-                {/* <NavBarVariante input={input} updateInput={(input) => setInput(input)}/> */}
-
-                    {/* <button
-                    className="dashboard-add-project-button"
-                    type="button"
-                    onClick={handleOpenModal}
-                    >+</button>
-
-                {isProjectCreationModelOpen && (
-                    <CreateProject
-                        show={isProjectCreationModelOpen}
-                        onHide={handleCloseModal}
-                    />
-                )} */}
-
-                <div className='dashboard-inner-container'>
-                    <h1 className='dashboard-inner-container-title'>Recent Projects</h1>
-                    <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer}/>
-                    <div className='dashboard-cards-container'>
-                        {[...Array(4)].map(project => {
-                            return <ProjectMiniature project={projects[0]} openDrawer={() => handleOpenDrawer(projects[0])} />
-                        })}
-                    </div>
-                    <h1 className='dashboard-inner-container-title'>Folders</h1>
-                    <div className='dashboard-folder-container'>
-                        {[...Array(30)].map(project => {
-                            return <FolderCard folder={null} />
-                        })}
-                    </div>
-                </div>
-                
-                
-            </div>
-        )
+    const handleOpenFolderModal = () => {
+        const bodyElement = document.getElementById('dashboard-container')
+        disableBodyScroll(bodyElement)
+        setIsFolderCreationModalOpen(true)
     }
+
+    const handleCloseFolderModal = () => {
+        const bodyElement = document.getElementById('dashboard-container')
+        enableBodyScroll(bodyElement)
+        setIsFolderCreationModalOpen(false)
+    }
+    console.log("🚀 ~ file: Lists.jsx ~ line 106 ~ Lists ~ isFolderCreationModelOpen", isFolderCreationModelOpen)
+
+    return (
+        <div id="dashboard-container" className="dashboard-container">
+            {/* <NavBarVariante input={input} updateInput={(input) => setInput(input)}/> */}
+            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer}/>
+            {isProjectCreationModelOpen && (
+                <CreateProject
+                    show={isProjectCreationModelOpen}
+                    onHide={handleCloseProjectModal}
+                />
+            )}
+            {isFolderCreationModelOpen && (
+                <AddFolderModal
+                    closeModal={handleCloseFolderModal}
+                />
+            )}
+            <BreadCrumbs pathObject={[{url: '/dashboard', name: 'Dashboard'}]} />
+            <div className='dashboard-inner-container'>
+                <h1 className='dashboard-inner-container-title'>Recent Projects</h1>
+                <div className='dashboard-cards-container'>
+                    <ProjectMiniature isAdd openAddProject={handleOpenProjectModal} />
+                    {recentProjects.map((project, idx) => {
+                        if (idx < 3) {
+                            return <ProjectMiniature project={project} openDrawer={() => handleOpenDrawer(project)} />
+                        }
+                    })}
+                </div>
+                <h1 className='dashboard-inner-container-title'>Folders</h1>
+                <div className='dashboard-folder-container'>
+                    <FolderCard isAdd openAddFolder={handleOpenFolderModal}/>
+                    {folders.map(folder => {
+                        return <FolderCard folder={folder} />
+                    })}
+                </div>
+            </div>
+        </div>
+    )
 }

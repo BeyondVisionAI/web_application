@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ProjectData from './ProjectData';
 import VideoData from './VideoData';
@@ -121,6 +121,18 @@ export default function CreateProject({ show, onHide }) {
             };
         }, [ref]);
     }
+
+    const escFunction = useCallback((event) => {
+        if (event.key === "Escape") {
+          onHide()
+        }
+      }, []);
+      useEffect(() => {
+        document.addEventListener("keydown", escFunction, false);
+        return () => {
+          document.removeEventListener("keydown", escFunction, false);
+        };
+      }, []);
 
     useOutsideAlerter(wrapperRef);
 

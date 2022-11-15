@@ -72,3 +72,26 @@
     font-size: .9vw;
     margin-top: 1vh;
 }
+
+.project-drawer-editor-icons-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: -1vh;
+    margin-bottom: 2vh;
+}
+
+.project-drawer-editor-icon-container {
+    background-color: #F6F8FF;
+    padding: .7vw;
+    cursor: pointer;
+    border-radius: 100%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-right: .7vw;
+}
+
+.project-drawer-editor-icon {
+    color: #7793ED;
+}
