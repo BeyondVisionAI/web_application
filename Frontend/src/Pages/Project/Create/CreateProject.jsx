@@ -82,7 +82,7 @@ export default function CreateProject({ show, onHide }) {
             await uploadMedia();
             history.push(`/project/${projectResponse.data._id}`);
             await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectResponse.data._id}/generationIA`, { typeGeneration: 'ActionRetrieve' });
-            onHide()
+            onHide();
         } catch (error) {
             console.error(error);
         }
@@ -115,7 +115,7 @@ export default function CreateProject({ show, onHide }) {
         useEffect(() => {
             function handleClickOutside(event) {
                 if (ref.current && !ref.current.contains(event.target)) {
-                    onHide()
+                    onHide();
                 }
             }
             document.addEventListener("mousedown", handleClickOutside);
@@ -124,6 +124,20 @@ export default function CreateProject({ show, onHide }) {
             };
         }, [ref]);
     }
+
+    useEffect(() => {
+        const keyDownHandler = event => {    
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            onHide();
+          }
+        };
+
+        document.addEventListener('keydown', keyDownHandler);
+        return () => {
+          document.removeEventListener('keydown', keyDownHandler);
+        };
+      }, []);
 
     useOutsideAlerter(wrapperRef);
 
