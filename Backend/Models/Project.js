@@ -9,6 +9,7 @@ const enumStatus = [
 const enumActualStep = [
     'ProjectCreation',
     'ActionRetrieve',
+    'FaceRecognition',
     'TextGeneration',
     'VoiceGeneration',
     'AudioGeneration',

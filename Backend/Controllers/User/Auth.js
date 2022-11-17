@@ -37,9 +37,9 @@ exports.register = async function (req, res) {
         var emailHtml = fs.readFileSync(require('path').resolve(__dirname, '../../Models/emailTemplates/emailVerification.html'), 'utf-8')
         var template = handlebars.compile(emailHtml);
         var replacements = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            verifyEmaiLink: `${process.env.WEBSITE_URL}/verifyEmail?verifUID=${verifUID}`,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          verifyEmaiLink: `${process.env.WEBSITE_URL}/verifyEmail?verifUID=${verifUID}`,
         };
         var htmlToSend = template(replacements);
         const mailData = {
@@ -89,7 +89,7 @@ exports.login = async function (req, res) {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
-        domain: req.headers.origin.includes('localhost') ? null: req.headers.origin
+        domain: req.headers.origin.includes('localhost') ? null : req.headers.origin
       });
       return res.status(200).send("Success");
     } else {
@@ -147,9 +147,9 @@ exports.askForPasswordChange = async function (req, res) {
     var emailHtml = fs.readFileSync(require('path').resolve(__dirname, '../../Models/emailTemplates/passwordReset.html'), 'utf-8')
     var template = handlebars.compile(emailHtml);
     var replacements = {
-        firstName: doc.firstName,
-        lastName: doc.lastName,
-        resetPasswordLink: `${process.env.WEBSITE_URL}/resetPassword?verifUID=${doc.verificationUID}`,
+      firstName: doc.firstName,
+      lastName: doc.lastName,
+      resetPasswordLink: `${process.env.WEBSITE_URL}/resetPassword?verifUID=${doc.verificationUID}`,
     };
     var htmlToSend = template(replacements);
     const mailData = {

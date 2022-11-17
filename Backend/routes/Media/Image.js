@@ -15,7 +15,7 @@ module.exports = function(app) {
 
     app.get('/images/:projectId/:id',
         authMiddleware.authenticateUser,
-        collabMiddleware.isCollab,
+        // collabMiddleware.isCollab,
         image.getImage
     );
 }
