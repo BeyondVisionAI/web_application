@@ -97,11 +97,6 @@
 	"email-not-verified": "Email non vérifié",
 	"email-cannot-be-verified": "L'adresse mail n'a pas pu être vérifiée, réessayer ultérieurement",
 
-	"==== CONTACT FORM ====": "",
-	"Your-name": "Votre nom *",
-	"Your-mail": "Votre adresse mail *",
-	"Your-message": "Votre message *",
-
 	"==== DASHBOARD ====": "",
 	"create-project":"Créer un projet",
 	"project-details": "Détails du projet",
