@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios'
+import axios from 'axios';
 import { io } from "socket.io-client";
 import Cookies from 'js-cookie';
 export const AuthContext = React.createContext();

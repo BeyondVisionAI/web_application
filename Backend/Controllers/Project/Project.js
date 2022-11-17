@@ -3,6 +3,7 @@ const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
+import { axios } from 'axios';
 
 exports.getProjectDB = async function (projectId) {
     try {
@@ -166,6 +167,34 @@ exports.setStatus = async function (req, res) {
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
         console.log("Project->setStatus: " + err);
+        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+    }
+}
+
+exports.setScript = async function (req, res) {
+    const data = req.body.data;
+    const projectId = req.params.projectId
+    try {
+        if (!projectId || !data)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        for (let key in data.script) {
+            let { actionName, startTime, endTime } = data.script[key];
+
+            
+            let replica = await new Replica();
+            replica = {
+                projectId: projectId,
+                content: actionName,
+                timestamp: startTime,
+                duration: endTime - startTime,
+                voiceId: 1,
+                lastEditDate: new Date() };
+            await replica.save();
+        }
+
+        return (res.status(200).send("Script save to the project."));
+    } catch (err) {
+        console.log("Project->setScript: " + err);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
 }
