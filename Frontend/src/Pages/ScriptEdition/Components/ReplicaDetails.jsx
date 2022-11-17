@@ -263,7 +263,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             </div>
             <button
             onClick={() => {setIsLoading(true);updateReplicaText()}}
-            className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Saving..." : "Save"}</button>
+            className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Sauvegarde en cours..." : "Sauvegarder"}</button>
 
             {/* <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
                 <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top truncate">{formatTimestamp(timestamp, duration)}</p>
