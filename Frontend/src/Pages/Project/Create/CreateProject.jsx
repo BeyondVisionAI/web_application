@@ -147,7 +147,7 @@ export default function CreateProject({ show, onHide }) {
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                 <div ref={wrapperRef} className="relative w-full my-6 mx-auto max-w-7xl h-5/6">
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none h-full focus:outline-none">
-                        <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                        <div className="flex items-start justify-between border-b border-solid border-blueGray-200 rounded-t">
                             <StepsBar steps={steps}></StepsBar>
                             <button
                             className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -166,4 +166,3 @@ export default function CreateProject({ show, onHide }) {
         </>
     );
 }
-// TODO: Handle error and required elements
