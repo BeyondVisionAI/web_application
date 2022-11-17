@@ -33,7 +33,7 @@
 			},
 			"basicPlan": {
 				"name": "Basic Plan",
-				"priceLabel": "€5.99/moismonth",
+				"priceLabel": "€5.99/month",
 				"nProjects": "Up to 10 projects",
 				"collaboration": "Collaborative projects",
 				"no-watermark": "No watermark"
@@ -95,11 +95,6 @@
 	"email-verified": "Email Verified",
 	"email-not-verified": "Email not verified",
 	"email-cannot-be-verified": "Email couldn't be verified, try again later",
-
-	"==== CONTACT FORM ====": "",
-	"Your-name": "Your name *",
-	"Your-mail": "Your mail *",
-	"Your-message": "Your message *",
 
 	"==== DASHBOARD ====": "",
 	"create-project":"Create project",
