@@ -17,5 +17,7 @@ module.exports = function(app) {
 
     app.get('/user/me', Middleware.authenticateUser, User.getUser)
     
-    app.get('/user/:userId', Middleware.authenticateUser, User.getUserById)
+    app.get('/user/:userId/id', Middleware.authenticateUser, User.getUserById)
+
+    app.post('/user/email', Middleware.authenticateUser, User.getUserByEmail)
 }

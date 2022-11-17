@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import UploadFile from '../../../GenericComponents/Files/UploadFile';
 import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 import ThumbnailDisplay from './ThumbnailDisplay';
+import CollaboratorInput from '../../../GenericComponents/InputWithLabel/CollaboratorInput';
 
-export default function ProjectData({ image, setImage, nextStep, prevStep, handleChange, values }) {
+export default function ProjectData({ image, setImage, nextStep, prevStep, handleChange, values, collaborators, setCollaborators }) {
     const types = [
         "Aucun",
         "Aventure",
@@ -26,8 +27,8 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
         e.preventDefault();
         handleChange('videoType', selectedType);
         handleChange('description', description);
-        handleChange('name', title)
-        setImage(localImage)
+        handleChange('name', title);
+        setImage(localImage);
         nextStep();
     };
 
@@ -69,8 +70,10 @@ export default function ProjectData({ image, setImage, nextStep, prevStep, handl
                 <select className="input-with-label-input" id='videoType' defaultValue={ values.videoType } onChange={(e) => setSelectedType(e.target.value)}>
                     {types.map((element) => (<option key={element}>{element}</option>))}
                 </select>
+                <div className='flex'>
+                    <CollaboratorInput defaultValue={ "" } collaborators={ collaborators } setCollaborators={ setCollaborators } />
+                </div>
             </div>
-            {/* TODO: ADD Add collaborator label */}
 
             <div className="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded items-center justify-center">
                 {(!thumbnail && !image) && <UploadFile text="Drag and drop your thumbnail !" setData={ setLocalImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>}

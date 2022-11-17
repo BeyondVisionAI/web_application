@@ -17,7 +17,7 @@ export default function VideoData({ prevStep, handleChange, values, postData }) 
     const [createPayment, setCreatePayment] = useState(false);
     const [arePaymentLoaded, setArePaymentLoaded] = useState(false);
     const [Payments, setPayments] = useState();
-    const [areAllRequiredFieldsFilled, setAreAllRequiredFieldsFilled] = useState(false);
+    const [areAllRequiredFieldsFilled, setAreAllRequiredFieldsFilled] = useState(true); // TODO False Default
     const regexAmount = "^([0-9]+([.][0-9]*)?|[.][0-9]+)$";
     const next = e => {
         e.preventDefault();

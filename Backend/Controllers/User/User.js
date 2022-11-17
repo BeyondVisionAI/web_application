@@ -15,3 +15,17 @@ exports.getUserById = async function(req, res) {
     }
     return res.status(404).send(Errors.USER_NOT_FOUND)
 }
+
+exports.getUserByEmail = async function(req, res) {
+    if (!req.body.email) {
+        console.log("Collaboration->createCollaboration: Req.body not complete :\n" + req.body);
+        return res.status(401).send(Errors.BAD_REQUEST_MISSING_INFOS);
+    }
+
+    const targetUser = await User.findOne({ email: req.body.email });
+    if (!targetUser) {
+        console.log("Collaboration->createCollaboration: Target email isn't on the database");
+        return res.status(404).send(Errors.EMAIL_UNKNOWN);
+    }
+    return res.status(200).send(targetUser);
+}
