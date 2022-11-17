@@ -129,8 +129,8 @@ export default function ScriptEdition(props) {
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
-                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
-                            <CircleButton url="/user-icon.png" size='30px'/>
+                            <CircleButton url="/download-icon.png" size='50px' onClick={() => RedirectToProjectManagement()}/>
+                            <CircleButton url="/user-icon.png" size='50px'/>
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 edit-bloc">

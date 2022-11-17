@@ -3,7 +3,7 @@ import "./CircleButton.css"
 
 const CircleButton = (props) => {
     return (
-        <button style={{backgroundColor: props.bgColor}} className="circle-button-container" onClick={props.onClick}>
+        <button style={{backgroundColor: props.bgColor, height: props.size, width: props.size}} className="circle-button-container" onClick={props.onClick}>
             <img className='icon' src={props.url} alt="button" />
         </button>
     );
