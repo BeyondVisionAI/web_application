@@ -230,19 +230,9 @@ exports.finishedEdition = async function (req, res) {
             audioObject.id = replica.id;
             audioObject.timeStamp = replica.id;
             audioObject.duration = replica.id;
-            if (replica.status !== 'Done' && replicas.actualStep !== 'Voice') {
+            if (replica.status !== 'Done' && replicas.actualStep !== 'Voice')
                 if (!createAudio(replica))
                     throw Errors.INTERNAL_ERROR;
-                else {
-                    if (returnValue === Errors.INTERNAL_ERROR)
-                        throw (Errors.INTERNAL_ERROR);
-                    audioObject.signedUrl = returnValue;
-                }
-            } else {
-                if (returnValue === Errors.INTERNAL_ERROR)
-                    throw (Errors.INTERNAL_ERROR);
-                audioObject.signedUrl = returnValue;
-            }
             audiosInfo.append(audioObject);
         }
 
