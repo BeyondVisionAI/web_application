@@ -31,7 +31,6 @@ var wrapedSendMail = exports.wrapedSendMail = function (mailOptions) {
     return new Promise((resolve, reject) => {
         smtpTransport.sendMail(mailOptions, function (error, info) {
             if (error) {
-                console.log("🚀 ~ file: Auth.js ~ line 27 ~ transporter.sendMail ~ error", error)
                 reject(false);
             } else {
                 resolve(true);
@@ -41,10 +40,6 @@ var wrapedSendMail = exports.wrapedSendMail = function (mailOptions) {
 }
 
 exports.contactForm = async function (req, res) {
-    console.log("🚀 ~ file: Mail.js ~ line 16 ~ process.env.GOOGLE_CLIENT_SECRET", process.env.GOOGLE_CLIENT_SECRET)
-    console.log("🚀 ~ file: Mail.js ~ line 18 ~ process.env.GOOGLE_REFRESH_TOKEN", process.env.GOOGLE_REFRESH_TOKEN)
-    console.log("🚀 ~ file: Mail.js ~ line 20 ~ process.env.GOOGLE_ACCESS_TOKEN", process.env.GOOGLE_ACCESS_TOKEN)
-    console.log("🚀 ~ file: Mail.js ~ line 35 ~ req.body", req.body)
     if (!req.body || !req.body.name || !req.body.email || !req.body.message) {
         return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS)
     }
@@ -68,7 +63,6 @@ exports.contactForm = async function (req, res) {
         await wrapedSendMail(mailData)
         return res.status(200).send("Success");
     } catch (err) {
-        console.log("🚀 ~ file: Mail.js ~ line 60 ~ err", err)
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }

@@ -51,7 +51,6 @@ exports.register = async function (req, res) {
           html: htmlToSend,
         };
         if (!process.env.IS_TEST) {
-          console.log("Register : Verification Mail")
           try {
             await wrapedSendMail(mailData)
             return res.status(200).send("Success");
@@ -59,7 +58,6 @@ exports.register = async function (req, res) {
             return res.status(500).send(Errors.INTERNAL_ERROR);
           }
         } else {
-          console.log("Register : No Verification Mail")
           return res.status(200).send("Success");
         }
       });
