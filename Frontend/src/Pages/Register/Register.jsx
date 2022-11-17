@@ -53,7 +53,6 @@ const Register = () => {
                     withCredentials: true,
                     url: `${process.env.REACT_APP_API_URL}/user/register`,
                 })
-                console.log("🚀 ~ file: Login.jsx ~ line 84 ~ register ~ res", res)
                 if (res.status === 200) {
                     toast.success("Account created")
                     history.push('/login')

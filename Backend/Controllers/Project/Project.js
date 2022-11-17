@@ -4,6 +4,7 @@ const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 import { axios } from 'axios';
+const axios = require("axios");
 
 exports.getProjectDB = async function (projectId) {
     try {
@@ -97,7 +98,7 @@ exports.deleteProject = async function (req, res) {
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
         await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
-        await Project.deleteMany({ _id: { $in: req.body.projectIds }});
+        await Project.deleteMany({ _id: { $in: req.body.projectIds } });
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -113,7 +114,7 @@ exports.deleteProject = async function (req, res) {
  */
 exports.updateProject = async function (req, res) {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, {returnDocument: 'after'});
+        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, { returnDocument: 'after' });
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);
@@ -141,10 +142,11 @@ exports.getAllProjects = async function (req, res) {
  * @returns { response to send }
  */
 exports.setStatus = async function (req, res) {
+    console.log('Route Set Status');
     try {
         if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        var project = await Project.findById(req.params.projectId);
+        let project = await Project.findById(req.params.projectId);
 
         if (!project)
             return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
@@ -163,7 +165,12 @@ exports.setStatus = async function (req, res) {
         else if (req.body.statusType === 'Done')
             project.progress = 100;
 
+
         await project.save();
+        console.log("Project:", project);
+        if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
+            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId })
+        }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
         console.log("Project->setStatus: " + err);
@@ -171,30 +178,71 @@ exports.setStatus = async function (req, res) {
     }
 }
 
-exports.setScript = async function (req, res) {
-    const data = req.body.data;
-    const projectId = req.params.projectId
+exports.generationIA = async function (req, res) {
+    console.log('Route generation IA');
+    let returnCode = 200;
+    let returnMessage = "";
+    let project = await Project.findById(req.params.projectId);
     try {
-        if (!projectId || !data)
-            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        for (let key in data.script) {
-            let { actionName, startTime, endTime } = data.script[key];
+        if (!req.body.typeGeneration) {
+            throw Errors.BAD_REQUEST_BAD_INFOS;
+        }
+        if ((project.ActualStep === 'ActionRetrieve' || project.ActualStep === 'FaceRecognition') && project.status === 'InProgress') {
+            returnMessage = 'Generation IA is in progress';
+        } else {
+            if (req.body.typeGeneration === 'ActionRetrieve') {
+                project.ActualStep = 'ActionRetrieve';
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { projectId: req.params.projectId });
+            } else if (req.body.typeGeneration === 'FaceRecognition') {
+                project.ActualStep = 'FaceRecognition';
+                // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`, { projectId: req.params.projectId });
+            }
+        }
+    } catch (err) {
+        project.status = 'Error';
+        await project.save();
+        console.log("Project->Generation IA: " + err);
+        returnCode = 400;
+        returnMessage = err;
+    }
+    return (res.status(returnCode).send(returnMessage));
+}
 
-            
-            let replica = await new Replica();
-            replica = {
-                projectId: projectId,
-                content: actionName,
-                timestamp: startTime,
-                duration: endTime - startTime,
-                voiceId: 1,
-                lastEditDate: new Date() };
-            await replica.save();
+exports.finishedEdition = async function (req, res) {
+    console.log('Route Finished Edtion');
+    let returnCode = 200;
+    let returnMessage = "La generation des Audio sont en cours...";
+    try {
+        replicas = getProjectReplicas(req.params.projectId);
+        if (replicas === Errors.INTERNAL_ERROR) {
+            throw Errors.INTERNAL_ERROR;
+        } else if ((await replicas).length === 0) {
+            returnCode = 400;
+            returnMessage = "Error : Il n'y a aucun audio a générer.";
+        }
+        let audiosInfo = []
+        let audioObject = {
+            id: '',
+            timeStamp: .0,
+            duration: .0,
+        }
+        for (replica in replicas) {
+            audioObject.id = replica.id;
+            audioObject.timeStamp = replica.id;
+            audioObject.duration = replica.id;
+            if (replica.status !== 'Done' && replicas.actualStep !== 'Voice')
+                if (!createAudio(replica))
+                    throw Errors.INTERNAL_ERROR;
+            audiosInfo.append(audioObject);
         }
 
-        return (res.status(200).send("Script save to the project."));
+        //TODO voir ce que marco a besoin au niveau des audios (url et etc...)
+        axios.post(`${process.env.SERVER_IA_URL}/GenerationAudio`, { projectId: req.params.projectId, audiosInfo: audiosInfo });
     } catch (err) {
-        console.log("Project->setScript: " + err);
-        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+        console.log("Project->Finished Edition: " + err);
+        returnCode = 400;
+        returnMessage = err;
     }
+    return (res.status(returnCode).send(returnMessage));
 }
