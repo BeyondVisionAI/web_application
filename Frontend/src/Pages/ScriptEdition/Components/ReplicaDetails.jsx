@@ -327,7 +327,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 <h3>{ comments.length }</h3>
             </div>
             <div id="comment-frame" className="wrapper">
-                <CommentBox comments={comments} replica={replica} updateComments={updateComments} removeComment={removeComment}/>
+                <CommentBox comments={comments} replica=languageSelected{replica} updateComments={updateComments} removeComment={removeComment}/>
             </div>
             <button
                 onClick={() => {setIsLoading(true);updateReplicaText()}}
