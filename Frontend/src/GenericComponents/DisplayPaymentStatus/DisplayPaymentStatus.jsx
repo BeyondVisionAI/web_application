@@ -36,9 +36,7 @@ const DisplayPaymentStatus = () => {
       });
   }, [stripe]);
 
-  return null
-
-
+  return null;
 };
 
 export default DisplayPaymentStatus;

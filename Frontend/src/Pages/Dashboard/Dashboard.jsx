@@ -11,13 +11,13 @@ import axios from "axios"
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Dashboard() {
-    const {logout, currentUser} = useContext(AuthContext)
-    const [isRedirectFromPayment, setIsRedirectFromPayment] = useState(false)
-    const [paymentAmount, setPaymentAmount] = useState(null)
-    const [createPayment, setCreatePayment] = useState(false)
-    const [arePaymentLoaded, setArePaymentLoaded] = useState(false)
-    const [Payments, setPayments] = useState()
-    const regexAmount = "^([0-9]+([.][0-9]*)?|[.][0-9]+)$"
+    const {logout, currentUser} = useContext(AuthContext);
+    const [isRedirectFromPayment, setIsRedirectFromPayment] = useState(false);
+    const [paymentAmount, setPaymentAmount] = useState(null);
+    const [createPayment, setCreatePayment] = useState(false);
+    const [arePaymentLoaded, setArePaymentLoaded] = useState(false);
+    const [Payments, setPayments] = useState();
+    const regexAmount = "^([0-9]+([.][0-9]*)?|[.][0-9]+)$";
 
     useEffect(() => {
         const clientSecret = new URLSearchParams(window.location.search).get(
