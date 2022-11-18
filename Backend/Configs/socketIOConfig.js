@@ -11,6 +11,7 @@ const parseCookie = str =>
   }, {});
 
 exports.socketIOConfig = function (http) {
+    var projectsRooms = [];
     var rooms = []
 
     var io = require('socket.io')(http, {
@@ -37,6 +38,35 @@ exports.socketIOConfig = function (http) {
     io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
         console.log(`Client ${socket.id} connected !`)
         socket.emit('connection', null);
+
+        socket.on("open project", projectId => {
+            var index = projectsRooms.findIndex((elem) => elem.id === projectId);
+            if (index === -1) {
+                console.log(`Creating new roomProject with id = ${projectId}`);
+                var newProjectRoom = {
+                    id: projectId,
+                    users: [socket.id]
+                }
+                projectsRooms.push(newProjectRoom)
+            } else {
+                console.log(`Adding user ${socket.id} to roomProject ${projectsRooms}`);
+                if (!projectsRooms[index].users.includes(projectId)) projectsRooms[index].users.push(socket.id)
+            }
+        });
+
+        socket.on("close project", projectId => {
+            var index = projectsRooms.findIndex(x => x.users.includes(socket.id));
+            if (index !== -1) {
+                projectsRooms[index].users.splice(projectsRooms[index].users.indexOf(socket.id), 1);
+            } 
+        });
+
+        socket.on("new replica", (projectId) => {
+            var index = projectsRooms.findIndex((elem) => elem.id === projectId);
+            for (var user of projectsRooms[index].users) {
+                io.to(user).emit("new replica detected");
+            }
+        });
 
         socket.on("join room", roomId => {
             var index = null

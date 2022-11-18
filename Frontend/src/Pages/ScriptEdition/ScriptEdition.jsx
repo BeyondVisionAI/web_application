@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReplicaDetails from './Components/ReplicaDetails';
 import EmptyReplicaDetails from './Components/EmptyReplicaDetails';
 import Timeline from './Components/Timeline';
@@ -12,9 +12,13 @@ import AudioPlayer from './Components/AudioPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
+import { AuthContext } from '../../GenericComponents/Auth/Auth';
 
 
 export default function ScriptEdition(props) {
+
+    const {socket, currentUser} = useContext(AuthContext);
+
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -24,7 +28,26 @@ export default function ScriptEdition(props) {
     const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
+    socket.on('connection', () => {
+        console.log(`I'm connected with the back-end for the script edition`);
+    });
+    
+    socket.on('new replica detected', async () => {
+        try {
+            const res = await axios({
+                method: "GET",
+                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/replicas`,
+                withCredentials: true
+            });
+            let resRep = Object.values(res.data);
+            setReplicas(resRep);
+        } catch (e) {
+            console.log('error detected when call new replica in front')
+        }
+    });
+
     useEffect(() => {
+        socket.emit("open project", props.match.params.id);
         const getProject = async function (id) {
             try {
                 let videoUrl = undefined;
@@ -72,6 +95,7 @@ export default function ScriptEdition(props) {
         } else {
             newReplicas.push(newReplica)
         }
+        socket.emit("new replica", props.match.params.id);
         setReplicas(newReplicas)
     }
 
