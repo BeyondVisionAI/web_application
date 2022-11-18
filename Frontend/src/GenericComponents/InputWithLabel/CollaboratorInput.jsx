@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 import validator from 'validator';
 import axios from "axios";
 import Tag from "./Tag";
@@ -32,10 +33,19 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
 
     const addCollaborator = async () => {
         try {
+            if (collaborators.find(collaborator => collaborator.user.email === newCollaborator)) {
+                toast.warning("This collaborator is already added");
+                return;
+            }
             let collaboratorsUpdate = [...collaborators];
             const user = await axios.post(`${process.env.REACT_APP_API_URL}/user/email`, { email: newCollaborator });
 
-            collaboratorsUpdate.push({ user: user.data }); // Add Rights ?
+            if (user.status != 200) {
+                toast.error("Error will getting user, please retry");
+                return;
+            }
+            setNewCollaborator("");
+            collaboratorsUpdate.push({ user: user.data }); // TODO: Add Rights
             setCollaborators(collaboratorsUpdate);
         } catch (error) {
             setErrorMessage('Email invalid!');
@@ -44,7 +54,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
     }
 
     const deleteCollaborator = (userId) => {
-        const updatedCollaborators = collaborators.filter(function(collaborator){ 
+        const updatedCollaborators = collaborators.filter(function(collaborator) { 
             return collaborator.user._id != userId; 
         });
 
@@ -74,7 +84,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
                 </div>
 
             </div>
-            <div className="flex felx-row pt-1">
+            <div className="flex flex-wrap w-2/3 pt-1">
                 {collaborators.map((collaborator) => {
                     return (
                         <Tag key={collaborator.user._id} text={collaborator.user.firstName} onDelete={() => deleteCollaborator(collaborator.user._id)} />
