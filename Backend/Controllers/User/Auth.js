@@ -85,11 +85,15 @@ exports.login = async function (req, res) {
       var userJWT = jwt.sign(userWithoutPassword, process.env.JWT_SECRETKEY, {
         expiresIn: "24h",
       });
+      var domain = null;
+      if (req.headers && req.headers.origin && !req.headers.origin.includes('localhost')) {
+        domain = req.headers.origin
+      }
       res.cookie("token", userJWT, {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
-        domain: req.headers.origin.includes('localhost') ? null: req.headers.origin
+        domain: domain
       });
       return res.status(200).send("Success");
     } else {

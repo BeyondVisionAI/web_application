@@ -3,6 +3,8 @@ const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
+const { Collaboration: CollaborationModel } = require("../../Models/Collaboration") ;
+const { User } = require("../../Models/User");
 
 exports.getProjectDB = async function (projectId) {
     try {
@@ -125,6 +127,23 @@ exports.getAllProjects = async function (req, res) {
         var projects = await module.exports.getAllProjectsDB(req.user.userId);
         if (!projects) {
             return res.status(500).send(Errors.INTERNAL_ERROR);
+        }
+        return res.status(200).send(projects);
+    } catch (err) {
+        console.log("Project->getAllProject: " + err);
+        return res.status(500).send(Errors.INTERNAL_ERROR);
+    }
+}
+
+exports.getRecentProjects = async function (req, res) {
+    try {
+        var projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(3);
+        const projects = []
+        for (const projectId of projectsIds) {
+            let ownerId = await CollaborationModel.findOne({projectId: projectId.projectId, rights: Role.OWNER});
+            const owner = await User.findOne({ _id: ownerId.userId}, {firstName: 1, lastName: 1})
+            const project = await Project.findOne({ _id: projectId.projectId});
+            projects.push({...project._doc, owner: owner})
         }
         return res.status(200).send(projects);
     } catch (err) {

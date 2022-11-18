@@ -4,7 +4,7 @@ import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWi
 import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-export default function AddFolderModal({ closeModal }) {
+export default function AddFolderModal({ closeModal, addToFolderList }) {
     const [folderName, setFolderName] = useState('')
 
     const wrapperRef = useRef(null);
@@ -41,9 +41,24 @@ export default function AddFolderModal({ closeModal }) {
         setFolderName(value);
     }
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         if (folderName === '') {
             toast.error('Folder name cannot be empty')
+        }
+        try {
+            var res = await axios({
+                url: `${process.env.REACT_APP_API_URL}/lists`,
+                method: 'POST',
+                withCredentials: true,
+                data: {
+                    name: folderName,
+                }
+            })
+            toast.success("Folder successfully created")
+            addToFolderList(res.data)
+            closeModal()
+        } catch (error) {
+            console.error(error)
         }
     }
 

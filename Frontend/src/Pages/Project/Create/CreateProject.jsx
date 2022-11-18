@@ -7,7 +7,7 @@ import DropVideo from './DropVideo';
 import { useHistory } from "react-router-dom";
 import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
 
-export default function CreateProject({ show, onHide }) {
+export default function CreateProject({ show, onHide, addToProjectList }) {
     const [modalStep, setModalStep] = useState(0);
     const [video, setVideo] = useState(null);
     const [image, setImage] = useState(null);

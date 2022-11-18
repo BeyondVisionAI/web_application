@@ -41,8 +41,13 @@ exports.deleteCollaborationDB = async function(collabId) {
 exports.getCollaborations = async function(req, res) {
     try {
         const filter = { projectId: req.params.projectId };
-        const all = await Collaboration.find(filter);
-        return res.status(200).send(all);
+        const collaboration = await Collaboration.find(filter);
+        const collaborators = []
+        for (const e of collaboration) {
+            const user = await User.findOne({_id: e.userId}, {firstName: 1, lastName: 1})
+            collaborators.push({...e._doc, user: user})
+        }
+        return res.status(200).send(collaborators);
     } catch (err) {
         console.log("Collaboration->getCollaborations: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);

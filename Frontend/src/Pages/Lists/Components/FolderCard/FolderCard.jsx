@@ -4,8 +4,12 @@ import { useHistory } from 'react-router-dom';
 import ProfilePic from '../../../../GenericComponents/ProfilePic/ProfilePic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { FaTrash } from 'react-icons/fa';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-export default function FolderCard({ folder, isAdd, openAddFolder }) {
+export default function FolderCard({ folder, isAdd, openAddFolder, removeFromList }) {
     const history = useHistory();
 
     if (isAdd) {
@@ -18,19 +22,44 @@ export default function FolderCard({ folder, isAdd, openAddFolder }) {
     }
 
     const handleClick = () => {
-        history.push(`/dashboard/${folder?.id}`)
+        history.push(`/dashboard/${folder._id}`)
     }
-    
-    // TODO: Replace with value from folder
+
+    const handleDelete = async () => {
+        try {
+            await axios({
+                url: `${process.env.REACT_APP_API_URL}/lists/${folder._id}`,
+                method: 'DELETE',
+                withCredentials: true
+            })
+            removeFromList(folder._id);
+        } catch (e) {
+            toast.error("Error while deleting folder")
+        }
+    }
+
     return (
-       <div className='folder-card-container' onClick={handleClick}>
-            <div className="folder-card-title-container">
-                <p>Folder #1</p>
-            </div>
-            <div className='folder-card-last-editor-container'>
-                <ProfilePic initials="NB" label="Nicole Borretaz" />
-                <p className='folder-card-last-edit-time'>UN MOIS PLUS TOT</p>
-            </div>
-       </div>
+        <>
+            <ContextMenuTrigger id={`context-menu-folder-${folder._id}`}>
+                <div className='folder-card-container' onClick={handleClick}>
+                        <div className="folder-card-title-container">
+                            <p>{folder.name}</p>
+                        </div>
+                        <div className='folder-card-last-editor-container'>
+                            <ProfilePic initials={`${folder.creator.firstName[0]}${folder.creator.lastName[0]}`} label={`${folder.creator.firstName} ${folder.creator.lastName}`} />
+                            {/* <p className='folder-card-last-edit-time'>UN MOIS PLUS TOT</p> */}
+                        </div>
+                </div>
+            </ContextMenuTrigger>
+            <ContextMenu id={`context-menu-folder-${folder._id}`}>
+                <MenuItem onClick={handleDelete}>
+                    <div className='folder-card-context-menu-item-container'>
+                        <FaTrash />
+                        <p>Delete Folder</p>
+                    </div>
+                    
+                </MenuItem>
+            </ContextMenu>
+        </>
     )
 }

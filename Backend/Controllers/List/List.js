@@ -5,6 +5,7 @@ const { Role } = require("../../Models/Roles");
 const { List } = require("../../Models/list/List");
 const { ListMember } = require("../../Models/list/ListMember");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
+const { User } = require("../../Models/User");
 
 exports.getListMyProjects = async function(req, res) {
     try {
@@ -84,16 +85,9 @@ exports.getAllCustomLists = async function(req, res) {
                 console.log("List->getAllCustomLists: ListMember.listId \"" + myCustomListMember.listId + "\" doesn't exist in List Collection");
                 continue;
             }
-            var listResult = { "_id": list._id, "name": list.name, "projects": [] };
-            const filter = { listId: list._id };
-            const projectOnList = await ProjectListed.find(filter);
-            for (var project of projectOnList) {
-                const temp = await Project.getProjectDB(project.projectId);
-                if (temp)
-                    listResult.projects.push(temp);
-                else
-                    console.log("List->getAllCustomLists: ProjectListed \"" + project.projectId + "\" isn't linked to a Project existing");
-            }
+            const owner = await ListMember.findOne({listId : list._id, rights: Role.OWNER})
+            const creator = await User.findOne({_id : owner.userId}, {firstName:1, lastName:1})
+            var listResult = { "_id": list._id, "name": list.name, "creator": creator};
             result.push(listResult);
         }
         return res.status(200).send(result);
@@ -117,7 +111,9 @@ exports.createNewList = async function(req, res) {
             rights: Role.OWNER
         });
         await newListMember.save();
-        return res.status(200).send(newList);
+        const creator = await User.findOne({_id : req.user.userId}, {firstName:1, lastName:1})
+        const completedList = {name: newList.name, _id: newList._id, creator: creator}
+        return res.status(200).send(completedList);
     } catch (err) {
         console.log("List->createNewList: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);

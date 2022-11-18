@@ -11,15 +11,12 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
     useEffect(() => {
         async function getCollaborators () {
             try {
-                let newCollaborators = [];
-                let collaborations = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`);
-
-                for (let collaboration of collaborations.data) {
-                    let user = await axios.get(`${process.env.REACT_APP_API_URL}/user/${collaboration.userId}`);
-
-                    newCollaborators.push({ user: user.data, collaboration: collaboration, changes: 0 });
-                }
-                setCollaborators(newCollaborators);
+                const collaborators = await axios({
+                    url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`,
+                    method: 'GET',
+                    withCredentials: true,
+                })
+                setCollaborators(collaborators.data);
             } catch (err) {
                 console.error(err);
                 setCollaborators([])
@@ -35,8 +32,6 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
     return (
             <div style={{marginLeft: "auto", marginRight: "10px"}}>
                 <div onClick={() => isEditable ? setShowModal(true) : null} className={`collaborator-container ${isEditable && 'editable'}`} >
-                 <div className="collaborator-item">AG</div>
-                 <div className="collaborator-item">DC</div>
                     {collaborators.map((collaborator, idx) => {
                         if (idx < 2) {
                             return (

@@ -10,10 +10,11 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import FolderCard from './Components/FolderCard/FolderCard';
 import AddFolderModal from './Components/AddFolderModal/AddFolderModal';
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
+
 export default function Lists() {
 
-    const [recentProjects, setRecentProjects] = useState([1, 2])
-    const [folders, setFolders] = useState([1, 2, 3])
+    const [recentProjects, setRecentProjects] = useState([])
+    const [folders, setFolders] = useState([])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedProject, setSelectedProject] = useState(null)
     const [isProjectCreationModelOpen, setIsProjectCreationModalOpen] = useState(false)
@@ -26,8 +27,32 @@ export default function Lists() {
     }, []);
 
     useEffect(() => {
-        // TODO: Fetch Recent Projects
-        // TODO: Fetch Folders
+        const getLists = async () => {
+            try {
+                var res = await axios({
+                    url: `${process.env.REACT_APP_API_URL}/lists`,
+                    method: 'GET',
+                    withCredentials: true,
+                })
+                setFolders(res.data)
+            } catch (e) {
+                console.error(e)
+            }
+        }
+        const getRecentProjects = async () => {
+            try {
+                var res = await axios({
+                    url: `${process.env.REACT_APP_API_URL}/projects`,
+                    method: 'GET',
+                    withCredentials: true,
+                })
+                setRecentProjects(res.data)
+            } catch (e) {
+                console.error(e)
+            }
+        }
+        getLists()
+        getRecentProjects()
     }, []);
 
     const handleOpenDrawer = (project) => {
@@ -67,6 +92,19 @@ export default function Lists() {
         enableBodyScroll(bodyElement)
         setIsFolderCreationModalOpen(false)
     }
+
+    const removeFolderFromList = (id) => {
+        const idx = folders.findIndex((obj) => obj._id === id);
+        if (idx === -1) return;
+        const newList = [...folders];
+        newList.splice(idx, 1)
+        setFolders(newList)
+    }
+
+    const addToProjectList = (project) => {
+    console.log("🚀 ~ file: Lists.jsx ~ line 105 ~ addToProjectList ~ project", project)
+
+    }
     console.log("🚀 ~ file: Lists.jsx ~ line 106 ~ Lists ~ isFolderCreationModelOpen", isFolderCreationModelOpen)
 
     return (
@@ -77,11 +115,13 @@ export default function Lists() {
                 <CreateProject
                     show={isProjectCreationModelOpen}
                     onHide={handleCloseProjectModal}
+                    addToProjectList={addToProjectList}
                 />
             )}
             {isFolderCreationModelOpen && (
                 <AddFolderModal
                     closeModal={handleCloseFolderModal}
+                    addToFolderList={(folder) => setFolders([...folders, folder])}
                 />
             )}
             <BreadCrumbs pathObject={[{url: '/dashboard', name: 'Dashboard'}]} />
@@ -99,7 +139,7 @@ export default function Lists() {
                 <div className='dashboard-folder-container'>
                     <FolderCard isAdd openAddFolder={handleOpenFolderModal}/>
                     {folders.map(folder => {
-                        return <FolderCard folder={folder} />
+                        return <FolderCard folder={folder} removeFromList={removeFolderFromList}/>
                     })}
                 </div>
             </div>
