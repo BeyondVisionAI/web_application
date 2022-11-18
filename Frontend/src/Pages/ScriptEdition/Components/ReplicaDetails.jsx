@@ -227,7 +227,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     }
     const voiceName = function(nameId, language) {
         if (languageOption[languageId] === "Tous")
-            return (nameId + ' - ' + language);
+            return `${nameId} - ${language}`;
         else
             return (nameId);
     }
@@ -257,8 +257,8 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 <div className="w-full flex flex-row justify-between items-center mb-1">
                     <h3 className="section-title">Voix language :</h3>
                     <select name="languageSelection" id=""
-                            value= {languageOption[languageId]}
-                            selected = {languageId}
+                            value={languageOption[languageId]}
+                            selected={languageId}
                             className="inline-flex items-center form-select form-select-lg
                             w-2/5 p-2 mr-9
                             text-xl
@@ -279,9 +279,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 <div className="w-full flex flex-row justify-between items-center mb-1">
                     <h3 className="section-title">Voix :</h3>
                     <select name="voiceSelection" id=""
-                            value= {() => {
-                                return (voiceName(voiceOption[voiceId].nameID, voiceOption[voiceId].language))
-                            }}
+                            value= {() => voiceName(voiceOption[voiceId].nameID, voiceOption[voiceId].language)}
                             className="inline-flex items-center form-select form-select-lg
                             w-2/5 p-2 mr-9
                             text-xl
@@ -300,7 +298,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
                     <h3 className="section-title">Commence à :</h3>
-                    <input type='text' defaultValue={formatTimestamp(timestamp, duration)} disabled='true'
+                    <input type='text' defaultValue={formatTimestamp(timestamp, duration)} disabled={true}
                            className="inline-flex items-center
                         w-1/2 p-2 text-base
                         border border-solid border-blue-300 rounded">
