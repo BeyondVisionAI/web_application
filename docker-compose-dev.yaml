@@ -94,6 +94,7 @@ services:
   stripe-cli:
     image: stripe/stripe-cli
     container_name: stripe-cli
+    platform: "linux/amd64"
     network_mode: host
     environment:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
