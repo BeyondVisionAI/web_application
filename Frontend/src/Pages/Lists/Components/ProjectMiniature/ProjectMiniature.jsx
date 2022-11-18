@@ -12,13 +12,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default function ProjectMiniature({ project, openDrawer, isAdd, openAddProject }) {
-    console.log("🚀 ~ file: ProjectMiniature.jsx ~ line 15 ~ ProjectMiniature ~ project", project)
     const history = useHistory();
 
     const {currentUser} = useContext(AuthContext);
 
     const [thumbnail, setThumbnail] = useState('');
     axios.defaults.withCredentials = true;
+
+    useEffect(() => {
+        const getThumbnailUrl =  async () => {
+            const url = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+            setThumbnail(url)
+        }
+        getThumbnailUrl()
+    }, []);
 
     if (isAdd) {
         return (
@@ -31,7 +38,7 @@ export default function ProjectMiniature({ project, openDrawer, isAdd, openAddPr
 // TODO: Replace with value from project
     return (
        <div className='project-card-container' onClick={openDrawer}>
-            <img src='https://lumiere-a.akamaihd.net/v1/images/image_83011738.jpeg?region=0,0,540,810' className='project-card-image'/> 
+            <img src={thumbnail} className='project-card-image'/> 
             <div className='project-card-floating-collaborators'>
                 <CollaboratorsButton projectId={project?._id} />
             </div>

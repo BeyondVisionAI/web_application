@@ -56,6 +56,7 @@ exports.stripeWebhook = async function (req, res) {
             var paymentIntent = event.data.object;
             Payment.findOne({paymentIntentId: paymentIntent.id}, (err, doc) => {
                 if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
+                if (!doc) return res.status(404).send("Not found")
                 var newDoc = {...doc._doc}
                 newDoc.paymentStatus = 'success'
                 doc.overwrite(newDoc)
@@ -69,6 +70,7 @@ exports.stripeWebhook = async function (req, res) {
             paymentIntent = event.data.object;
             Payment.findOne({paymentIntentId: paymentIntent.id}, (err, doc) => {
                 if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
+                if (!doc) return res.status(404).send("Not found")
                 var newDoc = {...doc._doc}
                 newDoc.paymentStatus = 'failed'
                 doc.overwrite(newDoc)
