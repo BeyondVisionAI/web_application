@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReplicaDetails from './Components/ReplicaDetails';
+import EmptyReplicaDetails from './Components/EmptyReplicaDetails';
 import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -7,6 +8,9 @@ import { useHistory } from 'react-router-dom';
 import Chat from '../Chat/Chat';
 import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
+import CircleButton from '../../GenericComponents/Button/CircleButton';
+import './ScriptEdition.css';
+import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 
 
 export default function ScriptEdition(props) {
@@ -27,10 +31,11 @@ export default function ScriptEdition(props) {
                     let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
 
                     if (video.status === 200)
-                        videoUrl = video.data.url;
+                        videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
                 } catch (error) {
                     console.error('Video non dispo');
                 }
+                // videoUrl = '/Marco_Destruction.mp4'
                 setProject({
                     id: id,
                     title: projectR.data.name,
@@ -120,33 +125,34 @@ export default function ScriptEdition(props) {
         return (
             <>
                 <div className="script-edition-container h-screen w-screen overflow-x-hidden">
-                    <NavBarVariante projectId={props.match.params.id} />
                     <div id="page-container" className="w-screen h-5/6 py-2 px-6">
                         <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
-                            <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{project.title}</h1>
-                            <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base" onClick={() => RedirectToProjectManagement()}>Soumettre</button>
+                            <div className='flex flex-row gap-2 pa-0'>
+                                <CircleButton url="/arrow-left.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
+                                <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
+                            </div>
+                            <div className='flex flex-row gap-1 pa-0'>
+                                <CircleButton url="/download-icon.png" size='30px'/>
+                                <CircleButton url="/user-icon.png" size='30px'/>
+                            </div>
                         </div>
 
-                        <div id="edit-bloc" className="flex h-4/6">
-
-                        <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
-                            {replicaSelected !== null ?
-                                <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
-                            :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
-                                    <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
-                                </div>
-                            }
-
-                        </div>
-                           <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-gray-100">
-                               <VideoPlayer
-                               videoUrl={project.videoUrl}
-                               setDuration={setVideoDuration}
-                               setPlayedSecondsInParent={setPlayedSeconds}
-                               newSecondsFromCursor={newSecondsFromCursor}
-                               resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
-                               />
-                           </div>
+                        <div className="flex flex-row gap-3 edit-bloc">
+                            <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">                                
+                                {replicaSelected !== null ?
+                                    <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
+                                :   <EmptyReplicaDetails/>
+                                }
+                            </div>
+                            <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
+                                <VideoPlayer
+                                    videoUrl={project.videoUrl}
+                                    setDuration={setVideoDuration}
+                                    setPlayedSecondsInParent={setPlayedSeconds}
+                                    newSecondsFromCursor={newSecondsFromCursor}
+                                    resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                                />
+                            </div>
                         </div>
 
                         <div className="flex h-1/3 w-full pb-6 mt-2">

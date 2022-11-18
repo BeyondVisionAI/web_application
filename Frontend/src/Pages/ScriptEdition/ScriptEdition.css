@@ -1,0 +1,9 @@
+.edit-bloc {
+  border-radius: 12px;
+  background: #F3F5FD;
+  padding: 16px;
+}
+.around-video-player {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+}

@@ -18,6 +18,7 @@ export default function ProjectMiniature({ project, openDrawer, isAdd, openAddPr
     const {currentUser} = useContext(AuthContext);
 
     const [thumbnail, setThumbnail] = useState('');
+    axios.defaults.withCredentials = true;
 
     if (isAdd) {
         return (
