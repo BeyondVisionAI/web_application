@@ -4,26 +4,34 @@
 			"home": "Accueil",
 			"project": "Notre projet",
 			"pricing": "Prix",
-			"about_us": "À propos de nous",
+			"aboutUs": "À propos de nous",
 			"timeline": "Timeline",
 			"contact": "Contact"
 		}
 	},
 
 	"landingPage": {
-		"Audio Description": "L'audio-description",
-		"made easy": "désormais simple",
-		"our-gooddid": "Nous utilisons l'intelligence artificielle pour une nouvelle méthode de produire l'audio-description",
-		"join-us": "Rejoignez-nous maintenant !",
-		"project-HELP": "Aider",
-		"project-Help": "les déficients visuels",
-		"project-help": "Chez Beyond Vision, nous souhaitons aider les déficients visuels en agrandissant leur catalogue de films.",
-		"project-SIMPLIFY": "Simplifier",
-		"project-Simplify": "le processus d'audio-description",
-		"project-simplify": "Le procédé de création de l'audio-description pour un film ou une série télé est très long et cher. Pour des réalisateurs de films indépendants, il est souvent inconcevable de rendre leur contenu accessible aux déficients visuels. Ici, chez Beyond Vision, nous voulons donner à tout le monde la possibilité de rendre son travail accessible.",
-		"project-PROPEL": "Proposer",
-		"project-Propel": "une nouvelle méthode pour traiter les images",
-		"project-propel": "L'un de nos objectifs le plus ambitieux est de réaliser une IA capable d'interpréter le sens de courtes vidéos...",
+		"audioDescription": "L'audio-description",
+		"madeEasy": "désormais simple",
+		"ourGooddid": "Nous utilisons l'intelligence artificielle pour une nouvelle méthode de produire l'audio-description",
+		"joinUs": "Rejoignez-nous maintenant !",
+		"project": {
+			"help": {
+				"header": "Aider",
+				"subheader": "les déficients visuels",
+				"text": "Chez Beyond Vision, nous souhaitons aider les déficients visuels en agrandissant le catalogue de contenu vidéo adaptés à leurs besoins."
+			},
+			"simplify": {
+				"header": "Simplifier",
+				"subheader": "le processus d'audio-description",
+				"text": "Le procédé de création de l'audio-description pour un film ou une série télé est très long et cher. Pour des réalisateurs de films indépendants, il est souvent inconcevable de rendre leur contenu accessible aux déficients visuels. Chez Beyond Vision, nous voulons donner aux créateurs de contenu la possibilité de rendre son travail accessible à tous."
+			},
+			"propel": {
+				"header": "Proposer",
+				"subheader": "une nouvelle méthode pour traiter les images",
+				"text": "L'un de nos objectifs le plus ambitieux est de réaliser une IA capable d'interpréter le sens de courtes vidéos..."
+			}
+		},
 		"pricing": {
 			"freePlan": {
 				"name": "Option gratuite",
@@ -35,88 +43,44 @@
 			"basicPlan": {
 				"name": "Plan basique",
 				"priceLabel": "€5.99/mois",
-				"nProjects": "Jusqu'à 10 projects",
+				"nProjects": "Jusqu'à 10 projets",
 				"collaboration": "Projets collaboratifs",
-				"no-watermark": "Pas de filigrane"
+				"noWatermark": "Pas de filigrane"
 			},
 			"proPlan": {
 				"name": "Option professionelle",
 				"priceLabel": "€7.99/mois",
-				"nProjects": "Projects illimités",
-				"voice-shop": "Magasin de voix",
-				"AD-review": "Verification certifiée de l'audiodescription",
+				"nProjects": "Projets illimités",
+				"voiceShop": "Magasin de voix",
+				"ADReview": "Verification certifiée de l'audiodescription",
 				"4K": "Export de la vidéo finale en 4K"
 			}
 		},
-		"The-team": "L'équipe Beyond Vision",
+		"theTeam": "L'équipe Beyond Vision",
 		"timeline": {
 			"header": "Notre parcours",
-			"Sep_20": {
+			"sep20": {
 				"label": "Septembre 2020",
-				"description": "Défintion du projet"
+				"description": "Définition du projet"
 			},
-			"Feb_21": {
+			"feb21": {
 				"label": "Février 2021",
 				"description": "Design et tests"
 			},
-			"May_21": {
+			"may21": {
 				"label": "Mai 2021",
 				"description": "Début du développement de l'application"
 			},
-			"May_22": {
+			"may22": {
 				"label": "Mai 2022",
 				"description": "Déploiement de la beta"
 			}
 		},
 		"contact": {
-			"your-name": "Votre nom",
-			"your-email": "Votre adresse mail",
-			"your-message": "Votre message",
+			"yourName": "Votre nom",
+			"yourEmail": "Votre adresse mail",
+			"yourMessage": "Votre message",
 			"send": "Envoyer"
 		}
-	},
-
-	"==== ERROR MESSAGES ====": "",
-	"missing-field-message": "Champ manquant pour envoyer votre message",
-	"username-password-missing": "Nom d'utilisateur et/ou mot de passe manquant",
-	"invalid-email-or-password": "Adresse mail et/ou mot de passe incorrect",
-	"unable-to-contact-server": "Erreur lors de la communication avec le serveur",
-
-	"==== AUTHENTICATION RELATED ====": "",
-	"log-in": "S'identifier",
-	"log-in-now": "Identifiez-vous maintenant !",
-	"create-account-now": "Create one now !",
-	"password-reset": "Réinitialiser votre mot de passe",
-	"password-reset-now": "Réinitialisez-le maintenant !",
-	"password-reset-message": "Si cet email est lié à un compte, vous recevrez un lien pour réinitialiser votre mot de passe dans les prochaines minutes",
-	"no-account": "Nouvel utilisateur ?",
-	"password-forgotten": "Mot de passe oublié ?",
-	"remember-password": "Vous vous souvenez de votre mot de passe ?",
-	"email-verifying": "Vérification de votre adresse mail...",
-	"email-verified": "Email vérifié",
-	"email-not-verified": "Email non vérifié",
-	"email-cannot-be-verified": "L'adresse mail n'a pas pu être vérifiée, réessayer ultérieurement",
-
-	"==== DASHBOARD ====": "",
-	"create-project":"Créer un projet",
-	"project-details": "Détails du projet",
-	"about-the-video": "À propos de la vidéo",
-	"video-updated": "Video uploaded",
-	"video-summary": "Résumé de la vidéo",
-	"video-type": "Genre de la vidéo",
-
-	"==== UTILS ====": "",
-	"next": "Suivant",
-	"back": "Précédent",
-	"send": "Envoyer",
-
-	"==== IMG ====": "",
-	"img-blue-flower": "Illustration bleu contenant une fleur",
-
-	"==== NOT SORTED ====": "",
-	"": "Beyond Vision est une plateforme web conçue pour faciliter la création d'audio-description pour les courts-métrages",
-	"nav-back-home": "← Revenir sur la page d'accueil",
-	"shop": "Boutique",
-	"pay": "Payer",
-	"information-usage": "Les informations fournies ci-dessus nous aiderons à audio-décrire votre vidéo plus efficacement."
+	}
 }

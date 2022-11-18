@@ -4,10 +4,10 @@ import "./Timeline.css";
 const Timeline = () => {
   const { t } = useTranslation('translation', {keyPrefix: 'landingPage.timeline'});
   const timeline = [
-    { date: "Sep_20", isFocused: false },
-    { date: "Feb_21", isFocused: false },
-    { date: "May_21", isFocused: false },
-    { date: "May_22", isFocused: true }
+    { date: "sep20", isFocused: false },
+    { date: "feb21", isFocused: false },
+    { date: "may21", isFocused: false },
+    { date: "may22", isFocused: true }
   ]
   return (
     <div href="timeline" id="timeline" className="timeline-body">
