@@ -11,9 +11,9 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
     const [duration, setDuration] = useState(replica.duration);
-    const [voiceId, setVoiceId] = useState(replica.voiceId);
+    const [voiceSelected, setVoiceSelected] = useState(replica.voiceId);
     const [voiceOption, setVoiceOption] = useState([]);
-    const [languageId, setLanguageId] = useState(0);
+    const [languageSelected, setLanguageSelected] = useState(0);
     const [languageOption, setLanguageOption] = useState(['Tous']);
 
     // additional infos
@@ -34,6 +34,32 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         toggleTextUpdate(!isTextUpdated)
     }
 
+    const voiceName = function(nameId, language) {
+        if (languageOption[languageSelected] === "Tous")
+            return (nameId + ' - ' + language);
+        else
+            return (nameId);
+    }
+
+    const handleLanguageChange = function(e) {
+        setLanguageSelected(e.target.value);
+    }
+
+    const handleVoiceChange = function(e) {
+        setVoiceSelected(e.target.value);
+    }
+
+    const changeVoiceSelected = function(voiceId) {
+        if (voiceOption !== undefined && voiceOption.length > 0) {
+            const index = voiceOption.findIndex(item => item.id == voiceId);
+            if (index === -1) {
+                setVoiceSelected(voiceOption[0].id);
+            } else {
+                setVoiceSelected(voiceId);
+            }
+        }
+    }
+
     const updateReplicaText = async function () {
         try {
             const res = await axios({
@@ -42,7 +68,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                     content: text,
                     timestamp: timestamp,
                     duration: duration,
-                    voiceId: voiceId
+                    voiceId: voiceSelected
                 },
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
                 withCredentials: true
@@ -70,21 +96,19 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         const retrieveVoices = async () => {
             try {
                 let response = '';
-                if (languageOption[languageId] === 'Tous')
+                if (languageOption[languageSelected] === 'Tous')
                     response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`);
                 else
-                    response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`, { params: { language: languageOption[languageId] }});
+                    response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`, { params: { language: languageOption[languageSelected] }});
                 const voices = response.data.voices;
-                if (voices.findIndex(item => item.id === voiceId) === -1) {
-                    setVoiceId(voices[0].id)
-                }
                 setVoiceOption(voices);
+                changeVoiceSelected(voiceSelected);
             } catch (err) {
                 console.error("Replica Error :", err);
             }
         }
         await retrieveVoices();
-    }, [languageId]);
+    }, [languageSelected]);
 
     useEffect(() => {
         replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
@@ -154,7 +178,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         setCharacterCount(`${replica.content.length}/100`);
         setTimestamp(replica.timestamp);
         setDuration(replica.duration);
-        setVoiceId(replica.voiceId);
+        changeVoiceSelected(replica.voiceId)
         setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
     }, [replica]);
@@ -225,12 +249,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             return ("you")
         }
     }
-    const voiceName = function(nameId, language) {
-        if (languageOption[languageId] === "Tous")
-            return (nameId + ' - ' + language);
-        else
-            return (nameId);
-    }
 
     return (
         <div className="h-full w-full flex flex-col justify-around py-2 px-6">
@@ -256,21 +274,17 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             <div>
                 <div className="w-full flex flex-row justify-between items-center mb-1">
                     <h3 className="section-title">Voix language :</h3>
-                    <select name="languageSelection" id=""
-                            value= {languageOption[languageId]}
-                            selected = {languageId}
+                    <select name="languageSelection" id="languageSelection"
+                            value= {languageSelected}
                             className="inline-flex items-center form-select form-select-lg
                             w-2/5 p-2 mr-9
                             text-xl
                             border border-solid border-blue-300 rounded
                             transition ease-in-out
                             focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
-                            onChange={(e) => {
-                                const index = languageOption.findIndex(item => item === e.target.value)
-                                setLanguageId(index);
-                            }}>
+                            onChange={handleLanguageChange}>
                         {languageOption.map(((value, index) => (
-                            <option key={index} value={value}>
+                            <option key={index} value={index}>
                                 {value}
                             </option>
                         )))}
@@ -278,29 +292,29 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 </div>
                 <div className="w-full flex flex-row justify-between items-center mb-1">
                     <h3 className="section-title">Voix :</h3>
-                    <select name="voiceSelection" id=""
-                            value= {() => {
-                                return (voiceName(voiceOption[voiceId].nameID, voiceOption[voiceId].language))
-                            }}
+                    <select name="voiceSelection" id="voiceSelection"
+                            value= {voiceSelected}
                             className="inline-flex items-center form-select form-select-lg
                             w-2/5 p-2 mr-9
                             text-xl
                             border border-solid border-blue-300 rounded
                             transition ease-in-out
                             focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
-                            onChange={(e) => {setVoiceId(voiceOption[voiceOption.findIndex(item => item.nameID === e.target.value)]?.id)}}>
-                        {voiceOption.map((option => (
-                            <option key={option.id} value={voiceName(option.nameID, option.language)}>
-                                {voiceName(option.nameID, option.language)}
-                            </option>
-                        )))}
+                            onChange={handleVoiceChange}>
+                        {voiceOption.map((
+                            (option, index) => (
+                                <option key={index} value={option.id}>
+                                    {voiceName(option.nameID, option.language)}
+                                </option>
+                            )
+                        ))}
                     </select>
                 </div>
 
                 {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
                     <h3 className="section-title">Commence à :</h3>
-                    <input type='text' defaultValue={formatTimestamp(timestamp, duration)} disabled='true'
+                    <input type='text' defaultValue={formatTimestamp(timestamp, duration)} disabled={true}
                            className="inline-flex items-center
                         w-1/2 p-2 text-base
                         border border-solid border-blue-300 rounded">
