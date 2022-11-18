@@ -122,7 +122,7 @@ export default function Lists() {
         if (clientSecret) {
             setIsRedirectFromPayment(true);
             // window.location.replace('http://localhost/dashboard');
-            window.history.replaceState(null, "Dashboard", "/dashboard");
+            // window.history.replaceState(null, "Dashboard", "/dashboard");
 
         }
     }, []);
