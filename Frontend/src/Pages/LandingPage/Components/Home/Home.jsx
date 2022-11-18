@@ -11,10 +11,10 @@ const Home = () => {
     return (
         <div href="home" id="home" className="home-container">
             <div className="home-left-side">
-                <h1>{t("Audio Description")}</h1>
-                <h2>{t("made easy")}</h2>
-                <p>{t("our-gooddid")}</p>
-                <button onClick={() => history.push("/")}>{t("join-us")}</button>
+                <h1>{t("audioDescription")}</h1>
+                <h2>{t("madeEasy")}</h2>
+                <p>{t("ourGooddid")}</p>
+                <button onClick={() => history.push("/")}>{t("joinUs")}</button>
             </div>
             <div className="home-video">
                 <ReactPlayer style={{zIndex:'0'}} controls className="video-player" url="https://dms.licdn.com/playlist/C4D05AQEongTmyGtf7g/mp4-720p-30fp-crf28/0/1612962034063?e=2147483647&v=beta&t=QBJbTIlWGSyUmO3R_t6-8pkWZI0P0FopbQv2zusI9w0" />

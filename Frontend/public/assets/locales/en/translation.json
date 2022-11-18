@@ -4,25 +4,33 @@
 			"home": "Home",
 			"project": "The Project",
 			"pricing": "Pricing",
-			"about_us": "About us",
+			"aboutUs": "About us",
 			"timeline": "Timeline",
 			"contact": "Contact"
 		}
 	},
 	"landingPage": {
-		"Audio Description": "Audio Description",
-		"made easy": "made easy",
-		"our-gooddid": "We created a new way to produce audio description using AI",
-		"join-us": "Join us now !",
-		"project-HELP": "Help",
-		"project-Help": "visually impaired people",
-		"project-help": "At Beyond Vision, our main goal is to help visually impaired people by giving them more choice in the content they can watch.",
-		"project-SIMPLIFY": "Simplify",
-		"project-Simplify": "the process of audio description",
-		"project-simplify": "The process of creating audio description for a movie or a televised show is time consuming and very costly. For independent filmmakers it's almost impossible to make your content available to visually impaired people. Here, at Beyond Vision, we want to give the possibility to everyone to make his content available to ...",
-		"project-PROPEL": "Propel",
-		"project-Propel": "a new way to treat images",
-		"project-propel": "One of our biggest goal is to create an Artificial Intelligence that it able to extract meaning from short video clips...",
+		"audioDescription": "Audio Description",
+		"madeEasy": "made easy",
+		"ourGooddid": "We created a new way to produce audio description using AI",
+		"joinUs": "Join us now !",
+		"project": {
+			"help": {
+				"header": "Help",
+				"subheader": "visually impaired people",
+				"text": "At Beyond Vision, our main goal is to help visually impaired people having more video content adapted for their need."
+			},
+			"simplify": {
+				"header": "Simplify",
+				"subheader": "the process of audio description",
+				"text": "The process of creating audio description for a movie or a televised show is time consuming and very costly. For independent filmmakers it's almost impossible to make your content available to visually impaired people. Here, at Beyond Vision, we want to give the possibility to everyone to make his content available to ..."
+			},
+			"propel": {
+				"header": "Propel",
+				"subheader": "a new way to treat images",
+				"text": "One of our biggest goal is to create an Artificial Intelligence that it able to extract meaning from short video clips..."
+			}
+		},
 		"pricing": {
 			"freePlan": {
 				"name": "Free Plan",
@@ -36,97 +44,42 @@
 				"priceLabel": "€5.99/month",
 				"nProjects": "Up to 10 projects",
 				"collaboration": "Collaborative projects",
-				"no-watermark": "No watermark"
+				"noWatermark": "No watermark"
 			},
 			"proPlan": {
 				"name": "Pro Plan",
 				"priceLabel": "€7.99/month",
 				"nProjects": "Unlimited projects",
-				"voice-shop": "Voice shop advantages",
-				"AD-review": "Certified audiodescription review",
+				"voiceShop": "Voice shop advantages",
+				"ADReview": "Certified audiodescription review",
 				"4K": "Export the finished videos in 4K"
 			}
 		},
-		"The-team": "The Beyond Vision team",
+		"theTeam": "The Beyond Vision team",
 		"timeline": {
 			"header": "Timeline",
-			"Sep_20": {
+			"sep20": {
 				"label": "September 2020",
-				"description": "Défintion of the projet"
+				"description": "Definition of the projet"
 			},
-			"Feb_21": {
+			"feb21": {
 				"label": "February 2021",
 				"description": "Design and tests"
 			},
-			"May_21": {
+			"may21": {
 				"label": "May 2021",
 				"description": "Beginning of the development of the software"
 			},
-			"May_22": {
+			"may22": {
 				"label": "May 2022",
 				"description": "Deployment of the beta"
 			}
 		},
 		"contact": {
-			"your-name": "Your name",
-			"your-email": "Your email",
-			"your-message": "Your message",
+			"yourName": "Your name",
+			"yourEmail": "Your email",
+			"yourMessage": "Your message",
 			"send": "Send"
 		}
-	},
-
-	"==== ERROR MESSAGES ====": "",
-	"missing-field-message": "Missing field to send message",
-	"username-password-missing": "Username or password not filled",
-	"invalid-email-or-password": "Invalid email or password",
-	"unable-to-contact-server": "Error while contacting the server",
-
-	"==== AUTHENTICATION RELATED ====": "",
-	"log-in": "Log In",
-	"log-in-now": "Log In Now !",
-	"create-account-now": "Create one now !",
-	"password-reset": "Reset your password",
-	"password-reset-now": "Reset it now !",
-	"password-reset-message": "If this email is linked to an account you will receive a link to reset your password in the next few minutes.",
-	"no-account": "No account ?",
-	"password-forgotten": "Forgot your password ?",
-	"remember-password": "Remember your password ?",
-	"email-verifying": "Verifying your email...",
-	"email-verified": "Email Verified",
-	"email-not-verified": "Email not verified",
-	"email-cannot-be-verified": "Email couldn't be verified, try again later",
-
-	"==== DASHBOARD ====": "",
-	"create-project":"Create project",
-	"project-details": "Project details",
-	"about-the-video": "About the video",
-	"video-updated": "Video uploaded",
-	"video-summary": "Video summary",
-	"video-type": "Video type",
-
-	"==== UTILS ====": "",
-	"next": "Next",
-	"back": "Back",
-	"send": "Send",
-
-	"==== IMG ====": "",
-	"img-blue-flower": "Blue picture with a flower",
-
-	"==== NOT SORTED ====": "",
-	"": "Beyond Vision is a web platform designed to facilitate the creation of audio description for short films",
-	"nav-back-home": "← Go back to Home Page",
-	"shop": "Shop",
-	"pay": "Pay",
-	"information-usage": "Those informations will help us to generate an audiodescription more effectively",
-
-	"==== 404 ====": "",
-	"404-message": "Oh oh, it seems we lost you right here !",
-	"404-message-login-part1": "This page may be restricted, you might want to",
-	"404-message-login-part2": "log in",
-	"404-message-login-part3": "to your account.",
-	"404-message-changeAccount": "You might want to switch to a different account.",
-	"404-message-navigate": "Or, you could go back to ",
-	"404-message-navigate-your-dashboard": "your Dashboard",
-	"404-message-navigate-home": "the home page"
-
+	}
 }

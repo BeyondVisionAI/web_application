@@ -9,7 +9,7 @@ export default function NavBarVariante() {
     {type: 'LINK', href:"#home",texte: t('home')},
     {type: 'LINK', href:"#project", texte: t('project')},
     {type: 'LINK', href:"#pricing", texte: t('pricing')},
-    {type: 'LINK', href:"#aboutus", texte: t('about_us')},
+    {type: 'LINK', href:"#aboutus", texte: t('aboutUs')},
     {type: 'LINK', href:"#timeline", texte: t('timeline')},
     {type: 'LINK', href:"#contact", texte: t('contact')},
   ];
