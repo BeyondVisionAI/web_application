@@ -43,7 +43,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
       url={videoUrl}
       ref={ playerRef }
       controls={true}
-      onDuration={setDuration ? setDuration : null}
+      onDuration={setDuration ? setDuration : () => {}}
       onBuffer={() => setPlaying(false)}
       onBufferEnd={() => setPlaying(true)}
       onSeek={second => setPlayedSeconds(second * 1000)}

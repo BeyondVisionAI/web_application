@@ -10,7 +10,10 @@ const Change = {
     kickChanges: 2
 }
 
+//TODO : Redo edit collaborator modal to use new collaborators model :'(
+
 export default function EditCollaborators({ projectId, collaborators, setCollaborators, onHide }) {
+    console.log("🚀 ~ file: EditCollaborators.jsx ~ line 14 ~ EditCollaborators ~ collaborators", collaborators)
     const wrapperRef = useRef(null);
 
     axios.defaults.withCredentials = true;

@@ -10,7 +10,7 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import FolderCard from './Components/FolderCard/FolderCard';
 import AddFolderModal from './Components/AddFolderModal/AddFolderModal';
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
-
+import { HiArrowNarrowRight } from "react-icons/hi";
 export default function Lists() {
 
     const [recentProjects, setRecentProjects] = useState([])
@@ -102,15 +102,13 @@ export default function Lists() {
     }
 
     const addToProjectList = (project) => {
-    console.log("🚀 ~ file: Lists.jsx ~ line 105 ~ addToProjectList ~ project", project)
 
     }
-    console.log("🚀 ~ file: Lists.jsx ~ line 106 ~ Lists ~ isFolderCreationModelOpen", isFolderCreationModelOpen)
 
     return (
         <div id="dashboard-container" className="dashboard-container">
             {/* <NavBarVariante input={input} updateInput={(input) => setInput(input)}/> */}
-            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer}/>
+            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}/>
             {isProjectCreationModelOpen && (
                 <CreateProject
                     show={isProjectCreationModelOpen}
@@ -134,6 +132,12 @@ export default function Lists() {
                             return <ProjectMiniature project={project} openDrawer={() => handleOpenDrawer(project)} />
                         }
                     })}
+                </div>
+                <div className='dashboard-see-all-projects-container'>
+                    <a className='dashboard-see-all-projects-content' href='/projects'>
+                        <p>See all projects</p>
+                        <HiArrowNarrowRight className='dashboard-see-all-projects-icon'/>
+                    </a>
                 </div>
                 <h1 className='dashboard-inner-container-title'>Folders</h1>
                 <div className='dashboard-folder-container'>

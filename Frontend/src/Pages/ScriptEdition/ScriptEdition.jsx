@@ -144,7 +144,7 @@ export default function ScriptEdition(props) {
                                 :   <EmptyReplicaDetails/>
                                 }
                             </div>
-                            <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
+                            <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg" style={{maxHeight: '55vh'}}>
                                 <VideoPlayer
                                     videoUrl={project.videoUrl}
                                     setDuration={setVideoDuration}

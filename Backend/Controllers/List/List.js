@@ -87,7 +87,8 @@ exports.getAllCustomLists = async function(req, res) {
             }
             const owner = await ListMember.findOne({listId : list._id, rights: Role.OWNER})
             const creator = await User.findOne({_id : owner.userId}, {firstName:1, lastName:1})
-            var listResult = { "_id": list._id, "name": list.name, "creator": creator};
+            const projects = await ProjectListed.find({listId : list._id})
+            var listResult = { "_id": list._id, "name": list.name, "creator": creator, "projects": projects};
             result.push(listResult);
         }
         return res.status(200).send(result);
@@ -112,7 +113,7 @@ exports.createNewList = async function(req, res) {
         });
         await newListMember.save();
         const creator = await User.findOne({_id : req.user.userId}, {firstName:1, lastName:1})
-        const completedList = {name: newList.name, _id: newList._id, creator: creator}
+        const completedList = {name: newList.name, _id: newList._id, creator: creator, projects: []}
         return res.status(200).send(completedList);
     } catch (err) {
         console.log("List->createNewList: " + err);

@@ -83,7 +83,12 @@
     margin-bottom: 2vh;
 }
 
-.project-drawer-editor-icon-container {
+.project-drawer-video-container {
+    max-height: 40vh;
+}
+
+.project-drawer-editor-icon-container,
+.project-drawer-editor-icon-container-error {
     background-color: #F6F8FF;
     padding: .7vw;
     cursor: pointer;
@@ -92,6 +97,14 @@
     margin-right: .7vw;
 }
 
+.project-drawer-editor-icon-container-error {
+    background-color: rgb(255, 177, 177);
+}
+
 .project-drawer-editor-icon {
     color: #7793ED;
+}
+
+.project-drawer-editor-icon-error {
+    color: rgb(255, 65, 65);
 }

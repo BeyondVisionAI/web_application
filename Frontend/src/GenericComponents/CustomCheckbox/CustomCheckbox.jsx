@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './CustomCheckbox.css'
 
 const CustomCheckbox = ({label, onChange, defaultState, style}) => {
-    const [isChecked, setIsChecked] = useState(defaultState || false)
+    const [isChecked, setIsChecked] = useState(defaultState !== undefined ? defaultState : false)
     console.log("🚀 ~ file: CustomCheckbox.jsx ~ line 6 ~ CustomCheckbox ~ isChecked", isChecked)
 
     const handleClick = () => {
         onChange(!isChecked)
         setIsChecked(!isChecked)
     }
+
+    useEffect(() => {
+        setIsChecked(defaultState)
+    }, [defaultState]);
 
     return ( 
         <div className='custom-checkbox-container' onClick={handleClick} style={style}>
