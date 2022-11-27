@@ -53,7 +53,7 @@ export default function ProjectDataStep({ image, setImage, nextStep, prevStep, h
     }, [localImage]);
 
     useEffect(() => {
-        if (title.length > 0 && (thumbnail || image) && selectedType && description) // TODO: SelectedType = null en créant le component
+        if (title.length > 0 && (thumbnail || image) && selectedType && description)
             setAreAllRequiredFieldsFilled(true);
         else
             setAreAllRequiredFieldsFilled(false);

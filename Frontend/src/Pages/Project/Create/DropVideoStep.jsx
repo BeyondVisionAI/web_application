@@ -21,10 +21,10 @@ export default function DropVideoStep({ video, setVideo, nextStep }) {
                     />
                     :
                     <div className='flex flex-col h-full mt-4'>
-                        <VideoPlayer videoUrl={video}/> {/* TODO: Fix le lecteur de vidéo */}
+                        <VideoPlayer videoUrl={URL.createObjectURL(video)} setDuration={() => {}}/>
                         <div className='flex flex-row justify-between bg-black rounded-b'>
                             <p className="my-2 ml-4 input-with-label-label text-white align-middle">
-                                Genre de la vidéo
+                                {video.name}
                             </p>
                             <button className='mr-4 my-2 text-red-700 left-0 align-middle' onClick={() => setVideo(null)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
