@@ -4,7 +4,7 @@ import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithL
 import ThumbnailDisplay from './ThumbnailDisplay';
 import CollaboratorInput from '../../../GenericComponents/InputWithLabel/CollaboratorInput';
 
-export default function ProjectData({ image, setImage, nextStep, prevStep, handleChange, values, collaborators, setCollaborators }) {
+export default function ProjectDataStep({ image, setImage, nextStep, prevStep, handleChange, values, collaborators, setCollaborators }) {
     const types = [
         "Aucun",
         "Aventure",

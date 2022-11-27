@@ -42,7 +42,8 @@ export default function ManageProject(props) {
                     actualStep: projectR.data.actualStep,
                     thumbnailId: projectR.data.thumbnailId,
                     videoUrl: videoUrl,
-                    description: projectR.data.description
+                    description: projectR.data.description,
+                    isPaid: projectR.data.isPaid
                 });
             } catch (error) {
                 console.error(error);
@@ -86,6 +87,7 @@ export default function ManageProject(props) {
 //   Cancel scroll barre
 //   Mettre un temps de chargement quand la donnée n'est pas disponible
 
+    console.log(project);
     if (project) {
         return (
             <div className='w-full h-screen bg-myWhite'>
@@ -102,6 +104,7 @@ export default function ManageProject(props) {
                             description={project.description}
                             thumbnailId={project.thumbnailId}
                         />
+                        <h2>{project.isPaid == true ? "Is Paid" : "Is not Paid"}</h2>
                         {/* <VideoPlayer
                             videoUrl={project.videoUrl}
                         /> */}

@@ -2,7 +2,7 @@ import React from 'react';
 import UploadFile from '../../../GenericComponents/Files/UploadFile';
 import VideoPlayer from '../Manage/Widgets/VideoPlayer';
 
-export default function DropVideo({ video, setVideo, nextStep, handleChange, values }) {
+export default function DropVideoStep({ video, setVideo, nextStep }) {
     const onClick = e => {
         e.preventDefault();
         nextStep();

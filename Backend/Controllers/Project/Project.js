@@ -4,11 +4,28 @@ const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 const axios = require("axios");
+const { Payment, PaymentStatus } = require("../../Models/Payment");
+
+const projectHasBeenPaid = async function (projectId) {
+    const payments = await Payment.find({ projectId: projectId });
+
+    if (!payments.length) {
+        return false;
+    }
+    for (const payment of payments) {
+        if (!payment || payment.paymentStatus != PaymentStatus.success) {
+            return false;
+        }
+    }
+    return true;
+}
 
 exports.getProjectDB = async function (projectId) {
     try {
-        var project = await Project.findById(projectId);
-        return project;
+        const project = await Project.findById(projectId);
+        const isPaid = await projectHasBeenPaid(projectId);        
+
+        return {...project._doc, isPaid: isPaid};
     } catch (err) {
         console.log("Project->getProjectDB: " + err);
         return null;
@@ -41,10 +58,11 @@ exports.getAllProjectsDB = async function (userId) {
  */
 exports.getProject = async function (req, res) {
     try {
-        let project = await Project.findById(req.params.projectId);
+        const project = await Project.findById(req.params.projectId);
+        const isPaid = await projectHasBeenPaid(req.params.projectId);        
 
         if (project)
-            return res.status(200).send(project);
+            return res.status(200).send({...project._doc, isPaid: isPaid});
         return res.status(404).send(Errors.PROJECT_NOT_FOUND);
     } catch (err) {
         console.log("Project->getProject: " + err);

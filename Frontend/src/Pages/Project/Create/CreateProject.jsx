@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import ProjectData from './ProjectData';
-import VideoData from './VideoData';
+import ProjectDataStep from './ProjectDataStep';
+import PaymentStep from './PaymentStep';
 import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
-import DropVideo from './DropVideo';
+import DropVideoStep from './DropVideoStep';
 import { useHistory } from "react-router-dom";
 import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
 
@@ -92,9 +92,7 @@ export default function CreateProject({ show, onHide }) {
             handleChange('id', projectResponse.data._id);
             addCollaborators(projectResponse.data._id);
             await uploadMedia();
-            history.push(`/project/${projectResponse.data._id}`);
             await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectResponse.data._id}/generationIA`, { typeGeneration: 'ActionRetrieve' });
-            onHide();
         } catch (error) {
             console.error(error);
         }
@@ -104,19 +102,19 @@ export default function CreateProject({ show, onHide }) {
         switch (modalStep) {
             case 0:
                 return (
-                    <DropVideo video={ video } setVideo={ setVideo } nextStep={ nextStep } handleChange={ handleChange } values={ values }/>
+                    <DropVideoStep video={ video } setVideo={ setVideo } nextStep={ nextStep }/>
                 );
             case 1:
                 return (
-                    <ProjectData image={ image } setImage={ setImage } nextStep={ nextStep } prevStep={ prevStep } handleChange={ handleChange } values={ values } collaborators={ collaborators } setCollaborators={ setCollaborators }/>
+                    <ProjectDataStep image={ image } setImage={ setImage } nextStep={ nextStep } prevStep={ prevStep } handleChange={ handleChange } values={ values } collaborators={ collaborators } setCollaborators={ setCollaborators }/>
                 );
             case 2:
                 return (
-                    <VideoData prevStep={ prevStep } handleChange={ handleChange } setCollaborators={ values } postData={ postData }/>
+                    <PaymentStep values={ values } postData={ postData }/>
                 );
             default:
                 return (
-                    <DropVideo nextStep={ nextStep } handleChange={ handleChange } values={ values }/>
+                    <DropVideoStep nextStep={ nextStep } handleChange={ handleChange } values={ values }/>
                 );
         }
     }
