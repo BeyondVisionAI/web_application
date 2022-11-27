@@ -21,7 +21,7 @@ export default function DropVideoStep({ video, setVideo, nextStep }) {
                     />
                     :
                     <div className='flex flex-col h-full mt-4'>
-                        <VideoPlayer videoUrl={URL.createObjectURL(video)} setDuration={() => {}}/>
+                        <VideoPlayer videoUrl={URL.createObjectURL(video)}/>
                         <div className='flex flex-row justify-between bg-black rounded-b'>
                             <p className="my-2 ml-4 input-with-label-label text-white align-middle">
                                 {video.name}
