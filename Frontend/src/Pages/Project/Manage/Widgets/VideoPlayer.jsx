@@ -36,7 +36,6 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
       setIsPlaying(playing)
   }, [playing]);
 
-
   if (videoUrl === 'Undefined')
     return (<Widget weight='h-1/5' rounded='rounded-b-lg'>Uploading ...</Widget>)
 

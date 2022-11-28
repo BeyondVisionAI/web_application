@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UploadFile from '../../../GenericComponents/Files/UploadFile';
 import VideoPlayer from '../Manage/Widgets/VideoPlayer';
 
-export default function DropVideoStep({ video, setVideo, nextStep }) {
+export default function DropVideoStep({ video, setVideo, nextStep, handleChange }) {
+    const [videoDuration, setVideoDuration] = useState(null);
     const onClick = e => {
         e.preventDefault();
         nextStep();
     }
+
+    useEffect(() => {
+        if (videoDuration != null) {
+            handleChange("videoDuration", videoDuration);
+        }
+    }, [videoDuration]);
 
     return (
         <form className='h-full flex flex-col'>
@@ -21,7 +28,7 @@ export default function DropVideoStep({ video, setVideo, nextStep }) {
                     />
                     :
                     <div className='flex flex-col h-full mt-4'>
-                        <VideoPlayer videoUrl={URL.createObjectURL(video)}/>
+                        <VideoPlayer videoUrl={URL.createObjectURL(video)} setDuration={ setVideoDuration }/>
                         <div className='flex flex-row justify-between bg-black rounded-b'>
                             <p className="my-2 ml-4 input-with-label-label text-white align-middle">
                                 {video.name}

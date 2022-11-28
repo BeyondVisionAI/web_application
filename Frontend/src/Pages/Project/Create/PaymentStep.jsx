@@ -1,37 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import Button from '../../../GenericComponents/Button/Button';
+import React, { useEffect } from 'react'
 import PaymentForm from '../../../GenericComponents/PaymentForm/PaymentForm';
-import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
-import { toast } from 'react-toastify';
 
-export default function PaymentStep({ values, postData }) {
-    const [paymentAmount, setPaymentAmount] = useState(null);
-    const [createPayment, setCreatePayment] = useState(false);
-    const regexAmount = "^([0-9]+([.][0-9]*)?|[.][0-9]+)$";
-
+export default function PaymentStep({ values, postData, showPayment}) {
     useEffect(() => {
-        postData();
+        if (!showPayment)
+            postData();
     }, []);
 
-    function startPayment() {
-        const regex = new RegExp(regexAmount);
-
-        if (!paymentAmount) {
-            toast.error('No Amount');
-        } else if (!regex.test(paymentAmount)) {
-            toast.error('Invalid Amount');
-        } else {
-            setCreatePayment(true);
-        }
-    }
-
     return (
-        <div className="w-full h-full p-3">
-            <div className='flex flex-col justify-center'>
-                <InputWithLabel onChange={setPaymentAmount} verifyRegex={regexAmount} label='Payment Amount' errorMessage="Not a positive float" type='text'/>
-                <Button onClick={startPayment} label="Create Payment" />
-            </div>
-            {createPayment && <PaymentForm amount={paymentAmount} currency='EUR' redirectUrl={`http://localhost/project/${values.id}`} projectId={ values.id } />}
+        <div className="w-full h-full p-3 flex flex-col justify-center items-center">
+            {
+                showPayment ?
+                    <PaymentForm amount={`${Math.round(values.videoDuration * 0.25)}`} currency='EUR' redirectUrl={`http://localhost/project/${values.id}`} projectId={ values.id } /> :
+                    <h1>Project is creating, please wait</h1>
+            }
         </div>
-    )
+    );
 }

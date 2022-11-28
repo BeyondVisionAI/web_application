@@ -18,7 +18,9 @@ export default function CreateProject({ show, onHide }) {
         description: null,
         videoId: null,
         videoType: null,
+        videoDuration: null
     });
+    const [showPayment, setShowPayment] = useState(false);
     const [collaborators, setCollaborators] = useState([]);
     const [steps, setSteps] = useState([
         {title: 'Téléverser la vidéo', img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/><polyline points="16 16 12 12 8 16"/></svg>, isDone: true},
@@ -91,6 +93,7 @@ export default function CreateProject({ show, onHide }) {
             let projectResponse = await axios.post(`${process.env.REACT_APP_API_URL}/projects`, { status: 'Stop', ...values, script: null });
             handleChange('id', projectResponse.data._id);
             addCollaborators(projectResponse.data._id);
+            setShowPayment(true);
             await uploadMedia();
             await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectResponse.data._id}/generationIA`, { typeGeneration: 'ActionRetrieve' });
         } catch (error) {
@@ -102,7 +105,7 @@ export default function CreateProject({ show, onHide }) {
         switch (modalStep) {
             case 0:
                 return (
-                    <DropVideoStep video={ video } setVideo={ setVideo } nextStep={ nextStep }/>
+                    <DropVideoStep video={ video } setVideo={ setVideo } nextStep={ nextStep } handleChange={ handleChange }/>
                 );
             case 1:
                 return (
@@ -110,7 +113,7 @@ export default function CreateProject({ show, onHide }) {
                 );
             case 2:
                 return (
-                    <PaymentStep values={ values } postData={ postData }/>
+                    <PaymentStep values={ values } postData={ postData } showPayment={ showPayment }/>
                 );
             default:
                 return (
