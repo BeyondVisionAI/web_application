@@ -6,6 +6,10 @@ const { List } = require("../../Models/list/List");
 const { ListMember } = require("../../Models/list/ListMember");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 const { User } = require("../../Models/User");
+const { Collaboration: CollaborationModel } = require("../../Models/Collaboration") ;
+const { Image } = require("../../Models/Media/Image");
+const { Video } = require("../../Models/Media/Video");
+const { Project: ProjectModel, enumStatus, enumActualStep } = require("../../Models/Project");
 
 exports.getListMyProjects = async function(req, res) {
     try {
@@ -61,12 +65,14 @@ exports.getCustomList = async function(req, res) {
         var result = { "_id": list._id, "name": list.name, "projects": [] };
         const filter = { listId: req.params.listId };
         const projectOnList = await ProjectListed.find(filter);
-        for (var project of projectOnList) {
-            const temp = await Project.getProjectDB(project.projectId);
-            if (temp)
-                result.projects.push(temp);
-            else
-                console.log("List->getCustomList: ProjectListed \"" + project._id + "\" isn't linked to a Project existing");
+        console.log("🚀 ~ file: List.js ~ line 64 ~ exports.getCustomList=function ~ projectOnList", projectOnList)
+        for (const projectId of projectOnList) {
+            let ownerId = await CollaborationModel.findOne({projectId: projectId.projectId, rights: Role.OWNER});
+            const owner = await User.findOne({ _id: ownerId.userId}, {firstName: 1, lastName: 1})
+            const project = await ProjectModel.findOne({ _id: projectId.projectId});
+            const thumbnail = await Image.findOne({ _id: project.thumbnailId})
+            const video = await Video.findOne({ _id: project.videoId})
+            result.projects.push({...project._doc, owner: owner, thumbnail: thumbnail, video: video})
         }
         return res.status(200).send(result);
     } catch (err) {

@@ -21,8 +21,6 @@ export default function Lists() {
     const [isProjectCreationModelOpen, setIsProjectCreationModalOpen] = useState(false)
     const [isFolderCreationModelOpen, setIsFolderCreationModalOpen] = useState(false)
 
-    const [isFinished, setIsFinished] = useState(false);
-
     useEffect(() => {
         return (clearAllBodyScrollLocks)
     }, []);
