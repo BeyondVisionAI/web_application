@@ -41,17 +41,15 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
                             return null;
                         }
                     })}
-                    {isEditable && <div className="collaborator-item">+</div>}
+                    {/* {isEditable && <div className="collaborator-item">+</div>} */}
                 </div>
-            {/* <button onClick={ () => setShowModal(true) }>Collaborators</button> */}
-            {modalShow &&
-                (<EditCollaborators
+                {/* <EditCollaborators
                     projectId={ projectId }
                     collaborators={ collaborators }
                     setCollaborators= { setCollaborators }
-                    onHide={ () => setShowModal(false) }
-                />)
-            }
+                    isModalOpen={modalShow}
+                    closeModal={ () => setShowModal(false) }
+                /> */}
         </div>
     )
 }

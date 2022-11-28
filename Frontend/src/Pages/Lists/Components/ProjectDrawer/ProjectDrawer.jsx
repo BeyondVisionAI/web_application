@@ -6,21 +6,9 @@ import { FaPen, FaTrash} from "react-icons/fa";
 import { FiScissors } from "react-icons/fi";
 import VideoPlayer from "../../../Project/Manage/Widgets/VideoPlayer";
 import { DownloadFileUrl } from "../../../../GenericComponents/Files/S3Manager";
+
 const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList}) => {
     const divRef = useRef(null)
-
-    const [video, setVideo] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        const getVideoUrl =  async () => {
-          const url = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', project?.video?.name)
-          setVideo(url)
-          setIsLoading(false)
-        }
-        setIsLoading(true)
-        getVideoUrl()
-    }, [project?.video?.name]);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -53,16 +41,19 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList}) => {
             <div className="project-drawer-editor-icon-container"><FaPen className="project-drawer-editor-icon"/></div>
             <div className="project-drawer-editor-icon-container-error"><FaTrash className="project-drawer-editor-icon-error"/></div>
           </div>
-            {isLoading ? <p>Loading...</p> : <div className="project-drawer-video-container"><VideoPlayer videoUrl={video} /></div>}
-            <div className="project-drawer-editor-container">
-                <CollaboratorsButton projectId={project?._id} isEditable/>
+            <div className="project-drawer-thumbnail-container">
+              <img src={project?.thumbnailUrl} alt="project" />
             </div>
+            {/* <div className="project-drawer-editor-container">
+                <CollaboratorsButton projectId={project?._id} isEditable/>
+            </div> */}
+            {/* TODO: Replace by component of Dimitri */}
             <div className="project-drawer-content">
                 <h1 className="project-drawer-title">{project?.name}</h1>
                 <h2 className="project-drawer-sub-title">Description</h2>
                 <p className="project-drawer-text-content">{project?.description}</p>
                 <h2 className="project-drawer-sub-title">Folders</h2>
-                <FolderListSelectable project={project} addToFolderList={addToFolderList}/>
+                <FolderListSelectable project={project} addToFolderList={addToFolderList ? addToFolderList : null}/>
             </div>
         </div>
     );

@@ -83,8 +83,20 @@
     margin-bottom: 2vh;
 }
 
-.project-drawer-video-container {
-    max-height: 40vh;
+.project-drawer-thumbnail-container {
+    width: 100%;
+    display: block;
+    position: relative;
+    padding-top: 56.25%;
+}
+
+.project-drawer-thumbnail-container > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .project-drawer-editor-icon-container,

@@ -24,7 +24,7 @@ module.exports = function (app) {
 
     app.get('/projects',
         authMiddleware.authenticateUser,
-        Project.getRecentProjects);
+        Project.getAllProjects);
 
     app.post('/projects/:projectId/setStatus',
         Project.setStatus);

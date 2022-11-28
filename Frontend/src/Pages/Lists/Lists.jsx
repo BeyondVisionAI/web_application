@@ -11,6 +11,7 @@ import FolderCard from './Components/FolderCard/FolderCard';
 import AddFolderModal from './Components/AddFolderModal/AddFolderModal';
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import { HiArrowNarrowRight } from "react-icons/hi";
+import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 export default function Lists() {
 
     const [recentProjects, setRecentProjects] = useState([])
@@ -45,8 +46,15 @@ export default function Lists() {
                     url: `${process.env.REACT_APP_API_URL}/projects`,
                     method: 'GET',
                     withCredentials: true,
+                    params: {
+                        limit: 3
+                    }
                 })
-                setRecentProjects(res.data)
+                var projects = [...res.data];
+                for (const project of projects) {
+                    project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+                }
+                setRecentProjects(projects)
             } catch (e) {
                 console.error(e)
             }

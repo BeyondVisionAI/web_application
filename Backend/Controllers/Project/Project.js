@@ -124,32 +124,58 @@ exports.updateProject = async function (req, res) {
     }
 }
 
+// exports.getAllProjects = async function (req, res) {
+//     try {
+//         var projects = await module.exports.getAllProjectsDB(req.user.userId);
+//         if (!projects) {
+//             return res.status(500).send(Errors.INTERNAL_ERROR);
+//         }
+//         return res.status(200).send(projects);
+//     } catch (err) {
+//         console.log("Project->getAllProject: " + err);
+//         return res.status(500).send(Errors.INTERNAL_ERROR);
+//     }
+// }
+
+// exports.getRecentProjects = async function (req, res) {
+//     try {
+//         var projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(3);
+//         const projects = []
+//         for (const projectId of projectsIds) {
+//             let ownerId = await CollaborationModel.findOne({projectId: projectId.projectId, rights: Role.OWNER});
+//             const owner = await User.findOne({ _id: ownerId.userId}, {firstName: 1, lastName: 1})
+//             const project = await Project.findOne({ _id: projectId.projectId});
+//             console.log("🚀 ~ file: Project.js ~ line 146 ~ project", project)
+//             const thumbnail = await Image.findOne({ _id: project.thumbnailId})
+//             const video = await Video.findOne({ _id: project.videoId})
+//             projects.push({...project._doc, owner: owner, thumbnail: thumbnail, video: video})
+//         }
+//         return res.status(200).send(projects);
+//     } catch (err) {
+//         console.log("Project->getAllProject: " + err);
+//         return res.status(500).send(Errors.INTERNAL_ERROR);
+//     }
+// }
+
 exports.getAllProjects = async function (req, res) {
     try {
-        var projects = await module.exports.getAllProjectsDB(req.user.userId);
-        if (!projects) {
-            return res.status(500).send(Errors.INTERNAL_ERROR);
+        var projectsIds = null
+        console.log("🚀 ~ file: Project.js ~ line 164 ~ req.body", req.query)
+        if (req.query.limit) {
+            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(parseInt(req.body.limit));
+        } else {
+            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 });
         }
-        return res.status(200).send(projects);
-    } catch (err) {
-        console.log("Project->getAllProject: " + err);
-        return res.status(500).send(Errors.INTERNAL_ERROR);
-    }
-}
-
-exports.getRecentProjects = async function (req, res) {
-    try {
-        var projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(3);
         const projects = []
         for (const projectId of projectsIds) {
             let ownerId = await CollaborationModel.findOne({projectId: projectId.projectId, rights: Role.OWNER});
             const owner = await User.findOne({ _id: ownerId.userId}, {firstName: 1, lastName: 1})
             const project = await Project.findOne({ _id: projectId.projectId});
-            console.log("🚀 ~ file: Project.js ~ line 146 ~ project", project)
             const thumbnail = await Image.findOne({ _id: project.thumbnailId})
             const video = await Video.findOne({ _id: project.videoId})
             projects.push({...project._doc, owner: owner, thumbnail: thumbnail, video: video})
         }
+        console.log("🚀 ~ file: Project.js ~ line 164 ~ projects", projects)
         return res.status(200).send(projects);
     } catch (err) {
         console.log("Project->getAllProject: " + err);
