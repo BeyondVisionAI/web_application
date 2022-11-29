@@ -87,7 +87,6 @@ export default function ManageProject(props) {
 //   Cancel scroll barre
 //   Mettre un temps de chargement quand la donnée n'est pas disponible
 
-    console.log(project);
     if (project) {
         return (
             <div className='w-full h-screen bg-myWhite'>
