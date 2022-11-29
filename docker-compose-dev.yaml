@@ -46,8 +46,6 @@ services:
     networks:
       - api
       - bdd
-    environment:
-      - IS_TEST="TRUE"
     restart: on-failure
 
   mongodb:

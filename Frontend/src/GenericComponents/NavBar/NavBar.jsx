@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import "./NavBar.css"
 import { AuthContext } from '../Auth/Auth';
+import I18nSelectionButton from './I18nSelectionButton/I18nSelectionButton';
 
 const NavBar = ({ homeRef, rightButtons, others }) => {
     const {currentUser, logout} = useContext(AuthContext);
     const [isMenuActive, setIsMenuActive] = useState(false)
     const [wdWidth, setWdWidth] = useState(window.innerWidth)
-
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
@@ -60,6 +60,7 @@ const NavBar = ({ homeRef, rightButtons, others }) => {
                     {renderButtons(rightButtons)}
                 </div>)}
             {others}
+            <I18nSelectionButton/>
             {currentUser && <FontAwesomeIcon style={{marginLeft: '-10vw', color: 'red', cursor:'pointer'}} icon={faSignOutAlt} onClick={logout} />}
         </div>
     );

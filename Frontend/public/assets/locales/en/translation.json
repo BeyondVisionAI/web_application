@@ -1,0 +1,85 @@
+{
+	"navigation": {
+		"landingPage": {
+			"home": "Home",
+			"project": "The Project",
+			"pricing": "Pricing",
+			"aboutUs": "About us",
+			"timeline": "Timeline",
+			"contact": "Contact"
+		}
+	},
+	"landingPage": {
+		"audioDescription": "Audio Description",
+		"madeEasy": "made easy",
+		"ourGooddid": "We created a new way to produce audio description using AI",
+		"joinUs": "Join us now !",
+		"project": {
+			"help": {
+				"header": "Help",
+				"subheader": "visually impaired people",
+				"text": "At Beyond Vision, our main goal is to help visually impaired people having more video content adapted for their need."
+			},
+			"simplify": {
+				"header": "Simplify",
+				"subheader": "the process of audio description",
+				"text": "The process of creating audio description for a movie or a televised show is time consuming and very costly. For independent filmmakers it's almost impossible to make your content available to visually impaired people. Here, at Beyond Vision, we want to give the possibility to everyone to make his content available to ..."
+			},
+			"propel": {
+				"header": "Propel",
+				"subheader": "a new way to treat images",
+				"text": "One of our biggest goal is to create an Artificial Intelligence that it able to extract meaning from short video clips..."
+			}
+		},
+		"pricing": {
+			"freePlan": {
+				"name": "Free Plan",
+				"priceLabel": "FREE",
+				"nProjects": "Up to 5 projects",
+				"5min": "5 minutes long videos maximum",
+				"watermark": "Beyond Vision watermark"
+			},
+			"basicPlan": {
+				"name": "Basic Plan",
+				"priceLabel": "€5.99/month",
+				"nProjects": "Up to 10 projects",
+				"collaboration": "Collaborative projects",
+				"noWatermark": "No watermark"
+			},
+			"proPlan": {
+				"name": "Pro Plan",
+				"priceLabel": "€7.99/month",
+				"nProjects": "Unlimited projects",
+				"voiceShop": "Voice shop advantages",
+				"ADReview": "Certified audiodescription review",
+				"4K": "Export the finished videos in 4K"
+			}
+		},
+		"theTeam": "The Beyond Vision team",
+		"timeline": {
+			"header": "Timeline",
+			"sep20": {
+				"label": "September 2020",
+				"description": "Definition of the projet"
+			},
+			"feb21": {
+				"label": "February 2021",
+				"description": "Design and tests"
+			},
+			"may21": {
+				"label": "May 2021",
+				"description": "Beginning of the development of the software"
+			},
+			"may22": {
+				"label": "May 2022",
+				"description": "Deployment of the beta"
+			}
+		},
+		"contact": {
+			"yourName": "Your name",
+			"yourEmail": "Your email",
+			"yourMessage": "Your message",
+			"send": "Send"
+		}
+	}
+}
