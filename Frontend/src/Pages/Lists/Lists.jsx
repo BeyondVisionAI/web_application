@@ -12,11 +12,10 @@ import CreateProject from '../Project/Create/CreateProject';
 import NavBarVariante from '../../GenericComponents/NavBar/Dashboard/NavBarVariante';
 import { Elements } from '@stripe/react-stripe-js';
 import DisplayPaymentStatus from '../../GenericComponents/DisplayPaymentStatus/DisplayPaymentStatus';
-import {loadStripe} from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
-
     const [input, setInput] = useState('');
     const [customLists, setCustomLists] = useState([]);
     const [myProjectsList, setMyProjectsList] = useState({ id: 0, name: "My projects", movies: [] });
@@ -121,9 +120,6 @@ export default function Lists() {
 
         if (clientSecret) {
             setIsRedirectFromPayment(true);
-            // window.location.replace('http://localhost/dashboard');
-            // window.history.replaceState(null, "Dashboard", "/dashboard");
-
         }
     }, []);
 

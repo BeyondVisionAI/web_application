@@ -55,9 +55,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
     }
 
     const deleteCollaborator = (userId) => {
-        const updatedCollaborators = collaborators.filter(function(collaborator) { 
-            return collaborator.user._id != userId; 
-        });
+        const updatedCollaborators = collaborators.filter((collaborator) => collaborator.user._id != userId);
 
         setCollaborators(updatedCollaborators);
     }
@@ -66,11 +64,13 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
         <div className="flex flex-col w-full pt-4">
             <label className="input-with-label-label">Add collaborators</label>
             <div className="flex w-full">
-                <input pattern={".+"}
+                <input
+                 pattern={".+"}
                  onBlur={checkValidity}
                  placeholder="Email"
                  className="input-with-label-input w-full"
-                 type="email" onChange={(arg) => {
+                 type="email"
+                 onChange={(arg) => {
                     setNewCollaborator(arg.target.value);
                  }}
                  name="Add collaborators"
@@ -88,7 +88,11 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
             <div className="flex flex-wrap w-2/3 pt-1">
                 {collaborators.map((collaborator) => {
                     return (
-                        <Tag key={collaborator.user._id} text={collaborator.user.firstName} onDelete={() => deleteCollaborator(collaborator.user._id)} />
+                        <Tag
+                         key={collaborator.user._id}
+                         text={collaborator.user.firstName}
+                         onDelete={() => deleteCollaborator(collaborator.user._id)}
+                        />
                     );
                 })}
             </div>

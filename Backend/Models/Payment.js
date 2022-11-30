@@ -23,8 +23,8 @@ const payment = new mongoose.Schema({
     paymentAmount: String,
     paymentStatus: {
         type: String,
-        enum: [PaymentStatus.failed, PaymentStatus.inProgress, PaymentStatus.success, PaymentStatus.refunded],
-        default: 'in progress'
+        enum: Object.values(PaymentStatus),
+        default: PaymentStatus.inProgress
     },
     paymentCurrency: String,
 });

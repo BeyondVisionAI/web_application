@@ -105,19 +105,40 @@ export default function CreateProject({ show, onHide }) {
         switch (modalStep) {
             case 0:
                 return (
-                    <DropVideoStep video={ video } setVideo={ setVideo } nextStep={ nextStep } handleChange={ handleChange }/>
+                    <DropVideoStep
+                     video={ video }
+                     setVideo={ setVideo }
+                     nextStep={ nextStep }
+                     handleChange={ handleChange }
+                    />
                 );
             case 1:
                 return (
-                    <ProjectDataStep image={ image } setImage={ setImage } nextStep={ nextStep } prevStep={ prevStep } handleChange={ handleChange } values={ values } collaborators={ collaborators } setCollaborators={ setCollaborators }/>
+                    <ProjectDataStep
+                     image={ image }
+                     setImage={ setImage }
+                     nextStep={ nextStep }
+                     prevStep={ prevStep }
+                     handleChange={ handleChange }
+                     values={ values }
+                     collaborators={ collaborators }
+                     setCollaborators={ setCollaborators }
+                    />
                 );
             case 2:
                 return (
-                    <PaymentStep values={ values } postData={ postData } showPayment={ showPayment }/>
+                    <PaymentStep
+                     values={ values }
+                     postData={ postData }
+                     showPayment={ showPayment }
+                    />
                 );
             default:
                 return (
-                    <DropVideoStep nextStep={ nextStep } handleChange={ handleChange } values={ values }/>
+                    <DropVideoStep nextStep={ nextStep }
+                     handleChange={ handleChange }
+                     values={ values }
+                    />
                 );
         }
     }
