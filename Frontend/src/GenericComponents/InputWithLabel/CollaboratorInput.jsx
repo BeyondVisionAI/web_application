@@ -49,7 +49,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
             collaboratorsUpdate.push({ user: user.data }); // TODO: Add Rights
             setCollaborators(collaboratorsUpdate);
         } catch (error) {
-            setErrorMessage('Email invalid!');
+            setErrorMessage('Email is invalid!');
             console.error(error);
         }
     }
