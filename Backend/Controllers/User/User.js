@@ -28,4 +28,5 @@ exports.getUserByEmail = async function(req, res) {
         return res.status(404).send(Errors.EMAIL_UNKNOWN);
     }
     return res.status(200).send(targetUser);
+    
 }
