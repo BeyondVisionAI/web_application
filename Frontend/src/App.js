@@ -17,7 +17,6 @@ import ManageProject from './Pages/Project/Manage/ManageProject';
 import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
 import Chat from './Pages/Chat/Chat';
 
-
 function App() {
   return (
     <div className="App">

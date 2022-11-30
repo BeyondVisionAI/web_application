@@ -42,14 +42,14 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
             const user = await axios.post(`${process.env.REACT_APP_API_URL}/user/email`, { email: newCollaborator });
 
             if (user.status != 200) {
-                toast.error("Error will getting user, please retry");
+                toast.error("Error while getting user, please retry");
                 return;
             }
             setNewCollaborator("");
             collaboratorsUpdate.push({ user: user.data }); // TODO: Add Rights
             setCollaborators(collaboratorsUpdate);
         } catch (error) {
-            setErrorMessage('Email invalid!');
+            setErrorMessage('Email is invalid!');
             console.error(error);
         }
     }
