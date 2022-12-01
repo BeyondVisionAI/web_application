@@ -1,5 +1,5 @@
 .folder-list-selectable-container {
-    height: 25vh;
+    max-height: 25vh;
     width: 23vw;
     display: flex;
     flex-direction: column;

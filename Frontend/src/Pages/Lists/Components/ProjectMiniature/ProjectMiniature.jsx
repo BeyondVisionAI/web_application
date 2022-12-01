@@ -3,7 +3,6 @@ import "./ProjectMiniature.css";
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 import { DownloadFileUrl } from '../../../../GenericComponents/Files/S3Manager';
 import CollaboratorsButton from '../../../../GenericComponents/NavBar/Project/CollaboratorsComponents/CollaboratorsButton';
@@ -12,8 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default function ProjectMiniature({ project, openDrawer, isAdd, openAddProject }) {
-console.log("🚀 ~ file: ProjectMiniature.jsx ~ line 15 ~ ProjectMiniature ~ project", project)
-
+console.log("🚀 ~ file: ProjectMiniature.jsx:15 ~ ProjectMiniature ~ project", project)
     if (isAdd) {
         return (
         <div className='project-card-container project-card-container-centered' onClick={openAddProject}>
@@ -25,7 +23,7 @@ console.log("🚀 ~ file: ProjectMiniature.jsx ~ line 15 ~ ProjectMiniature ~ pr
 
     return (
        <div className='project-card-container' onClick={openDrawer}>
-            <img src={project.thumbnailUrl} className='project-card-image'/> 
+            <img src={project?.thumbnail ? project.thumbnailUrl : '/login-image.jpg'} className='project-card-image'/> 
             <div className='project-card-floating-collaborators'>
                 <CollaboratorsButton projectId={project?._id} />
             </div>

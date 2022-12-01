@@ -25,6 +25,12 @@
     overflow-x: hidden;
 }
 
+.project-drawer-show-more {
+    color: #7793ED;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .project-drawer-container-active {
     transform: translateX(0);
 }
@@ -71,6 +77,7 @@
     font-weight: 400;
     font-size: .9vw;
     margin-top: 1vh;
+    overflow: hidden;
 }
 
 .project-drawer-editor-icons-container {

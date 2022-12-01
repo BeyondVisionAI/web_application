@@ -111,10 +111,20 @@ export default function Lists() {
 
     }
 
+    const removeProjectFromList = (projectId) => {
+        const idx = recentProjects.findIndex(item => item._id === projectId);
+        if (idx !== -1) {
+            let projectsCopy = [...recentProjects];
+            projectsCopy.splice(idx, 1);
+            setRecentProjects(projectsCopy)
+            console.log("🚀 ~ file: Lists.jsx:119 ~ removeProjectFromList ~ projectsCopy", projectsCopy)
+        }
+    }
+
     return (
         <div id="dashboard-container" className="dashboard-container">
-            {/* <NavBarVariante input={input} updateInput={(input) => setInput(input)}/> */}
-            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}/>
+            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}
+            removeProjectFromList={removeProjectFromList}/>
             {isProjectCreationModelOpen && (
                 <CreateProject
                     show={isProjectCreationModelOpen}

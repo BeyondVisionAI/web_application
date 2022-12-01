@@ -50,6 +50,7 @@ const FolderListSelectable = ({project, addToFolderList}) => {
                 await axios({
                     method: 'POST',
                     url: `${process.env.REACT_APP_API_URL}/lists/${listId}/projects/${project?._id}`,
+                    withCredentials: true,
                 })
             } catch (e) {
                 console.error(e)
@@ -60,6 +61,7 @@ const FolderListSelectable = ({project, addToFolderList}) => {
                 await axios({
                     method: 'DELETE',
                     url: `${process.env.REACT_APP_API_URL}/lists/${listId}/projects/${project?._id}`,
+                    withCredentials: true,
                 })
             } catch (e) {
                 console.error(e)
@@ -70,7 +72,6 @@ const FolderListSelectable = ({project, addToFolderList}) => {
 
     const isProjectInList = (list) => {
         for (const projectL of list.projects) {
-            console.log(`Project Selected = ${project?._id}, project compared = ${projectL?.projectId}, result = ${project?._id === projectL?.projectId}`);
             if (project?._id === projectL?.projectId) return true
         }
         return false
