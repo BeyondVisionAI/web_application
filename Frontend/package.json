@@ -45,7 +45,7 @@
   "scripts": {
     "start": "set PORT=80 && craco start",
     "build": "craco build",
-    "prod": "npm i --legacy-peer-deps && npm i -g craco && craco build && npm i -g serve && serve -p 80 -s ./build/",
+    "prod": "npm i --legacy-peer-deps && npm i -g craco && craco build && npm i -g serve && serve -s ./build/",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
