@@ -75,17 +75,6 @@ const createReplicaAndAudio = async (
     status,
     lastEditor,
     ) => {
-    console.log("Logging createReplicaAndAudio");
-    console.log(projectId);
-    console.log(content);
-    console.log(timestamp);
-    console.log(duration);
-    console.log(voiceId);
-    console.log(actualStep);
-    console.log(status);
-    console.log(lastEditor);
-    console.log("End of logging createReplicaAndAudio");
-
     try {
         if (!projectId || !content || !voiceId || !actualStep || !status || !lastEditor) {
             throw Error(Errors.REPLICA_AND_AUDIO_CREATION_MISSING_ARGUMENTS);
@@ -168,13 +157,10 @@ exports.setReplicas = async function (req, res) {
     const actionsJson = JSON.parse(req.body.actionsJson);
     const userId = req.body.userId;
     const projectId = req.params.projectId
-    console.log("Entering setReplicas with script:");
-    console.log(actionsJson.script);
     try {
         if (!projectId || !actionsJson || !userId)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
         for (let key in actionsJson.script) {
-            console.log("Creating replica...");
             let { actionName, startTime } = actionsJson.script[key];
             const replica = await createReplicaAndAudio(
                 projectId,
