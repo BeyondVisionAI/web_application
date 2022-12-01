@@ -3,7 +3,6 @@ const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
-import { axios } from 'axios';
 const axios = require("axios");
 
 exports.getProjectDB = async function (projectId) {
@@ -173,7 +172,7 @@ exports.setStatus = async function (req, res) {
         }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
-        console.log("Project->setStatus: " + err);
+        console.log(`Project->setStatus: ${err}`);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
 }
@@ -192,7 +191,11 @@ exports.generationIA = async function (req, res) {
         } else {
             if (req.body.typeGeneration === 'ActionRetrieve') {
                 project.ActualStep = 'ActionRetrieve';
-                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { projectId: req.params.projectId });
+                console.log("Project-> IA: ");
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { 
+                    userId: req.user.userId,
+                    projectId: req.params.projectId,
+                });
             } else if (req.body.typeGeneration === 'FaceRecognition') {
                 project.ActualStep = 'FaceRecognition';
                 // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow

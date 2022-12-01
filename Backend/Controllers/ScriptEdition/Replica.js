@@ -63,6 +63,52 @@ const getReplicaAudioUrl = async (replica) => {
     } catch (error) {
         console.error(error);
     }
+};
+
+const createReplicaAndAudio = async (
+    projectId,
+    content,
+    timestamp,
+    duration,
+    voiceId,
+    actualStep,
+    status,
+    lastEditor,
+    ) => {
+    console.log("Logging createReplicaAndAudio");
+    console.log(projectId);
+    console.log(content);
+    console.log(timestamp);
+    console.log(duration);
+    console.log(voiceId);
+    console.log(actualStep);
+    console.log(status);
+    console.log(lastEditor);
+    console.log("End of logging createReplicaAndAudio");
+
+    try {
+        if (!projectId || !content || !voiceId || !actualStep || !status || !lastEditor) {
+            throw Error(Errors.REPLICA_AND_AUDIO_CREATION_MISSING_ARGUMENTS);
+        }
+        const newReplica = new Replica({
+            projectId: projectId,
+            content: content,
+            timestamp: timestamp,
+            duration: duration,
+            voiceId: voiceId,
+            actualStep: actualStep,
+            status: status,
+            lastEditor: lastEditor,
+            lastEditDate: Date.now()
+        });
+        newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
+        const replica = await newReplica.save();
+        console.log(replica);
+        await createAudio(newReplica);
+    } catch (err) {
+        console.log(err);
+        return("KO");
+    }
 }
 
 exports.getProjectReplicas = async function (projectId) {
@@ -118,6 +164,38 @@ exports.getProjectReplica = async function (req, res) {
     }
 }
 
+exports.setReplicas = async function (req, res) {
+    const actionsJson = JSON.parse(req.body.actionsJson);
+    const userId = req.body.userId;
+    const projectId = req.params.projectId
+    console.log("Entering setReplicas with script:");
+    console.log(actionsJson.script);
+    try {
+        if (!projectId || !actionsJson || !userId)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        for (let key in actionsJson.script) {
+            console.log("Creating replica...");
+            let { actionName, startTime } = actionsJson.script[key];
+            const replica = await createReplicaAndAudio(
+                projectId,
+                actionName,
+                startTime * 1000,
+                1,
+                1,
+                'Created',
+                'Done',
+                userId,
+            );
+            if (replica === "KO") {
+                throw new Error(Errors.INTERNAL_ERROR);
+            }
+        }
+        return (res.status(200).send("Project replicas saved."));
+    } catch (err) {
+        console.log("Project->setReplicas: " + err);
+        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+    }
+}
 
 exports.createReplica = async function (req, res) {
     try {
@@ -125,22 +203,17 @@ exports.createReplica = async function (req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-        const newReplica = new Replica({
-            projectId: req.params.projectId,
-            content: req.body.content,
-            timestamp: req.body.timestamp,
-            duration: req.body.duration,
-            voiceId: req.body.voiceId,
-            actualStep: 'Created',
-            status: 'Done',
-            lastEditor: req.user.userId,
-            lastEditDate: Date.now()
-        });
-        newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
-
-        await newReplica.save();
-        await createAudio(newReplica);
-        res.status(200).send(newReplica);
+        await createReplicaAndCreateAudio(
+            req.params.projectId,
+            req.body.content,
+            req.body.timestamp,
+            req.body.duration,
+            req.body.voiceId,
+            'Created',
+            'Done',
+            req.user.userId,
+        );
+        res.status(200).send("Replica created !");
     } catch (err) {
         console.log("Replica->createReplica : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);

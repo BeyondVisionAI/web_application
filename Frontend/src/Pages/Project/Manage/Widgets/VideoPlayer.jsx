@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import ReactPlayer from 'react-player';
-import AudioPlayer from '../../../ScriptEdition/Components/AudioPlayer';
 
 export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, newSecondsFromCursor, resetNewSecondsFromCursor, setIsPlaying }) => {
   const [playedSeconds, setPlayedSeconds] = useState(0)

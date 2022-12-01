@@ -13,7 +13,6 @@ import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 
-
 export default function ScriptEdition(props) {
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
@@ -51,6 +50,21 @@ export default function ScriptEdition(props) {
 
         getProject(props.match.params.id)
     }, [props.match.params.id]);
+
+    const callGenerationIA = () => {
+        axios.defaults.withCredentials = true;
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${project.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
+        .then((res) => {
+            if (res.status === 400) {
+                toast.error(res.data);
+                return;
+            }
+            toast.success(res.data);
+        })
+        .catch((err) => {
+            toast.error(err)
+        });
+    }
 
     const updateReplicaAction = async (selectedId) => {
         setReplicaSelected(selectedId);
@@ -141,6 +155,10 @@ export default function ScriptEdition(props) {
                             }
                         </div>
                         <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
+                            <button 
+                              onClick={() => callGenerationIA()}>
+                                Générer l'audio-description
+                            </button>
                             <VideoPlayer
                                 videoUrl={project.videoUrl}
                                 setDuration={setVideoDuration}

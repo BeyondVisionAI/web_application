@@ -41,7 +41,8 @@ const replica = new Schema({
         ref: "User",
         required: true
     },
-    lastEditDate: Date
+    lastEditDate: Date,
+    audioName: String,
 });
 
 
