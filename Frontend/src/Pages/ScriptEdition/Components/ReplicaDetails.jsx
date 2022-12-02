@@ -12,6 +12,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
     const [duration, setDuration] = useState(replica.duration);
+    const [replicaId, setReplicaId] = useState(replica.id);
     const [voiceIdSelected, setVoiceIdSelected] = useState(replica.voiceId);
 
     // additional infos
@@ -121,6 +122,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
         setTimestamp(replica.timestamp);
         setDuration(replica.duration);
         setVoiceIdSelected(replica.voiceId);
+        setReplicaId(replica.id);
         setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
     }, [replica]);
@@ -214,7 +216,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
 
             {/* Voix */}
             <div>
-                <VoiceChoices voiceId={ voiceIdSelected} setVoiceIdSelected={setVoiceIdSelected}/>
+                <VoiceChoices voiceId={ voiceIdSelected} setVoiceIdSelected={setVoiceIdSelected} replicaId={replicaId}/>
                 {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
                     <h3 className="section-title">Commence à :</h3>

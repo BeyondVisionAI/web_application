@@ -1,7 +1,7 @@
 import {React, useEffect, useState } from "react";
 import axios from 'axios';
 
-const VoiceChoices = ({ voiceId, setVoiceIdSelected }) => {
+const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     const [voiceIndexSelected, setVoiceIndexSelected] = useState(undefined);
     const [voiceOptions, setVoiceOptions] = useState([]);
     const [languageSelected, setLanguageSelected] = useState(0);
@@ -78,6 +78,11 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected }) => {
     useEffect(async () => {
         retrieveVoices();
     }, [voiceId]);
+
+    useEffect(async () => {
+        setLanguageSelected(0);
+        retrieveVoices();
+    }, [replicaId]);
 
     // setLanguageSelected(0);
 
