@@ -3,18 +3,16 @@ import CommentBox from './CommentBox';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import './ReplicaDetails.css'
+import VoiceChoices from "./VoicesChoice";
 
 
-const ReplicaDetails = ({replica, updateReplica}) => {
+const ReplicaDetails = ({ replica, updateReplica }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
     const [duration, setDuration] = useState(replica.duration);
-    const [voiceSelected, setVoiceSelected] = useState(replica.voiceId);
-    const [voiceOption, setVoiceOption] = useState([]);
-    const [languageSelected, setLanguageSelected] = useState(0);
-    const [languageOption, setLanguageOption] = useState(['Tous']);
+    const [voiceIdSelected, setVoiceIdSelected] = useState(replica.voiceId);
 
     // additional infos
     const [lastEdit, setLastEdit] = useState(replica.lastEditDate);
@@ -34,32 +32,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         toggleTextUpdate(!isTextUpdated)
     }
 
-    const voiceName = function(nameId, language) {
-        if (languageOption[languageSelected] === "Tous")
-            return (nameId + ' - ' + language);
-        else
-            return (nameId);
-    }
-
-    const handleLanguageChange = function(e) {
-        setLanguageSelected(e.target.value);
-    }
-
-    const handleVoiceChange = function(e) {
-        setVoiceSelected(e.target.value);
-    }
-
-    const changeVoiceSelected = function(voiceId) {
-        if (voiceOption !== undefined && voiceOption.length > 0) {
-            const index = voiceOption.findIndex(item => item.id == voiceId);
-            if (index === -1) {
-                setVoiceSelected(voiceOption[0].id);
-            } else {
-                setVoiceSelected(voiceId);
-            }
-        }
-    }
-
     const updateReplicaText = async function () {
         try {
             const res = await axios({
@@ -68,7 +40,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                     content: text,
                     timestamp: timestamp,
                     duration: duration,
-                    voiceId: voiceSelected
+                    voiceId: voiceIdSelected
                 },
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
                 withCredentials: true
@@ -79,36 +51,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             console.error("error => ", err);
         }
     }
-
-    useEffect(async () => {
-        const retrieveLanguages = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveLanguages`);
-                const temp = ["Tous"]
-                for (const language of response.data.language)
-                    temp.push(language);
-                setLanguageOption(temp);
-            } catch (err) {
-                console.error("Replica Error :", err);
-            }
-        }
-        await retrieveLanguages();
-        const retrieveVoices = async () => {
-            try {
-                let response = '';
-                if (languageOption[languageSelected] === 'Tous')
-                    response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`);
-                else
-                    response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`, { params: { language: languageOption[languageSelected] }});
-                const voices = response.data.voices;
-                setVoiceOption(voices);
-                changeVoiceSelected(voiceSelected);
-            } catch (err) {
-                console.error("Replica Error :", err);
-            }
-        }
-        await retrieveVoices();
-    }, [languageSelected]);
 
     useEffect(() => {
         replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
@@ -178,7 +120,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         setCharacterCount(`${replica.content.length}/100`);
         setTimestamp(replica.timestamp);
         setDuration(replica.duration);
-        changeVoiceSelected(replica.voiceId)
+        setVoiceIdSelected(replica.voiceId);
         setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
     }, [replica]);
@@ -272,69 +214,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
 
             {/* Voix */}
             <div>
-                <div className="w-full flex flex-row justify-between items-center mb-1">
-                    <h3 className="section-title">Voix language :</h3>
-                    <select name="languageSelection" id="languageSelection"
-                            value= {languageSelected}
-                            className="inline-flex items-center form-select form-select-lg
-                            w-2/5 p-2 mr-9
-                            text-xl
-                            border border-solid border-blue-300 rounded
-                            transition ease-in-out
-                            focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
-                            onChange={handleLanguageChange}>
-                        {
-                            () => {
-                                if (!languageOption) {
-                                    console.error("Error : voice couldn't be retrieve");
-                                    return (<option key={0} value={-1}>
-                                            {""}
-                                        </option>
-                                    );
-                                }
-                                return (
-                                    languageOption.map(((value, index) => (
-                                    <option key={index} value={index}>
-                                        {value}
-                                    </option>
-                                    ))));
-                            }
-                        }
-                    </select>
-                </div>
-                <div className="w-full flex flex-row justify-between items-center mb-1">
-                    <h3 className="section-title">Voix :</h3>
-                    <select name="voiceSelection" id="voiceSelection"
-                            value= {voiceSelected}
-                            className="inline-flex items-center form-select form-select-lg
-                            w-2/5 p-2 mr-9
-                            text-xl
-                            border border-solid border-blue-300 rounded
-                            transition ease-in-out
-                            focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
-                            onChange={handleVoiceChange}>
-                        {
-                            () => {
-                                if (!voiceOption) {
-                                    console.error("Error : voice couldn't be retrieve");
-                                    return (<option key={0} value={-1}>
-                                            {""}
-                                        </option>
-                                    );
-                                }
-                                return (
-                                    voiceOption.map((
-                                    (option, index) => (
-                                        <option key={index} value={option.id}>
-                                            {voiceName(option.nameID, option.language)}
-                                        </option>
-                                    )
-                                )));
-                            }
-                        }
-                    </select>
-                </div>
-
+                <VoiceChoices voiceId={ voiceIdSelected} setVoiceIdSelected={setVoiceIdSelected}/>
                 {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
                     <h3 className="section-title">Commence à :</h3>
@@ -363,55 +243,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             </div>
         </div>
     )
-
-    /*
-        return (
-    <div className="h-full w-full flex flex-col justify-around">
-        <h1 className="text-blue-400 text-2xl text-center">Détails</h1>
-        <div className="w-full flex flex-row justify-between items-center pl-2">
-            <h3 className="ml-2 text-xl inline-flex items-center">Texte</h3>
-            <h3 className="inline-flex items-center text-l mr-9">{characterCount}</h3>
-        </div>
-        <textarea name="replica-text" id=""
-        value={text} maxLength='100'
-        onChange={handleReplicaTextChange}
-        className="w-11/12 resize-none my-2 ml-4 px-2 py-1 leading-7 text-xl
-        rounded-md border border-solid border-blue-500
-        focus:text-black focus:bg-white focus:border-blue-500 focus:outline-none"
-        ></textarea>
-
-        <div className="w-full flex flex-row justify-between items-center pl-2">
-            <h3 className="ml-2 text-xl inline-flex items-center">Voix</h3>
-            <select name="voiceSelection" id="" selected={voiceId}
-            className="inline-flex items-center form-select form-select-lg
-            w-2/5 p-2 mr-9
-            text-xl
-            border border-solid border-blue-300 rounded
-            transition ease-in-out
-            focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
-                <option value="toto">toto</option>
-                <option value="plop">plop</option>
-                <option value="foo">foo</option>
-                <option value="bar">bar</option>
-                <option value="addVoice">Ajouter une voix</option>
-            </select>
-        </div>
-
-        <h3 className="pl-4 text-xl">Commentaires</h3>
-        <div id="comment-frame" className="w-fit h-3/6 ml-6 mr-9 overflow-y-auto">
-            <CommentBox comments={comments} replica={replica} updateComments={updateComments} removeComment={removeComment}/>
-        </div>
-        <button
-        onClick={() => {setIsLoading(true);updateReplicaText()}}
-        className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Saving..." : "Save"}</button>
-
-        <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
-            <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top truncate">{formatTimestamp(timestamp, duration)}</p>
-            <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
-        </div>
-    </div>
-)
-            */
 }
 
 export default ReplicaDetails;

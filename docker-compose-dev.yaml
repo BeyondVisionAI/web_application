@@ -34,6 +34,8 @@ services:
     ports:
       - "8080:8080"
       - "8082"
+    environment:
+      IS_TEST: "true"
     env_file:
       - .env
       - ./Backend/.env
