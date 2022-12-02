@@ -32,7 +32,7 @@ export default function ScriptEdition(props) {
         console.log(`I'm connected with the back-end for the script edition`);
     });
     
-    socket.on('new replica detected', async () => {
+    socket.on('replica detected', async () => {
         try {
             const res = await axios({
                 method: "GET",
@@ -95,7 +95,7 @@ export default function ScriptEdition(props) {
         } else {
             newReplicas.push(newReplica)
         }
-        socket.emit("new replica", props.match.params.id);
+        socket.emit("new replica", {projectId: props.match.params.id, replica: newReplica});
         setReplicas(newReplicas)
     }
 

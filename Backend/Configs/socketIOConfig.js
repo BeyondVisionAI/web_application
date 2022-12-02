@@ -61,10 +61,10 @@ exports.socketIOConfig = function (http) {
             } 
         });
 
-        socket.on("new replica", (projectId) => {
-            var index = projectsRooms.findIndex((elem) => elem.id === projectId);
+        socket.on("new replica", (content) => {
+            var index = projectsRooms.findIndex((elem) => elem.id === content.projectId);
             for (var user of projectsRooms[index].users) {
-                io.to(user).emit("new replica detected");
+                io.to(user).emit("update replica", content.replica);
             }
         });
 
