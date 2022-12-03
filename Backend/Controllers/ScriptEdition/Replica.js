@@ -92,7 +92,6 @@ const createReplicaAndAudio = async (
         });
         newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
         const replica = await newReplica.save();
-        console.log(replica);
         await createAudio(newReplica);
     } catch (err) {
         console.log(err);
