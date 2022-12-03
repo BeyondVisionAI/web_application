@@ -1,17 +1,20 @@
 import React, {useEffect} from 'react';
 import Member from './Member/Member';
+import { useTranslation } from 'react-i18next';
 import "./TheTeam.css"
 import Aos from 'aos'
 
 const TheTeam = () => {
+    const { t } = useTranslation('translation', {keyPrefix: 'landingPage'});
 
     useEffect(() => {
         Aos.init({duration: "1500", disable: 'mobile'})
     }, []);
 
+
     return (
         <div href="aboutus" id="aboutus" className="team-container">
-            <h1>The Team</h1>
+            <h1>{t('theTeam')}</h1>
             <div data-aos="slide-right" className="line">
                 <Member name="GAIGNARD Alex" picture="/ag.png" position="Web Developer / CI-CD" />
                 <Member name="MENARD Leo" picture="/ag.png" position="Web Developer / IA" />

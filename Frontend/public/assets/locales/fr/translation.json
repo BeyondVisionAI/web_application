@@ -1,0 +1,86 @@
+{
+	"navigation": {
+		"landingPage": {
+			"home": "Accueil",
+			"project": "Notre projet",
+			"pricing": "Prix",
+			"aboutUs": "À propos de nous",
+			"timeline": "Timeline",
+			"contact": "Contact"
+		}
+	},
+
+	"landingPage": {
+		"audioDescription": "L'audio-description",
+		"madeEasy": "désormais simple",
+		"ourGooddid": "Nous utilisons l'intelligence artificielle pour une nouvelle méthode de produire l'audio-description",
+		"joinUs": "Rejoignez-nous maintenant !",
+		"project": {
+			"help": {
+				"header": "Aider",
+				"subheader": "les déficients visuels",
+				"text": "Chez Beyond Vision, nous souhaitons aider les déficients visuels en agrandissant le catalogue de contenu vidéo adaptés à leurs besoins."
+			},
+			"simplify": {
+				"header": "Simplifier",
+				"subheader": "le processus d'audio-description",
+				"text": "Le procédé de création de l'audio-description pour un film ou une série télé est très long et cher. Pour des réalisateurs de films indépendants, il est souvent inconcevable de rendre leur contenu accessible aux déficients visuels. Chez Beyond Vision, nous voulons donner aux créateurs de contenu la possibilité de rendre son travail accessible à tous."
+			},
+			"propel": {
+				"header": "Proposer",
+				"subheader": "une nouvelle méthode pour traiter les images",
+				"text": "L'un de nos objectifs le plus ambitieux est de réaliser une IA capable d'interpréter le sens de courtes vidéos..."
+			}
+		},
+		"pricing": {
+			"freePlan": {
+				"name": "Option gratuite",
+				"priceLabel": "GRATUIT",
+				"nProjects": "Jusqu'à 5 projets",
+				"5min": "Vidéos de 5 minutes maximum",
+				"watermark": "Filigrane Beyond Vision"
+			},
+			"basicPlan": {
+				"name": "Plan basique",
+				"priceLabel": "€5.99/mois",
+				"nProjects": "Jusqu'à 10 projets",
+				"collaboration": "Projets collaboratifs",
+				"noWatermark": "Pas de filigrane"
+			},
+			"proPlan": {
+				"name": "Option professionelle",
+				"priceLabel": "€7.99/mois",
+				"nProjects": "Projets illimités",
+				"voiceShop": "Magasin de voix",
+				"ADReview": "Verification certifiée de l'audiodescription",
+				"4K": "Export de la vidéo finale en 4K"
+			}
+		},
+		"theTeam": "L'équipe Beyond Vision",
+		"timeline": {
+			"header": "Notre parcours",
+			"sep20": {
+				"label": "Septembre 2020",
+				"description": "Définition du projet"
+			},
+			"feb21": {
+				"label": "Février 2021",
+				"description": "Design et tests"
+			},
+			"may21": {
+				"label": "Mai 2021",
+				"description": "Début du développement de l'application"
+			},
+			"may22": {
+				"label": "Mai 2022",
+				"description": "Déploiement de la beta"
+			}
+		},
+		"contact": {
+			"yourName": "Votre nom",
+			"yourEmail": "Votre adresse mail",
+			"yourMessage": "Votre message",
+			"send": "Envoyer"
+		}
+	}
+}
