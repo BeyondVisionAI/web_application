@@ -15,7 +15,7 @@ export default function CollaboratorsButton( { projectId } ) {
                 let collaborations = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`);
 
                 for (let collaboration of collaborations.data) {
-                    let user = await axios.get(`${process.env.REACT_APP_API_URL}/user/${collaboration.userId}`);
+                    let user = await axios.get(`${process.env.REACT_APP_API_URL}/user/${collaboration.userId}/id`);
 
                     newCollaborators.push({ user: user.data, collaboration: collaboration, changes: 0 });
                 }

@@ -10,9 +10,12 @@ import ModalDestroyLeaveProject from './Components/ModalDestroyLeaveProject/Moda
 import ModalDestroyLeaveList from './Components/ModalDestroyLeaveList/ModalDestroyLeaveList';
 import CreateProject from '../Project/Create/CreateProject';
 import NavBarVariante from '../../GenericComponents/NavBar/Dashboard/NavBarVariante';
+import { Elements } from '@stripe/react-stripe-js';
+import DisplayPaymentStatus from '../../GenericComponents/DisplayPaymentStatus/DisplayPaymentStatus';
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
-
     const [input, setInput] = useState('');
     const [customLists, setCustomLists] = useState([]);
     const [myProjectsList, setMyProjectsList] = useState({ id: 0, name: "My projects", movies: [] });
@@ -31,6 +34,9 @@ export default function Lists() {
 
     var [isFinished, setIsFinished] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
+
+    // Stripe
+    const [isRedirectFromPayment, setIsRedirectFromPayment] = useState(false);
 
     useEffect(() => {
         const getMyProjects = async () => {
@@ -107,6 +113,16 @@ export default function Lists() {
         };
     }, [refreshKey]);
 
+    useEffect(() => {
+        const clientSecret = new URLSearchParams(window.location.search).get(
+            'payment_intent_client_secret'
+        );
+
+        if (clientSecret) {
+            setIsRedirectFromPayment(true);
+        }
+    }, []);
+
     const handleOpenAddProjectToListPopup = (projectId) => {
         setAddProjectToListOpen(true);
         setProjectToModify(projectId);
@@ -156,6 +172,7 @@ export default function Lists() {
             <div className="page-container">
                 <NavBarVariante input={input} updateInput={(input) => setInput(input)}/>
 
+                {isRedirectFromPayment && <Elements stripe={stripePromise}><DisplayPaymentStatus /></Elements>}
                 <ModalAddProjectToList refresh={setRefreshKey} open={addProjectToListPopupOpen} close={handleCloseAddProjectToListPopup}
                     projectId={projectToModify}></ModalAddProjectToList>
                 <ModalRemoveProjectFromList refresh={setRefreshKey} open={removeProjectFromListPopupOpen} close={handleCloseRemoveProjectFromListPopup}

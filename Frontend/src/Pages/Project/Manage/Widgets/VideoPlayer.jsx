@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import ReactPlayer from 'react-player';
-import AudioPlayer from '../../../ScriptEdition/Components/AudioPlayer';
 
 export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, newSecondsFromCursor, resetNewSecondsFromCursor, setIsPlaying }) => {
   const [playedSeconds, setPlayedSeconds] = useState(0)
@@ -33,9 +32,9 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
   }, [newSecondsFromCursor, resetNewSecondsFromCursor]);
 
   useEffect(() => {
-    setIsPlaying(playing)
+    if (setIsPlaying)
+      setIsPlaying(playing)
   }, [playing]);
-
 
   if (videoUrl === 'Undefined')
     return (<Widget weight='h-1/5' rounded='rounded-b-lg'>Uploading ...</Widget>)
@@ -48,7 +47,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
       url={ videoUrl }
       ref={ playerRef }
       controls={true}
-      onDuration={setDuration ? setDuration : null}
+      onDuration={setDuration ? setDuration : () => {}}
       onBuffer={() => setPlaying(false)}
       onBufferEnd={() => setPlaying(true)}
       onSeek={second => setPlayedSeconds(second * 1000)}
