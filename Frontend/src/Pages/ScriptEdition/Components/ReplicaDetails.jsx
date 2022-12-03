@@ -122,7 +122,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
         setTimestamp(replica.timestamp);
         setDuration(replica.duration);
         setVoiceIdSelected(replica.voiceId);
-        setReplicaId(replica.id);
+        setReplicaId(replica._id);
         setLastEdit(replica.lastEditDate);
         setLastEditor(replica.lastEditor);
     }, [replica]);

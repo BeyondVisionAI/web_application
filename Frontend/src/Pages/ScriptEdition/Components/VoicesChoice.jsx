@@ -76,15 +76,9 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     }, [languageSelected]);
 
     useEffect(async () => {
-        retrieveVoices();
-    }, [voiceId]);
-
-    useEffect(async () => {
         setLanguageSelected(0);
         retrieveVoices();
     }, [replicaId]);
-
-    // setLanguageSelected(0);
 
     return (
         <div>
