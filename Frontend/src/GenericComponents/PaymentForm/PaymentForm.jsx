@@ -33,6 +33,7 @@ const PaymentForm = (props) => {
             var res = await axios({
                 method: "POST",
                 data: {
+                    projectId: props.projectId,
                     amount: props.amount,
                     currency: props.currency,
                 },
@@ -78,7 +79,8 @@ const PaymentForm = (props) => {
 PaymentForm.propTypes = {
     amount: PropTypes.string.isRequired,
     currency: PropTypes.string.isRequired,
-    redirectUrl: PropTypes.string.isRequired
+    redirectUrl: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired
 }
 
 export default PaymentForm;

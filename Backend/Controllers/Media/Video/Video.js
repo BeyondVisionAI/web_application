@@ -30,7 +30,7 @@ exports.createVideo = async function(req, res)
             url: url
         });
         await newVideo.save();
-        return res.status("200").send(newVideo);
+        return res.status(200).send(newVideo);
     } catch (err) {
         console.log("Video->createVideo: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);

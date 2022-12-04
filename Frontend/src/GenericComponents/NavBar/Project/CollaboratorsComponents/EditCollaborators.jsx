@@ -71,7 +71,7 @@ export default function EditCollaborators({ projectId, collaborators, setCollabo
             axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: event.target[0].value, titleOfCollaboration: 'Read', rights: 'READ'})
             .then(async ({data}) => {
                 let collaboratorsUpdate = [...collaborators];
-                let user = await axios.get(`${process.env.REACT_APP_API_URL}/user/${data.userId}`);
+                let user = await axios.get(`${process.env.REACT_APP_API_URL}/user/${data.userId}/id`);
 
                 collaboratorsUpdate.push({ user: user.data, collaboration: data, changes: 0 });
                 setCollaborators(collaboratorsUpdate);
