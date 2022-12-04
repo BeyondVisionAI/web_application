@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default function ProjectMiniature({ project, openDrawer, isAdd, openAddProject }) {
-console.log("🚀 ~ file: ProjectMiniature.jsx:15 ~ ProjectMiniature ~ project", project)
+    console.log("🚀 ~ file: ProjectMiniature.jsx ~ line 14 ~ ProjectMiniature ~ project", project)
     if (isAdd) {
         return (
         <div className='project-card-container project-card-container-centered' onClick={openAddProject}>

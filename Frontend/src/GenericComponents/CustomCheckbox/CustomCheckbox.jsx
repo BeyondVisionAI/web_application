@@ -3,7 +3,6 @@ import './CustomCheckbox.css'
 
 const CustomCheckbox = ({label, onChange, defaultState, style}) => {
     const [isChecked, setIsChecked] = useState(defaultState !== undefined ? defaultState : false)
-    console.log("🚀 ~ file: CustomCheckbox.jsx ~ line 6 ~ CustomCheckbox ~ isChecked", isChecked)
 
     const handleClick = () => {
         onChange(!isChecked)

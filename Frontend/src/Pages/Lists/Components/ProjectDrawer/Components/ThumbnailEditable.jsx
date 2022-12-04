@@ -8,11 +8,14 @@ const ThumbnailEditable = ({thumbnailUrl, editThumbnail, isEditable}) => {
     const inputRef = useRef(null)
 
     useEffect(() => {
-        setThumbnail(thumbnailUrl)
-    }, [thumbnailUrl, isEditable]);
+        if (typeof thumbnailUrl === 'object') {
+            setThumbnail(URL.createObjectURL(thumbnailUrl))
+        } else {
+            setThumbnail(thumbnailUrl)
+        }
+    }, [thumbnailUrl]);
 
     const handleChange = (e) => {
-        setThumbnail(URL.createObjectURL(e.target.files[0]))
         editThumbnail(e.target.files[0])
     }
 

@@ -8,6 +8,7 @@ import { FiScissors } from "react-icons/fi";
 import axios from "axios";
 import InputWithLabel from "../../../../GenericComponents/InputWithLabel/InputWithLabel";
 import ThumbnailEditable from "./Components/ThumbnailEditable";
+import { UploadFileOnS3 } from "../../../../GenericComponents/Files/S3Manager";
 
 function getStyle(el,styleProp)
 {
@@ -28,14 +29,15 @@ function countLines() {
   return lines
 }
 
-const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList}) => {
+const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject}) => {
     const divRef = useRef(null)
     const [lineCount, setLineCount] = useState(0)
     const [showMore, setShowMore] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
     const [title, setTitle] = useState(project?.name)
-    console.log("🚀 ~ file: ProjectDrawer.jsx:36 ~ ProjectDrawer ~ title", title)
     const [description, setDescription] = useState(project?.description)
+    const [thumbnail, setThumbnail] = useState(project?.thumbnailUrl || '/login-image.jpg')
+    console.log("🚀 ~ file: ProjectDrawer.jsx ~ line 40 ~ ProjectDrawer ~ thumbnail", thumbnail)
 
     useEffect(() => {
       if (project?.description) {
@@ -47,6 +49,11 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
     useEffect(() => {
       if (project?.name) setTitle(project?.name)
     }, [project?.name]);
+
+    useEffect(() => {
+      if (project?.thumbnailUrl) setThumbnail(project?.thumbnailUrl);
+      else setThumbnail('/login-image.jpg')
+    }, [project?.thumbnailUrl]);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -100,13 +107,48 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
       }
 
       const handleEditSave = async () => {
-        alert("Save")
+        try {
+          let updatedProject = {}
+          let data = {}
+          console.log("🚀 ~ file: ProjectDrawer.jsx ~ line 113 ~ handleEditSave ~ thumbnail", thumbnail)
+          if (thumbnail !== '/login-image.jpg' && thumbnail !== project?.thumbnailUrl) {
+            const imageRes = await UploadFileOnS3(thumbnail, 'bv-thumbnail-project', 'us-east-1', `${project._id}.${thumbnail.name.split(".").pop()}`)
+            const thumbnailResponse = await axios({
+              method: 'POST',
+              withCredentials: true,
+              url: `${process.env.REACT_APP_API_URL}/images`,
+              data: {
+                name: imageRes.Key,
+                desc: `Thumbnail for ${project.name} locate in ${imageRes.bucket} bucket`,
+                ETag: imageRes.ETag
+              }
+            })
+            updatedProject['thumbnail'] = thumbnailResponse.data
+            data['thumbnailId'] = thumbnailResponse.data._id;
+          }
+          if (title !== project?.name) data['name'] = title;
+          if (description !== project?.description) data['description'] = description;
+          const updatedProjectResponse = await axios({
+            method: 'PATCH',
+            withCredentials: true,
+            url: `${process.env.REACT_APP_API_URL}/projects/${project._id}`,
+            data: data
+          })
+          updatedProject = {...updatedProject, ...updatedProjectResponse.data}
+          editProject(updatedProject)
         setIsEdit(false)
+        } catch (error) {
+          console.error(error)
+          setIsEdit(false)
+
+        }
       }
 
       const handleEditCancel = () => {
         setDescription(project?.description);
-        setTitle(project?.title)
+        setTitle(project?.name)
+        if (project?.thumbnailUrl) setThumbnail(project?.thumbnailUrl);
+        else setThumbnail('/login-image.jpg')
         setIsEdit(false)
       }
 
@@ -124,23 +166,23 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             <div className="project-drawer-editor-icon-container-error" onClick={handleDelete}><FaTrash className="project-drawer-editor-icon-error"/></div>
           </div>
             <div className="project-drawer-thumbnail-container">
-              <ThumbnailEditable isEditable={isEdit} thumbnailUrl={project?.thumbnail ? project?.thumbnailUrl : '/login-image.jpg'}/>
+              <ThumbnailEditable editThumbnail={setThumbnail} isEditable={isEdit} thumbnailUrl={thumbnail}/>
             </div>
             {/* <div className="project-drawer-editor-container">
                 <CollaboratorsButton projectId={project?._id} isEditable/>
             </div> */}
             {/* TODO: Replace by component of Dimitri */}
             <div className="project-drawer-content">
-                {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{project?.name}</h1>}
+                {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{title}</h1>}
                 <h2 className="project-drawer-sub-title">Description</h2>
                 {isEdit ? <InputWithLabel fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
                   lineCount > 15 ?
                   <p>
-                    {!showMore && <p className="project-drawer-text-content" style={{maxHeight: '35vh', overflow: 'hidden'}}>{project?.description}</p>}
-                    {showMore && <p className="project-drawer-text-content">{project?.description}</p>}
+                    {!showMore && <p className="project-drawer-text-content" style={{maxHeight: '35vh', overflow: 'hidden'}}>{description}</p>}
+                    {showMore && <p className="project-drawer-text-content">{description}</p>}
                     <p className="project-drawer-show-more" onClick={() => setShowMore(!showMore)}>Show {showMore ? 'Less' : 'More'}</p>
                   </p> :
-                    <p id="project-description" className="project-drawer-text-content">{project?.description}</p>
+                    <p id="project-description" className="project-drawer-text-content">{description}</p>
                 }
                 <h2 className="project-drawer-sub-title">Folders</h2>
                 <FolderListSelectable project={project} addToFolderList={addToFolderList ? addToFolderList : null}/>

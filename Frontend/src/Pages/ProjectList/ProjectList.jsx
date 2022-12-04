@@ -55,9 +55,21 @@ const ProjectList = (props) => {
         setIsDrawerOpen(false)
     }
 
+    const editProject = async (project) => {
+        const idx = projects.findIndex((item) => item._id === project._id);
+        if (idx !== - 1) {
+            let projectsCopy = [...projects]
+            if (project.thumbnail !== projectsCopy[idx].thumbnail) {
+                project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+            }
+            projectsCopy[idx] = {...projects[idx], ...project};
+            setProjects(projectsCopy)
+        }
+    }
+
     return (
         <div id="dashboard-container" className="dashboard-container">
-            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} />
+            <ProjectDrawer editProject={editProject} project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} />
             <BreadCrumbs pathObject={[{url: '/dashboard', name: 'Dashboard'}, {url: `/dahsboard/${folderId}`, name: folderName}]} />
             <div className='dashboard-inner-container'>
                 <h1 className='dashboard-inner-container-title'>Projects</h1>

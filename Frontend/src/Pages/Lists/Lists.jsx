@@ -107,7 +107,19 @@ export default function Lists() {
     }
 
     const addToProjectList = (project) => {
+        setRecentProjects([project, ...recentProjects]);
+    }
 
+    const editProject = async (project) => {
+        const idx = recentProjects.findIndex((item) => item._id === project._id);
+        if (idx !== - 1) {
+            let projectsCopy = [...recentProjects]
+            if (project.thumbnail !== projectsCopy[idx].thumbnail) {
+                project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+            }
+            projectsCopy[idx] = {...projectsCopy[idx], ...project};
+            setRecentProjects(projectsCopy)
+        }
     }
 
     const removeProjectFromList = (projectId) => {
@@ -122,7 +134,7 @@ export default function Lists() {
 
     return (
         <div id="dashboard-container" className="dashboard-container">
-            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}
+            <ProjectDrawer editProject={editProject} project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}
             removeProjectFromList={removeProjectFromList}/>
             {isProjectCreationModelOpen && (
                 <CreateProject

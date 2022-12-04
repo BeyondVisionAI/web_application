@@ -47,7 +47,6 @@ const Projects = () => {
     const handleCloseDrawer = () => {
         const bodyElement = document.getElementById('dashboard-container')
         enableBodyScroll(bodyElement)
-        setSelectedProject(null)
         setIsDrawerOpen(false)
     }
 
@@ -67,9 +66,21 @@ const Projects = () => {
 
     }
 
+    const editProject = async (project) => {
+        const idx = projects.findIndex((item) => item._id === project._id);
+        if (idx !== - 1) {
+            let projectsCopy = [...projects]
+            if (project.thumbnail !== projectsCopy[idx].thumbnail) {
+                project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+            }
+            projectsCopy[idx] = {...projects[idx], ...project};
+            setProjects(projectsCopy)
+        }
+    }
+
     return (
         <div id="dashboard-container" className="dashboard-container">
-            <ProjectDrawer project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} />
+            <ProjectDrawer editProject={editProject} project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} />
             {isProjectCreationModelOpen && (
                 <CreateProject
                     show={isProjectCreationModelOpen}
