@@ -24,7 +24,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     }
 
     const changeVoiceIndexSelected = function(voiceId, arr) {
-        if (arr !== undefined && arr.length > 0) {
+        if (!arr && arr.length > 0) {
             const index = arr.findIndex(item => {
                 return item.id == voiceId
             });
@@ -92,19 +92,19 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
                 <h3 className="section-title">Voix language :</h3>
                 <select
                     name="languageSelection" id="languageSelection"
-                    value={languageSelected}
+                    value={ languageSelected }
                     className="inline-flex items-center form-select form-select-lg
                     w-2/5 p-2 mr-9
                     text-xl
                     border border-solid border-blue-300 rounded
                     transition ease-in-out
                     focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
-                    onChange={handleLanguageChange}>
+                    onChange={ handleLanguageChange }>
                     {
                         languageOptions &&
                         languageOptions.map((value, index) => (
-                            <option key={index} value={index}>
-                                {value}
+                            <option key={ index } value={ index }>
+                                { value }
                             </option>
                         ))
                     }
@@ -114,19 +114,19 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
                 <h3 className="section-title">Voix :</h3>
                 <select
                     name="voiceSelection" id="voiceSelection"
-                    value={voiceIndexSelected}
+                    value={ voiceIndexSelected }
                     className="inline-flex items-center form-select form-select-lg
                     w-2/5 p-2 mr-9
                     text-xl
                     border border-solid border-blue-300 rounded
                     transition ease-in-out
                     focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
-                    onChange={handleVoiceChange}>
+                    onChange={ handleVoiceChange }>
                     {
                         voiceOptions &&
                         voiceOptions.map(
                             (option, index) => (
-                                <option key={index} value={index}>
+                                <option key={ index } value={ index }>
                                     {voiceName(option.nameID, option.language)}
                                 </option>
                             )

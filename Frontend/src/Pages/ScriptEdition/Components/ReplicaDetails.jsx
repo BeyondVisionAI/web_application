@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import './ReplicaDetails.css'
 import VoiceChoices from "./VoicesChoice";
 
-
 const ReplicaDetails = ({ replica, updateReplica }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [text, setText] = useState(replica.content);
@@ -130,21 +129,20 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
     /***
      * COMMENT UPDATE
      */
-
     const updateComments = (newComment) => {
-        var newComments = [...comments]
+        var newComments = [...comments];
         if (newComments.findIndex((item) => item._id === newComment._id) !== -1) {
             newComments[newComments.findIndex((item) => item._id === newComment._id)] = newComment;
         } else {
-            newComments.push(newComment)
+            newComments.push(newComment);
         }
-        setComments(newComments)
+        setComments(newComments);
     }
 
     const removeComment = (commentID) => {
-        var newComments = [...comments]
-        newComments.splice(newComments.findIndex((item) => item._id === commentID), 1)
-        setComments(newComments)
+        var newComments = [...comments];
+        newComments.splice(newComments.findIndex((item) => item._id === commentID), 1);
+        setComments(newComments);
     }
 
     /***
@@ -174,8 +172,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
 
         // return "[" + start + "] - [" + end + "] (" + d / 1000 + "s)";
     }
-
-
+    
     const formatDate = function(time) {
         const dateOptions =
             {
@@ -205,9 +202,9 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
                     <h3 className="section-title">Texte :</h3>
                     <h3>-/100</h3>
                 </div>
-                <textarea name="replica-text" id=""
-                          value={text} maxLength='100' rows={3}
-                          onChange={handleReplicaTextChange}
+                <textarea name="replica-text"
+                          value={ text } maxLength='100' rows={3}
+                          onChange={ handleReplicaTextChange }
                           className="w-full resize-none px-2 py-1 text-base
                     rounded-md border border-solid border-blue-500
                     focus:text-black focus:bg-white focus:border-blue-500 focus:outline-none"
@@ -216,11 +213,11 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
 
             {/* Voix */}
             <div>
-                <VoiceChoices voiceId={ voiceIdSelected} setVoiceIdSelected={setVoiceIdSelected} replicaId={replicaId}/>
+                <VoiceChoices voiceId={ voiceIdSelected } setVoiceIdSelected={ setVoiceIdSelected } replicaId={ replicaId }/>
                 {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
                     <h3 className="section-title">Commence à :</h3>
-                    <input type='text' defaultValue={formatTimestamp(timestamp, duration)} disabled={true}
+                    <input type='text' defaultValue={ formatTimestamp(timestamp, duration) } disabled={true}
                            className="inline-flex items-center
                         w-1/2 p-2 text-base
                         border border-solid border-blue-300 rounded">
@@ -232,16 +229,16 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
                 <h3 className="section-title">Commentaires:</h3>
                 <h3>{ comments.length }</h3>
             </div>
-            {/*<div id="comment-frame" className="wrapper">*/}
-            {/*    <CommentBox comments={comments} replica=languageSelected{replica} updateComments={updateComments} removeComment={removeComment}/>*/}
-            {/*</div>*/}
+            <div id="comment-frame" className="wrapper">
+                <CommentBox comments={ comments } replica={ replica } updateComments={ updateComments } removeComment={ removeComment }/>
+            </div>
             <button
-                onClick={() => {setIsLoading(true);updateReplicaText()}}
-                className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{isLoading ? "Saving..." : "Save"}</button>
+                onClick={ () => {setIsLoading(true);updateReplicaText()} }
+                className="bg-myBlue w-1/8 h-1/8 rounded-full text-white truncate p-3 items-center text-base mb-2">{ isLoading ? "Saving..." : "Save" }</button>
 
             <div className="w-full h-5 mb-0 px-1 align-center bg-gray-300 flex flex-row justify-between">
-                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top truncate">{formatTimestamp(timestamp, duration)}</p>
-                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{formatDate(lastEdit)} by {formatLastEditor(lastEditor)}</p>
+                <p className="inline-flex text-xs text-left text-gray-400 align-bottom hover:align-top truncate">{ formatTimestamp(timestamp, duration) }</p>
+                <p className="inline-flex text-xs text-right text-gray-400 align-bottom hover:align-top truncate">{ formatDate(lastEdit) } by { formatLastEditor(lastEditor) }</p>
             </div>
         </div>
     )
