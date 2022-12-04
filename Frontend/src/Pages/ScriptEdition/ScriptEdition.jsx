@@ -13,12 +13,11 @@ import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
-import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
+import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';import { useTranslation } from 'react-i18next';
 
 export default function ScriptEdition(props) {
-
     const {socket, currentUser} = useContext(AuthContext);
-
+    const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -137,19 +136,19 @@ export default function ScriptEdition(props) {
                 switch (e.response.status) {
                     case 401:
                         switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                            case "USER_NOT_LOGIN": errMsg = t('errMsgs.401.userNotLoggedIn'); break;
                             /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                            default: errMsg = "Error (401)."; break;
+                            case "PROJECT_NOT_YOURS": errMsg = t('errMsgs.401.projectNotYours'); break;
+                            default: errMsg = t('errMsgs.401.default'); break;
                         } break;
-                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                    case 403: errMsg = t('errMsgs.403.forbiddenAccess'); break;
                     case 404:
                         switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                            default: errMsg = "Error (404)."; break;
+                            case "PROJECT_NOT_FOUND": errMsg = t('errMsgs.404.projectNotFound'); break;
+                            case "REPLICA_NOT_FOUND": errMsg = t('errMsgs.404.replicaNotFound'); break;
+                            default: errMsg = t('errMsgs.404.default'); break;
                         } break;
-                    default /* 500 */ : errMsg = "Internal Error."; break;
+                    default /* 500 */ : errMsg = t('errMsgs.500.serverError'); break;
                 }
                 toast.error(errMsg);
                 console.error(e);
@@ -312,11 +311,11 @@ export default function ScriptEdition(props) {
                         />
                     </div>
                     <AudioPlayer
-                    replicas={replicas}
-                    playedSeconds={playedSeconds}
-                    newSecondsFromCursor={newSecondsFromCursor}
-                    resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
-                    triggerPause={!isPlaying}
+                        replicas={replicas}
+                        playedSeconds={playedSeconds}
+                        newSecondsFromCursor={newSecondsFromCursor}
+                        resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                        triggerPause={!isPlaying}
                     />
                 </div>
                 {/* <Chat projectId={props.match.params.id}/> */}

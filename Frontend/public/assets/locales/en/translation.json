@@ -9,6 +9,7 @@
 			"contact": "Contact"
 		}
 	},
+
 	"landingPage": {
 		"audioDescription": "Audio Description",
 		"madeEasy": "made easy",
@@ -80,6 +81,218 @@
 			"yourEmail": "Your email",
 			"yourMessage": "Your message",
 			"send": "Send"
+		}
+	},
+
+	"dashboard": {
+		"searchProject": "Search for a project..."
+	},
+
+	"authentication": {
+		"goBackHome": "← Go back to Home Page",
+		"logInForm": {
+			"title": "Log In",
+			"underTitle": "Beyond Vision is a web platform designed to facilitate the creation of audio description for short films",
+			"email": {
+				"label": "Email",
+				"placeholder": "mail@website.com"
+			},
+			"password": {
+				"label": "Password",
+				"placeholder": "Min. 8 characters"
+			},
+			"noAccount": "No account ?",
+			"createAccountNow": "Create one now !",
+			"forgottenPassword": "Forgot your password ?",
+			"resetPasswordNow": "Reset it now !",
+			"submitLabel": "Login"
+		},
+		"registerForm": {
+			"title": "Create an account",
+			"underTitle": "Beyond Vision is a web platform designed to facilitate the creation of audio description for short films",
+			"email": {
+				"label": "Email",
+				"placeholder": "mail@website.com",
+				"validationFailedMsg": "Invalid email address"
+			},
+			"name": {
+				"firstname": {
+					"label": "First Name",
+					"placeholder": "John"
+				},
+				"lastname": {
+					"label": "Last Name",
+					"placeholder": "Doe"
+				},
+				"validationFailedMsg": "Name cannot contain special characters"
+			},
+			"password": {
+				"label": "Password",
+				"verifyLabel": "Verify your password",
+				"placeholder": "Min. 8 characters",
+				"validationFailedMsg": "Min. 1 Uppercase, 1 number, 1 special character"
+			},
+			"gotAccount": "Already have an account ?",
+			"logInNow": "Log In Now !",
+			"submitLabel": "Create Account",
+			"successMessage": "Account created",
+			"errMsgs": {
+				"allTheFieldsMustBeFilled": "All the fields needs to be filled",
+				"passwordMismatch": "Passwords are not matching",
+				"invalidFields": "Invalid fields",
+				"emailAlreadyUsed": "Email already in use",
+				"serverError": "Error while contacting the server"
+			}
+		},
+		"passwordResetForm": {
+			"title": "Reset your password",
+			"underTitle": "Beyond Vision is a web platform designed to facilitate the creation of audio description for short films",
+			"password": {
+				"label": "Password",
+				"verifyLabel": "Verify your password",
+				"placeholder": "Min. 8 characters",
+				"validationFailedMsg": "Min. 1 Uppercase, 1 number, 1 special character"
+			},
+			"rememberPassword": "Remember your password ?",
+			"logInNow": "Log In Now !",
+			"submitLabel": "Reset now",
+			"successMessage": "Password successfully changed",
+			"errMsgs": {
+				"passwordMismatch": "Passwords are not matching",
+				"validationFailedMsg": "Passwords needs to have at least 1 uppercase, 1 number, 1 special character",
+				"serverError": "Could not modify password. Try again later"
+			}
+		},
+		"emailVerification": {
+			"label": "Verifying your email...",
+			"successMessage": "Email Verified",
+			"errorMessage": "Email couldn't be verified, try again later"
+		},
+		"errorMessages": {
+			"usernameOrPasswordNotFilled": "Username or password not filled",
+			"invalidEmailOrPassword": "Invalid email or password",
+			"unverifiedEmail": "Email not verified",
+			"serverError": "Error while contacting the server"
+		}
+	},
+
+	"project": {
+		"create": {
+			"step1": {
+				"title": "Upload the video",
+				"next": "Next"
+			},
+			"step2": {
+				"title": "Project details",
+				"form": {
+					"title": {
+						"label": "Title",
+						"placeholder": "Title"
+					},
+					"description": {
+						"label": "Short summary of the video",
+						"placeholder": "Summary of the video"
+					},
+					"genre": {
+						"label": "Video genre",
+						"values": {
+							"none": "None",
+							"adventure": "Adventure",
+							"action": "Action",
+							"drame": "Drame",
+							"family": "Family",
+							"musical": "Musical",
+							"crime": "Crime",
+							"sciFi": "Science-fiction",
+							"horror": "Horror"
+						}
+					},
+					"thumbnail": {
+						"label": "Drag and drop your thumbnail !",
+						"loadingLabel": "Loading..."
+					},
+					"commentOnDataUsage": "The intel provided above will help us to generate the audio description in a more accurate way.",
+					"previous": "Back",
+					"next": "Next"
+				}
+			},
+			"step3": {
+				"title": "Payment",
+				"creatingProject": "Project is creating, please wait"
+			}
+		},
+		"manage": {
+			"editor": "Editor",
+			"config": "Configurations",
+			"cancel": "Cancel",
+			"done": "Done",
+			"descriptionWidget": {
+				"title": {
+					"label": "Title",
+					"placeholder": "Title"
+				},
+				"description": {
+					"label": "Short summary of the video",
+					"placeholder": "Summary of the video"
+			},
+				"updateSuccess": "Updated successfully",
+				"errMsgs": {
+					"errWhileFetchingData": "An error occured while fetching data!",
+					"errWhileUpdatingProject": "An error occured while updating the project",
+					"errPleaseRetry": "Error, please retry."
+				}
+			},
+			"videoPlayerWidget": {
+				"uploading": "Uploading..."
+			},
+			"errMsgs": {
+				"projectNotFound": "Project not found"
+			}
+		}
+	},
+
+	"scriptEdition": {
+		"replicaDetails": {
+			"title": "Replica's parameters",
+			"empty": "Aucun réplique sélectionnée",
+			"you": "You",
+			"text": {
+				"label": "Text :",
+				"detail": "-/100"
+			},
+			"voice": {
+				"label": "Voice :"
+			},
+			"startingTime": {
+				"label": "Starting at :"
+			},
+			"comments": {
+				"label": "Comments :"
+			},
+			"saveButton": {
+				"label": {
+					"isLoading": "Saving...",
+					"notLoading": "Save"
+				}
+			}
+		},
+		"errMsgs": {
+			"401": {
+				"userNotLoggedIn": "Error (401) - User is not logged in.",
+				"projectNotYours": "Error (401) - No collaboration found between the userId and the project.",
+				"default": "Error (401)."
+			},
+			"403": {
+				"forbiddenAccess": "Error (403) - User has no right to access the content."
+			},
+			"404": {
+				"projectNotFound": "Error (404) - Missing project.",
+				"replicaNotFound": "Error (404) - Missing replica.",
+				"default":"Error (404)."
+			},
+			"500": {
+				"serverError": "Internal Error."
+			}
 		}
 	}
 }

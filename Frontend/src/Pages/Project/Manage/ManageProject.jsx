@@ -7,6 +7,7 @@ import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
 import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
+import { useTranslation } from 'react-i18next';
 
 const EDIT = {
     off: 0,
@@ -15,6 +16,7 @@ const EDIT = {
 }
 
 export default function ManageProject(props) {
+    const { t } = useTranslation('translation', {keyPrefix: 'project.manage'});
     const [project, setProject] = useState(null);
     const [editing, setEditing] = useState(EDIT.off);
     const history = useHistory();
@@ -70,14 +72,14 @@ export default function ManageProject(props) {
         if (editing === EDIT.off)
             return (
                 <>
-                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => RedirectToEdit()}>Editor</button>
-                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.on)}>Configurations</button>
+                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => RedirectToEdit()}>{t('editor')}</button>
+                    <button className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.on)}>{t('config')}</button>
                 </>
             );
         return (
             <>
-                <button className="bg-myBlack text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.off)}>Cancel</button>
-                <button className="bg-myBlue text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.update)}>Done</button>
+                <button className="bg-myBlack text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.off)}>{t('cancel')}</button>
+                <button className="bg-myBlue text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={() => setEditing(EDIT.update)}>{t('done')}</button>
             </>
         );
     };
@@ -115,7 +117,7 @@ export default function ManageProject(props) {
     } else {
         return (
             <>
-                <h1>Project not found</h1>
+                <h1>{t('errMsgs.projectNotFound')}</h1>
             </>
         );
     }

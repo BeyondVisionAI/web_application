@@ -82,5 +82,217 @@
 			"yourMessage": "Votre message",
 			"send": "Envoyer"
 		}
+	},
+
+	"dashboard": {
+		"searchProject": "Recherchez un projet..."
+	},
+
+	"authentication": {
+		"goBackHome": "← Retourner à la page d'acceuil",
+		"logInForm": {
+			"title": "Identification",
+			"underTitle": "Beyond Vision est une plateforme web facilitant la création d'audio description pour des courts-métrages",
+			"email": {
+				"label": "Email",
+				"placeholder": "mail@sitweb.com"
+			},
+			"password": {
+				"label": "Mot de passe",
+				"placeholder": "Min. 8 caractères"
+			},
+			"noAccount": "Pas de compte ?",
+			"createAccountNow": "En créer un maintenant !",
+			"forgottenPassword": "Mot de passe oublié ?",
+			"resetPasswordNow": "Le réinitialiser !",
+			"submitLabel": "Je m'identifie"
+		},
+		"registerForm": {
+			"title": "Créez un compte",
+			"underTitle": "Beyond Vision est une plateforme web facilitant la création d'audio description pour des courts-métrages",
+			"email": {
+				"label": "Email",
+				"placeholder": "mail@sitweb.com",
+				"validationFailedMsg": "Adresse email invalide"
+			},
+			"name": {
+				"firstname": {
+					"label": "Prénom",
+					"placeholder": "Jean"
+				},
+				"lastname": {
+					"label": "Nom",
+					"placeholder": "Dupont"
+				},
+				"validationFailedMsg": "Aucun caractère spécial n'est accepté"
+			},
+			"password": {
+				"label": "Mot de passe",
+				"verifyLabel": "Vérification du mot de passe",
+				"placeholder": "Min. 8 caractères",
+				"validationFailedMsg": "Min. 1 majuscule, 1 nombre, 1 caractère spécial"
+			},
+			"gotAccount": "Vous avez déjà un compte ?",
+			"logInNow": "Je me connecte !",
+			"submitLabel": "Créer mon compte",
+			"successMessage": "Compte créé",
+			"errMsgs": {
+				"allTheFieldsMustBeFilled": "Tous les champs doivent être remplis",
+				"passwordMismatch": "Les mots de passes ne correspondent pas",
+				"invalidFields": "Champs invalides",
+				"emailAlreadyUsed": "Adresse email déjà utilisée",
+				"serverError": "Une erreur est survenant lors la communication serveur. Prière de réessayer ultérieurement."
+			}
+		},
+		"passwordResetForm": {
+			"title": "Réinitialisez votre mot de passe",
+			"underTitle": "Beyond Vision est une plateforme web facilitant la création d'audio description pour des courts-métrages",
+			"password": {
+				"label": "Mot de passe",
+				"verifyLabel": "Vérification du mot de passe",
+				"placeholder": "Min. 8 caractères",
+				"validationFailedMsg": "Min. 1 majuscule, 1 nombre, 1 caractère spécial"
+			},
+			"rememberPassword": "Vous connaissez votre mot de passe ?",
+			"logInNow": "Je me connecte !",
+			"submitLabel": "Réinitialiser le mot de passe",
+			"successMessage": "Mot de passe modifié",
+			"errMsgs": {
+				"passwordMismatch": "Les mots de passes ne correspondent pas",
+				"validationFailedMsg": "Min. 1 majuscule, 1 nombre, 1 caractère spécial",
+				"serverError": "Une erreur est survenant lors la communication serveur. Veuillez réessayer ultérieurement."
+			}
+		},
+		"emailVerification": {
+			"label": "Vérification de votre adresse email...",
+			"successMessage": "Adresse email vérifiée",
+			"errorMessage": "L'adresse email n'a pas pu être vérifiée, réessayer ultérieurement"
+		},
+		"errorMessages": {
+			"usernameOrPasswordNotFilled": "Nom d'utilisateur ou mot de passe non renseigné",
+			"invalidEmailOrPassword": "Email ou mot de passe invalide",
+			"unverifiedEmail": "Email non vérifié",
+			"serverError": "Une erreur est survenant lors la communication serveur. Prière de réessayer ultérieurement."
+		}
+	},
+
+	"project": {
+		"create": {
+			"step1": {
+				"title": "Téléverser la vidéo",
+				"next": "Suivant"
+			},
+			"step2": {
+				"title": "Détails du projet",
+				"form": {
+					"title": {
+						"label": "Titre",
+						"placeholder": "Titre"
+					},
+					"description": {
+						"label": "Résumé court de la vidéo",
+						"placeholder": "Résumé de la vidéo"
+					},
+					"genre": {
+						"label": "Genre de la vidéo",
+						"values": {
+							"none": "Aucun",
+							"adventure": "Aventure",
+							"action": "Action",
+							"drame": "Drame",
+							"family": "Jeunesse",
+							"musical": "Musical",
+							"crime": "Policier",
+							"sciFi": "Science-fiction",
+							"horror": "Horreur"
+						}
+					},
+					"thumbnail": {
+						"label": "Glissez et déposez votre image !",
+						"loadingLabel": "Chargement..."
+					},
+					"commentOnDataUsage": "Les informations fournies ci-dessus nous aiderons à audio-décrire votre vidéo plus éfficacement.",
+					"previous": "Précédent",
+					"next": "Suivant"
+				}
+			},
+			"step3": {
+				"title": "Paiement",
+				"creatingProject": "Le projet est en cours de création, veuillez patienter"
+			}
+		},
+		"manage": {
+			"editor": "Editeur",
+			"config": "Configurations",
+			"cancel": "Annuler",
+			"done": "Fini",
+			"descriptionWidget": {
+				"title": {
+					"label": "Titre",
+					"placeholder": "Titre"
+				},
+				"description": {
+					"label": "Résumé court de la vidéo",
+					"placeholder": "Résumé de la vidéo"
+				},
+				"updateSuccess": "Succès de la mise à jour",
+				"errMsgs": {
+					"errWhileFetchingData": "Une erreur est survenue lors de la récupération des données",
+					"errWhileUpdatingProject": "Une erreur est survenue lors de la mise à jour du projet",
+					"errPleaseRetry": "Erreur, veuillez réessayer ultérieurement."
+				}
+			},
+			"videoPlayerWidget": {
+				"uploading": "Mise en ligne..."
+			},
+			"errMsgs": {
+				"projectNotFound": "Projet introuvable"
+			}
+		}
+	},
+
+	"scriptEdition": {
+		"replicaDetails": {
+			"title": "Paramètres de la réplique",
+			"empty": "Aucun réplique sélectionnée",
+			"you": "Vous",
+			"text": {
+				"label": "Texte :",
+				"detail": "-/100"
+			},
+			"voice": {
+				"label": "Voix :"
+			},
+			"startingTime": {
+				"label": "Commence à :"
+			},
+			"comments": {
+				"label": "Commentaires :"
+			},
+			"saveButton": {
+				"label": {
+					"isLoading": "Enrgistrement...",
+					"notLoading": "Enrgistrer"
+				}
+			}
+		},
+		"errMsgs": {
+			"401": {
+				"userNotLoggedIn": "Erreur (401) - L'utilisateur n'est pas connecté.",
+				"projectNotYours": "Erreur (401) - Aucune collaboration trouvé entre l'utilisateur et le projet.",
+				"default": "Erreur (401)."
+			},
+			"403": {
+				"forbiddenAccess": "Erreur (403) - L'utilisateur n'a pas les droits sur le contenu."
+			},
+			"404": {
+				"projectNotFound": "Erreur (404) - Projet introuvable.",
+				"replicaNotFound": "Erreur (404) - Replica introuvable.",
+				"default":"Erreur (404)."
+			},
+			"500": {
+				"serverError": "Erreur serveur."
+			}
+		}
 	}
 }
