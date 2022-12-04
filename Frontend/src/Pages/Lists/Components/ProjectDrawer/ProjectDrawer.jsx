@@ -9,27 +9,10 @@ import axios from "axios";
 import InputWithLabel from "../../../../GenericComponents/InputWithLabel/InputWithLabel";
 import ThumbnailEditable from "./Components/ThumbnailEditable";
 import { UploadFileOnS3 } from "../../../../GenericComponents/Files/S3Manager";
-
-function getStyle(el,styleProp)
-{
-    var x = document.getElementById(el);
-    if (!x) return null
-    if (x?.currentStyle)
-        var y = x?.currentStyle[styleProp];
-    else if (window.getComputedStyle)
-        var y = document.defaultView.getComputedStyle(x,null).getPropertyValue(styleProp);
-    return y;
-}
-
-function countLines() {
-  var el = document.getElementById('project-description');
-  var divHeight = el?.offsetHeight
-  var lineHeight = parseInt(getStyle('project-description', 'line-height'));
-  var lines = divHeight / lineHeight;
-  return lines
-}
+import CollaboratorInput from "../../../../GenericComponents/InputWithLabel/CollaboratorInput";
 
 const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject}) => {
+    console.log("🚀 ~ file: ProjectDrawer.jsx ~ line 14 ~ ProjectDrawer ~ project", project)
     const divRef = useRef(null)
     const [lineCount, setLineCount] = useState(0)
     const [showMore, setShowMore] = useState(false)
@@ -37,12 +20,33 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
     const [title, setTitle] = useState(project?.name)
     const [description, setDescription] = useState(project?.description)
     const [thumbnail, setThumbnail] = useState(project?.thumbnailUrl || '/login-image.jpg')
-    console.log("🚀 ~ file: ProjectDrawer.jsx ~ line 40 ~ ProjectDrawer ~ thumbnail", thumbnail)
+    const [collaborators, setCollaborators] = useState(null);
+
+    useEffect(() => {
+        async function getCollaborators () {
+            try {
+                const collaborators = await axios({
+                    url: `${process.env.REACT_APP_API_URL}/projects/${project._id}/collaborations`,
+                    method: 'GET',
+                    withCredentials: true,
+                })
+                setCollaborators(collaborators.data);
+            } catch (err) {
+                console.error(err);
+                setCollaborators([])
+            }
+        }
+        getCollaborators();
+    }, [ project ])
 
     useEffect(() => {
       if (project?.description) {
         setDescription(project?.description)
-        setLineCount(countLines())
+        if (project?.description?.length > 800) {
+            setLineCount(40)
+        } else {
+            setLineCount(0)
+        }
       }
     }, [project?.description]);
 
@@ -174,11 +178,12 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             {/* TODO: Replace by component of Dimitri */}
             <div className="project-drawer-content">
                 {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{title}</h1>}
+                <CollaboratorInput collaborators={collaborators} />
                 <h2 className="project-drawer-sub-title">Description</h2>
                 {isEdit ? <InputWithLabel fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
                   lineCount > 15 ?
                   <p>
-                    {!showMore && <p className="project-drawer-text-content" style={{maxHeight: '35vh', overflow: 'hidden'}}>{description}</p>}
+                    {!showMore && <p className="project-drawer-text-content" style={{maxHeight: '35vh', overflow: 'hidden'}} >{description}</p>}
                     {showMore && <p className="project-drawer-text-content">{description}</p>}
                     <p className="project-drawer-show-more" onClick={() => setShowMore(!showMore)}>Show {showMore ? 'Less' : 'More'}</p>
                   </p> :
