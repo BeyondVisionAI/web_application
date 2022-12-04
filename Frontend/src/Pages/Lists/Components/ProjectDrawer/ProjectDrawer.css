@@ -58,6 +58,10 @@
     justify-content: flex-start;
 }
 
+.icon-rotate {
+    transform: rotate(45deg);
+}
+
 .project-drawer-title {
     color: black;
     font-weight: 500;

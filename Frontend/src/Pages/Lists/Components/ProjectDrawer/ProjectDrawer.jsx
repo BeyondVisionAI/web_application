@@ -3,10 +3,11 @@ import CollaboratorsButton from "../../../../GenericComponents/NavBar/Project/Co
 import { toast } from 'react-toastify';
 import FolderListSelectable from "./Components/FolderListSelectable";
 import "./ProjectDrawer.css"
-import { FaPen, FaTrash} from "react-icons/fa";
+import { FaPen, FaTrash, FaPlus, FaCheck} from "react-icons/fa";
 import { FiScissors } from "react-icons/fi";
 import axios from "axios";
 import InputWithLabel from "../../../../GenericComponents/InputWithLabel/InputWithLabel";
+import ThumbnailEditable from "./Components/ThumbnailEditable";
 
 function getStyle(el,styleProp)
 {
@@ -51,6 +52,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
         function handleClickOutside(event) {
           if (divRef.current && !divRef.current.contains(event.target)) {
             closeDrawer();
+            setIsEdit(false)
           }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -61,6 +63,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
 
       const escFunction = useCallback((event) => {
         if (event.key === "Escape") {
+          setIsEdit(false)
           closeDrawer()
         }
       }, []);
@@ -104,24 +107,24 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             <a className="project-drawer-editor-icon-container" href={`/project/${project?._id}/edit`}><FiScissors className="project-drawer-editor-icon"/></a>
             {isEdit ? 
             <>
-              <div className="project-drawer-editor-icon-container" onClick={handleEditCancel}><FaPen className="project-drawer-editor-icon"/></div>
-              <div className="project-drawer-editor-icon-container" onClick={handleEditSave}><FaPen className="project-drawer-editor-icon"/></div>
+              <div className="project-drawer-editor-icon-container" onClick={handleEditCancel}><FaPlus className="project-drawer-editor-icon icon-rotate"/></div>
+              <div className="project-drawer-editor-icon-container" onClick={handleEditSave}><FaCheck className="project-drawer-editor-icon"/></div>
             </>
             :
             <div className="project-drawer-editor-icon-container" onClick={() => setIsEdit(true)}><FaPen className="project-drawer-editor-icon"/></div>}
             <div className="project-drawer-editor-icon-container-error" onClick={handleDelete}><FaTrash className="project-drawer-editor-icon-error"/></div>
           </div>
             <div className="project-drawer-thumbnail-container">
-              <img src={project?.thumbnail ? project?.thumbnailUrl : '/login-image.jpg'} alt="project" />
+              <ThumbnailEditable isEditable={isEdit} thumbnailUrl={project?.thumbnail ? project?.thumbnailUrl : '/login-image.jpg'}/>
             </div>
             {/* <div className="project-drawer-editor-container">
                 <CollaboratorsButton projectId={project?._id} isEditable/>
             </div> */}
             {/* TODO: Replace by component of Dimitri */}
             <div className="project-drawer-content">
-                {isEdit ? <InputWithLabel fullWidth label="Title" type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{project?.name}</h1>}
+                {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{project?.name}</h1>}
                 <h2 className="project-drawer-sub-title">Description</h2>
-                {isEdit ? <InputWithLabel fullWidth label="Description" type="textarea" onChange={setDescription} defaultValue={description} /> : 
+                {isEdit ? <InputWithLabel fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
                   lineCount > 15 ?
                   <p>
                     {!showMore && <p className="project-drawer-text-content" style={{maxHeight: '35vh', overflow: 'hidden'}}>{project?.description}</p>}
