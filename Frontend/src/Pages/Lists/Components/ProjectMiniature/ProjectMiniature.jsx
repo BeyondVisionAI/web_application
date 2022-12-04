@@ -22,7 +22,7 @@ console.log("🚀 ~ file: ProjectMiniature.jsx:15 ~ ProjectMiniature ~ project",
     }
 
     return (
-       <div className='project-card-container' onClick={openDrawer}>
+       <div className='project-card-container project-card-drawer-trigger' onClick={openDrawer}>
             <img src={project?.thumbnail ? project.thumbnailUrl : '/login-image.jpg'} className='project-card-image'/> 
             <div className='project-card-floating-collaborators'>
                 <CollaboratorsButton projectId={project?._id} />

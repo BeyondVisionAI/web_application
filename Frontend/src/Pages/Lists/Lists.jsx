@@ -71,7 +71,6 @@ export default function Lists() {
     const handleCloseDrawer = () => {
         const bodyElement = document.getElementById('dashboard-container')
         enableBodyScroll(bodyElement)
-        setSelectedProject(null)
         setIsDrawerOpen(false)
     }
 

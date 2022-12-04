@@ -50,9 +50,18 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
 
     useEffect(() => {
         function handleClickOutside(event) {
+          const elements = document.getElementsByClassName('project-card-drawer-trigger')
           if (divRef.current && !divRef.current.contains(event.target)) {
-            closeDrawer();
-            setIsEdit(false)
+            let isClosed = true;
+            for (const element of elements) {
+              if (element.contains(event.target)) {
+                isClosed = false;
+              }
+            }
+            if (isClosed) {
+              closeDrawer();
+            }
+            setIsEdit(false);
           }
         }
         document.addEventListener("mousedown", handleClickOutside);
