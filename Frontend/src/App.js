@@ -5,7 +5,6 @@ import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './GenericComponents/Auth/Auth';
-import Dashboard from './Pages/Dashboard/Dashboard';
 import Login from './Pages/Login/Login';
 import PrivateRoute from './GenericComponents/PrivateRoute/PrivateRoute';
 import Page404 from './Pages/Page404/Page404';
@@ -20,7 +19,6 @@ import Chat from './Pages/Chat/Chat';
 import ProjectList from './Pages/ProjectList/ProjectList';
 import Projects from './Pages/Projects/Projects';
 
-
 function App() {
   return (
     <div className="App">
@@ -28,7 +26,6 @@ function App() {
         <AuthProvider>
           <BrowserRouter>
             <Switch>
-              {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
               <PrivateRoute exact path="/dashboard" component={Lists} />
               <PrivateRoute exact path="/dashboard/:listId" component={ProjectList} />
               <Route exact path="/" component={LandingPage} />

@@ -3,20 +3,19 @@ import Draggable from "react-draggable";
 
 const grabbable =  {
     cursor: 'move',
-    cursor: 'grab',
-    cursor: '-moz-grab',
-    cursor: '-webkit-grab',
+    cursor: 'grab', // eslint-disable-line
+    cursor: '-moz-grab', // eslint-disable-line
+    cursor: '-webkit-grab', // eslint-disable-line
 }
 
 const grabbableActive = {
     cursor: 'grabbing',
-    cursor: '-moz-grabbing',
-    cursor: '-webkit-grabbing',
+    cursor: '-moz-grabbing', // eslint-disable-line
+    cursor: '-webkit-grabbing', // eslint-disable-line
 }
 
-const TimelineCursor = ({secondsPlayed, secondToPixelRatio, setNewSecondsFromCursor}) => {
+const TimelineCursor = ({secondsPlayed, secondToPixelRatio, setNewSecondsFromCursor, onTimelineSeek}) => {
     const [position, setPosition] = useState({x: secondsPlayed * secondToPixelRatio, y: 0})
-    const [leftOffset, setLeftOffset] = useState(0);
     const [cursorStyle, setCursorStyle] = useState(grabbable)
     const cursorRef = useRef(null)
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import ReactPlayer from 'react-player';
 
-export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, newSecondsFromCursor, resetNewSecondsFromCursor }) => {
+export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, newSecondsFromCursor, resetNewSecondsFromCursor, setIsPlaying }) => {
   const [playedSeconds, setPlayedSeconds] = useState(0)
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null)
@@ -31,6 +31,10 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
     }
   }, [newSecondsFromCursor, resetNewSecondsFromCursor]);
 
+  useEffect(() => {
+    if (setIsPlaying)
+      setIsPlaying(playing)
+  }, [playing]);
 
   if (videoUrl === 'Undefined')
     return (<Widget weight='h-1/5' rounded='rounded-b-lg'>Uploading ...</Widget>)
@@ -40,7 +44,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
       <ReactPlayer
       width='100%'
       height='100%'
-      url={videoUrl}
+      url={ videoUrl }
       ref={ playerRef }
       controls={true}
       onDuration={setDuration ? setDuration : () => {}}

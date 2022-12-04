@@ -12,6 +12,12 @@ import AddFolderModal from './Components/AddFolderModal/AddFolderModal';
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
+import NavBarVariante from '../../GenericComponents/NavBar/Dashboard/NavBarVariante';
+import { Elements } from '@stripe/react-stripe-js';
+import DisplayPaymentStatus from '../../GenericComponents/DisplayPaymentStatus/DisplayPaymentStatus';
+import { loadStripe } from '@stripe/stripe-js';
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
+
 export default function Lists() {
 
     const [recentProjects, setRecentProjects] = useState([])
@@ -20,6 +26,9 @@ export default function Lists() {
     const [selectedProject, setSelectedProject] = useState(null)
     const [isProjectCreationModelOpen, setIsProjectCreationModalOpen] = useState(false)
     const [isFolderCreationModelOpen, setIsFolderCreationModalOpen] = useState(false)
+
+    // Stripe
+    const [isRedirectFromPayment, setIsRedirectFromPayment] = useState(false);
 
     useEffect(() => {
         return (clearAllBodyScrollLocks)
@@ -59,6 +68,15 @@ export default function Lists() {
         }
         getLists()
         getRecentProjects()
+    }, []);
+    useEffect(() => {
+        const clientSecret = new URLSearchParams(window.location.search).get(
+            'payment_intent_client_secret'
+        );
+
+        if (clientSecret) {
+            setIsRedirectFromPayment(true);
+        }
     }, []);
 
     const handleOpenDrawer = (project) => {

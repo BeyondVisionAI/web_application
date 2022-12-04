@@ -3,6 +3,22 @@ const Collaboration = require("../../Controllers/Collaboration/Collaboration");
 const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
+const axios = require("axios");
+const { Payment, PaymentStatus } = require("../../Models/Payment");
+
+const projectHasBeenPaid = async function (projectId) {
+    const payments = await Payment.find({ projectId: projectId });
+
+    if (!payments.length) {
+        return false;
+    }
+    for (const payment of payments) {
+        if (!payment || payment.paymentStatus != PaymentStatus.success) {
+            return false;
+        }
+    }
+    return true;
+}
 const { Collaboration: CollaborationModel } = require("../../Models/Collaboration") ;
 const { User } = require("../../Models/User");
 const { Image } = require("../../Models/Media/Image");
@@ -10,8 +26,10 @@ const { Video } = require("../../Models/Media/Video");
 
 exports.getProjectDB = async function (projectId) {
     try {
-        var project = await Project.findById(projectId);
-        return project;
+        const project = await Project.findById(projectId);
+        const isPaid = await projectHasBeenPaid(projectId);        
+
+        return {...project._doc, isPaid: isPaid};
     } catch (err) {
         console.log("Project->getProjectDB: " + err);
         return null;
@@ -44,10 +62,11 @@ exports.getAllProjectsDB = async function (userId) {
  */
 exports.getProject = async function (req, res) {
     try {
-        let project = await Project.findById(req.params.projectId);
+        const project = await Project.findById(req.params.projectId);
+        const isPaid = await projectHasBeenPaid(req.params.projectId);        
 
         if (project)
-            return res.status(200).send(project);
+            return res.status(200).send({...project._doc, isPaid: isPaid});
         return res.status(404).send(Errors.PROJECT_NOT_FOUND);
     } catch (err) {
         console.log("Project->getProject: " + err);
@@ -76,7 +95,7 @@ exports.createProject = async function (req, res) {
         });
         await newProject.save();
         await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
-        res.status("200").send(newProject);
+        res.status(200).send(newProject);
     } catch (err) {
         console.log("Project->createProject: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -100,7 +119,7 @@ exports.deleteProject = async function (req, res) {
             await Collaboration.deleteCollaborationDB(collaboration._id);
 
         await Project.deleteOne({ _id: req.params.projectId }); // TODO: Try multiple
-        await Project.deleteMany({ _id: { $in: req.body.projectIds }});
+        await Project.deleteMany({ _id: { $in: req.body.projectIds } });
         return res.status(204).send("");
     } catch (err) {
         console.log("Project->deleteProject: " + err);
@@ -116,7 +135,7 @@ exports.deleteProject = async function (req, res) {
  */
 exports.updateProject = async function (req, res) {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, {returnDocument: 'after'});
+        const project = await Project.findByIdAndUpdate(req.params.projectId, req.body, { returnDocument: 'after' });
         return res.status(200).send(project);
     } catch (err) {
         console.log("Project->updateProject: " + err);
@@ -157,10 +176,11 @@ exports.getAllProjects = async function (req, res) {
  * @returns { response to send }
  */
 exports.setStatus = async function (req, res) {
+    console.log('Route Set Status');
     try {
         if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
-        var project = await Project.findById(req.params.projectId);
+        let project = await Project.findById(req.params.projectId);
 
         if (!project)
             return (res.status(400).send(Errors.PROJECT_NOT_FOUND));
@@ -179,10 +199,84 @@ exports.setStatus = async function (req, res) {
         else if (req.body.statusType === 'Done')
             project.progress = 100;
 
+
         await project.save();
+        console.log("Project:", project);
+        if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
+            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId })
+        }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
         console.log("Project->setStatus: " + err);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
+}
+
+exports.generationIA = async function (req, res) {
+    console.log('Route generation IA');
+    let returnCode = 200;
+    let returnMessage = "";
+    let project = await Project.findById(req.params.projectId);
+    try {
+        if (!req.body.typeGeneration) {
+            throw Errors.BAD_REQUEST_BAD_INFOS;
+        }
+        if ((project.ActualStep === 'ActionRetrieve' || project.ActualStep === 'FaceRecognition') && project.status === 'InProgress') {
+            returnMessage = 'Generation IA is in progress';
+        } else {
+            if (req.body.typeGeneration === 'ActionRetrieve') {
+                project.ActualStep = 'ActionRetrieve';
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { projectId: req.params.projectId });
+            } else if (req.body.typeGeneration === 'FaceRecognition') {
+                project.ActualStep = 'FaceRecognition';
+                // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`, { projectId: req.params.projectId });
+            }
+        }
+    } catch (err) {
+        project.status = 'Error';
+        await project.save();
+        console.log("Project->Generation IA: " + err);
+        returnCode = 400;
+        returnMessage = err;
+    }
+    return (res.status(returnCode).send(returnMessage));
+}
+
+exports.finishedEdition = async function (req, res) {
+    console.log('Route Finished Edtion');
+    let returnCode = 200;
+    let returnMessage = "La generation des Audio sont en cours...";
+    try {
+        replicas = getProjectReplicas(req.params.projectId);
+        if (replicas === Errors.INTERNAL_ERROR) {
+            throw Errors.INTERNAL_ERROR;
+        } else if ((await replicas).length === 0) {
+            returnCode = 400;
+            returnMessage = "Error : Il n'y a aucun audio a générer.";
+        }
+        let audiosInfo = []
+        let audioObject = {
+            id: '',
+            timeStamp: .0,
+            duration: .0,
+        }
+        for (replica in replicas) {
+            audioObject.id = replica.id;
+            audioObject.timeStamp = replica.id;
+            audioObject.duration = replica.id;
+            if (replica.status !== 'Done' && replicas.actualStep !== 'Voice')
+                if (!createAudio(replica))
+                    throw Errors.INTERNAL_ERROR;
+            audiosInfo.append(audioObject);
+        }
+
+        //TODO voir ce que marco a besoin au niveau des audios (url et etc...)
+        axios.post(`${process.env.SERVER_IA_URL}/GenerationAudio`, { projectId: req.params.projectId, audiosInfo: audiosInfo });
+    } catch (err) {
+        console.log("Project->Finished Edition: " + err);
+        returnCode = 400;
+        returnMessage = err;
+    }
+    return (res.status(returnCode).send(returnMessage));
 }

@@ -1,6 +1,6 @@
-module.exports = function(app) {
+module.exports = function (app) {
     // const scriptEdition = require("../Controllers/ScriptEdition/ScriptEdition.js");
-    const replica =  require("../Controllers/ScriptEdition/Replica.js")
+    const replica = require("../Controllers/ScriptEdition/Replica.js")
     const replicaComments = require("../Controllers/ScriptEdition/ReplicaComments");
     const authMiddleware = require('../Controllers/User/authMiddleware');
     const collabMiddleware = require('../Controllers/Collaboration/collabMiddleware');
@@ -54,13 +54,13 @@ module.exports = function(app) {
         collabMiddleware.isCollab,
         ReplicaMiddleware.isReplicaFromProject,
         replicaComments.getReplicaComment);
-    
+
     app.post("/projects/:projectId/replicas/:replicaId/comments",
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightWrite,
         ReplicaMiddleware.isReplicaFromProject,
         replicaComments.postComment);
-    
+
     app.delete("/projects/:projectId/replicas/:replicaId/comments/:commentId",
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightOwner,

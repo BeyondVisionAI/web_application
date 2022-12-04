@@ -12,6 +12,7 @@ const ReplicaDetails = ({replica, updateReplica}) => {
     const [timestamp, setTimestamp] = useState(replica.timestamp);
     const [duration, setDuration] = useState(replica.duration);
     const [voiceId, setVoiceId] = useState(replica.voiceId);
+    const [voiceOption, setVoiceOption] = useState([]);
 
     // additional infos 
     const [lastEdit, setLastEdit] = useState(replica.lastEditDate);
@@ -50,6 +51,17 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             console.error("error => ", err);
         }
     }
+    useEffect(() => {
+        const retrieveVoices = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_SERVER_IA_URL}/Voice/RetrieveVoices`);
+                setVoiceOption(response.data);
+            } catch (err) {
+                console.error("Replica Error :", err);
+            }
+        }
+        retrieveVoices();
+    }, []);
 
     useEffect(() => {
         replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
@@ -74,26 +86,46 @@ const ReplicaDetails = ({replica, updateReplica}) => {
                 switch (e.response.status) {
                     case 401:
                         switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                            case "USER_NOT_LOGIN":
+                                errMsg = "Error (401) - User is not logged in.";
+                                break;
                             /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                            default: errMsg = "Error (401)."; break;
-                        } break;
-                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                            case "PROJECT_NOT_YOURS":
+                                errMsg = "Error (401) - No collaboration found between the userId and the project.";
+                                break;
+                            default:
+                                errMsg = "Error (401).";
+                                break;
+                        }
+                        break;
+                    case 403:
+                        errMsg = "Error (403) - User has no right to access the content.";
+                        break;
                     case 404:
                         switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                            case "REPLICA_NOT_IN_PROJECT": errMsg = "Error (404) - Invalid replica, does not belong to the project."; break;
-                            default: errMsg = "Error (404)."; break;
-                        } break;
-                    default /* 500 */ : errMsg = "Internal Error."; break;
+                            case "PROJECT_NOT_FOUND":
+                                errMsg = "Error (404) - Missing project.";
+                                break;
+                            case "REPLICA_NOT_FOUND":
+                                errMsg = "Error (404) - Missing replica.";
+                                break;
+                            case "REPLICA_NOT_IN_PROJECT":
+                                errMsg = "Error (404) - Invalid replica, does not belong to the project.";
+                                break;
+                            default:
+                                errMsg = "Error (404).";
+                                break;
+                        }
+                        break;
+                    default /* 500 */
+                    :
+                        errMsg = "Internal Error.";
+                        break;
                 }
                 toast.error(errMsg);
                 console.error(e);
             }
         }
-
         fetchReplicaComments();
         setText(replica.content);
         setCharacterCount(`${replica.content.length}/100`);
@@ -129,9 +161,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
      */
 
     const formatTimestamp = function (t, d) {
-        
-        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 154 ~ formatTimestamp ~ t", t)
-        console.log("🚀 ~ file: ReplicaDetails.jsx ~ line 153 ~ formatTimestamp ~ d", d)
         const msToTimecode = function(t) {
             var hours = Math.floor(t / 3600000);
             var minutes = Math.floor((t - (hours * 3600000)) / 60000);
@@ -164,7 +193,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         };
         return new Date(time).toLocaleDateString("fr-FR", dateOptions);
     }
-
 
     const formatLastEditor = function(person) {
         var fName = person?.firstName;
@@ -199,18 +227,19 @@ const ReplicaDetails = ({replica, updateReplica}) => {
             <div>
                 <div className="w-full flex flex-row justify-between items-center mb-1">
                     <h3 className="section-title">Voix :</h3>
-                    <select name="voiceSelection" id="" selected={voiceId}
+                    <select name="voiceSelection" id=""
+                    value={voiceOption[voiceOption.findIndex(item => item.id === parseInt(voiceId))]?.nameID}
                     className="inline-flex items-center form-select form-select-lg
                     w-1/2 p-2 text-base 
                     border border-solid border-blue-300 rounded
                     transition ease-in-out
-                    focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none">
-                        {/* TODO FETCH THESE INFO FROM BACKEND */}
-                        <option value="Anthony">Anthony</option>
-                        <option value="Théo">Théo</option>
-                        <option value="Marie">Marie</option>
-                        <option value="Léo">Léa</option>
-                        <option value="addVoice">Ajouter une voix</option>
+                    focus:text-black focus:bg-white focus:border-blue-300 focus:outline-none"
+                    onChange={(e) => {setVoiceId(voiceOption[voiceOption.findIndex(item => item.nameID === e.target.value)]?.id)}}>
+                        {voiceOption.map((option => (
+                            <option key={option.id} value={option.nameID}>
+                                {option.nameID}
+                            </option>
+                        )))}
                     </select>
                 </div>
 
