@@ -5,8 +5,6 @@ import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import Chat from '../Chat/Chat';
-import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 import AudioPlayer from './Components/AudioPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
@@ -185,6 +183,12 @@ export default function ScriptEdition(props) {
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
+                            <button
+                              className="button-container whitespace-nowrap"
+                              onClick={() => callGenerationIA()}
+                            >
+                                <div className="button-text">Générer le script</div>
+                            </button>
                             <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
                             <CircleButton url="/user-icon.png" size='30px'/>
                         </div>
@@ -197,10 +201,6 @@ export default function ScriptEdition(props) {
                             }
                         </div>
                         <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
-                            <button 
-                              onClick={() => callGenerationIA()}>
-                                Générer l'audio-description
-                            </button>
                             <VideoPlayer
                                 videoUrl={project.videoUrl}
                                 setDuration={setVideoDuration}

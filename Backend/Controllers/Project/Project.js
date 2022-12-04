@@ -174,7 +174,6 @@ exports.getAllProjects = async function (req, res) {
  * @returns { response to send }
  */
 exports.setStatus = async function (req, res) {
-    console.log('Route Set Status');
     try {
         if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
@@ -199,7 +198,6 @@ exports.setStatus = async function (req, res) {
 
 
         await project.save();
-        console.log("Project:", project);
         if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
             axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId })
         }
@@ -211,7 +209,6 @@ exports.setStatus = async function (req, res) {
 }
 
 exports.generationIA = async function (req, res) {
-    console.log('Route generation IA');
     let returnCode = 200;
     let returnMessage = "";
     let project = await Project.findById(req.params.projectId);
@@ -246,7 +243,6 @@ exports.generationIA = async function (req, res) {
 }
 
 exports.finishedEdition = async function (req, res) {
-    console.log('Route Finished Edtion');
     let returnCode = 200;
     let returnMessage = "La generation des Audio sont en cours...";
     try {
