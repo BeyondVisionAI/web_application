@@ -31,6 +31,18 @@ export default function ScriptEdition(props) {
     socket.on('connection', () => {
         console.log(`I'm connected with the back-end for the script edition`);
     });
+
+    socket.on('new replica', async (newReplica) => {
+        setReplicas([...replicas, newReplica])
+    });
+
+    socket.on('update replica', async (replica) => {
+        updateReplica(replica);
+    });
+
+    socket.on('delete replica', async (replica) => {
+        removeReplica(replica._id);
+    });
     
     socket.on('replica detected', async () => {
         try {
@@ -73,6 +85,9 @@ export default function ScriptEdition(props) {
         }
 
         getProject(props.match.params.id)
+        return (() => {
+            socket.emit("close project", props.match.params.id);
+        })
     }, [props.match.params.id]);
 
     const updateReplicaAction = async (selectedId) => {
@@ -95,14 +110,17 @@ export default function ScriptEdition(props) {
         } else {
             newReplicas.push(newReplica)
         }
-        socket.emit("new replica", {projectId: props.match.params.id, replica: newReplica});
         setReplicas(newReplicas)
     }
 
     const removeReplica = (replicaID) => {
-        var newReplicas = [...replicas]
-        newReplicas.splice(newReplicas.findIndex((item) => item._id === replicaID), 1)
-        setReplicas(newReplicas)
+        var newReplicas = [...replicas];
+        const index = newReplicas.findIndex((item) => item._id === replicaID);
+        if (index !== -1) {
+            newReplicas.splice(index, 1)
+        }
+        setReplicas(newReplicas);
+        setReplicaSelected(null);
     }
 
 
@@ -159,7 +177,7 @@ export default function ScriptEdition(props) {
                     </div>
                     <div className="flex flex-row gap-3 edit-bloc">
                         <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">                                
-                            {replicaSelected !== null
+                            {replicaSelected !== null && getReplicaFromId(replicaSelected) !== null
                             ?   <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
                             :   <EmptyReplicaDetails/>
                             }
