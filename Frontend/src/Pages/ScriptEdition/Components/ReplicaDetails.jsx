@@ -63,13 +63,6 @@ const ReplicaDetails = ({replica, updateReplica}) => {
         retrieveVoices();
     }, []);
 
-    useEffect(() => {
-        replicaTextUpdateTimeout = setTimeout(updateReplicaText, 5000);
-
-        return () => {
-            clearTimeout(replicaTextUpdateTimeout);
-        }
-    }, [isTextUpdated]);
 
     useEffect(() => {
         const fetchReplicaComments = async () => {

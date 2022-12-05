@@ -54,14 +54,16 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
         var newReplica = {...replica}
         // let dropOffMSecond = (data.x / parameters.secToPxCoef) * 1000;
         // dropOffMSecond = parseInt(dropOffMSecond.toFixed())
-        newReplica.timestamp = dropOffMSecond
-        await axios({
-            method: 'PUT',
-            url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
-            data: {timestamp: dropOffMSecond},
-            withCredentials: true
-        });
-        updateReplica(newReplica)
+        newReplica.timestamp = dropOffMSecond;
+        if (newReplica.timestamp !== replica.timestamp) {
+            await axios({
+                method: 'PUT',
+                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+                data: {timestamp: dropOffMSecond},
+                withCredentials: true
+            });
+            updateReplica(newReplica)
+        }
     }
 
     return (
