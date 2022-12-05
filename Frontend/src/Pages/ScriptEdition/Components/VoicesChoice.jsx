@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     const [voiceIndexSelected, setVoiceIndexSelected] = useState(undefined);
+    const [voiceIdTemp, setVoiceIdTemp] = useState(undefined);
     const [voiceOptions, setVoiceOptions] = useState([]);
     const [languageSelected, setLanguageSelected] = useState(0);
     const [languageOptions, setLanguageOptions] = useState(['Tous']);
@@ -21,6 +22,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     const handleVoiceChange = function(e) {
         setVoiceIndexSelected(e.target.value);
         setVoiceIdSelected(voiceOptions[e.target.value].id);
+        setVoiceIdTemp(voiceOptions[e.target.value].id)
     }
 
     const changeVoiceIndexSelected = function(voiceId, arr) {
@@ -32,9 +34,11 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
             if (index === -1) {
                 setVoiceIndexSelected(0);
                 setVoiceIdSelected(arr[0].id);
+                setVoiceIdTemp(0);
             } else {
                 setVoiceIndexSelected(index);
                 setVoiceIdSelected(arr[index].id);
+                setVoiceIdTemp(arr[index].id);
             }
         }
     }
@@ -67,6 +71,19 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
         }
     }
 
+    async function checkVoiceId() {
+        if (voiceId >= 0) {
+            const index = voiceOptions.findIndex(item => item.id == voiceId);
+
+            if (index === -1) {
+                setLanguageSelected(0);
+                retrieveVoices();
+            } else {
+                setVoiceIndexSelected(index);
+            }
+        }
+    }
+
     useEffect(async () => {
         retrieveLanguages();
     }, []);
@@ -74,6 +91,12 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     useEffect(async () => {
         retrieveVoices();
     }, [languageSelected]);
+
+    useEffect(async () => {
+        if (voiceIdTemp != voiceId) {
+            checkVoiceId();
+        }
+    }, [voiceId]);
 
     useEffect(async () => {
         setLanguageSelected(0);
