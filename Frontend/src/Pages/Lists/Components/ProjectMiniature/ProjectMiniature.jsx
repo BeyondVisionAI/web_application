@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 import { DownloadFileUrl } from '../../../../GenericComponents/Files/S3Manager';
+import SVGLogos from '../../../../GenericComponents/SVGLogos/SVGLogos';
 
 export default function ProjectMiniature({ idList, movie, openAddProjectToList, openRemoveProjectFromList, openDestroyLeaveProject }) {
 
@@ -107,33 +108,11 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
         history.push(`/project/${movie._id}`);
     }
 
-    const statusImage = () => {
-        if (movie.status === "Stop") {
-            return (<svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-14 w-14" fill="none" viewBox="0 0 26 26" stroke="#868EBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-pause-circle">
-                    <circle cx="13" cy="13" r="10"></circle>
-                    <line x1="11" y1="16" x2="11" y2="10"></line>
-                    <line x1="15" y1="16" x2="15" y2="10"></line>
-                </svg>);
-        } else if (movie.status === "Error") {
-            return (<svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="#868EBB">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>);
-        } else if (movie.status === "Done") {
-            return (<svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="#868EBB">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>);
-        } else if (movie.status === "InProgress") {
-            return (<svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="#868EBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="2" x2="12" y2="6"></line>
-                    <line x1="12" y1="18" x2="12" y2="22"></line>
-                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-                    <line x1="2" y1="12" x2="6" y2="12"></line>
-                    <line x1="18" y1="12" x2="22" y2="12"></line>
-                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-                </svg>
-            );
+    const stepImage = () => {
+        if (movie.actualStep === "") {
+
+        } else if (movie.actualStep === "") {
+
         }
     }
 
@@ -157,9 +136,10 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
                     </div>
                 </div>
             </div>
-            <div className="info-container align-middle">
-                <div className="inline-block align-middle project-status">
-                    { statusImage() }
+            <div className="flex flex-row info-container align-middle">
+                <div className="flex flex-row inline-block align-middle project-status">
+                    <SVGLogos logoType={movie.actualStep}/>
+                    <SVGLogos logoType={movie.status}/>
                 </div>
                 <div className="inline-block align-middle project-infos-middle">
                     <h3 className="truncate project-title">{movie.name}</h3>

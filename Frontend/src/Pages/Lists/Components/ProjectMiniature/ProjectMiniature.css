@@ -25,7 +25,8 @@
 }
 
 .project-status {
-    width: 12%;
+    margin-left: 2px;
+    width: 18%;
 }
 
 .project-infos-middle {
