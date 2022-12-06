@@ -97,7 +97,6 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
             }
             if (true || "thumbnailId")
                 getThumbnailProject("projectId");
-            console.log("movie :", movie);
         } catch (error) {
             console.error(error);
             toast.error('Error while fetching data!');
