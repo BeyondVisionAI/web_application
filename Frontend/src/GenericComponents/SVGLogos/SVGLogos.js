@@ -91,7 +91,7 @@ const logosImages = [
         type: "VideoGeneration",
         image: <svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-14 w-14" fill="none" viewBox="0 0 26 26" stroke="#868EBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="13" cy="13" r="10"/>
-            <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            <polygon points="10.75 16.02 16.5 12.75 10.75 9.48 10.75 16.02"></polygon>
         </svg>
     }
 ];
