@@ -119,14 +119,14 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
     return (
         <div className="project-miniature-container">
             <div className="img-container relative">
-            <img className="object-fill w-full h-full" src={thumbnail} alt={`Movie ${movie.name}`} onClick={() => RedirectToProject()}></img>
+            <img className="object-fill w-full h-full" src={ thumbnail } alt={ `Movie ${movie.name}` } onClick={ () => RedirectToProject() }></img>
             {/* <img className="object-fill w-full h-full" src={`./assets/movies/animal.jpg`} alt={`Movie ${movie.name}`}></img> */}
                 <div className="rounded-full absolute top-3 right-3 dropdown grid justify-items-stretch">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 justify-self-end" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                     </svg>
                     <div className='dropdown-child'>
-                        <p onClick={() => {openAddProjectToList(movie._id)}}>Add to a list</p>
+                        <p onClick={ () => {openAddProjectToList(movie._id)} }>Add to a list</p>
                         {
                             roleProject === "OWNER" ? <p onClick={() => {openDestroyLeaveProject(movie._id)}}>Destroy the project</p> : <p onClick={() => {openDestroyLeaveProject(movie._id)}}>Leave the project</p>
                         }
@@ -138,15 +138,15 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
             </div>
             <div className="flex flex-row info-container align-middle">
                 <div className="flex flex-row inline-block align-middle project-status">
-                    <SVGLogos logoType={movie.actualStep}/>
-                    <SVGLogos logoType={movie.status}/>
+                    <SVGLogos logoType={ movie.actualStep }/>
+                    <SVGLogos logoType={ movie.status }/>
                 </div>
                 <div className="inline-block align-middle project-infos-middle">
-                    <h3 className="truncate project-title">{movie.name}</h3>
-                    {/* <span className="project-last-edit">Edited {movie['last-edit']} {movie['last-edit-unit']} ago</span> */}
+                    <h3 className="truncate project-title">{ movie.name }</h3>
+                    {/* <span className="project-last-edit">Edited { movie['last-edit'] } { movie['last-edit-unit'] } ago</span> */}
                 </div>
                 {/* <div className="inline-block align-middle relative project-collaborators h-full">
-                    {collaborators}
+                    { collaborators }
                 </div> */}
             </div>
         </div>
