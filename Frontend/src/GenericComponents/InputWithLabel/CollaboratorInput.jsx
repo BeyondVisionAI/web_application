@@ -5,7 +5,7 @@ import axios from "axios";
 import Tag from "./Tag";
 
 
-function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
+function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEditable }) {
     const [isValid, setIsValid] = useState(true);
     const [newCollaborator, setNewCollaborator] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
@@ -34,7 +34,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
     const addCollaborator = async (e) => {
         e.preventDefault();
         try {
-            if (collaborators.find(collaborator => collaborator.user.email === newCollaborator)) {
+            if (collaborators?.find(collaborator => collaborator.user.email === newCollaborator)) {
                 toast.warning("This collaborator is already added");
                 return;
             }
@@ -55,15 +55,15 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
     }
 
     const deleteCollaborator = (userId) => {
-        const updatedCollaborators = collaborators.filter((collaborator) => collaborator.user._id != userId);
+        const updatedCollaborators = collaborators?.filter((collaborator) => collaborator.user._id != userId);
 
         setCollaborators(updatedCollaborators);
     }
 
     return (
         <div className="flex flex-col w-full pt-4">
-            <label className="input-with-label-label">Add collaborators</label>
-            <div className="flex w-full">
+            {isEditable && <label className="input-with-label-label">Add collaborators</label>}
+            {isEditable && <div className="flex w-full">
                 <input
                  pattern={".+"}
                  onBlur={checkValidity}
@@ -84,13 +84,15 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
                     </button>
                 </div>
 
-            </div>
-            <div className="flex flex-wrap w-2/3 pt-1">
-                {collaborators.map((collaborator) => {
+            </div>}
+            <div className="flex flex-wrap flex-row w-full pt-1">
+                {collaborators?.map((collaborator) => {
+                    console.log("🚀 ~ file: CollaboratorInput.jsx:90 ~ {collaborators?.map ~ collaborator", collaborator)
                     return (
                         <Tag
                          key={collaborator.user._id}
-                         text={collaborator.user.firstName}
+                         userRole={collaborator.titleOfCollaboration}
+                         text={`${collaborator.user.firstName} ${collaborator.user.lastName}(${collaborator.titleOfCollaboration})`}
                          onDelete={() => deleteCollaborator(collaborator.user._id)}
                         />
                     );

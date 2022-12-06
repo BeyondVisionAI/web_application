@@ -178,7 +178,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             {/* TODO: Replace by component of Dimitri */}
             <div className="project-drawer-content">
                 {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{title}</h1>}
-                <CollaboratorInput collaborators={collaborators} />
+                <CollaboratorInput isEditable={isEdit} collaborators={collaborators} />
                 <h2 className="project-drawer-sub-title">Description</h2>
                 {isEdit ? <InputWithLabel fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
                   lineCount > 15 ?

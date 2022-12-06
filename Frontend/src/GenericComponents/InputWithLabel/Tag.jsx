@@ -1,15 +1,53 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+import "./Tag.css"
+import { FiMoreHorizontal } from "react-icons/fi";
 
-function Tag({ text, onDelete }) {
+const role = ['Owner', 'Admin', 'Writer', 'Reader']
+
+function Tag({ text, userRole, onDelete }) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [left, setLeft] = useState(0)
+    const [top, setTop] = useState(0)
+    const menuRef = useRef(null)
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+          if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+          }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, [menuRef]);
+
+    const handleClick = (e) => {
+        e.preventDefault()
+        setIsMenuOpen(true)
+    }
+
     return (
-        <div className="px-0.5 transition ease-in-out hover:scale-110">
-            <div className="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 bg-blue-200 text-myBlue rounded-full">
-                <label>{text}</label>
-                <button className="pl-2 text-myBlack text-base" onClick={() => onDelete()}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
+        <>
+            <div className="px-0.5 transition ease-in-out tag-container">
+                <div className="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 bg-blue-200 text-myBlue rounded-full">
+                    <label>{text}</label>
+                    <FiMoreHorizontal className="tag-dropdown-menu-trigger" onClick={handleClick}/>
+                </div>
+                {isMenuOpen &&
+                    <div ref={menuRef} className="custom-context-menu-tags">
+                        {role.map((item) => {
+                            console.log("🚀 ~ file: Tag.jsx:46 ~ {role.map ~ userRole", userRole)
+                            console.log("🚀 ~ file: Tag.jsx:47 ~ {role.map ~ item", item)
+                            return (
+                                <p>{item}</p>
+                            )
+                        })}
+                        <p>Remove</p>
+                    </div>
+                }
             </div>
-        </div>
+        </>
     );
 }
 

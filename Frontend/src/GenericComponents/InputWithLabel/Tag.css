@@ -1,0 +1,38 @@
+.custom-context-menu-tags {
+    display: flex;
+    flex-direction: column;
+    width: 8vw;
+    position: absolute;
+    background-color: white;
+    z-index: 3000 !important;
+    border-radius: .4vw;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin-top: -.4vh;
+}
+
+.custom-context-menu-tags > p {
+    color: #7793ED;
+    font-weight: 500;
+    padding: .5vw 1vh;
+    transition: color 150ms ease-in;
+    transition: background-color 150ms ease-in;
+    cursor: pointer;
+}
+
+.custom-context-menu-tags > p:first-of-type {
+    border-radius: .4vw .4vw 0 0;
+}
+
+.custom-context-menu-tags > p:last-of-type {
+    border-radius: 0 0 .4vw .4vw;
+}
+
+.custom-context-menu-tags > p:hover {
+    background-color: #7793ED;
+    color: #F6F8FF;
+}
+
+.tag-dropdown-menu-trigger {
+    margin-left: .5rem;
+    cursor: pointer;
+}
