@@ -89,9 +89,9 @@ const logosImages = [
         </svg>
     }, {
         type: "VideoGeneration",
-        image: <svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-14 w-14" fill="none" viewBox="0 0 26 26" stroke="#868EBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="13" cy="13" r="10"/>
-            <polygon points="10.75 16.02 16.5 12.75 10.75 9.48 10.75 16.02"></polygon>
+        image: <svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="#868EBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="2" ry="2"/>
+            <polygon points="8.75 16.02 15.5 12.75 8.75 8.48 8.75 16.02"></polygon>
         </svg>
     }
 ];
