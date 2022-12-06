@@ -122,6 +122,43 @@ export default function ScriptEdition(props) {
         history.push(`/project/${props.match.params.id}`);
     }
 
+    const LaunchGeneration = async() => {
+        try {
+            toast.warning("Generation started");
+            const res = await axios({
+                method: "POST",
+                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
+                withCredentials: true
+            });
+            if (res.status != 200) {
+                toast.error("An error occured when trying to generate the project");
+            }
+        } catch (error) {
+            toast.error("Could not generate the project");
+            console.log(error)
+        }
+    }
+
+    const DownloadFile = async() => {
+        try {
+            var res = await DownloadFileUrl("bv-finish-products", `Audio/${props.match.params.id}.mp3`)
+            console.log(res)
+        } catch (error) {
+            toast.error("Could not download the audiodescription file");
+            console.log(error)
+        }
+    }
+
+    const DownloadVideo = async() => {
+        try {
+            var res = await DownloadFileUrl("bv-finish-products", `Video/${props.match.params.id}.mp4`)
+            console.log(res)
+        } catch (error) {
+            toast.error("Could not download the audiodescription file");
+            console.log(error)
+        }
+    }
+
     if (project) {
         return (
             <div className="script-edition-container h-screen w-screen overflow-x-hidden">
@@ -129,6 +166,9 @@ export default function ScriptEdition(props) {
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
+                            <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadVideo()}/>
+                            <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadFile()}/>
+                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
                             <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
                             <CircleButton url="/user-icon.png" size='30px'/>
                         </div>

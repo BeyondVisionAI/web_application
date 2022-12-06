@@ -5,6 +5,7 @@ const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 const axios = require("axios");
 const { Payment, PaymentStatus } = require("../../Models/Payment");
+const { getProjectReplicasFromId, createAudio } = require("../../Controllers/ScriptEdition/Replica")
 
 const projectHasBeenPaid = async function (projectId) {
     const payments = await Payment.find({ projectId: projectId });
@@ -171,7 +172,7 @@ exports.setStatus = async function (req, res) {
             return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
 
         project.status = req.body.statusType;
-        project.ActualStep = req.body.stepType;
+        project.actualStep = req.body.stepType;
 
         if (req.body.progress && req.body.progress >= 0 && progrreq.body.progressess <= 100)
             project.progress = req.body.progress;
@@ -184,10 +185,6 @@ exports.setStatus = async function (req, res) {
 
 
         await project.save();
-        console.log("Project:", project);
-        if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
-            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId })
-        }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
         console.log("Project->setStatus: " + err);
@@ -204,14 +201,14 @@ exports.generationIA = async function (req, res) {
         if (!req.body.typeGeneration) {
             throw Errors.BAD_REQUEST_BAD_INFOS;
         }
-        if ((project.ActualStep === 'ActionRetrieve' || project.ActualStep === 'FaceRecognition') && project.status === 'InProgress') {
+        if ((project.actualStep === 'ActionRetrieve' || project.actualStep === 'FaceRecognition') && project.status === 'InProgress') {
             returnMessage = 'Generation IA is in progress';
         } else {
             if (req.body.typeGeneration === 'ActionRetrieve') {
-                project.ActualStep = 'ActionRetrieve';
+                project.actualStep = 'ActionRetrieve';
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { projectId: req.params.projectId });
             } else if (req.body.typeGeneration === 'FaceRecognition') {
-                project.ActualStep = 'FaceRecognition';
+                project.actualStep = 'FaceRecognition';
                 // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`, { projectId: req.params.projectId });
             }
@@ -231,7 +228,7 @@ exports.finishedEdition = async function (req, res) {
     let returnCode = 200;
     let returnMessage = "La generation des Audio sont en cours...";
     try {
-        replicas = getProjectReplicas(req.params.projectId);
+        replicas = await getProjectReplicasFromId(req.params.projectId);
         if (replicas === Errors.INTERNAL_ERROR) {
             throw Errors.INTERNAL_ERROR;
         } else if ((await replicas).length === 0) {
@@ -239,23 +236,23 @@ exports.finishedEdition = async function (req, res) {
             returnMessage = "Error : Il n'y a aucun audio a générer.";
         }
         let audiosInfo = []
-        let audioObject = {
-            id: '',
-            timeStamp: .0,
-            duration: .0,
-        }
-        for (replica in replicas) {
-            audioObject.id = replica.id;
-            audioObject.timeStamp = replica.id;
-            audioObject.duration = replica.id;
+        for (const replica of replicas) {
+            let audioObject = {
+                id: replica._id.toString(),
+                timeStamp: parseFloat(replica.timestamp / 1000),
+                duration:  parseFloat(replica.duration / 1000),
+            }
             if (replica.status !== 'Done' && replicas.actualStep !== 'Voice')
                 if (!createAudio(replica))
                     throw Errors.INTERNAL_ERROR;
-            audiosInfo.append(audioObject);
+            audiosInfo.push(audioObject);
         }
+        await axios.post(`${process.env.SERVER_IA_URL}/Generation/GenerationAudio`, { projectId: req.params.projectId, audioInfo: audiosInfo });
+        let project = await Project.findById(req.params.projectId);
 
-        //TODO voir ce que marco a besoin au niveau des audios (url et etc...)
-        axios.post(`${process.env.SERVER_IA_URL}/GenerationAudio`, { projectId: req.params.projectId, audiosInfo: audiosInfo });
+        if (project.actualStep === 'AudioGeneration' && project.status === 'Done') {
+            axios.post(`${process.env.SERVER_IA_URL}/Generation/GenerationVideo`, { projectId: req.params.projectId })
+        }
     } catch (err) {
         console.log("Project->Finished Edition: " + err);
         returnCode = 400;
