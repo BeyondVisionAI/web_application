@@ -4,25 +4,30 @@ import { toast } from 'react-toastify';
 import CustomCheckbox from '../../../../../GenericComponents/CustomCheckbox/CustomCheckbox';
 import "./FolderListSelectable.css"
 
-const FolderListSelectable = ({project, addToFolderList}) => {
+const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
     const [lists, setLists] = useState([])
     const [newListName, setNewListName] = useState('')
 
-    useEffect(() => {
-        const getLists = async () => {
-            try {
-                var res = await axios({
-                    url: `${process.env.REACT_APP_API_URL}/lists`,
-                    method: 'GET',
-                    withCredentials: true,
-                })
-                setLists(res.data)
-            } catch (e) {
-                console.error(e)
-            }
+    const getLists = async () => {
+        try {
+            var res = await axios({
+                url: `${process.env.REACT_APP_API_URL}/lists`,
+                method: 'GET',
+                withCredentials: true,
+            })
+            setLists(res.data)
+        } catch (e) {
+            console.error(e)
         }
-        getLists()
-    }, []);
+    }
+
+    useEffect(() => {
+        if (defaultLists) {
+            setLists(defaultLists)
+        } else {
+            getLists()
+        }
+    }, [defaultLists]);
 
     const handleCreateList = async () => {
         if (!newListName) return toast.error("Folder name must not be null !")

@@ -12,7 +12,7 @@ import { UploadFileOnS3 } from "../../../../GenericComponents/Files/S3Manager";
 import CollaboratorInput from "../../../../GenericComponents/InputWithLabel/CollaboratorInput";
 import { AuthContext } from "../../../../GenericComponents/Auth/Auth";
 
-const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject}) => {
+const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject, folderList}) => {
     const divRef = useRef(null)
     const [lineCount, setLineCount] = useState(0)
     const [showMore, setShowMore] = useState(false)
@@ -197,7 +197,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                     <p id="project-description" className="project-drawer-text-content">{description}</p>
                 }
                 <h2 className="project-drawer-sub-title">Folders</h2>
-                <FolderListSelectable project={project} addToFolderList={addToFolderList ? addToFolderList : null}/>
+                <FolderListSelectable defaultLists={folderList || null} project={project} addToFolderList={addToFolderList ? addToFolderList : null}/>
             </div>
         </div>
     );

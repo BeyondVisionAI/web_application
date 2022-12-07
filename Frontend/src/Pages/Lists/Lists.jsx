@@ -152,7 +152,7 @@ export default function Lists() {
 
     return (
         <div id="dashboard-container" className="dashboard-container">
-            <ProjectDrawer editProject={editProject} project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}
+            <ProjectDrawer folderList={folders} editProject={editProject} project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}
             removeProjectFromList={removeProjectFromList}/>
             {isProjectCreationModelOpen && (
                 <CreateProject
