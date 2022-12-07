@@ -10,17 +10,24 @@ const parseCookie = str =>
     return acc;
   }, {});
 
-exports.socketIOConfig = function (http) {
-    var rooms = []
+exports.projectsRooms = [];
+exports.io = null;
 
-    var io = require('socket.io')(http, {
+exports.sendDataToUser = function(user, route, data) {
+    exports.io.to(user).emit(route, data);
+}
+
+exports.socketIOConfig = function (http) {
+    // var projectsRooms = [];
+    var rooms = []
+    exports.io = require('socket.io')(http, {
         cors: {
             credentials: true,
             origin: 'http://localhost',
         }
     });
 
-    io.use((socket, next) => {
+    exports.io.use((socket, next) => {
         var cookies = parseCookie(socket.handshake.headers.cookie)
         if (cookies['token']) {
             try {
@@ -34,9 +41,32 @@ exports.socketIOConfig = function (http) {
         }
     })
 
-    io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
+    exports.io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
         console.log(`Client ${socket.id} connected !`)
         socket.emit('connection', null);
+
+        socket.on("open project", projectId => {
+            var index = exports.projectsRooms.findIndex((elem) => elem.id === projectId);
+            if (index === -1) {
+                console.log(`Creating new roomProject with id = ${projectId}`);
+                var newProjectRoom = {
+                    id: projectId,
+                    users: [socket.id]
+                }
+                exports.projectsRooms.push(newProjectRoom);
+            } else {
+                if (!exports.projectsRooms[index].users.includes(socket.id)) {
+                    exports.projectsRooms[index].users.push(socket.id)
+                }
+            }
+        });
+
+        socket.on("close project", projectId => {
+            var index = exports.projectsRooms.findIndex(x => x.users.includes(socket.id));
+            if (index !== -1) {
+                exports.projectsRooms[index].users.splice(exports.projectsRooms[index].users.indexOf(socket.id), 1);
+            } 
+        });
 
         socket.on("join room", roomId => {
             var index = null
@@ -80,7 +110,7 @@ exports.socketIOConfig = function (http) {
             message['senderID']['firstName'] = sender.firstName;
             message['senderID']['lastName'] = sender.lastName;
             for (var user of rooms[index].users) {
-                io.to(user).emit("newMessage", message);
+                exports.io.to(user).emit("newMessage", message);
             }
         });
 
