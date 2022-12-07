@@ -146,7 +146,6 @@ exports.updateProject = async function (req, res) {
 exports.getAllProjects = async function (req, res) {
     try {
         var projectsIds = null
-        console.log("🚀 ~ file: Project.js ~ line 164 ~ req.body", req.query)
         if (req.query.limit) {
             projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(parseInt(req.body.limit));
         } else {
@@ -161,7 +160,6 @@ exports.getAllProjects = async function (req, res) {
             const video = await Video.findOne({ _id: project.videoId})
             projects.push({...project._doc, owner: owner, thumbnail: thumbnail, video: video})
         }
-        console.log("🚀 ~ file: Project.js ~ line 164 ~ projects", projects)
         return res.status(200).send(projects);
     } catch (err) {
         console.log("Project->getAllProject: " + err);
