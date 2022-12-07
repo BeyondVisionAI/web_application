@@ -162,7 +162,7 @@ export default function ScriptEdition(props) {
     }, []);
 
     const RedirectToProjectManagement = () => {
-        history.push(`/project/${props.match.params.id}`);
+        history.push(`/projects/`);
     }
 
     const LaunchGeneration = async() => {

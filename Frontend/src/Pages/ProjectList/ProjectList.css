@@ -52,36 +52,3 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 3vh 0;
 }
-
-.dashboard-see-all-projects-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 1vh 4vw;
-    color: rgb(121, 121, 121);
-    font-weight: 500;
-    font-size: 1vw;
-}
-
-.dashboard-see-all-projects-content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    transition: transform 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    cursor: pointer;
-}
-
-.dashboard-see-all-projects-icon {
-    transition: transform 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
-}
-
-.dashboard-see-all-projects-content:hover {
-    transform: translateX(-.2vw) ;
-}
-
-.dashboard-see-all-projects-content:hover > .dashboard-see-all-projects-icon {
-    transform: translateX(.5vw);
-}

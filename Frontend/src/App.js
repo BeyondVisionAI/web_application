@@ -16,6 +16,8 @@ import Lists from './Pages/Lists/Lists';
 import ManageProject from './Pages/Project/Manage/ManageProject';
 import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
 import Chat from './Pages/Chat/Chat';
+import ProjectList from './Pages/ProjectList/ProjectList';
+import Projects from './Pages/Projects/Projects';
 
 function App() {
   return (
@@ -25,7 +27,9 @@ function App() {
           <BrowserRouter>
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Lists} />
+              <PrivateRoute exact path="/dashboard/:listId" component={ProjectList} />
               <Route exact path="/" component={LandingPage} />
+              <PrivateRoute exact path="/projects" component={Projects} />
               <PrivateRoute exact path="/project/:id" component={ManageProject} />
               <PrivateRoute exact path="/project/:id/edit" component={ScriptEdition} />
               <Route exact path="/login" component={Login} />

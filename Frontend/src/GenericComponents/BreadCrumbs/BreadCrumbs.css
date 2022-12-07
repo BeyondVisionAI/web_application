@@ -1,0 +1,30 @@
+.breadcrumbs-container {
+    display: flex;
+    flex-direction: row;
+    background-color: #F6F8FE;
+    padding: 1vw 2vh;
+    width: fit-content;
+    margin-left: 1vw;
+    margin-top: 2vh;
+    border: 1.5px solid rgba(119, 147, 237, 0.2);
+    box-shadow: 0px 3.52184px 15.8483px rgba(8, 23, 71, 0.15);
+    border-radius: 52px;
+    color: #7793ED;
+    font-weight: 500;
+    font-size: 1vw;
+}
+
+.breadcrumbs-item-container {
+    display: flex;
+    flex-direction: row;
+    margin-left: .3vh;
+    margin-right: .3vh;
+}
+
+.breadcrumbs-item-link {
+    margin-right: .3vh;
+}
+
+.breadcrumbs-item-link-active {
+    color: rgb(48, 48, 48);
+}

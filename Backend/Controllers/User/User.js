@@ -22,7 +22,7 @@ exports.getUserByEmail = async function(req, res) {
         return res.status(401).send(Errors.BAD_REQUEST_MISSING_INFOS);
     }
 
-    const targetUser = await User.findOne({ email: req.body.email });
+    const targetUser = await User.findOne({ email: req.body.email }, {firstName: 1, lastName: 1, email: 1});
     if (!targetUser) {
         console.log("User->getUserByEmail: Target email isn't on the database");
         return res.status(404).send(Errors.EMAIL_UNKNOWN);

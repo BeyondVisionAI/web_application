@@ -11,7 +11,7 @@ export default function PaymentStep({ values, postData, showPayment}) {
         <div className="w-full h-full p-3 flex flex-col justify-center items-center">
             {
                 showPayment ?
-                    <PaymentForm amount={`${Math.round(values.videoDuration * 0.25)}`} currency='EUR' redirectUrl={`http://localhost/project/${values.id}`} projectId={ values.id } /> :
+                    <PaymentForm amount={`${Math.round(values.videoDuration * 0.25)}`} currency='EUR' redirectUrl={`http://localhost/dashboard`} projectId={ values.id } /> :
                     <h1>Project is creating, please wait</h1>
             }
         </div>

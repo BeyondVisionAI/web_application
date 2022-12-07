@@ -66,7 +66,7 @@ const createAudio = async (replica) => {
                 text: content,
                 replicaId: _id
             })
-            .then((response) => {
+            .then(async (response) => {
                 if (response.status != 200) {
                     throw Error(response.data);
                 }
@@ -75,7 +75,7 @@ const createAudio = async (replica) => {
                 replica.actualStep = 'Voice';
                 var index = projectsRooms.findIndex((elem) => elem.id == projectId);
                 for (var user of projectsRooms[index].users) {
-                    sendDataToUser(user, "update replica", replica);
+                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
                 }
             })
             .catch((err) => {
@@ -231,7 +231,7 @@ exports.updateReplica = async function (req, res) {
         }
         var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
         for (var user of projectsRooms[index].users) {
-            sendDataToUser(user, "update replica", replica);
+            sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
         }
         return res.status(200).send(replica);
     } catch (err) {

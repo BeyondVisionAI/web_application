@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const InputWithLabel = (props) => {
     const [isValid, setIsValid] = useState(true)
-    const [text, setText] = useState("")
+    const [text, setText] = useState()
 
     useEffect(() => {
         if (props.defaultValue) {
@@ -55,8 +55,7 @@ const InputWithLabel = (props) => {
                 name={props.label}
                 id={props.label}
                 value={text}
-                >
-                </textarea>
+                style={{width: props.fullWidth ? '100%' : '60%'}}/>
                 {isValid ? null: <p className="input-with-label-error">{props.errorMessage}</p>}
             </div>
         )
@@ -79,7 +78,8 @@ const InputWithLabel = (props) => {
             }}
             name={props.label}
             id={props.label}
-            value={text}/>
+            value={text}
+            style={{width: props.fullWidth ? '100%' : '60%'}}/>
             {isValid ? null: <p className="input-with-label-error">{props.errorMessage}</p>}
         </div>
     );
@@ -88,6 +88,7 @@ const InputWithLabel = (props) => {
 InputWithLabel.propTypes = {
     verifyRegex: PropTypes.string,
     errorMessage: PropTypes.string,
+    defaultValue: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     label: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,

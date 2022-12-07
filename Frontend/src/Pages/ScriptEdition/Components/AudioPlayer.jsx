@@ -22,7 +22,8 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
     }, [triggerPause]);
 
     useEffect(() => {
-        if (!newSecondsFromCursor) return
+        if (!newSecondsFromCursor) return;
+        if (sortedReplicas.length === 0) return;
         var closest = sortedReplicas.reduce(function(prev, curr) {
             return (Math.abs(curr.timestamp - newSecondsFromCursor * 1000) < Math.abs(prev.timestamp - newSecondsFromCursor * 1000) ? curr : prev);
         });
