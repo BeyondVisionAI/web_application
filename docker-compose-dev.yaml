@@ -45,6 +45,7 @@ services:
       - ./Backend/Models:/app/Models/
       - ./Backend/Configs:/app/Configs/
       - ./Backend/Routes:/app/Routes/
+      - ./Backend/routes:/app/routes/
     networks:
       - api
       - bdd

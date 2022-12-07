@@ -1,15 +1,66 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+import "./Tag.css"
+import { FiMoreHorizontal } from "react-icons/fi";
 
-function Tag({ text, onDelete }) {
+const ROLE_LIST = ['OWNER', 'ADMIN', 'WRITE', 'READ']
+
+function Tag({ text, role, userRole, isUser, onDelete, onChangeRole }) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [canBeEdited, setCanBeEdited] = useState(true)
+    const menuRef = useRef(null)
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+          if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+          }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, [menuRef]);
+
+    useEffect(() => {
+        if (role === 'OWNER') setCanBeEdited(false);
+        if (['WRITE', 'READ'].includes(userRole)) setCanBeEdited(false)
+        if (isUser) setCanBeEdited(false)
+    }, [role, userRole]);
+
+    const handleClick = (e) => {
+        e.preventDefault()
+        setIsMenuOpen(true)
+    }
+
+    const handleSelect = (type) => {
+        if (type === 'DELETE') {
+            onDelete();
+        } else {
+            onChangeRole(type);
+        }
+        setIsMenuOpen(false);
+    }
+
     return (
-        <div className="px-0.5 transition ease-in-out hover:scale-110">
-            <div className="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 bg-blue-200 text-myBlue rounded-full">
-                <label>{text}</label>
-                <button className="pl-2 text-myBlack text-base" onClick={() => onDelete()}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
+        <>
+            <div className="px-0.5 transition ease-in-out tag-container">
+                <div className="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 bg-blue-200 text-myBlue rounded-full">
+                    <label style={{textTransform: 'capitalize'}}>{text}</label>
+                    {canBeEdited && <FiMoreHorizontal className="tag-dropdown-menu-trigger" onClick={handleClick}/>}
+                </div>
+                {isMenuOpen &&
+                    <div ref={menuRef} className="custom-context-menu-tags">
+                        {ROLE_LIST.map((item) => {
+                            if (item === 'OWNER') return null;
+                            return (
+                                <p onClick={() => handleSelect(item)} className={`${item === role && 'active'}`}>{item.toLocaleLowerCase()}</p>
+                            )
+                        })}
+                        <p onClick={() => handleSelect('DELETE')} className="remove">Remove</p>
+                    </div>
+                }
             </div>
-        </div>
+        </>
     );
 }
 
