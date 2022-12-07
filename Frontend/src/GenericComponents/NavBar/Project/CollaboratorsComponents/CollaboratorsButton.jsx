@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import EditCollaborators from './EditCollaborators';
 import "./CollaboratorsButton.css"
 
 export default function CollaboratorsButton( { projectId, isEditable } ) {
@@ -44,42 +43,6 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
                         {collaborators.length >= 3 && <div className="collaborator-item">+{collaborators.length - 2}</div>}
                     {/* {isEditable && <div className="collaborator-item">+</div>} */}
                 </div>
-                {/* <EditCollaborators
-                    projectId={ projectId }
-                    collaborators={ collaborators }
-                    setCollaborators= { setCollaborators }
-                    isModalOpen={modalShow}
-                    closeModal={ () => setShowModal(false) }
-                /> */}
         </div>
     )
 }
-
-// const collaboration = new Schema({
-//     projectId: {
-//         type: Schema.Types.ObjectId,
-//         ref: "Project",
-//         required: true
-//     },
-//     userId: {
-//         type: Schema.Types.ObjectId,
-//         ref: "User",
-//         required: true
-//     },
-//     titleOfCollaboration: String,
-//     rights: {
-//         type: String,
-//         enum : Role,
-//         default: Role.ADMIN
-//     }
-// });
-
-
-// const user = new mongoose.Schema({
-//     firstName: String,
-//     lastName: String,
-//     password: String,
-//     email: String,
-//     isEmailConfirmed: { type :Boolean, default: false },
-//     verificationUID: { type: String, default: uuidv4() }
-//   });
