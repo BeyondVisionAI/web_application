@@ -36,11 +36,12 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
                         if (idx < 2) {
                             return (
                                 <div key={idx} className="collaborator-item">{collaborator.user.firstName[0]}{collaborator.user.lastName[0]}</div>
-                            )
-                        } else {
-                            return null;
-                        }
-                    })}
+                                )
+                            } else {
+                                return null;
+                            }
+                        })}
+                        {collaborators.length >= 3 && <div className="collaborator-item">+{collaborators.length - 2}</div>}
                     {/* {isEditable && <div className="collaborator-item">+</div>} */}
                 </div>
                 {/* <EditCollaborators
