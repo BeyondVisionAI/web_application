@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import ReplicaDetails from './Components/ReplicaDetails';
 import EmptyReplicaDetails from './Components/EmptyReplicaDetails';
 import Timeline from './Components/Timeline';
@@ -28,21 +28,25 @@ export default function ScriptEdition(props) {
     const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
-    socket.on('connection', () => {
-        console.log(`I'm connected with the back-end for the script edition`);
-    });
+    useMemo(() => {
+        socket.on('connection', () => {
+            console.log(`I'm connected with the back-end for the script edition`);
+        });
+    
+        socket.on('new replica', async (newReplica) => {
+            setReplicas([...replicas, newReplica])
+        });
+    
+        socket.on('update replica', async (replica) => {
+            console.log("🚀 ~ file: ScriptEdition.jsx:43 ~ socket.on ~ replica", replica)
+            updateReplica(replica);
+        });
+    
+        socket.on('delete replica', async (replica) => {
+            removeReplica(replica._id);
+        });
+    }, [socket])
 
-    socket.on('new replica', async (newReplica) => {
-        setReplicas([...replicas, newReplica])
-    });
-
-    socket.on('update replica', async (replica) => {
-        updateReplica(replica);
-    });
-
-    socket.on('delete replica', async (replica) => {
-        removeReplica(replica._id);
-    });
     
     socket.on('replica detected', async () => {
         try {
@@ -176,7 +180,7 @@ export default function ScriptEdition(props) {
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 edit-bloc">
-                        <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">                                
+                        <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">
                             {replicaSelected !== null && getReplicaFromId(replicaSelected) !== null
                             ?   <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
                             :   <EmptyReplicaDetails/>
