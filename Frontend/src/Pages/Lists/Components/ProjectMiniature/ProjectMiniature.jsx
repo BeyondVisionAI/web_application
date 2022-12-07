@@ -9,7 +9,6 @@ import CollaboratorsButton from '../../../../GenericComponents/NavBar/Project/Co
 import ProfilePic from '../../../../GenericComponents/ProfilePic/ProfilePic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import SVGLogos from '../../../../GenericComponents/SVGLogos/SVGLogos';
 
 export default function ProjectMiniature({ project, openDrawer, isAdd, openAddProject }) {
     if (isAdd) {
@@ -26,15 +25,13 @@ export default function ProjectMiniature({ project, openDrawer, isAdd, openAddPr
             <img src={project?.thumbnail ? project.thumbnailUrl : '/login-image.jpg'} className='project-card-image'/> 
             <div className='project-card-floating-collaborators'>
                 <CollaboratorsButton projectId={project?._id} />
-                <SVGLogos logoType={ movie.actualStep }/>
-                <SVGLogos logoType={ movie.status }/>
             </div>
             <div className='project-card-last-editor-container'>
-                <ProfilePic initials={`${project.owner.firstName[0]}${project.owner.lastName[0]}`} label={`${project.owner.firstName} ${project.owner.lastName}`} /> 
+                <ProfilePic initials={`${project.owner.firstName[0]}${project.owner.lastName[0]}`} label={`${project.owner.firstName} ${project.owner.lastName}`} />
                 {/* <p className='project-card-last-edit-time'>UN MOIS PLUS TOT</p>  */}
             </div>
             <div className="project-card-title-container">
-                <p>{project.name}</p> 
+                <p>{project.name}</p>
             </div>
        </div>
     )
