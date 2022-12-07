@@ -78,11 +78,13 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                 isClosed = false;
               }
             }
-            handleEditCancel()
+            if (isEdit) {
+              handleEditCancel()
+              setIsEdit(false);
+            }
             if (isClosed) {
               closeDrawer();
             }
-            setIsEdit(false);
           }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -93,8 +95,10 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
 
       const escFunction = useCallback((event) => {
         if (event.key === "Escape") {
-          setIsEdit(false)
-          handleEditCancel()
+          if (isEdit) {
+            handleEditCancel()
+            setIsEdit(false);
+          }
           closeDrawer()
         }
       }, []);
