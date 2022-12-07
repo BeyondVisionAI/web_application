@@ -81,6 +81,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             if (isClosed) {
               closeDrawer();
             }
+            handleEditCancel()
             setIsEdit(false);
           }
         }
@@ -93,6 +94,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
       const escFunction = useCallback((event) => {
         if (event.key === "Escape") {
           setIsEdit(false)
+          handleEditCancel()
           closeDrawer()
         }
       }, []);
