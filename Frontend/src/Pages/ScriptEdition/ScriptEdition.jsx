@@ -261,15 +261,14 @@ export default function ScriptEdition(props) {
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
                             {project.status === 'Done'
-                            ?   <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadVideo()}/>
-                            :   <DisabledCircleButton CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadVideo()}/>
+                            ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
+                            :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
                             }
                             {project.status === 'Done'
-                            ?   <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadFile()}/>
-                            :   <DisabledCircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadFile()}/>
+                            ?   <CircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
+                            :   <DisabledCircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
                             }
                             <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
-                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
                             <CircleButton url="/user-icon.png" size='30px'/>
                         </div>
                     </div>
