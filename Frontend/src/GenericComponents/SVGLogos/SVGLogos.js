@@ -97,13 +97,7 @@ const logosImages = [
 ];
 
 export default function SVGLogos({ logoType }) {
-    const logo = function () {
-        for (const logo of logosImages) {
-            if (logo.type === logoType) {
-                return (logo.image);
-            }
-        }
-    }
+    const logo = logosImages.find(logo => logo === logoType)?.image
     return (<>
         {logo()}
     </>)
