@@ -3,7 +3,7 @@ import React from 'react';
 const logosImages = [
     {
         type: "Stop",
-        image: <svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-14 w-14" fill="none" viewBox="0 0 26 26" stroke="#868EBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        image: <svg xmlns="http://www.w3.org/2000/svg" className="m-auto h-14 w-14" fill="none" viewBox="0 0 26 26" stroke="#868EBB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="13" cy="13" r="10"/>
             <line x1="11" y1="16" x2="11" y2="10"/>
             <line x1="15" y1="16" x2="15" y2="10"/>
