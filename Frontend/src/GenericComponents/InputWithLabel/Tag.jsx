@@ -5,7 +5,6 @@ import { FiMoreHorizontal } from "react-icons/fi";
 const ROLE_LIST = ['OWNER', 'ADMIN', 'WRITE', 'READ']
 
 function Tag({ text, role, userRole, isUser, onDelete, onChangeRole }) {
-    console.log("🚀 ~ file: Tag.jsx:8 ~ role", role)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [canBeEdited, setCanBeEdited] = useState(true)
     const menuRef = useRef(null)
@@ -41,7 +40,6 @@ function Tag({ text, role, userRole, isUser, onDelete, onChangeRole }) {
         }
         setIsMenuOpen(false);
     }
-    console.log("🚀 ~ file: Tag.jsx:48 ~ Tag ~ role", role)
 
     return (
         <>

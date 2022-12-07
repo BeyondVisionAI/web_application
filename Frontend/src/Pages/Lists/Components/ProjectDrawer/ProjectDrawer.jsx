@@ -147,7 +147,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             url: `${process.env.REACT_APP_API_URL}/projects/${project._id}`,
             data: data
           })
-          updatedProject = {...updatedProject, ...updatedProjectResponse.data}
+          updatedProject = {...project, ...updatedProject, ...updatedProjectResponse.data}
           editProject(updatedProject)
         setIsEdit(false)
         } catch (error) {
