@@ -78,10 +78,10 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                 isClosed = false;
               }
             }
+            handleEditCancel()
             if (isClosed) {
               closeDrawer();
             }
-            handleEditCancel()
             setIsEdit(false);
           }
         }
