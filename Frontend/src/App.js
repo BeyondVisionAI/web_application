@@ -16,6 +16,7 @@ import Lists from './Pages/Lists/Lists';
 import ManageProject from './Pages/Project/Manage/ManageProject';
 import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
 import Chat from './Pages/Chat/Chat';
+import Profile from './Pages/Profile/Profile';
 import ProjectList from './Pages/ProjectList/ProjectList';
 import Projects from './Pages/Projects/Projects';
 
@@ -32,6 +33,7 @@ function App() {
               <PrivateRoute exact path="/projects" component={Projects} />
               <PrivateRoute exact path="/project/:id" component={ManageProject} />
               <PrivateRoute exact path="/project/:id/edit" component={ScriptEdition} />
+              <PrivateRoute exact path="/profile" component={Profile} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/askForPasswordChange" component={AskForPasswordChange} />
