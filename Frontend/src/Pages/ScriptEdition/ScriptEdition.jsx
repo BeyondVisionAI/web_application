@@ -13,6 +13,7 @@ import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
+import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 
 
 export default function ScriptEdition(props) {
@@ -76,8 +77,8 @@ export default function ScriptEdition(props) {
                 setProject({
                     id: id,
                     title: projectR.data.name,
-                    videoUrl: videoUrl
-                    // status: projectR.data.status
+                    videoUrl: videoUrl,
+                    status: projectR.data.status
                 });
             } catch (error) {
                 console.error(error);
@@ -183,8 +184,32 @@ export default function ScriptEdition(props) {
 
     const DownloadFile = async() => {
         try {
-            var res = await DownloadFileUrl("bv-finish-products", `Audio/${props.match.params.id}.mp3`)
-            console.log(res)
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}`, { withCredentials: true });
+            if (projectR.data.status === "Done") {
+                var res = await DownloadFileUrl("bv-finish-products", `Audio/${props.match.params.id}.mp3`)
+                fetch(res, {
+                    method: 'GET',
+                })
+                .then((response) => response.blob())
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(
+                    new Blob([blob]),
+                  );
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute(
+                    'download',
+                    `${projectR.data.name}_AD.mp3`,
+                  );
+                  document.body.appendChild(link);
+                  link.click();
+                  link.parentNode.removeChild(link);
+                });
+            }
+            else {
+                toast.error("Audiodescription file not ready");
+            }
+       
         } catch (error) {
             toast.error("Could not download the audiodescription file");
             console.log(error)
@@ -193,8 +218,35 @@ export default function ScriptEdition(props) {
 
     const DownloadVideo = async() => {
         try {
-            var res = await DownloadFileUrl("bv-finish-products", `Video/${props.match.params.id}.mp4`)
-            console.log(res)
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}`, { withCredentials: true });
+            if (projectR.data.status === "Done") {
+                var res = await DownloadFileUrl("bv-finish-products", `Video/${props.match.params.id}.mp4`)
+                fetch(res, {
+                    method: 'GET',
+                })
+                .then((response) => response.blob())
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(
+                    new Blob([blob]),
+                  );
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute(
+                    'download',
+                    `${projectR.data.name}_AD.mp4`,
+                  );
+
+                  document.body.appendChild(link);
+
+                  link.click();
+
+                  link.parentNode.removeChild(link);
+                });
+            }
+            else {
+                toast.error("Audiodescription file not ready");
+            }
+       
         } catch (error) {
             toast.error("Could not download the audiodescription file");
             console.log(error)
@@ -208,8 +260,14 @@ export default function ScriptEdition(props) {
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
-                            <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadVideo()}/>
-                            <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadFile()}/>
+                            {project.status === 'Done'
+                            ?   <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadVideo()}/>
+                            :   <DisabledCircleButton CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadVideo()}/>
+                            }
+                            {project.status === 'Done'
+                            ?   <CircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadFile()}/>
+                            :   <DisabledCircleButton url="/instagram-direct.png" size='40px' onClick={() => DownloadFile()}/>
+                            }
                             <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
                             <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
                             <CircleButton url="/user-icon.png" size='30px'/>
