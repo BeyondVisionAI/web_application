@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const { Errors } = require('../../Models/Errors');
 
 AWS.config.setPromisesDependency();
 

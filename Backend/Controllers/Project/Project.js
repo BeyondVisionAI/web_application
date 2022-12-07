@@ -19,6 +19,10 @@ const projectHasBeenPaid = async function (projectId) {
     }
     return true;
 }
+const { Collaboration: CollaborationModel } = require("../../Models/Collaboration") ;
+const { User } = require("../../Models/User");
+const { Image } = require("../../Models/Media/Image");
+const { Video } = require("../../Models/Media/Video");
 
 exports.getProjectDB = async function (projectId) {
     try {
@@ -141,9 +145,20 @@ exports.updateProject = async function (req, res) {
 
 exports.getAllProjects = async function (req, res) {
     try {
-        var projects = await module.exports.getAllProjectsDB(req.user.userId);
-        if (!projects) {
-            return res.status(500).send(Errors.INTERNAL_ERROR);
+        var projectsIds = null
+        if (req.query.limit) {
+            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(parseInt(req.body.limit));
+        } else {
+            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 });
+        }
+        const projects = []
+        for (const projectId of projectsIds) {
+            let ownerId = await CollaborationModel.findOne({projectId: projectId.projectId, rights: Role.OWNER});
+            const owner = await User.findOne({ _id: ownerId.userId}, {firstName: 1, lastName: 1})
+            const project = await Project.findOne({ _id: projectId.projectId});
+            const thumbnail = await Image.findOne({ _id: project.thumbnailId})
+            const video = await Video.findOne({ _id: project.videoId})
+            projects.push({...project._doc, owner: owner, thumbnail: thumbnail, video: video})
         }
         return res.status(200).send(projects);
     } catch (err) {

@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { toast } from 'react-toastify';
 import validator from 'validator';
 import axios from "axios";
 import Tag from "./Tag";
+import { AuthContext } from "../Auth/Auth";
 
 
-function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
+function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEditable, projectId }) {
     const [isValid, setIsValid] = useState(true);
     const [newCollaborator, setNewCollaborator] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
+    const [userRole, setUserRole] = useState(null);
+    const {currentUser} = useContext(AuthContext)
+    console.log("🚀 ~ file: CollaboratorInput.jsx:15 ~ currentUser", currentUser)
 
     axios.defaults.withCredentials = true;
 
@@ -17,6 +21,13 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
             setNewCollaborator(defaultValue)
         }
     }, [defaultValue]);
+
+    useEffect(() => {
+        const idx = collaborators.findIndex((item) => item.userId === currentUser.userId)
+        if (idx !== -1) {
+            setUserRole(collaborators[idx].rights);
+        }
+    }, [collaborators, currentUser]);
 
     function checkValidity() {
         if (newCollaborator.length === 0) {
@@ -34,7 +45,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
     const addCollaborator = async (e) => {
         e.preventDefault();
         try {
-            if (collaborators.find(collaborator => collaborator.user.email === newCollaborator)) {
+            if (collaborators?.find(collaborator => collaborator.user.email === newCollaborator)) {
                 toast.warning("This collaborator is already added");
                 return;
             }
@@ -45,25 +56,56 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
                 toast.error("Error while getting user, please retry");
                 return;
             }
+            var newCollab = await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: user.data.email, titleOfCollaboration: 'Read', rights: 'READ'});
+
             setNewCollaborator("");
-            collaboratorsUpdate.push({ user: user.data }); // TODO: Add Rights
+            collaboratorsUpdate.push(newCollab.data); // TODO: Add Rights
             setCollaborators(collaboratorsUpdate);
         } catch (error) {
             setErrorMessage('Email is invalid!');
+            toast.error(error);
             console.error(error);
         }
     }
 
-    const deleteCollaborator = (userId) => {
-        const updatedCollaborators = collaborators.filter((collaborator) => collaborator.user._id != userId);
-
+    const deleteCollaborator = async (userId) => {
+        const updatedCollaborators = collaborators?.filter((collaborator) => collaborator.user._id != userId);
+        const idxCollab = collaborators.findIndex((item) => item.projectId === projectId && item.userId === userId)
+        if (idxCollab !== -1) {
+            const collab = collaborators[idxCollab];
+            axios({
+                method: 'DELETE',
+                url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
+            })
+        }
         setCollaborators(updatedCollaborators);
+    }
+
+    const handleRoleChange = async (role, userId) => {
+        const idxCollab = collaborators.findIndex((item) => item.projectId === projectId && item.userId === userId)
+        if (idxCollab !== -1) {
+            const collab = collaborators[idxCollab];
+            if (role === collab.rights) {
+                return;
+            }
+            const res = await axios({
+                method: 'PATCH',
+                url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
+                data: {
+                    titleOfCollaboration: role.toLowerCase(),
+                    rights: role,
+                }
+            })
+            let newCollabs = [...collaborators]
+            newCollabs[idxCollab] = {...collaborators[idxCollab], ...res.data};
+            setCollaborators(newCollabs);
+        }
     }
 
     return (
         <div className="flex flex-col w-full pt-4">
-            <label className="input-with-label-label">Add collaborators</label>
-            <div className="flex w-full">
+            {isEditable && <label className="input-with-label-label">Add collaborators</label>}
+            {isEditable && <div className="flex w-full">
                 <input
                  pattern={".+"}
                  onBlur={checkValidity}
@@ -84,14 +126,19 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators }) {
                     </button>
                 </div>
 
-            </div>
-            <div className="flex flex-wrap w-2/3 pt-1">
-                {collaborators.map((collaborator) => {
+            </div>}
+            <div className="flex flex-wrap flex-row w-full pt-1">
+                {collaborators?.map((collaborator) => {
+                    console.log("🚀 ~ file: CollaboratorInput.jsx:90 ~ {collaborators?.map ~ collaborator", collaborator)
                     return (
                         <Tag
                          key={collaborator.user._id}
-                         text={collaborator.user.firstName}
+                         role={collaborator.rights}
+                         userRole={userRole}
+                         isUser={currentUser.userId === collaborator.user._id}
+                         text={`${collaborator.user.firstName} ${collaborator.user.lastName}(${collaborator.titleOfCollaboration})`}
                          onDelete={() => deleteCollaborator(collaborator.user._id)}
+                         onChangeRole={(role) => handleRoleChange(role, collaborator.user._id)}
                         />
                     );
                 })}

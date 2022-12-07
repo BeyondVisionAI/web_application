@@ -53,7 +53,9 @@ const Errors = {
 
     //Shop : 8
     ARTICLE_NOT_FOUND: "ARTICLE_NOT_FOUND",
-    CART_NOT_FOUND: "CART_NOT_FOUND"
+    CART_NOT_FOUND: "CART_NOT_FOUND",
+
+    ERROR_S3_DELETE: "ERROR_S3_DELETE",
 };
 
 exports.Errors = Errors;

@@ -1,14 +1,17 @@
 import axios from 'axios';
 import React from 'react'
 import "./Lists.css"
-import ProjectsList from './Components/ProjectsList/ProjectsList';
-import ModalAddProjectToList from './Components/ModalAddProjectToList/ModalAddProjectToList';
-import ModalRemoveProjectFromList from './Components/ModalRemoveProjectFromList/ModalRemoveProjectFromList';
 import { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
-import ModalDestroyLeaveProject from './Components/ModalDestroyLeaveProject/ModalDestroyLeaveProject';
-import ModalDestroyLeaveList from './Components/ModalDestroyLeaveList/ModalDestroyLeaveList';
 import CreateProject from '../Project/Create/CreateProject';
+import ProjectDrawer from './Components/ProjectDrawer/ProjectDrawer';
+import ProjectMiniature from './Components/ProjectMiniature/ProjectMiniature';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import FolderCard from './Components/FolderCard/FolderCard';
+import AddFolderModal from './Components/AddFolderModal/AddFolderModal';
+import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
+import { HiArrowNarrowRight } from "react-icons/hi";
+import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import NavBarVariante from '../../GenericComponents/NavBar/Dashboard/NavBarVariante';
 import { Elements } from '@stripe/react-stripe-js';
 import DisplayPaymentStatus from '../../GenericComponents/DisplayPaymentStatus/DisplayPaymentStatus';
@@ -16,103 +19,56 @@ import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
-    const [input, setInput] = useState('');
-    const [customLists, setCustomLists] = useState([]);
-    const [myProjectsList, setMyProjectsList] = useState({ id: 0, name: "My projects", movies: [] });
-    const [sharedProjectsList, setSharedProjectsList] = useState({ id: 1, name: "Shared with me", movies: [] });
 
-    //Modals
-    const [addProjectToListPopupOpen, setAddProjectToListOpen] = useState(false);
-    const [removeProjectFromListPopupOpen, setRemoveProjectFromListOpen] = useState(false);
-    const [destroyLeaveProjectPopupOpen, setDestroyLeaveProjectOpen] = useState(false);
-    const [destroyLeaveListPopupOpen, setDestroyLeaveListOpen] = useState(false);
-    const [modalShow, setShowModal] = useState(false);
-
-    //Variables for modals
-    const [projectToModify, setProjectToModify] = useState(0);
-    const [listToModify, setListToModify] = useState(0);
-
-    var [isFinished, setIsFinished] = useState(false);
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [recentProjects, setRecentProjects] = useState([])
+    const [folders, setFolders] = useState([])
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [selectedProject, setSelectedProject] = useState(null)
+    const [isProjectCreationModelOpen, setIsProjectCreationModalOpen] = useState(false)
+    const [isFolderCreationModelOpen, setIsFolderCreationModalOpen] = useState(false)
 
     // Stripe
     const [isRedirectFromPayment, setIsRedirectFromPayment] = useState(false);
 
     useEffect(() => {
-        const getMyProjects = async () => {
-            try {
-                setMyProjectsList({ id: 0, name: "My projects", movies: [] });
-                var res = await axios({
-                    method: "GET",
-                    withCredentials: true,
-                    url: `${process.env.REACT_APP_API_URL}/lists/mine`,
-                });
-                setIsFinished(true);
-                res.data.forEach(movie => {
-                    setMyProjectsList(prev => ({
-                        ...prev,
-                        movies: [...prev.movies, movie]
-                    }));
-                });
-            } catch (err) {
-                toast.error("Email couldn't be verified, try again later")
-                setIsFinished(true)
-            }
-        };
+        return (clearAllBodyScrollLocks)
+    }, []);
 
-        const getSharedProjects = async () => {
+    useEffect(() => {
+        const getLists = async () => {
             try {
-                setSharedProjectsList({ id: 1, name: "Shared with me", movies: [] })
                 var res = await axios({
-                    method: "GET",
-                    withCredentials: true,
-                    url: `${process.env.REACT_APP_API_URL}/lists/shared`,
-                });
-                setIsFinished(true);
-                res.data.forEach(movie => {
-                    setSharedProjectsList(prev => ({
-                        ...prev,
-                        movies: [...prev.movies, movie]
-                    }));
-                });
-            } catch (err) {
-                toast.error("Email couldn't be verified, try again later")
-                setIsFinished(true)
-            }
-        };
-
-        const getAllCustomLists = async () => {
-            try {
-                setCustomLists([]);
-                var res = await axios({
-                    method: "GET",
-                    withCredentials: true,
                     url: `${process.env.REACT_APP_API_URL}/lists`,
-                });
-                setIsFinished(true);
-                res.data.forEach(list => {
-                    setCustomLists(prev => ([
-                        ...prev,
-                        {
-                            id: list._id,
-                            name: list.name,
-                            movies: list.projects
-                        }
-                    ]))
-                });
-            } catch (err) {
-                toast.error("Email couldn't be verified, try again later")
-                setIsFinished(true)
+                    method: 'GET',
+                    withCredentials: true,
+                })
+                setFolders(res.data)
+            } catch (e) {
+                console.error(e)
             }
-        };
-
-        getMyProjects();
-        getSharedProjects();
-        getAllCustomLists();
-        return function cleanup() {
-        };
-    }, [refreshKey]);
-
+        }
+        const getRecentProjects = async () => {
+            try {
+                var res = await axios({
+                    url: `${process.env.REACT_APP_API_URL}/projects`,
+                    method: 'GET',
+                    withCredentials: true,
+                    params: {
+                        limit: 3
+                    }
+                })
+                var projects = [...res.data];
+                for (const project of projects) {
+                    project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+                }
+                setRecentProjects(projects)
+            } catch (e) {
+                console.error(e)
+            }
+        }
+        getLists()
+        getRecentProjects()
+    }, []);
     useEffect(() => {
         const clientSecret = new URLSearchParams(window.location.search).get(
             'payment_intent_client_secret'
@@ -123,112 +79,119 @@ export default function Lists() {
         }
     }, []);
 
-    const handleOpenAddProjectToListPopup = (projectId) => {
-        setAddProjectToListOpen(true);
-        setProjectToModify(projectId);
-    };
-    const handleCloseAddProjectToListPopup = () => {
-        setAddProjectToListOpen(false);
-        setProjectToModify(0);
-    };
-
-    const handleOpenRemoveProjectFromListPopup = (projectId, listId) => {
-        setRemoveProjectFromListOpen(true);
-        setProjectToModify(projectId);
-        setListToModify(listId);
-    };
-    const handleCloseRemoveProjectFromListPopup = () => {
-        setRemoveProjectFromListOpen(false);
-        setProjectToModify(0);
-        setListToModify(0);
-    };
-
-    const handleOpenDestroyLeaveProjectPopup = (projectId) => {
-        setDestroyLeaveProjectOpen(true);
-        setProjectToModify(projectId);
-    };
-    const handleCloseDestroyLeaveProjectPopup = () => {
-        setDestroyLeaveProjectOpen(false);
-        setProjectToModify(0);
-    };
-
-    const handleOpenDestroyLeaveListPopup = (listId) => {
-        setDestroyLeaveListOpen(true);
-        setListToModify(listId);
-    };
-    const handleCloseDestroyLeaveListPopup = () => {
-        setDestroyLeaveListOpen(false);
-        setListToModify(0);
-    };
-
-    if (!isFinished) {
-        return (
-            <div className="page-container">
-                <NavBarVariante input={input} updateInput={(input) => setInput(input)}/>
-            </div>
-        );
-    } else {
-        return (
-            <div className="page-container">
-                <NavBarVariante input={input} updateInput={(input) => setInput(input)}/>
-
-                {isRedirectFromPayment && <Elements stripe={stripePromise}><DisplayPaymentStatus /></Elements>}
-                <ModalAddProjectToList refresh={setRefreshKey} open={addProjectToListPopupOpen} close={handleCloseAddProjectToListPopup}
-                    projectId={projectToModify}></ModalAddProjectToList>
-                <ModalRemoveProjectFromList refresh={setRefreshKey} open={removeProjectFromListPopupOpen} close={handleCloseRemoveProjectFromListPopup}
-                    projectId={projectToModify} listId={listToModify}></ModalRemoveProjectFromList>
-                <ModalDestroyLeaveProject refresh={setRefreshKey} open={destroyLeaveProjectPopupOpen} close={handleCloseDestroyLeaveProjectPopup}
-                    projectId={projectToModify}></ModalDestroyLeaveProject>
-                <ModalDestroyLeaveList refresh={setRefreshKey} open={destroyLeaveListPopupOpen} close={handleCloseDestroyLeaveListPopup}
-                    listId={listToModify}></ModalDestroyLeaveList>
-
-                <div className='flex justify-end p-1 sticky top-24 z-10'>
-                    <button
-                    className="bg-myBlue text-white active:bg-myBlack
-                        flex justify-center items-center h-12 w-12 mr-4
-                        font-bold uppercase text-xl rounded-full shadow outline-none
-                        hover:shadow-lg focus:outline-none ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal(true)}
-                    >+</button>
-                </div>
-
-                {modalShow ? (
-                    <CreateProject
-                        show={modalShow}
-                        onHide={() => setShowModal(false)}
-                    />
-                ): null}
-
-                {
-                    myProjectsList.movies.length > 0 ?
-                    <ProjectsList key={0} id="My projects" list={myProjectsList}
-                    openAddProjectToList={handleOpenAddProjectToListPopup}
-                    openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup}
-                    openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup}
-                    openDestroyLeaveList={handleOpenDestroyLeaveListPopup}/>
-                    : null
-                }
-                {
-                    sharedProjectsList.movies.length > 0 ?
-                    <ProjectsList key={1} id="Shared with me" list={sharedProjectsList}
-                    openAddProjectToList={handleOpenAddProjectToListPopup}
-                    openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup}
-                    openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup}
-                    openDestroyLeaveList={handleOpenDestroyLeaveListPopup}/>
-                    : null
-                }
-                {
-                    customLists.map((list, index) => (
-                        (list) && (list.movies) && (list.movies.length > 0) ?
-                            <ProjectsList key={index} id={list.id} list={list}
-                            openAddProjectToList={handleOpenAddProjectToListPopup}
-                            openRemoveProjectFromList={handleOpenRemoveProjectFromListPopup}
-                            openDestroyLeaveProject={handleOpenDestroyLeaveProjectPopup}
-                            openDestroyLeaveList={handleOpenDestroyLeaveListPopup}/> : <div key={index}></div>
-                    ))
-                }
-            </div>
-        )
+    const handleOpenDrawer = (project) => {
+        const bodyElement = document.getElementById('dashboard-container')
+        disableBodyScroll(bodyElement)
+        setSelectedProject(project)
+        setIsDrawerOpen(true)
     }
+
+    const handleCloseDrawer = () => {
+        const bodyElement = document.getElementById('dashboard-container')
+        enableBodyScroll(bodyElement)
+        setIsDrawerOpen(false)
+    }
+
+    const handleOpenProjectModal = () => {
+        const bodyElement = document.getElementById('dashboard-container')
+        disableBodyScroll(bodyElement)
+        setIsProjectCreationModalOpen(true)
+    }
+
+    const handleCloseProjectModal = () => {
+        const bodyElement = document.getElementById('dashboard-container')
+        enableBodyScroll(bodyElement)
+        setIsProjectCreationModalOpen(false)
+    }
+
+    const handleOpenFolderModal = () => {
+        const bodyElement = document.getElementById('dashboard-container')
+        disableBodyScroll(bodyElement)
+        setIsFolderCreationModalOpen(true)
+    }
+
+    const handleCloseFolderModal = () => {
+        const bodyElement = document.getElementById('dashboard-container')
+        enableBodyScroll(bodyElement)
+        setIsFolderCreationModalOpen(false)
+    }
+
+    const removeFolderFromList = (id) => {
+        const idx = folders.findIndex((obj) => obj._id === id);
+        if (idx === -1) return;
+        const newList = [...folders];
+        newList.splice(idx, 1)
+        setFolders(newList)
+    }
+
+    const addToProjectList = (project) => {
+        setRecentProjects([project, ...recentProjects]);
+    }
+
+    const editProject = async (project) => {
+        const idx = recentProjects.findIndex((item) => item._id === project._id);
+        if (idx !== - 1) {
+            let projectsCopy = [...recentProjects]
+            if (project.thumbnail !== projectsCopy[idx].thumbnail) {
+                project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+            }
+            projectsCopy[idx] = {...projectsCopy[idx], ...project};
+            setRecentProjects(projectsCopy)
+        }
+    }
+
+    const removeProjectFromList = (projectId) => {
+        const idx = recentProjects.findIndex(item => item._id === projectId);
+        if (idx !== -1) {
+            let projectsCopy = [...recentProjects];
+            projectsCopy.splice(idx, 1);
+            setRecentProjects(projectsCopy)
+            console.log("🚀 ~ file: Lists.jsx:119 ~ removeProjectFromList ~ projectsCopy", projectsCopy)
+        }
+    }
+
+    return (
+        <div id="dashboard-container" className="dashboard-container">
+            <ProjectDrawer folderList={folders} editProject={editProject} project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}
+            removeProjectFromList={removeProjectFromList}/>
+            {isProjectCreationModelOpen && (
+                <CreateProject
+                    show={isProjectCreationModelOpen}
+                    onHide={handleCloseProjectModal}
+                    addToProjectList={addToProjectList}
+                />
+            )}
+            {isFolderCreationModelOpen && (
+                <AddFolderModal
+                    closeModal={handleCloseFolderModal}
+                    addToFolderList={(folder) => setFolders([...folders, folder])}
+                />
+            )}
+            <BreadCrumbs pathObject={[{url: '/dashboard', name: 'Dashboard'}]} />
+            <div className='dashboard-inner-container'>
+                <h1 className='dashboard-inner-container-title'>Recent Projects</h1>
+                <div className='dashboard-cards-container'>
+                    <ProjectMiniature isAdd openAddProject={handleOpenProjectModal} />
+                    {recentProjects.map((project, idx) => {
+                        if (idx < 3) {
+                            return <ProjectMiniature project={project} openDrawer={() => handleOpenDrawer(project)} />
+                        }
+                    })}
+                </div>
+                <div className='dashboard-see-all-projects-container'>
+                    <a className='dashboard-see-all-projects-content' href='/projects'>
+                        <p>See all projects</p>
+                        <HiArrowNarrowRight className='dashboard-see-all-projects-icon'/>
+                    </a>
+                </div>
+                <h1 className='dashboard-inner-container-title'>Folders</h1>
+                <div className='dashboard-folder-container'>
+                    <FolderCard isAdd openAddFolder={handleOpenFolderModal}/>
+                    {folders.map(folder => {
+                        return <FolderCard folder={folder} removeFromList={removeFolderFromList}/>
+                    })}
+                </div>
+            </div>
+        </div>
+    )
 }
