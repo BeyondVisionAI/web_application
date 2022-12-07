@@ -107,19 +107,10 @@ export default function ProjectMiniature({ idList, movie, openAddProjectToList, 
         history.push(`/project/${movie._id}`);
     }
 
-    const stepImage = () => {
-        if (movie.actualStep === "") {
-
-        } else if (movie.actualStep === "") {
-
-        }
-    }
-
     return (
         <div className="project-miniature-container">
             <div className="img-container relative">
             <img className="object-fill w-full h-full" src={ thumbnail } alt={ `Movie ${movie.name}` } onClick={ () => RedirectToProject() }></img>
-            {/* <img className="object-fill w-full h-full" src={`./assets/movies/animal.jpg`} alt={`Movie ${movie.name}`}></img> */}
                 <div className="rounded-full absolute top-3 right-3 dropdown grid justify-items-stretch">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 justify-self-end" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
