@@ -17,7 +17,9 @@ exports.createCollaborationDB = async function(userId, projectId, title, role) {
             rights: role
         });
         await newCollab.save();
-        return newCollab;
+        var user = await User.findOne({_id: userId}, {firstName: 1, lastName: 1});
+        var res = {...newCollab._doc, user: user._doc}
+        return res;
     } catch (err) {
         console.log("Collaboration->createCollaborationDB: " + err);
         return null;

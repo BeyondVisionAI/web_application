@@ -17,14 +17,30 @@
     transition: color 150ms ease-in;
     transition: background-color 150ms ease-in;
     cursor: pointer;
+    position: relative;
+    text-transform: capitalize;
 }
 
-.custom-context-menu-tags > p:first-of-type {
+.custom-context-menu-tags > p:first-child {
     border-radius: .4vw .4vw 0 0;
 }
 
-.custom-context-menu-tags > p:last-of-type {
+.custom-context-menu-tags > p:last-child {
     border-radius: 0 0 .4vw .4vw;
+}
+
+.active {
+    background-color: #7793ED !important;
+    color: #F6F8FF !important;
+}
+
+.remove {
+    color: rgb(255, 177, 177) !important;
+}
+
+.remove:hover {
+    background-color: rgb(255, 177, 177) !important;
+    color: #F6F8FF !important;
 }
 
 .custom-context-menu-tags > p:hover {

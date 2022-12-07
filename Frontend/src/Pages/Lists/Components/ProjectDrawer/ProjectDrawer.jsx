@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState, useContext } from "react";
 import CollaboratorsButton from "../../../../GenericComponents/NavBar/Project/CollaboratorsComponents/CollaboratorsButton";
 import { toast } from 'react-toastify';
 import FolderListSelectable from "./Components/FolderListSelectable";
@@ -10,9 +10,9 @@ import InputWithLabel from "../../../../GenericComponents/InputWithLabel/InputWi
 import ThumbnailEditable from "./Components/ThumbnailEditable";
 import { UploadFileOnS3 } from "../../../../GenericComponents/Files/S3Manager";
 import CollaboratorInput from "../../../../GenericComponents/InputWithLabel/CollaboratorInput";
+import { AuthContext } from "../../../../GenericComponents/Auth/Auth";
 
 const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject}) => {
-    console.log("🚀 ~ file: ProjectDrawer.jsx ~ line 14 ~ ProjectDrawer ~ project", project)
     const divRef = useRef(null)
     const [lineCount, setLineCount] = useState(0)
     const [showMore, setShowMore] = useState(false)
@@ -20,7 +20,16 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
     const [title, setTitle] = useState(project?.name)
     const [description, setDescription] = useState(project?.description)
     const [thumbnail, setThumbnail] = useState(project?.thumbnailUrl || '/login-image.jpg')
-    const [collaborators, setCollaborators] = useState(null);
+    const [collaborators, setCollaborators] = useState([]);
+    const [userRole, setUserRole] = useState(null);
+    const {currentUser} = useContext(AuthContext)
+
+    useEffect(() => {
+      const idx = collaborators.findIndex((item) => item.userId === currentUser.userId)
+      if (idx !== -1) {
+          setUserRole(collaborators[idx].rights);
+      }
+  }, [collaborators, currentUser]);
 
     useEffect(() => {
         async function getCollaborators () {
@@ -166,19 +175,17 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
               <div className="project-drawer-editor-icon-container" onClick={handleEditSave}><FaCheck className="project-drawer-editor-icon"/></div>
             </>
             :
-            <div className="project-drawer-editor-icon-container" onClick={() => setIsEdit(true)}><FaPen className="project-drawer-editor-icon"/></div>}
-            <div className="project-drawer-editor-icon-container-error" onClick={handleDelete}><FaTrash className="project-drawer-editor-icon-error"/></div>
+            ['OWNER', 'ADMIN'].includes(userRole) && <div className="project-drawer-editor-icon-container" onClick={() => setIsEdit(true)}><FaPen className="project-drawer-editor-icon"/></div>}
+            {['OWNER', 'ADMIN'].includes(userRole) && 
+              <div className="project-drawer-editor-icon-container-error" onClick={handleDelete}><FaTrash className="project-drawer-editor-icon-error"/></div>
+            }
           </div>
             <div className="project-drawer-thumbnail-container">
               <ThumbnailEditable editThumbnail={setThumbnail} isEditable={isEdit} thumbnailUrl={thumbnail}/>
             </div>
-            {/* <div className="project-drawer-editor-container">
-                <CollaboratorsButton projectId={project?._id} isEditable/>
-            </div> */}
-            {/* TODO: Replace by component of Dimitri */}
             <div className="project-drawer-content">
                 {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{title}</h1>}
-                <CollaboratorInput isEditable={isEdit} collaborators={collaborators} />
+                <CollaboratorInput setCollaborators={setCollaborators} projectId={project?._id} isEditable={isEdit} collaborators={collaborators} />
                 <h2 className="project-drawer-sub-title">Description</h2>
                 {isEdit ? <InputWithLabel fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
                   lineCount > 15 ?
