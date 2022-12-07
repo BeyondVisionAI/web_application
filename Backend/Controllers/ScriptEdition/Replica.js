@@ -3,6 +3,7 @@ const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
 const { deleteFileS3, DownloadFileUrl } = require("../MediaManager/MediaManager")
 const axios = require("axios");
+const { projectsRooms, io, sendDataToUser } = require("../../Configs/socketIOConfig.js");
 
 /**
  * Call ServerIA to create audio
@@ -17,7 +18,7 @@ const createAudio = async (replica) => {
             replica.actualStep = 'Voice';
             await replica.save();
             
-            axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
+            await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
                 projectId: projectId,
                 voiceId: voiceId,
                 text: content,
@@ -30,16 +31,17 @@ const createAudio = async (replica) => {
                 replica.duration = response.data.audioDuration;
                 replica.status = 'Done';
                 replica.actualStep = 'Voice';
-                replica.save();
+                var index = projectsRooms.findIndex((elem) => elem.id == projectId);
+                for (var user of projectsRooms[index].users) {
+                    sendDataToUser(user, "update replica", replica);
+                }
             })
             .catch((err) => {
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
-                replica.save();
                 throw err;
             });
-        } else {
-            console.log('Replica content null');
+            await replica.save();
         }
     } catch (error) {
         console.error("Replica->Create Audio :", error);
@@ -189,17 +191,26 @@ exports.createReplica = async function (req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-        await createReplicaAndCreateAudio(
-            req.params.projectId,
-            req.body.content,
-            req.body.timestamp,
-            req.body.duration,
-            req.body.voiceId,
-            'Created',
-            'Done',
-            req.user.userId,
-        );
-        res.status(200).send("Replica created !");
+        const newReplica = new Replica({
+            projectId: req.params.projectId,
+            content: req.body.content,
+            timestamp: req.body.timestamp,
+            duration: req.body.duration,
+            voiceId: req.body.voiceId,
+            actualStep: 'Created',
+            status: 'Done',
+            lastEditor: req.user.userId,
+            lastEditDate: Date.now()
+        });
+        newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
+
+        await newReplica.save();
+        await createAudio(newReplica);
+        var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
+        for (var user of projectsRooms[index].users) {
+            sendDataToUser(user, "new replica", newReplica);
+        }
+        res.status(200).send(newReplica);
     } catch (err) {
         console.log("Replica->createReplica : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -240,6 +251,10 @@ exports.updateReplica = async function (req, res) {
                 await createAudio(replica);
             }
         }
+        var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
+        for (var user of projectsRooms[index].users) {
+            sendDataToUser(user, "update replica", replica);
+        }
         return res.status(200).send(replica);
     } catch (err) {
         console.log("Replica->updateReplica : " + err);
@@ -264,7 +279,10 @@ exports.deleteReplica = async function (req, res) {
         // const commentsToDelete = await ReplicaComment.find({replicaId: req.params.replicaId});
         // for (var comment of commentsToDelete)
         //     await comment.deleteOne();
-
+        var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
+        for (var user of projectsRooms[index].users) {
+            sendDataToUser(user, "delete replica", replicaToDelete);
+        }
         return res.status(200).send("Success");
     } catch (err) {
         console.log("Replica->deleteReplica : " + err);

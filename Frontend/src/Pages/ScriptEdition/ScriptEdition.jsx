@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReplicaDetails from './Components/ReplicaDetails';
 import EmptyReplicaDetails from './Components/EmptyReplicaDetails';
 import Timeline from './Components/Timeline';
@@ -12,8 +12,12 @@ import AudioPlayer from './Components/AudioPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
+import { AuthContext } from '../../GenericComponents/Auth/Auth';
 
 export default function ScriptEdition(props) {
+
+    const {socket, currentUser} = useContext(AuthContext);
+
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -23,7 +27,38 @@ export default function ScriptEdition(props) {
     const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
+    socket.on('connection', () => {
+        console.log(`I'm connected with the back-end for the script edition`);
+    });
+
+    socket.on('new replica', async (newReplica) => {
+        setReplicas([...replicas, newReplica])
+    });
+
+    socket.on('update replica', async (replica) => {
+        updateReplica(replica);
+    });
+
+    socket.on('delete replica', async (replica) => {
+        removeReplica(replica._id);
+    });
+    
+    socket.on('replica detected', async () => {
+        try {
+            const res = await axios({
+                method: "GET",
+                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/replicas`,
+                withCredentials: true
+            });
+            let resRep = Object.values(res.data);
+            setReplicas(resRep);
+        } catch (e) {
+            console.log('error detected when call new replica in front')
+        }
+    });
+
     useEffect(() => {
+        socket.emit("open project", props.match.params.id);
         const getProject = async function (id) {
             try {
                 let videoUrl = undefined;
@@ -49,6 +84,9 @@ export default function ScriptEdition(props) {
         }
 
         getProject(props.match.params.id)
+        return (() => {
+            socket.emit("close project", props.match.params.id);
+        })
     }, [props.match.params.id]);
 
     const callGenerationIA = () => {
@@ -90,9 +128,13 @@ export default function ScriptEdition(props) {
     }
 
     const removeReplica = (replicaID) => {
-        var newReplicas = [...replicas]
-        newReplicas.splice(newReplicas.findIndex((item) => item._id === replicaID), 1)
-        setReplicas(newReplicas)
+        var newReplicas = [...replicas];
+        const index = newReplicas.findIndex((item) => item._id === replicaID);
+        if (index !== -1) {
+            newReplicas.splice(index, 1)
+        }
+        setReplicas(newReplicas);
+        setReplicaSelected(null);
     }
 
 
@@ -133,7 +175,7 @@ export default function ScriptEdition(props) {
     }, []);
 
     const RedirectToProjectManagement = () => {
-        history.push(`/project/${props.match.params.id}`);
+        history.push(`/projects/`);
     }
 
     if (project) {
@@ -149,7 +191,7 @@ export default function ScriptEdition(props) {
                     </div>
                     <div className="flex flex-row gap-3 edit-bloc">
                         <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">                                
-                            {replicaSelected !== null
+                            {replicaSelected !== null && getReplicaFromId(replicaSelected) !== null
                             ?   <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
                             :   <EmptyReplicaDetails/>
                             }

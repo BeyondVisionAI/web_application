@@ -1,0 +1,70 @@
+.folder-card-container {
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    height: 13vh;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.04), 0px 8px 16px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    background-color: white;
+    transform: scale(100%);
+    transition: transform 300ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    border: 1px solid rgba(0, 0, 0, .03);
+}
+
+.folder-card-container-centered {
+    align-items: center;
+    justify-content: center;
+}
+
+.folder-card-container:hover {
+    transform: scale(110%);
+}
+
+.folder-card-last-editor-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    padding: 0 .7vw;
+    margin-top: .7vh;
+    margin-bottom: .7vh;
+}
+
+.folder-card-title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    padding: 0 .7vw;
+    color: black;
+    font-weight: 500;
+    font-size: 1.3vw;
+    margin-top: .7vh;
+    margin-bottom: .7vh;
+}
+
+.folder-card-title-container > p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.folder-card-last-edit-time {
+    color: #747474;
+}
+
+.folder-card-context-menu-item-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    color: lightcoral;
+}
+

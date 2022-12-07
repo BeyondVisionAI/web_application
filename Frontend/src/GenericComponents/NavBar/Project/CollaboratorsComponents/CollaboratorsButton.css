@@ -3,7 +3,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    cursor: default;
 }
 
 .collaborator-item {
@@ -18,17 +18,33 @@
     color: white;
     font-weight: 800;
     text-transform: capitalize;
+    border: solid .2vw white;
+    transition: all ease-in-out 300ms;
 }
 
 .collaborator-item:not(:first-child) {
-    margin-left: -.7rem;
+    transition: all ease-in-out 300ms;
+    margin-left: -1vw;
     box-shadow: -3px 2px 2px rgba(0, 0, 0, .3);
 }
 
+.collaborator-item:not(:first-child):hover {
+    margin-left: .2vw;
+}
+
 .collaborator-item:last-child {
+    transition: all ease-in-out 300ms;
     z-index: 1;
     background-color: white;
     color: #7793ED;
-    margin-left: -.7rem;
+    margin-left: -1vw;
     box-shadow: -3px 2px 2px rgba(0, 0, 0, .3);
+}
+
+.collaborator-item:last-child:hover {
+    margin-left: .2vw;
+}
+
+.editable {
+    cursor: pointer;
 }

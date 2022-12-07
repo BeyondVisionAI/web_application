@@ -1,48 +1,19 @@
-.role-select-container {
-    background-color: transparent;
-}
-
-.role-select-option {
-    color: black;
-}
-
-.collaborator-scrollable-container {
+.collaborator-modal-container {
     display: flex;
     flex-direction: column;
-    max-height: 70%;
-    overflow-y: scroll;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
-.add-collaborator-container {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    padding: 0 5%;
-}
-
-.add-collaborator-container > input {
-    background-color: transparent;
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 0 5px;
-}
-
-.add-collaborator-container > button {
-    background-color: #7793ED;
-    margin-top: 5px;
-    border-radius: 5px;
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.collaborator-save-button {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background-color: #7793ED;
-    padding: 5px 10px;
-    color: white;
-    font-weight: 700;
-    border-radius: 10px;
+.collaborator-modal-content-container {
+    width: 20%;
+    height: 40%;
+    background-color: white;
 }

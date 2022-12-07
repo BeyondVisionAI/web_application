@@ -4,11 +4,32 @@ const { Role } = require("../../Models/Roles");
 const { Errors } = require("../../Models/Errors.js");
 const { ProjectListed } = require("../../Models/list/ProjectListed");
 const axios = require("axios");
+const { Payment, PaymentStatus } = require("../../Models/Payment");
+
+const projectHasBeenPaid = async function (projectId) {
+    const payments = await Payment.find({ projectId: projectId });
+
+    if (!payments.length) {
+        return false;
+    }
+    for (const payment of payments) {
+        if (!payment || payment.paymentStatus != PaymentStatus.success) {
+            return false;
+        }
+    }
+    return true;
+}
+const { Collaboration: CollaborationModel } = require("../../Models/Collaboration") ;
+const { User } = require("../../Models/User");
+const { Image } = require("../../Models/Media/Image");
+const { Video } = require("../../Models/Media/Video");
 
 exports.getProjectDB = async function (projectId) {
     try {
-        var project = await Project.findById(projectId);
-        return project;
+        const project = await Project.findById(projectId);
+        const isPaid = await projectHasBeenPaid(projectId);        
+
+        return {...project._doc, isPaid: isPaid};
     } catch (err) {
         console.log("Project->getProjectDB: " + err);
         return null;
@@ -41,10 +62,11 @@ exports.getAllProjectsDB = async function (userId) {
  */
 exports.getProject = async function (req, res) {
     try {
-        let project = await Project.findById(req.params.projectId);
+        const project = await Project.findById(req.params.projectId);
+        const isPaid = await projectHasBeenPaid(req.params.projectId);        
 
         if (project)
-            return res.status(200).send(project);
+            return res.status(200).send({...project._doc, isPaid: isPaid});
         return res.status(404).send(Errors.PROJECT_NOT_FOUND);
     } catch (err) {
         console.log("Project->getProject: " + err);
@@ -73,7 +95,7 @@ exports.createProject = async function (req, res) {
         });
         await newProject.save();
         await Collaboration.createCollaborationDB(req.user.userId, newProject._id, "Owner", Role.OWNER);
-        res.status("200").send(newProject);
+        res.status(200).send(newProject);
     } catch (err) {
         console.log("Project->createProject: " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
@@ -123,9 +145,20 @@ exports.updateProject = async function (req, res) {
 
 exports.getAllProjects = async function (req, res) {
     try {
-        var projects = await module.exports.getAllProjectsDB(req.user.userId);
-        if (!projects) {
-            return res.status(500).send(Errors.INTERNAL_ERROR);
+        var projectsIds = null
+        if (req.query.limit) {
+            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(parseInt(req.body.limit));
+        } else {
+            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 });
+        }
+        const projects = []
+        for (const projectId of projectsIds) {
+            let ownerId = await CollaborationModel.findOne({projectId: projectId.projectId, rights: Role.OWNER});
+            const owner = await User.findOne({ _id: ownerId.userId}, {firstName: 1, lastName: 1})
+            const project = await Project.findOne({ _id: projectId.projectId});
+            const thumbnail = await Image.findOne({ _id: project.thumbnailId})
+            const video = await Video.findOne({ _id: project.videoId})
+            projects.push({...project._doc, owner: owner, thumbnail: thumbnail, video: video})
         }
         return res.status(200).send(projects);
     } catch (err) {

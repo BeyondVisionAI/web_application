@@ -42,7 +42,8 @@ export default function ManageProject(props) {
                     actualStep: projectR.data.actualStep,
                     thumbnailId: projectR.data.thumbnailId,
                     videoUrl: videoUrl,
-                    description: projectR.data.description
+                    description: projectR.data.description,
+                    isPaid: projectR.data.isPaid
                 });
             } catch (error) {
                 console.error(error);
@@ -81,11 +82,6 @@ export default function ManageProject(props) {
         );
     };
 
-// TODO :
-//   Indentation du text, récupération des: invoices, bouton mode edit, on load
-//   Cancel scroll barre
-//   Mettre un temps de chargement quand la donnée n'est pas disponible
-
     if (project) {
         return (
             <div className='w-full h-screen bg-myWhite'>
@@ -102,9 +98,7 @@ export default function ManageProject(props) {
                             description={project.description}
                             thumbnailId={project.thumbnailId}
                         />
-                        {/* <VideoPlayer
-                            videoUrl={project.videoUrl}
-                        /> */}
+                        <h2>{project.isPaid == true ? "Is Paid" : "Is not Paid"}</h2>
                      </div>
                      <div className='h-full w-1/3 rounded-xl'>
                          <ProjectStatus

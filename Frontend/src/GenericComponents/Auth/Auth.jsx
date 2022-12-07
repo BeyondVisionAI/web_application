@@ -23,16 +23,16 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    // useEffect(() => {
-    //     if (!currentUser) return;
-    //     setSocket(io(process.env.REACT_APP_API_URL, {
-    //         withCredentials: true,
-    //         autoConnect: true,
-    //         reconnection: true,
-    //         reconnectionDelay: 500,
-    //         reconnectionAttempts: 10
-    //     }))
-    // }, [currentUser]);
+    useEffect(() => {
+        if (!currentUser) return;
+        setSocket(io(process.env.REACT_APP_API_URL, {
+            withCredentials: true,
+            autoConnect: true,
+            reconnection: true,
+            reconnectionDelay: 500,
+            reconnectionAttempts: 10
+        }))
+    }, [currentUser]);
 
     async function logout() {
         try {
