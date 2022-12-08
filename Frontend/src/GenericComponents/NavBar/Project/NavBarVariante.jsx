@@ -5,7 +5,7 @@ import CollaboratorsButton from './CollaboratorsComponents/CollaboratorsButton'
 
 export default function NavBarVariante({ projectId }) {
     const renderCollaboratorsButton = (
-            <CollaboratorsButton key='collaboratorsButton' projectId={projectId} />
+            <CollaboratorsButton key='collaboratorsButton' projectId={projectId} isEditable/>
     )
 
     return (

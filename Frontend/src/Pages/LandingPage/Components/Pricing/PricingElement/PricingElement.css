@@ -13,7 +13,7 @@
 
 .pricing-element-container-secondary {
     height: 50vh;
-    width: 25%;
+    width: 30%;
 }
 
 
@@ -32,7 +32,7 @@
     background-size: 200% 100%;
     background-image: linear-gradient(to right, transparent 50%, white 50%);
     transition: background-position .3s cubic-bezier(0.19, 1, 0.22, 1) .1s, color .5s ease 0s, background-color .5s ease;
-    opacity: 0;
+    opacity: 1;
     cursor: default;
 }
 
@@ -52,6 +52,12 @@
     font-size: 1.2vw;
     margin-bottom: 15px;
     user-select: none;
+}
+
+.pricing-element-container > h1,
+.pricing-element-container-secondary > h1 {
+    font-weight: 400;
+    font-size: 1.5vw;
 }
 
 @media only screen and (max-width: 1024px) {

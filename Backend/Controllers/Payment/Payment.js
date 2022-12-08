@@ -9,7 +9,7 @@ function isNumeric(value) {
 }
 
 exports.createPaymentIntent = async function (req, res) {
-    if (!req.body.amount || !req.body.currency) {
+    if (!req.body.amount || !req.body.currency || !req.body.projectId) {
       return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
     }
     if (!isNumeric(req.body.amount) || !validateCurrencyCode(req.body.currency)) {
@@ -24,6 +24,7 @@ exports.createPaymentIntent = async function (req, res) {
         });
         const newPayment = new Payment({
             userId: req.user.userId,
+            projectId: req.body.projectId,
             paymentIntentId: paymentIntent.id,
             paymentAmount: paymentIntent.amount,
             paymentCurrency: paymentIntent.currency,
@@ -56,6 +57,7 @@ exports.stripeWebhook = async function (req, res) {
             var paymentIntent = event.data.object;
             Payment.findOne({paymentIntentId: paymentIntent.id}, (err, doc) => {
                 if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
+                if (!doc) return res.status(404).send("Not found")
                 var newDoc = {...doc._doc}
                 newDoc.paymentStatus = 'success'
                 doc.overwrite(newDoc)
@@ -69,6 +71,7 @@ exports.stripeWebhook = async function (req, res) {
             paymentIntent = event.data.object;
             Payment.findOne({paymentIntentId: paymentIntent.id}, (err, doc) => {
                 if (err) return res.status(500).send(Errors.INTERNAL_ERROR);
+                if (!doc) return res.status(404).send("Not found")
                 var newDoc = {...doc._doc}
                 newDoc.paymentStatus = 'failed'
                 doc.overwrite(newDoc)

@@ -9,6 +9,7 @@ services:
       dockerfile: ./DockerfileDev
     ports:
       - 80:80
+      - "8082"
     environment:
       CHOKIDAR_USEPOLLING: "true"
       NODE_ENV: "development"
@@ -23,6 +24,8 @@ services:
     restart: on-failure
 
   server:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - "mongodb"
     build:
@@ -30,6 +33,9 @@ services:
       dockerfile: ./DockerfileDev
     ports:
       - "8080:8080"
+      - "8082"
+    environment:
+      IS_TEST: "true"
     env_file:
       - .env
       - ./Backend/.env
@@ -39,11 +45,10 @@ services:
       - ./Backend/Models:/app/Models/
       - ./Backend/Configs:/app/Configs/
       - ./Backend/Routes:/app/Routes/
+      - ./Backend/routes:/app/routes/
     networks:
       - api
       - bdd
-    environment:
-      - IS_TEST="TRUE"
     restart: on-failure
 
   mongodb:

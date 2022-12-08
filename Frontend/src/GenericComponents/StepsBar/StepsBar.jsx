@@ -5,7 +5,7 @@ function StepsBar({ steps }) {
     function step(img, isDone) {
         return (
             <div className={`w-10 h-10 mx-auto bg-white rounded-full text-lg text-white flex items-center ${isDone ? "step-active" : "border-2 border-gray-200"}`}>
-                <span className={`text-center w-full ${isDone ? "step-icon-active" : "text-gray-600"}`}>
+                <span className={`text-center block m-1.5 w-full ${isDone ? "step-icon-active" : "text-gray-600"}`}>
                     {img}
                 </span>
             </div>

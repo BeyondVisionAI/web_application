@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import ReplicaDetails from './Components/ReplicaDetails';
+import EmptyReplicaDetails from './Components/EmptyReplicaDetails';
 import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -7,18 +8,59 @@ import { useHistory } from 'react-router-dom';
 import Chat from '../Chat/Chat';
 import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
+import AudioPlayer from './Components/AudioPlayer';
+import CircleButton from '../../GenericComponents/Button/CircleButton';
+import './ScriptEdition.css';
+import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
+import { AuthContext } from '../../GenericComponents/Auth/Auth';
+import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 
 
 export default function ScriptEdition(props) {
+
+    const {socket, currentUser} = useContext(AuthContext);
+
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
     const [replicaSelected, setReplicaSelected] = useState(null);
     const [playedSeconds, setPlayedSeconds] = useState(0);
     const [newSecondsFromCursor, setNewSecondsFromCursor] = useState(null)
+    const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
+    socket.on('connection', () => {
+        console.log(`I'm connected with the back-end for the script edition`);
+    });
+
+    socket.on('new replica', async (newReplica) => {
+        setReplicas([...replicas, newReplica])
+    });
+
+    socket.on('update replica', async (replica) => {
+        updateReplica(replica);
+    });
+
+    socket.on('delete replica', async (replica) => {
+        removeReplica(replica._id);
+    });
+    
+    socket.on('replica detected', async () => {
+        try {
+            const res = await axios({
+                method: "GET",
+                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/replicas`,
+                withCredentials: true
+            });
+            let resRep = Object.values(res.data);
+            setReplicas(resRep);
+        } catch (e) {
+            console.log('error detected when call new replica in front')
+        }
+    });
+
     useEffect(() => {
+        socket.emit("open project", props.match.params.id);
         const getProject = async function (id) {
             try {
                 let videoUrl = undefined;
@@ -27,15 +69,16 @@ export default function ScriptEdition(props) {
                     let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
 
                     if (video.status === 200)
-                        videoUrl = video.data.url;
+                        videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
                 } catch (error) {
                     console.error('Video non dispo');
                 }
+                // videoUrl = '/Marco_Destruction.mp4'
                 setProject({
                     id: id,
                     title: projectR.data.name,
-                    videoUrl: videoUrl
-                    // status: projectR.data.status
+                    videoUrl: videoUrl,
+                    status: projectR.data.status
                 });
             } catch (error) {
                 console.error(error);
@@ -43,6 +86,9 @@ export default function ScriptEdition(props) {
         }
 
         getProject(props.match.params.id)
+        return (() => {
+            socket.emit("close project", props.match.params.id);
+        })
     }, [props.match.params.id]);
 
     const updateReplicaAction = async (selectedId) => {
@@ -69,9 +115,13 @@ export default function ScriptEdition(props) {
     }
 
     const removeReplica = (replicaID) => {
-        var newReplicas = [...replicas]
-        newReplicas.splice(newReplicas.findIndex((item) => item._id === replicaID), 1)
-        setReplicas(newReplicas)
+        var newReplicas = [...replicas];
+        const index = newReplicas.findIndex((item) => item._id === replicaID);
+        if (index !== -1) {
+            newReplicas.splice(index, 1)
+        }
+        setReplicas(newReplicas);
+        setReplicaSelected(null);
     }
 
 
@@ -112,61 +162,158 @@ export default function ScriptEdition(props) {
     }, []);
 
     const RedirectToProjectManagement = () => {
-        history.push(`/project/${props.match.params.id}`);
+        history.push(`/projects/`);
     }
 
+    const LaunchGeneration = async() => {
+        try {
+            toast.warning("Generation started");
+            const res = await axios({
+                method: "POST",
+                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
+                withCredentials: true
+            });
+            if (res.status != 200) {
+                toast.error("An error occured when trying to generate the project");
+            }
+        } catch (error) {
+            toast.error("Could not generate the project");
+            console.log(error)
+        }
+    }
+
+    const DownloadFile = async() => {
+        try {
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}`, { withCredentials: true });
+            if (projectR.data.status === "Done") {
+                var res = await DownloadFileUrl("bv-finish-products", `Audio/${props.match.params.id}.mp3`)
+                fetch(res, {
+                    method: 'GET',
+                })
+                .then((response) => response.blob())
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(
+                    new Blob([blob]),
+                  );
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute(
+                    'download',
+                    `${projectR.data.name}_AD.mp3`,
+                  );
+                  document.body.appendChild(link);
+                  link.click();
+                  link.parentNode.removeChild(link);
+                });
+            }
+            else {
+                toast.error("Audiodescription file not ready");
+            }
+       
+        } catch (error) {
+            toast.error("Could not download the audiodescription file");
+            console.log(error)
+        }
+    }
+
+    const DownloadVideo = async() => {
+        try {
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}`, { withCredentials: true });
+            if (projectR.data.status === "Done") {
+                var res = await DownloadFileUrl("bv-finish-products", `Video/${props.match.params.id}.mp4`)
+                fetch(res, {
+                    method: 'GET',
+                })
+                .then((response) => response.blob())
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(
+                    new Blob([blob]),
+                  );
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute(
+                    'download',
+                    `${projectR.data.name}_AD.mp4`,
+                  );
+
+                  document.body.appendChild(link);
+
+                  link.click();
+
+                  link.parentNode.removeChild(link);
+                });
+            }
+            else {
+                toast.error("Audiodescription file not ready");
+            }
+       
+        } catch (error) {
+            toast.error("Could not download the audiodescription file");
+            console.log(error)
+        }
+    }
 
     if (project) {
         return (
-            <>
-                <div className="script-edition-container h-screen w-screen overflow-x-hidden">
-                    <NavBarVariante projectId={props.match.params.id} />
-                    <div id="page-container" className="w-screen h-5/6 py-2 px-6">
-                        <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
-                            <h1 className="text-blue-400 w-1/3 inline-flex items-center text-3xl">{project.title}</h1>
-                            <button className="bg-blue-600 w-min h-1/5 rounded-full text-white truncate p-3 inline-flex items-center text-base" onClick={() => RedirectToProjectManagement()}>Soumettre</button>
-                        </div>
-
-                        <div id="edit-bloc" className="flex h-4/6">
-
-                        <div id="menu-detail" className="bg-gray-100 w-1/3 mx-1 shadow-lg rounded-tl-3xl">
-                            {replicaSelected !== null ?
-                                <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
-                            :   <div className='w-full h-full bg-cover bg-center flex flex-col justify-center' style={{backgroundImage: "linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('/assets/hatched.png')"}}>
-                                    <p className='w-2/3 text-black self-center text-center bg-gray-100 rounded'>Veuillez sélectionner une réplique afin d'afficher ses détails</p>
-                                </div>
+            <div className="script-edition-container h-screen w-screen overflow-x-hidden">
+                <div id="page-container" className="w-screen h-5/6 py-2 px-6">
+                    <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
+                        <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
+                        <div className='flex flex-row gap-1 pa-0'>
+                            {project.status === 'Done'
+                            ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
+                            :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
                             }
-
-                        </div>
-                           <div id="movie-insight" className="flex justify-center content-end w-2/3 rounded-tr-3xl mx-1 shadow-lg bg-gray-100">
-                               <VideoPlayer
-                               videoUrl={project.videoUrl}
-                               setDuration={setVideoDuration}
-                               setPlayedSecondsInParent={setPlayedSeconds}
-                               newSecondsFromCursor={newSecondsFromCursor}
-                               resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
-                               />
-                           </div>
-                        </div>
-
-                        <div className="flex h-1/3 w-full pb-6 mt-2">
-                            <Timeline
-                            className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
-                            playedSeconds={playedSeconds}
-                            duration={videoDuration}
-                            replicas={replicas}
-                            projectId={project.id}
-                            onReplicaSelection={updateReplicaAction}
-                            updateReplica={updateReplica}
-                            removeReplicaFromState={removeReplica}
-                            setNewSecondsFromCursor={setNewSecondsFromCursor}
-                            />
+                            {project.status === 'Done'
+                            ?   <CircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
+                            :   <DisabledCircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
+                            }
+                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
+                            <CircleButton url="/user-icon.png" size='30px'/>
                         </div>
                     </div>
+                    <div className="flex flex-row gap-3 edit-bloc">
+                        <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">                                
+                            {replicaSelected !== null && getReplicaFromId(replicaSelected) !== null
+                            ?   <ReplicaDetails replica={getReplicaFromId(replicaSelected)} updateReplica={updateReplica}/>
+                            :   <EmptyReplicaDetails/>
+                            }
+                        </div>
+                        <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
+                            <VideoPlayer
+                                videoUrl={project.videoUrl}
+                                setDuration={setVideoDuration}
+                                setPlayedSecondsInParent={setPlayedSeconds}
+                                newSecondsFromCursor={newSecondsFromCursor}
+                                resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                                setIsPlaying={setIsPlaying}/>
+                        </div>
+                    </div>
+
+                    <div className="flex h-1/3 w-full pb-6 mt-2">
+                        <Timeline
+                        className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
+                        playedSeconds={playedSeconds}
+                        duration={videoDuration}
+                        replicas={replicas}
+                        projectId={project.id}
+                        onReplicaSelection={updateReplicaAction}
+                        updateReplica={updateReplica}
+                        removeReplicaFromState={removeReplica}
+                        setNewSecondsFromCursor={setNewSecondsFromCursor}
+                        />
+                    </div>
+                    <AudioPlayer
+                    replicas={replicas}
+                    playedSeconds={playedSeconds}
+                    newSecondsFromCursor={newSecondsFromCursor}
+                    resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                    triggerPause={!isPlaying}
+                    />
                 </div>
                 {/* <Chat projectId={props.match.params.id}/> */}
-            </>
-        )
+            </div>
+        );
     } else {
         return (
             <h1>Non</h1>

@@ -73,7 +73,6 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     desc: `Thumbnail for ${tmpProject.name} locate in ${bucket} bucket`,
                     ETag: imageRes.ETag,
                 });
-                console.log(thumbnailResponse.data);
                 if (thumbnailResponse.status !== 200)
                     console.error("Update image db error");
             }).catch(err => console.error("Upload thumbnail error:", err));
