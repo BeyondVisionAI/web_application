@@ -26,7 +26,7 @@ const createAudio = async (replica) => {
                 text: content,
                 replicaId: _id
             })
-            .then((response) => {
+            .then(async (response) => {
                 if (response.status != 200) {
                     throw Error(response.data);
                 }
@@ -35,7 +35,7 @@ const createAudio = async (replica) => {
                 replica.actualStep = 'Voice';
                 var index = projectsRooms.findIndex((elem) => elem.id == projectId);
                 for (var user of projectsRooms[index].users) {
-                    sendDataToUser(user, "update replica", replica);
+                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
                 }
             })
             .catch((err) => {
@@ -104,7 +104,7 @@ const createReplicaAndAudio = async (
     }
 }
 
-exports.getProjectReplicas = async function (projectId) {
+exports.getProjectReplicasFromId = async function (projectId) {
     try {
         var script = await Replica.find({ projectId: projectId }).
             populate({ path: 'lastEditor', select: 'firstName lastName' }).
@@ -119,7 +119,7 @@ exports.getProjectReplicas = async function (projectId) {
 
         return (scriptWithUrls);
     } catch (err) {
-        console.log("Replica->getProjectReplicas : " + err);
+        console.log("Replica->getProjectReplicasFromId : " + err);
         return (Errors.INTERNAL_ERROR);
     }
 }
@@ -246,7 +246,7 @@ exports.updateReplica = async function (req, res) {
         }
         var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
         for (var user of projectsRooms[index].users) {
-            sendDataToUser(user, "update replica", replica);
+            sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
         }
         return res.status(200).send(replica);
     } catch (err) {

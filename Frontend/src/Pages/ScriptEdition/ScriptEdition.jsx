@@ -11,6 +11,7 @@ import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
+import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 
 export default function ScriptEdition(props) {
 
@@ -73,8 +74,8 @@ export default function ScriptEdition(props) {
                 setProject({
                     id: id,
                     title: projectR.data.name,
-                    videoUrl: videoUrl
-                    // status: projectR.data.status
+                    videoUrl: videoUrl,
+                    status: projectR.data.status
                 });
             } catch (error) {
                 console.error(error);
@@ -176,6 +177,94 @@ export default function ScriptEdition(props) {
         history.push(`/projects/`);
     }
 
+    const LaunchGeneration = async() => {
+        try {
+            toast.warning("Generation started");
+            const res = await axios({
+                method: "POST",
+                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
+                withCredentials: true
+            });
+            if (res.status != 200) {
+                toast.error("An error occured when trying to generate the project");
+            }
+        } catch (error) {
+            toast.error("Could not generate the project");
+            console.log(error)
+        }
+    }
+
+    const DownloadFile = async() => {
+        try {
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}`, { withCredentials: true });
+            if (projectR.data.status === "Done") {
+                var res = await DownloadFileUrl("bv-finish-products", `Audio/${props.match.params.id}.mp3`)
+                fetch(res, {
+                    method: 'GET',
+                })
+                .then((response) => response.blob())
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(
+                    new Blob([blob]),
+                  );
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute(
+                    'download',
+                    `${projectR.data.name}_AD.mp3`,
+                  );
+                  document.body.appendChild(link);
+                  link.click();
+                  link.parentNode.removeChild(link);
+                });
+            }
+            else {
+                toast.error("Audiodescription file not ready");
+            }
+       
+        } catch (error) {
+            toast.error("Could not download the audiodescription file");
+            console.log(error)
+        }
+    }
+
+    const DownloadVideo = async() => {
+        try {
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}`, { withCredentials: true });
+            if (projectR.data.status === "Done") {
+                var res = await DownloadFileUrl("bv-finish-products", `Video/${props.match.params.id}.mp4`)
+                fetch(res, {
+                    method: 'GET',
+                })
+                .then((response) => response.blob())
+                .then((blob) => {
+                  const url = window.URL.createObjectURL(
+                    new Blob([blob]),
+                  );
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute(
+                    'download',
+                    `${projectR.data.name}_AD.mp4`,
+                  );
+
+                  document.body.appendChild(link);
+
+                  link.click();
+
+                  link.parentNode.removeChild(link);
+                });
+            }
+            else {
+                toast.error("Audiodescription file not ready");
+            }
+       
+        } catch (error) {
+            toast.error("Could not download the audiodescription file");
+            console.log(error)
+        }
+    }
+
     if (project) {
         return (
             <div className="script-edition-container h-screen w-screen overflow-x-hidden">
@@ -189,7 +278,15 @@ export default function ScriptEdition(props) {
                             >
                                 <div className="button-text">Générer le script</div>
                             </button>
-                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
+                            {project.status === 'Done'
+                            ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
+                            :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
+                            }
+                            {project.status === 'Done'
+                            ?   <CircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
+                            :   <DisabledCircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
+                            }
+                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
                             <CircleButton url="/user-icon.png" size='30px'/>
                         </div>
                     </div>
