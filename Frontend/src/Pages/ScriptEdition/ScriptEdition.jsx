@@ -45,7 +45,7 @@ export default function ScriptEdition(props) {
         socket.on('delete replica', async (replica) => {
             removeReplica(replica._id);
         });
-    }, [socket])
+    }, [socket, replicas])
 
     
     socket.on('replica detected', async () => {
@@ -108,13 +108,14 @@ export default function ScriptEdition(props) {
     }
 
     const updateReplica = (newReplica) => {
-        var newReplicas = [...replicas]
-        if (newReplicas.findIndex((item) => item._id === newReplica._id) !== -1) {
-            newReplicas[newReplicas.findIndex((item) => item._id === newReplica._id)] = newReplica;
-        } else {
-            newReplicas.push(newReplica)
+        console.log("🚀 ~ file: ScriptEdition.jsx:111 ~ updateReplica ~ newReplica", newReplica)
+        console.log("🚀 ~ file: ScriptEdition.jsx:115 ~ updateReplica ~ replicas", replicas)
+        const idx = replicas.findIndex((item) => item._id === newReplica._id)
+        if (idx !== -1) {
+            var newReplicas = [...replicas]
+            newReplicas[idx] = newReplica;
+            setReplicas(newReplicas)
         }
-        setReplicas(newReplicas)
     }
 
     const removeReplica = (replicaID) => {
