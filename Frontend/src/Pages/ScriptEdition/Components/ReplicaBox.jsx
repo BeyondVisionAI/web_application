@@ -19,7 +19,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
 
     useEffect(() => {
         setPosition({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
-    }, [parameters.secToPxCoef]);
+    }, [parameters.secToPxCoef, replica.timestamp]);
 
     const isReplicaCollided = function(replicasPositions, startTimestamp, endTimestamp) {
         for (var otherReplica of replicasPositions) {
