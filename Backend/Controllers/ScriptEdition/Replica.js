@@ -11,6 +11,7 @@ const { projectsRooms, io, sendDataToUser } = require("../../Configs/socketIOCon
  * @returns true or throw Error
  */
 
+
 const createAudio = async (replica) => {
     try {
         const { projectId, voiceId, content, _id } = replica;
@@ -193,7 +194,7 @@ exports.createReplica = async function (req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-        const newReplica = await createReplicaAndAudio(
+        await createReplicaAndCreateAudio(
             req.params.projectId,
             req.body.content,
             req.body.timestamp,
@@ -203,11 +204,7 @@ exports.createReplica = async function (req, res) {
             'Done',
             req.user.userId,
         );
-        var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
-        for (var user of projectsRooms[index].users) {
-            sendDataToUser(user, "new replica", newReplica);
-        }
-        res.status(200).send(newReplica);
+        res.status(200).send("Replica created !");
     } catch (err) {
         console.log("Replica->createReplica : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
