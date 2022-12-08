@@ -108,8 +108,6 @@ export default function ScriptEdition(props) {
     }
 
     const updateReplica = (newReplica) => {
-        console.log("🚀 ~ file: ScriptEdition.jsx:111 ~ updateReplica ~ newReplica", newReplica)
-        console.log("🚀 ~ file: ScriptEdition.jsx:115 ~ updateReplica ~ replicas", replicas)
         const idx = replicas.findIndex((item) => item._id === newReplica._id)
         if (idx !== -1) {
             var newReplicas = [...replicas]
