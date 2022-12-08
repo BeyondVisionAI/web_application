@@ -62,7 +62,6 @@ const NavBar = ({ homeRef, rightButtons, others }) => {
                 </div>)}
             {others}
             <I18nSelectionButton/>
-            {/*currentUser && <FontAwesomeIcon style={{marginLeft: '-10vw', color: 'red', cursor:'pointer'}} icon={faSignOutAlt} onClick={logout} />*/}
         </div>
     );
 }
