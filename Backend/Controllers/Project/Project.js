@@ -228,10 +228,19 @@ exports.generationIA = async function (req, res) {
                     userId: req.user.userId,
                     projectId: req.params.projectId,
                 });
+            } if (req.body.typeGeneration === 'ActionRetrieveFake') {
+
+                project.ActualStep = 'ActionRetrieve';
+                console.log("Project-> IA: ");
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/FinishedProcess`, {
+                    jsonPath: "../Files/Json/Action-638a321f6826a6c3cf094b96.json",
+                    userId: req.user.userId,
+                    projectId: req.params.projectId,
+                })
             } else if (req.body.typeGeneration === 'FaceRecognition') {
                 project.actualStep = 'FaceRecognition';
                 // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
-                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`, { projectId: req.params.projectId });
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/sNewProcess`, { projectId: req.params.projectId });
             }
         }
     } catch (err) {
