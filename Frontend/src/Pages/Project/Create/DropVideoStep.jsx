@@ -16,8 +16,8 @@ export default function DropVideoStep({ video, setVideo, nextStep, handleChange 
     }, [videoDuration]);
 
     return (
-        <form className='h-full flex flex-col'>
-            <div className="relative group w-full h-full flex justify-center items-center">
+        <form className='h-5/6 flex flex-col'>
+            <div className="relative group w-full h-5/6 flex justify-center items-center">
                 { !video ?
                     <UploadFile
                     setData={ setVideo }
