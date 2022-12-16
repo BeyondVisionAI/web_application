@@ -29,7 +29,6 @@ export default function ScriptEdition(props) {
     const history = useHistory();
 
     function initSocketListener() {
-
         socket.on('new replica', async (newReplica) => {
             setReplicas([...replicas, newReplica])
         });
@@ -161,7 +160,6 @@ export default function ScriptEdition(props) {
         initSocketListener()
 
         return(() => {
-            socket.emit('close project', props.match.params.id);
             socket.off("new replica");
             socket.off("update replica");
             socket.off("delete replica");
