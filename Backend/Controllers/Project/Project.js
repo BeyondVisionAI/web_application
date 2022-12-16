@@ -264,7 +264,7 @@ exports.finishedEdition = async function (req, res) {
                 timeStamp: parseFloat(replica.timestamp / 1000),
                 duration:  parseFloat(replica.duration / 1000),
             }
-            if (replica.status !== 'Done' && replicas.actualStep !== 'Voice')
+            if (replica.status !== 'Done' && replica.actualStep !== 'Voice')
                 if (!createAudio(replica))
                     throw Errors.INTERNAL_ERROR;
             audiosInfo.push(audioObject);
