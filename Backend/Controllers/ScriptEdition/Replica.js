@@ -291,11 +291,12 @@ exports.updateReplica = async function (req, res) {
             await replica.save();
             if (needAudioChanged) {
                 await createAudio(replica);
+            } else {
+                var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
+                for (var user of projectsRooms[index].users) {
+                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
+                }
             }
-        }
-        var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
-        for (var user of projectsRooms[index].users) {
-            sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
         }
         return res.status(200).send(replica);
     } catch (err) {
