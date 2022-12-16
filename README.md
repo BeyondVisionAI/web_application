@@ -49,29 +49,70 @@ foo@bar:~$ dos2unix .docker/mongo-express/docker-entrypoint.sh
 
 ##### Configuration
 
-Avant de lancer l'application il faudra creer plusieurs .env
+Avant de lancer l'application il faudra creer plusieurs Frontend/.env
 Le premier, celui du frontend devra contenir ces variables:
 
 ```txt
 REACT_APP_API_URL="urltoapi"
+REACT_APP_SERVER_IA_URL="urltoServer"
+
 REACT_APP_STRIPE_CLIENT_KEY=""
 REACT_APP_S3_ID=""
 REACT_APP_S3_SECRET=""
 REACT_APP_S3_REGION=""
 
+REACT_APP_STRIPE_CLIENT_KEY=""
+
 ```
 
-Le second, celui du backend devra contenir ces variables:
+Le second Backend/.env, celui du backend devra contenir ces variables:
 
 ```txt
+S3_ID=S3ID
+S3_SECRET=S3SECRET
+S3_REGION=us-east-1
+
 JWT_SECRETKEY="secretKeyToSignAndVerifyJWT"
 DB_CONN_STRING="mongodb://nameOfDB:passwordOfDB@urlOfDb/nameOfCollection"
+
 GMAIL_USERNAME="example@gmail.com"
 GOOGLE_CLIENT_ID=googleCliendID
 GOOGLE_CLIENT_SECRET=googleClientSecret
 GOOGLE_REFRESH_TOKEN=googleRefreshToken
 GOOGLE_ACCESS_TOKEN=googleAccessToken
+GOOGLE_REDIRECT_URI=redirectUrl
+
 WEBSITE_URL=UrlWhereWebsiteIsHosted
+SERVER_IA_URL=UrlWhereServerIaIsHosted
+```
+
+Enfin, le .env racine
+```txt
+MONGO_URL=mongodbUrl
+MONGO_INITDB_ROOT_USERNAME=DBUsername
+MONGO_INITDB_ROOT_PASSWORD=DBPassword
+MONGO_INITDB_DATABASE=DBDatabase
+MONGO_INITDB_USERNAME=DBUsername
+MONGO_INITDB_PASSWORD=DBPassword
+MONGO_REPLICA_SET_NAME=
+
+ME_CONFIG_BASICAUTH_USERNAME=username
+ME_CONFIG_BASICAUTH_PASSWORD=password
+
+# Stripe
+STRIPE_API_KEY=STRIP_KEY
+
+#Tests
+TESTS_JWT_SECRETKEY=HelloThereGeneralKenobi
+TESTS_INITDB_ROOT_USERNAME=root
+TESTS_INITDB_ROOT_PASSWORD=root
+TESTS_INITDB_DATABASE=beyondvisiontests
+
+#Tests db names
+TESTS_DB_USER=tests_db_user
+TESTS_DB_PROJECT=tests_db_project
+TESTS_DB_LIST=tests_db_list
+TESTS_DB_EXAMPLE=tests_db_example
 ```
 
 ##### Version de Développement :
