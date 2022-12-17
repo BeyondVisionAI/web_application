@@ -28,35 +28,19 @@ export default function ScriptEdition(props) {
     const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
-    socket.on('connection', () => {
-        console.log(`I'm connected with the back-end for the script edition`);
-    });
+    function initSocketListener() {
+        socket.on('new replica', async (newReplica) => {
+            setReplicas([...replicas, newReplica])
+        });
 
-    socket.on('new replica', async (newReplica) => {
-        setReplicas([...replicas, newReplica])
-    });
+        socket.on('update replica', async (replica) => {
+            updateReplica(replica);
+        });
 
-    socket.on('update replica', async (replica) => {
-        updateReplica(replica);
-    });
-
-    socket.on('delete replica', async (replica) => {
-        removeReplica(replica._id);
-    });
-    
-    socket.on('replica detected', async () => {
-        try {
-            const res = await axios({
-                method: "GET",
-                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/replicas`,
-                withCredentials: true
-            });
-            let resRep = Object.values(res.data);
-            setReplicas(resRep);
-        } catch (e) {
-            console.log('error detected when call new replica in front')
-        }
-    });
+        socket.on('delete replica', async (replica) => {
+            removeReplica(replica._id);
+        });
+    }
 
     useEffect(() => {
         socket.emit("open project", props.match.params.id);
@@ -173,6 +157,13 @@ export default function ScriptEdition(props) {
             }
         }
         fetchProjectDetails(props.match.params.id);
+        initSocketListener()
+
+        return(() => {
+            socket.off("new replica");
+            socket.off("update replica");
+            socket.off("delete replica");
+        })
     }, []);
 
     const RedirectToProjectManagement = () => {
