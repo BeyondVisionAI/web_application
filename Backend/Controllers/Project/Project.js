@@ -231,7 +231,6 @@ exports.generationIA = async function (req, res) {
             } if (req.body.typeGeneration === 'ActionRetrieveFake') {
 
                 project.ActualStep = 'ActionRetrieve';
-                console.log("Project-> IA: ");
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/FinishedProcess`, {
                     jsonPath: "../Files/Json/Action-638a321f6826a6c3cf094b96.json",
                     userId: req.user.userId,
