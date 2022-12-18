@@ -239,7 +239,7 @@ exports.generationIA = async function (req, res) {
             } else if (req.body.typeGeneration === 'FaceRecognition') {
                 project.actualStep = 'FaceRecognition';
                 // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
-                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/sNewProcess`, { projectId: req.params.projectId });
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/FaceRecognition/NewProcess`, { projectId: req.params.projectId });
             }
         }
     } catch (err) {
