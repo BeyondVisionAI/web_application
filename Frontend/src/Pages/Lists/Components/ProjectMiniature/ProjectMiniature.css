@@ -28,6 +28,7 @@
     object-fit: cover;
 }
 
+
 .project-card-floating-collaborators {
     display: flex;
     flex-direction: row;
