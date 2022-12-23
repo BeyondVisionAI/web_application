@@ -89,7 +89,6 @@ const CommentBox = ({comments, replica, updateComments, removeComment}) => {
                 default /* 500 */ : errMsg = "Internal Error."; break;
             }
             toast.error(errMsg);
-            console.error(e);
         }
         setNewComment("");
     }

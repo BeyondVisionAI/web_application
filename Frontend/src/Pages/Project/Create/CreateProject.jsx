@@ -6,6 +6,7 @@ import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideoStep from './DropVideoStep';
 import { useHistory } from "react-router-dom";
 import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
+import { toast } from 'react-toastify';
 
 export default function CreateProject({ show, onHide, addToProjectList }) {
     const [modalStep, setModalStep] = useState(0);
@@ -63,7 +64,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             });
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
-        }).catch(err => console.error("Upload thumbnail error:", err));
+        }).catch(() => toast.error("An error occured trying to upload the file, please retry"));
 
         UploadFileOnS3(video, 'beyondvision-vod-source-km23jds9b71q', process.env.REACT_APP_S3_REGION, `${values.id}.${video.name.split(".").pop()}`)
         .then(async videoRes => {
@@ -75,7 +76,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             });
             handleChange('videoId', videoResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
-        }).catch(err => console.error("Upload video error:", err));
+        }).catch(() => toast.error("An error occured trying to upload the file, please retry"));
     }
 
     const addCollaborators = (projectId) => {
@@ -83,7 +84,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             try {
                 axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: collaborator.user.email, titleOfCollaboration: 'Read', rights: 'READ'});
             } catch (error) {
-                console.error(error);
+                toast.error("An error occured while adding a collaborator, please retry");
             }
         });
     }
@@ -97,7 +98,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             await uploadMedia();
             await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectResponse.data._id}/generationIA`, { typeGeneration: 'ActionRetrieve' });
         } catch (error) {
-            console.error(error);
+            toast.error("An error occured while updating, please retry")
         }
     }
 

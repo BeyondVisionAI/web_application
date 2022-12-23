@@ -48,7 +48,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
             updateReplica(res.data)
             setIsLoading(false)
         } catch (err) {
-            console.error("error => ", err);
+            toast.error("An error occured updatign the replica's text, please retry")
         }
     }
 
@@ -105,7 +105,6 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
                         break;
                 }
                 toast.error(errMsg);
-                console.error(e);
             }
         }
         fetchReplicaComments();

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import "./CollaboratorsButton.css"
+import { toast } from 'react-toastify';
 
 export default function CollaboratorsButton( { projectId, isEditable } ) {
     // const [notifications, setNotifications] = useState(0);
@@ -17,7 +18,7 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
                 })
                 setCollaborators(collaborators.data);
             } catch (err) {
-                console.error(err);
+                toast.error("An error occured, please try again")
                 setCollaborators([])
             }
         }

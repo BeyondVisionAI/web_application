@@ -7,6 +7,7 @@ import "./ProjectList.css"
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import axios from 'axios';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
+import { toast } from 'react-toastify';
 
 const ProjectList = (props) => {
     const folderId = props.match.params.listId;
@@ -34,7 +35,7 @@ const ProjectList = (props) => {
                 }
                 setProjects(projects)
             } catch (e) {
-                console.error(e)
+                toast.error("An error occured getting the projects, please retry")
             }
         }
         getProjects()

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import TextareaAutosize from 'react-textarea-autosize';
+import { toast } from 'react-toastify';
 
 const Chat = (props) => {
     // TODO:
@@ -42,7 +43,7 @@ const Chat = (props) => {
             })
             setMessages([...messages, ...res.data]);
         } catch (e) {
-            console.error(e)
+            toast.error("An error occured, please retry")
         }
     }, [roomID]);
 

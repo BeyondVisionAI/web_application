@@ -44,7 +44,7 @@ export default function Lists() {
                 })
                 setFolders(res.data)
             } catch (e) {
-                console.error(e)
+                toast.error("An error occured accessing lists, please try again");
             }
         }
         const getRecentProjects = async () => {
@@ -63,7 +63,7 @@ export default function Lists() {
                 }
                 setRecentProjects(projects)
             } catch (e) {
-                console.error(e)
+                toast.error("An error occured trying to access recent projects, please try again");
             }
         }
         getLists()

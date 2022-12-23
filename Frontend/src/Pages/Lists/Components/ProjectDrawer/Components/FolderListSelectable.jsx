@@ -17,7 +17,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
             })
             setLists(res.data)
         } catch (e) {
-            console.error(e)
+            toast.error("An error occured trying to get lists, please retry");
         }
     }
 
@@ -45,7 +45,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
             addToFolderList(res.data)
             setNewListName('')
         } catch (error) {
-            console.error(error)
+            toast.error("An error occured while creating a list, please retry")
         }
     }
 
@@ -58,7 +58,6 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
                     withCredentials: true,
                 })
             } catch (e) {
-                console.error(e)
                 toast.error("Could not add this project to the list !")
             }
         } else {
@@ -69,7 +68,6 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
                     withCredentials: true,
                 })
             } catch (e) {
-                console.error(e)
                 toast.error("Could not remove this project from the list !")
             }
         }

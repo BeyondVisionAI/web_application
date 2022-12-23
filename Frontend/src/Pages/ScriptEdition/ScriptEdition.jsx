@@ -54,7 +54,7 @@ export default function ScriptEdition(props) {
                     if (video.status === 200)
                         videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
                 } catch (error) {
-                    console.error('Video non dispo');
+                    toast.error("An error occured getting the project, please retry")
                 }
                 setProject({
                     id: id,
@@ -63,7 +63,7 @@ export default function ScriptEdition(props) {
                     status: projectR.data.status
                 });
             } catch (error) {
-                console.error(error);
+                toast.error("An error occured while updating the project, please retry")
             }
         }
 
@@ -151,7 +151,6 @@ export default function ScriptEdition(props) {
                     default /* 500 */ : errMsg = "Internal Error."; break;
                 }
                 toast.error(errMsg);
-                console.error(e);
             }
         }
         fetchProjectDetails(props.match.params.id);

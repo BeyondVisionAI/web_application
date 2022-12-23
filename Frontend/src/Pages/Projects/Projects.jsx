@@ -6,6 +6,7 @@ import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager'
 import ProjectDrawer from '../Lists/Components/ProjectDrawer/ProjectDrawer'
 import ProjectMiniature from '../Lists/Components/ProjectMiniature/ProjectMiniature'
 import CreateProject from '../Project/Create/CreateProject'
+import { toast } from 'react-toastify';
 
 const Projects = () => {
     const [projects, setProjects] = useState([])
@@ -31,7 +32,7 @@ const Projects = () => {
                 }
                 setProjects(projects)
             } catch (e) {
-                console.error(e)
+                toast.error("An error occured while getting the projects, please retry")
             }
         }
         getProjects()

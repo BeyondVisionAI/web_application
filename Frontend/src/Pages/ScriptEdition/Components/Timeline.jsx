@@ -45,9 +45,8 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
                 withCredentials: true
             });
             updateReplica(res.data);
-        } catch (err) { // TODO check
+        } catch (err) {
             let errLog;
-            console.error("error : ", err);
 
             switch (err.response.status) {
                 case 401:
@@ -102,7 +101,6 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
             removeReplicaFromState(contextSelectedReplicaId);
         } catch (err) {
             let errLog;
-            console.error("error : ", err);
 
             switch (err.response.status) {
                 case 401:

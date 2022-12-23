@@ -28,14 +28,13 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
                     setThumbnail(url);
                 } catch (err) {
-                    console.error(`Getting file ${thumbnailId} on S3`, err);
+                    toast.error("An error occured getting the thumbnail, please retry")
                 }
             }
 
             if (thumbnailId)
                 getThumbnailProject(projectId);
         } catch (error) {
-            console.error(error);
             toast.error('Error while fetching data!');
         }
     }, [projectId, setThumbnail, thumbnailId]);
@@ -74,8 +73,8 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     ETag: imageRes.ETag,
                 });
                 if (thumbnailResponse.status !== 200)
-                    console.error("Update image db error");
-            }).catch(err => console.error("Upload thumbnail error:", err));
+                    toast.error("An error occured while updating the image, please retry");
+            }).catch(() => toast.error("An error occured while updating the thumbnail, please retry"));
         }
 
         async function updateProject () {
@@ -84,14 +83,13 @@ export default function Description({ editing, setEditing, updateProjectValues, 
 
                 updateThumbnail();
                 if (response.status !== 200)
-                    toast.error("Error while update project");
+                    toast.error("An error occured while getting the project");
                 else {
                     toast.success('Update success');
                     updateProjectValues([{field: 'description', value: response.data.description}, {field: 'name', value: response.data.name}]);
                     setEditing(0);
                 }
             } catch (error) {
-                console.error(error);
                 toast.error("Error, please retry.");
             }
         }

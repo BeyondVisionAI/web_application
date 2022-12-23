@@ -1,5 +1,6 @@
 import {React, useEffect, useState } from "react";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     const [voiceIndexSelected, setVoiceIndexSelected] = useState(undefined);
@@ -52,7 +53,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
                 temp.push(language);
             setLanguageOptions(temp);
         } catch (err) {
-            console.error("Replica Error :", err);
+            toast.error("An error occured while retrieving the languages, please retry")
         }
     }
 
@@ -67,7 +68,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
             setVoiceOptions(response.data.voices);
             changeVoiceIndexSelected(voiceId, response.data.voices);
         } catch (err) {
-            console.error("Replica Error :", err);
+            toast.error("An error occured while retrieving the voices, please retry")
         }
     }
 

@@ -42,7 +42,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                 })
                 setCollaborators(collaborators.data);
             } catch (err) {
-                console.error(err);
+                toast.error("An error occured while getting all the collaborators, please retry");
                 setCollaborators([])
             }
         }
@@ -157,7 +157,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
           editProject(updatedProject)
         setIsEdit(false)
         } catch (error) {
-          console.error(error)
+          toast.error("An error occured while saving, please retry")
           setIsEdit(false)
 
         }

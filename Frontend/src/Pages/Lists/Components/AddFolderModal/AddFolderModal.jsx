@@ -58,7 +58,7 @@ export default function AddFolderModal({ closeModal, addToFolderList }) {
             addToFolderList(res.data)
             closeModal()
         } catch (error) {
-            console.error(error)
+            toast.error("An error occured creating a folder, please try again later");
         }
     }
 

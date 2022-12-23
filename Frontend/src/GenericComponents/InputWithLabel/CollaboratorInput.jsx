@@ -62,8 +62,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             setCollaborators(collaboratorsUpdate);
         } catch (error) {
             setErrorMessage('Email is invalid!');
-            toast.error(error);
-            console.error(error);
+            toast.error("An error occured while adding a collaborator, please retry");
         }
     }
 

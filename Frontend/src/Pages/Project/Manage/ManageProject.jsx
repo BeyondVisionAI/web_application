@@ -7,6 +7,7 @@ import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
 import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
+import { toast } from 'react-toastify';
 
 const EDIT = {
     off: 0,
@@ -33,7 +34,7 @@ export default function ManageProject(props) {
                             videoUrl = video.data.url;
                     }
                 } catch (error) {
-                    console.error(error);
+                    toast.error("An error occured trying to get the project, please retry");
                 }
 
                 setProject({
@@ -46,7 +47,7 @@ export default function ManageProject(props) {
                     isPaid: projectR.data.isPaid
                 });
             } catch (error) {
-                console.error(error);
+                toast.error("An error occured trying to get the project, please retry");
             }
         }
 
