@@ -12,7 +12,6 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
     const [errorMessage, setErrorMessage] = useState(null);
     const [userRole, setUserRole] = useState(null);
     const {currentUser} = useContext(AuthContext)
-    console.log("🚀 ~ file: CollaboratorInput.jsx:15 ~ currentUser", currentUser)
 
     axios.defaults.withCredentials = true;
 
@@ -129,7 +128,6 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             </div>}
             <div className="flex flex-wrap flex-row w-full pt-1">
                 {collaborators?.map((collaborator) => {
-                    console.log("🚀 ~ file: CollaboratorInput.jsx:90 ~ {collaborators?.map ~ collaborator", collaborator)
                     return (
                         <Tag
                          key={collaborator.user._id}

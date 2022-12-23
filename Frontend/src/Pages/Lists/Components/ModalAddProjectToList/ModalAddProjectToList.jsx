@@ -29,7 +29,7 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
+            toast.err("An error occured while adding the project to a list, try again later.");
         } finally {
             button.innerHTML = "Add"
         }
@@ -56,16 +56,13 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
+            toast.err("An error occured while creating a new list, try again later.");
         } finally {
             button.innerHTML = "Add"
         }
     };
 
-    const setList = (listId) => {
-        setListToAdd(listId);
-        console.log(listId);
-    };
+    const setList = (listId) => setListToAdd(listId);
 
     useEffect(() => {
         const getAllCustomLists = async () => {

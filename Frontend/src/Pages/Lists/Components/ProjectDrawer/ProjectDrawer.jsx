@@ -130,7 +130,6 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
         try {
           let updatedProject = {}
           let data = {}
-          console.log("🚀 ~ file: ProjectDrawer.jsx ~ line 113 ~ handleEditSave ~ thumbnail", thumbnail)
           if (thumbnail !== '/login-image.jpg' && thumbnail !== project?.thumbnailUrl) {
             const imageRes = await UploadFileOnS3(thumbnail, 'bv-thumbnail-project', 'us-east-1', `${project._id}.${thumbnail.name.split(".").pop()}`)
             const thumbnailResponse = await axios({

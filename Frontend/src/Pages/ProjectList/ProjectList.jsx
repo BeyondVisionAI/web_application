@@ -22,7 +22,6 @@ const ProjectList = (props) => {
     useEffect(() => {
         const getProjects = async () => {
             try {
-                console.log("🚀 ~ file: ProjectList.jsx ~ line 27 ~ getProjects ~ folderId", folderId)
                 var res = await axios({
                     url: `${process.env.REACT_APP_API_URL}/lists/${folderId}`,
                     method: 'GET',

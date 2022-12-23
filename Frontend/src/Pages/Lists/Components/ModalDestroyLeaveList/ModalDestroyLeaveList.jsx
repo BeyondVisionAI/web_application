@@ -29,7 +29,6 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
             toast.error("Can't leave list");
         } finally {
             button.innerHTML = "Leave";
@@ -49,7 +48,6 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
             toast.error("Can't destroy list");
         } finally {
             button.innerHTML = "Destroy";
@@ -86,7 +84,6 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
                 });
             } catch (err) {
                 toast.error("Can't get your informations on this list");
-                console.log(err);
                 close();
             }
         };
@@ -101,10 +98,6 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
             document.body.removeEventListener('keydown', closeOnEscapeKeydown);
         }
     }, [listId]);
-
-    const displayData = () => {
-        console.log(role);
-    }
 
     if (open) {
         return (

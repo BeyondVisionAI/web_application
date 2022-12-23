@@ -181,7 +181,6 @@ export default function ScriptEdition(props) {
             }
         } catch (error) {
             toast.error("Could not generate the project");
-            console.log(error)
         }
     }
 
@@ -215,7 +214,6 @@ export default function ScriptEdition(props) {
        
         } catch (error) {
             toast.error("Could not download the audiodescription file");
-            console.log(error)
         }
     }
 
@@ -252,7 +250,6 @@ export default function ScriptEdition(props) {
        
         } catch (error) {
             toast.error("Could not download the audiodescription file");
-            console.log(error)
         }
     }
 

@@ -146,7 +146,6 @@ export default function Lists() {
             let projectsCopy = [...recentProjects];
             projectsCopy.splice(idx, 1);
             setRecentProjects(projectsCopy)
-            console.log("🚀 ~ file: Lists.jsx:119 ~ removeProjectFromList ~ projectsCopy", projectsCopy)
         }
     }
 

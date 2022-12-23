@@ -29,7 +29,6 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
             toast.error("Can't leave project");
         } finally {
             button.innerHTML = "Leave";
@@ -49,7 +48,6 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
             toast.error("Can't destroy project");
         } finally {
             button.innerHTML = "Destroy";
@@ -86,7 +84,6 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
                 });
             } catch (err) {
                 toast.error("Can't get your informations on this project");
-                console.log(err);
                 close();
             }
         };
@@ -101,10 +98,6 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
             document.body.removeEventListener('keydown', closeOnEscapeKeydown);
         }
     }, [projectId]);
-
-    const displayData = () => {
-        console.log(role);
-    }
 
     if (open) {
         return (

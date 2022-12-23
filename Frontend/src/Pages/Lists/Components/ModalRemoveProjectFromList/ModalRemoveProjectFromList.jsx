@@ -27,7 +27,6 @@ export default function ModalRemoveProjectFromList({ refresh, open, close, proje
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
             toast.error("Can't remove project from list, check your rights");
         } finally {
             button.innerHTML = "Remove";

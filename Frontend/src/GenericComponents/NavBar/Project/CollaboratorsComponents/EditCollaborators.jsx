@@ -11,8 +11,6 @@ const Change = {
 }
 
 export default function EditCollaborators({ projectId, collaborators, isModalOpen, closeModal }) {
-    console.log("🚀 ~ file: EditCollaborators.jsx ~ line 14 ~ EditCollaborators ~ collaborators", collaborators)
-    console.log("🚀 ~ file: EditCollaborators.jsx ~ line 34 ~ EditCollaborators ~ isModalOpen", isModalOpen)
     const wrapperRef = useRef(null);
     axios.defaults.withCredentials = true;
 
