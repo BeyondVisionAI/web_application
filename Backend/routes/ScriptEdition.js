@@ -14,30 +14,42 @@ module.exports = function (app) {
     app.get("/projects/:projectId/replicas",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
-        replica.getProjectReplicas);
+        replica.getProjectReplicas,
+    );
 
     app.get("/projects/:projectId/replicas/:replicaId",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
         ReplicaMiddleware.isReplicaFromProject,
-        replica.getProjectReplica);
+        replica.getProjectReplica,
+    );
 
+    app.post('/projects/:projectId/setReplicas',
+        //TODO : a implementer
+        //authMiddleware.authenticateUser,
+        //collabMiddleware.isCollab,
+        replica.setReplicas,
+    );
+    
     app.post("/projects/:projectId/replicas",
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightWrite,
-        replica.createReplica);
+        replica.createReplica,
+    );
 
     app.put("/projects/:projectId/replicas/:replicaId",
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightWrite,
         ReplicaMiddleware.isReplicaFromProject,
-        replica.updateReplica);
+        replica.updateReplica,
+    );
 
     app.delete("/projects/:projectId/replicas/:replicaId",
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightWrite,
         ReplicaMiddleware.isReplicaFromProject,
-        replica.deleteReplica);
+        replica.deleteReplica,
+    );
 
     /*
     ** Replica Comments Routes
@@ -47,23 +59,27 @@ module.exports = function (app) {
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
         ReplicaMiddleware.isReplicaFromProject,
-        replicaComments.getReplicaComments);
+        replicaComments.getReplicaComments,
+    );
 
     app.get("/projects/:projectId/replicas/:replicaId/comments/:commentId",
         authMiddleware.authenticateUser,
         collabMiddleware.isCollab,
         ReplicaMiddleware.isReplicaFromProject,
-        replicaComments.getReplicaComment);
+        replicaComments.getReplicaComment,
+    );
 
     app.post("/projects/:projectId/replicas/:replicaId/comments",
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightWrite,
         ReplicaMiddleware.isReplicaFromProject,
-        replicaComments.postComment);
+        replicaComments.postComment,
+    );
 
     app.delete("/projects/:projectId/replicas/:replicaId/comments/:commentId",
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightOwner,
         ReplicaMiddleware.isReplicaFromProject,
-        replicaComments.deleteComment);
+        replicaComments.deleteComment,
+    );
 }

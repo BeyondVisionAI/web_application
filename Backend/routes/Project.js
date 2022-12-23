@@ -28,7 +28,7 @@ module.exports = function (app) {
 
     app.post('/projects/:projectId/setStatus',
         Project.setStatus);
-
+    
     app.post('/projects/:projectId/generationIA',
         authMiddleware.authenticateUser,
         collabMiddleware.hasRightAdmin,

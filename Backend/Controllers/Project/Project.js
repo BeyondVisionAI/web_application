@@ -200,9 +200,12 @@ exports.setStatus = async function (req, res) {
 
 
         await project.save();
+        if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
+            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId })
+        }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
-        console.log("Project->setStatus: " + err);
+        console.log(`Project->setStatus: ${err}`);
         return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
     }
 }
@@ -220,8 +223,13 @@ exports.generationIA = async function (req, res) {
             returnMessage = 'Generation IA is in progress';
         } else {
             if (req.body.typeGeneration === 'ActionRetrieve') {
-                project.actualStep = 'ActionRetrieve';
-                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { projectId: req.params.projectId });
+
+                project.ActualStep = 'ActionRetrieve';
+                console.log("Project-> IA: ");
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { 
+                    userId: req.user.userId,
+                    projectId: req.params.projectId,
+                });
             } else if (req.body.typeGeneration === 'FaceRecognition') {
                 project.actualStep = 'FaceRecognition';
                 // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
@@ -239,7 +247,6 @@ exports.generationIA = async function (req, res) {
 }
 
 exports.finishedEdition = async function (req, res) {
-    console.log('Route Finished Edtion');
     let returnCode = 200;
     let returnMessage = "La generation des Audio sont en cours...";
     try {
@@ -257,7 +264,7 @@ exports.finishedEdition = async function (req, res) {
                 timeStamp: parseFloat(replica.timestamp / 1000),
                 duration:  parseFloat(replica.duration / 1000),
             }
-            if (replica.status !== 'Done' && replicas.actualStep !== 'Voice')
+            if (replica.status !== 'Done' && replica.actualStep !== 'Voice')
                 if (!createAudio(replica))
                     throw Errors.INTERNAL_ERROR;
             audiosInfo.push(audioObject);

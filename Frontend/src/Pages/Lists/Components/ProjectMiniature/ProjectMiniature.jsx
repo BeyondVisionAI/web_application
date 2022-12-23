@@ -27,11 +27,11 @@ export default function ProjectMiniature({ project, openDrawer, isAdd, openAddPr
                 <CollaboratorsButton projectId={project?._id} />
             </div>
             <div className='project-card-last-editor-container'>
-                <ProfilePic initials={`${project.owner.firstName[0]}${project.owner.lastName[0]}`} label={`${project.owner.firstName} ${project.owner.lastName}`} /> 
+                <ProfilePic initials={`${project.owner.firstName[0]}${project.owner.lastName[0]}`} label={`${project.owner.firstName} ${project.owner.lastName}`} />
                 {/* <p className='project-card-last-edit-time'>UN MOIS PLUS TOT</p>  */}
             </div>
             <div className="project-card-title-container">
-                <p>{project.name}</p> 
+                <p>{project.name}</p>
             </div>
        </div>
     )

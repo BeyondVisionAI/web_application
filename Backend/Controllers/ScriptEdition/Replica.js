@@ -3,50 +3,8 @@ const { Replica } = require("../../Models/ScriptEdition/Replica");
 const { ReplicaComment } = require("../../Models/ScriptEdition/ReplicaComment.js");
 const { deleteFileS3, DownloadFileUrl } = require("../MediaManager/MediaManager")
 const axios = require("axios");
-const { projectsRooms, io, sendDataToUser } = require("../../Configs/socketIOConfig.js");
+const { projectsRooms, sendDataToUser } = require("../../Configs/socketIOConfig.js");
 
-/**
- * Call ServerIA to create audio
- * @param {Replica} replica
- * @returns true or throw Error
- */
-exports.createAudio = async (replica) => {
-    try {
-        const { projectId, voiceId, content, _id } = replica;
-        if (content.length > 0) {
-            replica.status = 'InProgress';
-            replica.actualStep = 'Voice';
-            await replica.save();
-            
-            axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
-                projectId: projectId,
-                voiceId: voiceId,
-                text: content,
-                replicaId: _id
-            })
-            .then((response) => {
-                if (response.status != 200) {
-                    throw Error(response.data);
-                }
-                replica.duration = response.data.audioDuration;
-                replica.status = 'Done';
-                replica.actualStep = 'Voice';
-                replica.save();
-            })
-            .catch((err) => {
-                replica.status = 'Error';
-                replica.actualStep = 'Voice';
-                replica.save();
-                throw err;
-            });
-        } else {
-            console.log('Replica content null');
-        }
-    } catch (error) {
-        console.error("Replica->Create Audio :", error);
-        return false;
-    }
-}
 /**
  * Call ServerIA to create audio
  * @param {Replica} replica
@@ -60,36 +18,33 @@ const createAudio = async (replica) => {
             replica.actualStep = 'Voice';
             await replica.save();
             
-            await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
+            const audio = await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
                 projectId: projectId,
                 voiceId: voiceId,
                 text: content,
                 replicaId: _id
             })
-            .then(async (response) => {
-                if (response.status != 200) {
-                    throw Error(response.data);
-                }
-                replica.duration = response.data.audioDuration;
-                replica.status = 'Done';
-                replica.actualStep = 'Voice';
-                var index = projectsRooms.findIndex((elem) => elem.id == projectId);
-                for (var user of projectsRooms[index].users) {
-                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
-                }
-            })
-            .catch((err) => {
+            if (audio.status != 200) {
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
-                throw err;
-            });
+                throw audio;
+            }
+            replica.duration = audio.data.audioDuration;
+            replica.status = 'Done';
+            replica.actualStep = 'Voice';
+            var index = projectsRooms.findIndex((elem) => elem.id == projectId);
+            for (var user of projectsRooms[index].users) {
+                sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
+            }
             await replica.save();
+            return true;
         }
     } catch (error) {
         console.error("Replica->Create Audio :", error);
         return false;
     }
 }
+exports.createAudio = createAudio
 
 /**
  * Get download url and put in returned replica
@@ -106,6 +61,41 @@ const getReplicaAudioUrl = async (replica) => {
         return url
     } catch (error) {
         console.error(error);
+    }
+};
+
+const createReplicaAndAudio = async (
+    projectId,
+    content,
+    timestamp,
+    duration,
+    voiceId,
+    actualStep,
+    status,
+    lastEditor,
+    ) => {
+    try {
+        if (!projectId || !content || !voiceId || !actualStep || !status || !lastEditor) {
+            throw Error(Errors.REPLICA_AND_AUDIO_CREATION_MISSING_ARGUMENTS);
+        }
+        const newReplica = new Replica({
+            projectId: projectId,
+            content: content,
+            timestamp: timestamp,
+            duration: duration,
+            voiceId: voiceId,
+            actualStep: actualStep,
+            status: status,
+            lastEditor: lastEditor,
+            lastEditDate: Date.now()
+        });
+        newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
+        const replica = await newReplica.save();
+        console.log(replica);
+        await createAudio(newReplica);
+    } catch (err) {
+        console.log(err);
+        return("KO");
     }
 }
 
@@ -162,6 +152,35 @@ exports.getProjectReplica = async function (req, res) {
     }
 }
 
+exports.setReplicas = async function (req, res) {
+    const actionsJson = JSON.parse(req.body.actionsJson);
+    const userId = req.body.userId;
+    const projectId = req.params.projectId
+    try {
+        if (!projectId || !actionsJson || !userId)
+            return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        for (let key in actionsJson.script) {
+            let { actionName, startTime } = actionsJson.script[key];
+            const replica = await createReplicaAndAudio(
+                projectId,
+                actionName,
+                startTime * 1000,
+                1,
+                1,
+                'Created',
+                'Done',
+                userId,
+            );
+            if (replica === "KO") {
+                throw new Error(Errors.INTERNAL_ERROR);
+            }
+        }
+        return (res.status(200).send("Project replicas saved."));
+    } catch (err) {
+        console.log("Project->setReplicas: " + err);
+        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+    }
+}
 
 exports.createReplica = async function (req, res) {
     try {
@@ -227,11 +246,12 @@ exports.updateReplica = async function (req, res) {
             await replica.save();
             if (needAudioChanged) {
                 await createAudio(replica);
+            } else {
+                var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
+                for (var user of projectsRooms[index].users) {
+                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
+                }
             }
-        }
-        var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
-        for (var user of projectsRooms[index].users) {
-            sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
         }
         return res.status(200).send(replica);
     } catch (err) {

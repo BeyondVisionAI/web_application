@@ -15,7 +15,6 @@ import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
 import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 
-
 export default function ScriptEdition(props) {
 
     const {socket, currentUser} = useContext(AuthContext);
@@ -29,39 +28,19 @@ export default function ScriptEdition(props) {
     const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
-    useMemo(() => {
-        socket.on('connection', () => {
-            console.log(`I'm connected with the back-end for the script edition`);
-        });
-    
+    function initSocketListener() {
         socket.on('new replica', async (newReplica) => {
             setReplicas([...replicas, newReplica])
         });
-    
+
         socket.on('update replica', async (replica) => {
-            console.log("🚀 ~ file: ScriptEdition.jsx:43 ~ socket.on ~ replica", replica)
             updateReplica(replica);
         });
-    
+
         socket.on('delete replica', async (replica) => {
             removeReplica(replica._id);
         });
-    }, [socket, replicas])
-
-    
-    socket.on('replica detected', async () => {
-        try {
-            const res = await axios({
-                method: "GET",
-                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/replicas`,
-                withCredentials: true
-            });
-            let resRep = Object.values(res.data);
-            setReplicas(resRep);
-        } catch (e) {
-            console.log('error detected when call new replica in front')
-        }
-    });
+    }
 
     useEffect(() => {
         socket.emit("open project", props.match.params.id);
@@ -77,7 +56,6 @@ export default function ScriptEdition(props) {
                 } catch (error) {
                     console.error('Video non dispo');
                 }
-                // videoUrl = '/Marco_Destruction.mp4'
                 setProject({
                     id: id,
                     title: projectR.data.name,
@@ -94,6 +72,21 @@ export default function ScriptEdition(props) {
             socket.emit("close project", props.match.params.id);
         })
     }, [props.match.params.id]);
+
+    const callGenerationIA = () => {
+        axios.defaults.withCredentials = true;
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${project.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
+        .then((res) => {
+            if (res.status === 400) {
+                toast.error(res.data);
+                return;
+            }
+            toast.success(res.data);
+        })
+        .catch((err) => {
+            toast.error(err)
+        });
+    }
 
     const updateReplicaAction = async (selectedId) => {
         setReplicaSelected(selectedId);
@@ -162,6 +155,13 @@ export default function ScriptEdition(props) {
             }
         }
         fetchProjectDetails(props.match.params.id);
+        initSocketListener()
+
+        return(() => {
+            socket.off("new replica");
+            socket.off("update replica");
+            socket.off("delete replica");
+        })
     }, []);
 
     const RedirectToProjectManagement = () => {
@@ -283,6 +283,10 @@ export default function ScriptEdition(props) {
                             }
                         </div>
                         <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
+                            <button 
+                              onClick={() => callGenerationIA()}>
+                                Générer l'audio-description
+                            </button>
                             <VideoPlayer
                                 videoUrl={project.videoUrl}
                                 setDuration={setVideoDuration}

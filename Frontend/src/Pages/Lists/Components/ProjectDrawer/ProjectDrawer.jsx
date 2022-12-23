@@ -11,6 +11,7 @@ import ThumbnailEditable from "./Components/ThumbnailEditable";
 import { UploadFileOnS3 } from "../../../../GenericComponents/Files/S3Manager";
 import CollaboratorInput from "../../../../GenericComponents/InputWithLabel/CollaboratorInput";
 import { AuthContext } from "../../../../GenericComponents/Auth/Auth";
+import SVGLogos from '../../../../GenericComponents/SVGLogos/SVGLogos';
 
 const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject, folderList}) => {
     const divRef = useRef(null)
@@ -202,6 +203,11 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                   </p> :
                     <p id="project-description" className="project-drawer-text-content">{description}</p>
                 }
+                <h2 className="project-drawer-sub-title">Status</h2>
+                <div className="flex flex-row inline-block align-middle project-status">
+                    <SVGLogos logoType={ project?.actualStep }/>
+                    <SVGLogos logoType={ project?.status }/>
+                </div>
                 <h2 className="project-drawer-sub-title">Folders</h2>
                 <FolderListSelectable defaultLists={folderList || null} project={project} addToFolderList={addToFolderList ? addToFolderList : null}/>
             </div>
