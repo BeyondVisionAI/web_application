@@ -85,7 +85,26 @@
 	},
 
 	"dashboard": {
-		"searchProject": "Recherchez un projet..."
+		"projects": {
+			"recents": "Projets récents",
+			"add": "Créer un nouveau projet",
+			"more": "Voir tous les projets"
+		},
+		"folders": {
+			"title": "Dossiers",
+			"add": {
+				"label": "Ajouter un nouveau dossier",
+				"nameLabel": "Nom du dossier",
+				"successMessage": "Dossier créé avec succès",
+				"errMsgs": {
+					"noEmptyName": "Le nom de dossier ne peut pas être vide"
+				}
+			},
+			"delete": {
+				"label": "Supprimer le dossier",
+				"errorMessage": "Une erreur est survenue lors de la suppression du dossier"
+			}
+		}
 	},
 
 	"authentication": {
@@ -247,6 +266,21 @@
 			},
 			"errMsgs": {
 				"projectNotFound": "Projet introuvable"
+			}
+		},
+		"details": {
+			"collaborators": {
+				"add": "Ajouter des collaborateurs"
+			},
+			"description": {
+				"label": "Description"
+			},
+			"status": {
+				"label": "État"
+			},
+			"folders": {
+				"label": "Dossiers",
+				"add":"Créer un nouveau dossier"
 			}
 		}
 	},

@@ -85,7 +85,26 @@
 	},
 
 	"dashboard": {
-		"searchProject": "Search for a project..."
+		"projects": {
+			"recents": "Recent Projects",
+			"add": "Create a new project",
+			"more": "See all projects"
+		},
+		"folders": {
+			"title": "Folders",
+			"add": {
+				"label": "Add a new folder",
+				"nameLabel": "Folder name",
+				"successMessage": "Folder successfully created",
+				"errMsgs": {
+					"noEmptyName": "Folder name cannot be empty"
+				}
+			},
+			"delete": {
+				"label": "Delete folder",
+				"errorMessage": "Error while deleting folder"
+			}
+		}
 	},
 
 	"authentication": {
@@ -247,6 +266,21 @@
 			},
 			"errMsgs": {
 				"projectNotFound": "Project not found"
+			}
+		},
+		"details": {
+			"collaborators": {
+				"add": "Add collaborators"
+			},
+			"description": {
+				"label": "Description"
+			},
+			"status": {
+				"label": "Status"
+			},
+			"folders": {
+				"label": "Folders",
+				"add":"Create a new folder"
 			}
 		}
 	},
