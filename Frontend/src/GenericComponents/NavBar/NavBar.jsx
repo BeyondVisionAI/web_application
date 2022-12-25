@@ -2,11 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import "./NavBar.css"
-import { AuthContext } from '../Auth/Auth';
 import I18nSelectionButton from './I18nSelectionButton/I18nSelectionButton';
 
 const NavBar = ({ homeRef, rightButtons, others }) => {
-    const {currentUser, logout} = useContext(AuthContext);
     const [isMenuActive, setIsMenuActive] = useState(false)
     const [wdWidth, setWdWidth] = useState(window.innerWidth)
 

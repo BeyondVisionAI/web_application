@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
-import "./Profile.css";
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
 import { useHistory } from 'react-router-dom';
+import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
+import "./Profile.css";
+import ProfilePic from '../../GenericComponents/ProfilePic/ProfilePic';
 
 const Profile = () => {
     const { currentUser, logout } = useContext(AuthContext);
@@ -9,11 +11,11 @@ const Profile = () => {
 
     return (
         <>
-            <div className='navigation'><span onClick={() => history.push('/dashboard')} style={{cursor: 'pointer'}}>Dashboard</span> {' < Profile'}</div>
+            <BreadCrumbs pathObject={[{url: '/profile', name: 'Profile'}]} />
             <div className='container'>
                 <div className='profileContainer'>
                     <div className='profilePictureContainer'>
-                        <img className='profilePictureImage' src="/assets/userTempPic.jpg" alt="Your profile picture" />
+                        <ProfilePic initials={`${currentUser.firstName[0]}${currentUser.lastName[0]}`} size='large'/>
                     </div>
                     <p className='userName'>{currentUser.firstName} {currentUser.lastName}</p>
                 </div>

@@ -20,3 +20,9 @@
     border: solid .2vw white;
     transition: all ease-in-out 300ms;
 }
+
+.large {
+    width: 15rem;
+    height: 15rem;
+    font-size: 60pt;
+}

@@ -13,6 +13,7 @@ import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
+import AccountButton from '../../GenericComponents/Auth/AccountButton';
 import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 
 export default function ScriptEdition(props) {
@@ -273,7 +274,7 @@ export default function ScriptEdition(props) {
                             :   <DisabledCircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
                             }
                             <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
-                            <CircleButton url="/user-icon.png" size='30px'/>
+                            <AccountButton/>
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 edit-bloc">
