@@ -71,12 +71,17 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
         const idxCollab = collaborators.findIndex((item) => item.projectId === projectId && item.userId === userId)
         if (idxCollab !== -1) {
             const collab = collaborators[idxCollab];
-            axios({
-                method: 'DELETE',
-                url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
-            })
+            try {
+                axios({
+                    method: 'DELETE',
+                    url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
+                })
+                setCollaborators(updatedCollaborators);
+            } catch (_) {
+                setErrorMessage("Cannot delete the collaborator!");
+                toast.error("An error occured while deleting a collaborator, please retry");
+            }
         }
-        setCollaborators(updatedCollaborators);
     }
 
     const handleRoleChange = async (role, userId) => {
@@ -86,17 +91,22 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             if (role === collab.rights) {
                 return;
             }
-            const res = await axios({
-                method: 'PATCH',
-                url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
-                data: {
-                    titleOfCollaboration: role.toLowerCase(),
-                    rights: role,
-                }
-            })
-            let newCollabs = [...collaborators]
-            newCollabs[idxCollab] = {...collaborators[idxCollab], ...res.data};
-            setCollaborators(newCollabs);
+            try {
+                const res = await axios({
+                    method: 'PATCH',
+                    url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
+                    data: {
+                        titleOfCollaboration: role.toLowerCase(),
+                        rights: role,
+                    }
+                })
+                let newCollabs = [...collaborators]
+                newCollabs[idxCollab] = {...collaborators[idxCollab], ...res.data};
+                setCollaborators(newCollabs);
+            } catch (_) {
+                setErrorMessage("Cannot change the collaborator's role!");
+                toast.error("An error occured while updating a collaborator's role, please retry");
+            }
         }
     }
 

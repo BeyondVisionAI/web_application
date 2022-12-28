@@ -56,13 +56,17 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
         // dropOffMSecond = parseInt(dropOffMSecond.toFixed())
         newReplica.timestamp = dropOffMSecond;
         if (newReplica.timestamp !== replica.timestamp) {
-            await axios({
-                method: 'PUT',
-                url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
-                data: {timestamp: dropOffMSecond},
-                withCredentials: true
-            });
-            updateReplica(newReplica)
+            try {
+                await axios({
+                    method: 'PUT',
+                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}`,
+                    data: {timestamp: dropOffMSecond},
+                    withCredentials: true
+                });
+                updateReplica(newReplica)                    
+            } catch (_) {
+                toast.error("An error occured while moving the replica, please retry")
+            }
         }
     }
 
