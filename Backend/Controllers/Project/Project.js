@@ -224,7 +224,7 @@ exports.generationIA = async function (req, res) {
 
                 project.ActualStep = 'ActionRetrieve';
                 console.log("Project-> IA: ");
-                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { 
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, {
                     userId: req.user.userId,
                     projectId: req.params.projectId,
                 });

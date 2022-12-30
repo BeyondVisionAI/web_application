@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ProjectDataStep from './ProjectDataStep';
 import PaymentStep from './PaymentStep';
@@ -95,7 +95,6 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             addCollaborators(projectResponse.data._id);
             setShowPayment(true);
             await uploadMedia();
-            await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectResponse.data._id}/generationIA`, { typeGeneration: 'ActionRetrieve' });
         } catch (error) {
             console.error(error);
         }
