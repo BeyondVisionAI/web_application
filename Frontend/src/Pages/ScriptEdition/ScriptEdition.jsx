@@ -285,18 +285,6 @@ export default function ScriptEdition(props) {
                             >
                                 <div className="button-text">Générer le script</div>
                             </button>
-                            <button
-                              className="button-container whitespace-nowrap"
-                              onClick={() => callGenerationIAFake()}
-                            >
-                                <div className="button-text">Générer le faux script</div>
-                            </button>
-                            <button
-                              className="button-container whitespace-nowrap"
-                              onClick={() => callGenerationIA()}
-                            >
-                                <div className="button-text">Générer le script</div>
-                            </button>
                             {project.status === 'Done'
                             ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
                             :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
