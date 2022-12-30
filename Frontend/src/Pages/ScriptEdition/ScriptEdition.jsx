@@ -5,8 +5,6 @@ import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import Chat from '../Chat/Chat';
-import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 import AudioPlayer from './Components/AudioPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
@@ -75,13 +73,24 @@ export default function ScriptEdition(props) {
 
     const callGenerationIA = () => {
         axios.defaults.withCredentials = true;
-        axios.post(`${process.env.REACT_APP_API_URL}/projects/${project.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
         .then((res) => {
-            if (res.status === 400) {
-                toast.error(res.data);
-                return;
+            if (res.status !== 200) {
+                toast.error("An error occured when trying to generate the script");
             }
-            toast.success(res.data);
+        })
+        .catch((err) => {
+            toast.error(err)
+        });
+    }
+
+    const callGenerationIAFake = () => {
+        axios.defaults.withCredentials = true;
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieveFake'})
+        .then((res) => {
+            if (res.status !== 200) {
+                toast.error("An error occured when trying to generate the script");
+            }
         })
         .catch((err) => {
             toast.error(err)
@@ -264,6 +273,18 @@ export default function ScriptEdition(props) {
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
+                            <button
+                              className="button-container whitespace-nowrap"
+                              onClick={() => callGenerationIAFake()}
+                            >
+                                <div className="button-text">Générer le faux script</div>
+                            </button>
+                            <button
+                              className="button-container whitespace-nowrap"
+                              onClick={() => callGenerationIA()}
+                            >
+                                <div className="button-text">Générer le script</div>
+                            </button>
                             {project.status === 'Done'
                             ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
                             :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
@@ -284,10 +305,6 @@ export default function ScriptEdition(props) {
                             }
                         </div>
                         <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
-                            <button 
-                              onClick={() => callGenerationIA()}>
-                                Générer l'audio-description
-                            </button>
                             <VideoPlayer
                                 videoUrl={project.videoUrl}
                                 setDuration={setVideoDuration}

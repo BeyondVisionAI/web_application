@@ -175,7 +175,6 @@ exports.getAllProjects = async function (req, res) {
  * @returns { response to send }
  */
 exports.setStatus = async function (req, res) {
-    console.log('Route Set Status');
     try {
         if (!req.params.projectId || !req.body.statusType || !req.body.stepType)
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
@@ -211,7 +210,6 @@ exports.setStatus = async function (req, res) {
 }
 
 exports.generationIA = async function (req, res) {
-    console.log('Route generation IA');
     let returnCode = 200;
     let returnMessage = "";
     let project = await Project.findById(req.params.projectId);
@@ -226,10 +224,18 @@ exports.generationIA = async function (req, res) {
 
                 project.ActualStep = 'ActionRetrieve';
                 console.log("Project-> IA: ");
-                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, { 
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/NewProcess`, {
                     userId: req.user.userId,
                     projectId: req.params.projectId,
                 });
+            } else if (req.body.typeGeneration === 'ActionRetrieveFake') {
+
+                project.ActualStep = 'ActionRetrieve';
+                await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/FinishedProcess`, {
+                    jsonPath: "../Files/Json/Action-638a321f6826a6c3cf094b96.json",
+                    userId: req.user.userId,
+                    projectId: req.params.projectId,
+                })
             } else if (req.body.typeGeneration === 'FaceRecognition') {
                 project.actualStep = 'FaceRecognition';
                 // IA A besoin des images des different personnage sinon ils seront considérer en tant que unknow
