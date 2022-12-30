@@ -228,7 +228,7 @@ exports.generationIA = async function (req, res) {
                     userId: req.user.userId,
                     projectId: req.params.projectId,
                 });
-            } if (req.body.typeGeneration === 'ActionRetrieveFake') {
+            } else if (req.body.typeGeneration === 'ActionRetrieveFake') {
 
                 project.ActualStep = 'ActionRetrieve';
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/FinishedProcess`, {
