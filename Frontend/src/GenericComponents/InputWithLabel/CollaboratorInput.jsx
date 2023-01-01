@@ -4,9 +4,11 @@ import validator from 'validator';
 import axios from "axios";
 import Tag from "./Tag";
 import { AuthContext } from "../Auth/Auth";
-
+import { useTranslate } from 'react-i18next';
 
 function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEditable, projectId }) {
+    const { tWarn } = useTranslate('translation', {keyPrefix: 'warningMsgs.collaborators'})
+    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs.collaborators'})
     const [isValid, setIsValid] = useState(true);
     const [newCollaborator, setNewCollaborator] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
@@ -45,14 +47,14 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
         e.preventDefault();
         try {
             if (collaborators?.find(collaborator => collaborator.user.email === newCollaborator)) {
-                toast.warning("This collaborator is already added");
+                toast.warning(tWarn("alreadyAdded"));
                 return;
             }
             let collaboratorsUpdate = [...collaborators];
             const user = await axios.post(`${process.env.REACT_APP_API_URL}/user/email`, { email: newCollaborator });
 
             if (user.status != 200) {
-                toast.error("Error while getting user, please retry");
+                toast.error(tErr("getUser"));
                 return;
             }
             var newCollab = await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: user.data.email, titleOfCollaboration: 'Read', rights: 'READ'});
@@ -62,7 +64,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             setCollaborators(collaboratorsUpdate);
         } catch (error) {
             setErrorMessage('Email is invalid!');
-            toast.error("An error occured while adding a collaborator, please retry");
+            toast.error(tErr("addCollaborator"));
         }
     }
 
@@ -79,7 +81,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
                 setCollaborators(updatedCollaborators);
             } catch (_) {
                 setErrorMessage("Cannot delete the collaborator!");
-                toast.error("An error occured while deleting a collaborator, please retry");
+                toast.error(tErr("deleteCollaborator"));
             }
         }
     }
@@ -105,7 +107,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
                 setCollaborators(newCollabs);
             } catch (_) {
                 setErrorMessage("Cannot change the collaborator's role!");
-                toast.error("An error occured while updating a collaborator's role, please retry");
+                toast.error(tErr("updateCollaborator"));
             }
         }
     }

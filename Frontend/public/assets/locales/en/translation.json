@@ -310,18 +310,44 @@
 				}
 			}
 		},
+		"payment": {
+			"paymentSuccess": "Payment successfully processed"
+		},
+		"password": {
+			"ifLinkPwdReset": "If this email is linked to an account you will receive a link to reset your password in the next few minutes"
+		},
+		"warningMsgs": {
+			"payment": {
+				"paymentProcessing": "Payment processing. We'll update you when payment is recieved"
+			},
+			"collaborator": {
+				"collaborator": {
+					"alreadyAdded": "This collaborator is already added"
+				}
+			}
+		},
 		"errMsgs": {
 			"projectCreation": {
 				"s3Upload": "An error occured trying to upload the file, please retry"
 				, "update": "An error occured while updating, please retry"
 			},
 			"collaborator": {
-				"addCollaborator": "An error occured while adding a collaborator, please retry"
+				"addCollaborator": "An error occured while adding a collaborator, please retry",
+				"deleteCollaborator": "An error occured while deleting a collaborator, please retry",
+				"updateCollaborator": "An error occured while updating a collaborator's role, please retry",
+				"getUser": "Error while getting user, please retry",
+				"getCollaborators": "An error occured while fetching all collaborators, please retry"
 			},
 			"description" : {
 				"uploadImage": "An error occured while updating the image, please retry",
 				"uploadThumbnail": "An error occured while updating the thumbnail, please retry",
 				"getThumbnail": "An error occured while getting the thumbnail, please retry"
+			},
+			"payment": {
+				"paymentFail": "Payment failed. Please try another payment method"
+			},
+			"password": {
+				"usernameOrPwdNotFilled": "Username or password not filled"
 			},
 			"401": {
 				"userNotLoggedIn": "Error (401) - User is not logged in.",
@@ -338,7 +364,10 @@
 			},
 			"500": {
 				"serverError": "Internal Error."
-			}
+			},
+			"somethingWentWrong": "Something went wrong",
+			"errorOccured": "An error occured, please try again",
+			"serverError": "Error while contacting the server"
 		}
 	}
 }
