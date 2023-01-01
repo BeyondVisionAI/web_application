@@ -5,20 +5,17 @@ import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import Chat from '../Chat/Chat';
-import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 import AudioPlayer from './Components/AudioPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
-import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
+import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';import { useTranslation } from 'react-i18next';
 
 export default function ScriptEdition(props) {
-
     const {socket, currentUser} = useContext(AuthContext);
-
+    const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -75,13 +72,24 @@ export default function ScriptEdition(props) {
 
     const callGenerationIA = () => {
         axios.defaults.withCredentials = true;
-        axios.post(`${process.env.REACT_APP_API_URL}/projects/${project.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
         .then((res) => {
-            if (res.status === 400) {
-                toast.error(res.data);
-                return;
+            if (res.status !== 200) {
+                toast.error("An error occured when trying to generate the script");
             }
-            toast.success(res.data);
+        })
+        .catch((err) => {
+            toast.error(err)
+        });
+    }
+
+    const callGenerationIAFake = () => {
+        axios.defaults.withCredentials = true;
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieveFake'})
+        .then((res) => {
+            if (res.status !== 200) {
+                toast.error("An error occured when trying to generate the script");
+            }
         })
         .catch((err) => {
             toast.error(err)
@@ -136,19 +144,19 @@ export default function ScriptEdition(props) {
                 switch (e.response.status) {
                     case 401:
                         switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
+                            case "USER_NOT_LOGIN": errMsg = t('errMsgs.401.userNotLoggedIn'); break;
                             /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                            default: errMsg = "Error (401)."; break;
+                            case "PROJECT_NOT_YOURS": errMsg = t('errMsgs.401.projectNotYours'); break;
+                            default: errMsg = t('errMsgs.401.default'); break;
                         } break;
-                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
+                    case 403: errMsg = t('errMsgs.403.forbiddenAccess'); break;
                     case 404:
                         switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                            default: errMsg = "Error (404)."; break;
+                            case "PROJECT_NOT_FOUND": errMsg = t('errMsgs.404.projectNotFound'); break;
+                            case "REPLICA_NOT_FOUND": errMsg = t('errMsgs.404.replicaNotFound'); break;
+                            default: errMsg = t('errMsgs.404.default'); break;
                         } break;
-                    default /* 500 */ : errMsg = "Internal Error."; break;
+                    default /* 500 */ : errMsg = t('errMsgs.500.serverError'); break;
                 }
                 toast.error(errMsg);
             }
@@ -259,6 +267,18 @@ export default function ScriptEdition(props) {
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
+                            <button
+                              className="button-container whitespace-nowrap"
+                              onClick={() => callGenerationIAFake()}
+                            >
+                                <div className="button-text">Générer le faux script</div>
+                            </button>
+                            <button
+                              className="button-container whitespace-nowrap"
+                              onClick={() => callGenerationIA()}
+                            >
+                                <div className="button-text">Générer le script</div>
+                            </button>
                             {project.status === 'Done'
                             ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
                             :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
@@ -279,10 +299,6 @@ export default function ScriptEdition(props) {
                             }
                         </div>
                         <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
-                            <button 
-                              onClick={() => callGenerationIA()}>
-                                Générer l'audio-description
-                            </button>
                             <VideoPlayer
                                 videoUrl={project.videoUrl}
                                 setDuration={setVideoDuration}
@@ -307,11 +323,11 @@ export default function ScriptEdition(props) {
                         />
                     </div>
                     <AudioPlayer
-                    replicas={replicas}
-                    playedSeconds={playedSeconds}
-                    newSecondsFromCursor={newSecondsFromCursor}
-                    resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
-                    triggerPause={!isPlaying}
+                        replicas={replicas}
+                        playedSeconds={playedSeconds}
+                        newSecondsFromCursor={newSecondsFromCursor}
+                        resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                        triggerPause={!isPlaying}
                     />
                 </div>
                 {/* <Chat projectId={props.match.params.id}/> */}

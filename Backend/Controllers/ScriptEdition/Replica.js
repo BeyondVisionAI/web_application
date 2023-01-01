@@ -18,24 +18,29 @@ const createAudio = async (replica) => {
             replica.actualStep = 'Voice';
             await replica.save();
             
-            const audio = await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
+            await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
                 projectId: projectId,
                 voiceId: voiceId,
                 text: content,
                 replicaId: _id
             })
-            if (audio.status != 200) {
+            .then(async (response) => {
+                if (response.status != 200) {
+                    throw Error(response.data);
+                }
+                replica.duration = response.data.audioDuration;
+                replica.status = 'Done';
+                replica.actualStep = 'Voice';
+                var index = projectsRooms.findIndex((elem) => elem.id == projectId);
+                for (var user of projectsRooms[index].users) {
+                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
+                }
+            })
+            .catch((err) => {
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
-                throw audio;
-            }
-            replica.duration = audio.data.audioDuration;
-            replica.status = 'Done';
-            replica.actualStep = 'Voice';
-            var index = projectsRooms.findIndex((elem) => elem.id == projectId);
-            for (var user of projectsRooms[index].users) {
-                sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
-            }
+                throw err;
+            });
             await replica.save();
             return true;
         }
@@ -56,7 +61,7 @@ const getReplicaAudioUrl = async (replica) => {
         if (replica.status != 'Done' || replica.actualStep != 'Voice') {
             return replica
         }
-        const url = await DownloadFileUrl('bv-replicas', `${replica.projectId}/${replica._id}.mp3`);
+        const url = await DownloadFileUrl('bv-replicas', replica.audioName);
 
         return url
     } catch (error) {
@@ -91,8 +96,8 @@ const createReplicaAndAudio = async (
         });
         newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
         const replica = await newReplica.save();
-        console.log(replica);
         await createAudio(newReplica);
+        return replica;
     } catch (err) {
         console.log(err);
         return("KO");
@@ -138,7 +143,6 @@ exports.getProjectReplicas = async function (req, res) {
     }
 }
 
-
 exports.getProjectReplica = async function (req, res) {
     try {
         let replica = await Replica.findById(req.params.replicaId).
@@ -153,12 +157,14 @@ exports.getProjectReplica = async function (req, res) {
 }
 
 exports.setReplicas = async function (req, res) {
-    const actionsJson = JSON.parse(req.body.actionsJson);
+    const actionsJsonString = req.body.actionsJson;
     const userId = req.body.userId;
     const projectId = req.params.projectId
     try {
-        if (!projectId || !actionsJson || !userId)
+        if (!projectId || !actionsJsonString || !userId) {
             return (res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS));
+        }
+        actionsJson = JSON.parse(actionsJsonString);
         for (let key in actionsJson.script) {
             let { actionName, startTime } = actionsJson.script[key];
             const replica = await createReplicaAndAudio(
@@ -178,7 +184,7 @@ exports.setReplicas = async function (req, res) {
         return (res.status(200).send("Project replicas saved."));
     } catch (err) {
         console.log("Project->setReplicas: " + err);
-        return (res.status(400).send(Errors.BAD_REQUEST_BAD_INFOS));
+        return (res.status(400).send(Errors.REPLICA_CREATION_BY_AI_FAILED));
     }
 }
 
@@ -188,32 +194,22 @@ exports.createReplica = async function (req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-        const newReplica = new Replica({
-            projectId: req.params.projectId,
-            content: req.body.content,
-            timestamp: req.body.timestamp,
-            duration: req.body.duration,
-            voiceId: req.body.voiceId,
-            actualStep: 'Created',
-            status: 'Done',
-            lastEditor: req.user.userId,
-            lastEditDate: Date.now()
-        });
-        newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
-
-        await newReplica.save();
-        await createAudio(newReplica);
-        var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
-        for (var user of projectsRooms[index].users) {
-            sendDataToUser(user, "new replica", newReplica);
-        }
-        res.status(200).send(newReplica);
+        await createReplicaAndCreateAudio(
+            req.params.projectId,
+            req.body.content,
+            req.body.timestamp,
+            req.body.duration,
+            req.body.voiceId,
+            'Created',
+            'Done',
+            req.user.userId,
+        );
+        res.status(200).send("Replica created !");
     } catch (err) {
         console.log("Replica->createReplica : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
-
 
 exports.updateReplica = async function (req, res) {
     try {
@@ -259,7 +255,6 @@ exports.updateReplica = async function (req, res) {
         return res.status(500).send(Errors.INTERNAL_ERROR);
     }
 }
-
 
 exports.deleteReplica = async function (req, res) {
     try {

@@ -8,15 +8,17 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 export default function FolderCard({ folder, isAdd, openAddFolder, removeFromList }) {
+    const { t } = useTranslation('translation', {keyPrefix: 'dashboard.folders'});
     const history = useHistory();
 
     if (isAdd) {
         return (
             <div className='folder-card-container folder-card-container-centered' onClick={openAddFolder}>
                 <FontAwesomeIcon icon={faPlus} />
-                <p>Add a new folder</p>
+                <p>{t('add.label')}</p>
             </div>
         )
     }
@@ -34,7 +36,7 @@ export default function FolderCard({ folder, isAdd, openAddFolder, removeFromLis
             })
             removeFromList(folder._id);
         } catch (e) {
-            toast.error("Error while deleting folder")
+            toast.error(t('delete.errorMessage'))
         }
     }
 
@@ -55,7 +57,7 @@ export default function FolderCard({ folder, isAdd, openAddFolder, removeFromLis
                 <MenuItem onClick={handleDelete}>
                     <div className='folder-card-context-menu-item-container'>
                         <FaTrash />
-                        <p>Delete Folder</p>
+                        <p>{t('delete.label')}</p>
                     </div>
                     
                 </MenuItem>

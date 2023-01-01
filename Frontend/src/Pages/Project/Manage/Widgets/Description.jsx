@@ -5,9 +5,11 @@ import { DownloadFileUrl, UploadFileOnS3 } from '../../../../GenericComponents/F
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import UploadFile from '../../../../GenericComponents/Files/UploadFile';
 import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWithLabel';
+import { useTranslation } from 'react-i18next';
 
 export default function Description({ editing, setEditing, updateProjectValues, projectId, name, description, thumbnailId }) {
-
+    const { t } = useTranslation('translation', {keyPrefix: 'project.manage.descriptionWidget'});
+    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
     const [tmpProject, setTmpProject] = useState({name: name, description: description});
     const [thumbnail, setThumbnail] = useState(null);
     const [image, setImage] = useState(null);
@@ -28,14 +30,14 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
                     setThumbnail(url);
                 } catch (err) {
-                    toast.error("An error occured getting the thumbnail, please retry")
+                    toast.error(tErr('description.gettingThumbnail'))
                 }
             }
 
             if (thumbnailId)
                 getThumbnailProject(projectId);
         } catch (error) {
-            toast.error('Error while fetching data!');
+            toast.error(t('errMsgs.errWhileFetchingData'));
         }
     }, [projectId, setThumbnail, thumbnailId]);
 
@@ -73,8 +75,8 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     ETag: imageRes.ETag,
                 });
                 if (thumbnailResponse.status !== 200)
-                    toast.error("An error occured while updating the image, please retry");
-            }).catch(() => toast.error("An error occured while updating the thumbnail, please retry"));
+                    toast.error(tErr("description.uploadImage"));
+            }).catch(() => toast.error(tErr("description.uploadThumbnail")));
         }
 
         async function updateProject () {
@@ -83,14 +85,15 @@ export default function Description({ editing, setEditing, updateProjectValues, 
 
                 updateThumbnail();
                 if (response.status !== 200)
-                    toast.error("An error occured while getting the project");
+                    toast.error(t('errMsgs.errWhileUpdatingProject'));
                 else {
-                    toast.success('Update success');
+                    toast.success(t('updateSuccess'));
                     updateProjectValues([{field: 'description', value: response.data.description}, {field: 'name', value: response.data.name}]);
                     setEditing(0);
                 }
             } catch (error) {
-                toast.error("Error, please retry.");
+                console.error(error);
+                toast.error(t('errMsgs.errPleaseRetry'));
             }
         }
 
@@ -102,8 +105,8 @@ export default function Description({ editing, setEditing, updateProjectValues, 
     return (
         <Widget weight='h-2/4' rounded='rounded-t-lg'>
             <div className='w-2/4'>
-            {editing === 1 ? <InputWithLabel defaultValue={ name } placeholder="Title" type="text" label="Title" onChange={ tmpTitle => handleChange('name', tmpTitle) } /> : <h1 className='indent-1 top-10 p-5 text-2xl font-bold'>{name}</h1>}
-            {editing === 1 ? <InputWithLabel defaultValue={ description } placeholder="Résumé de la vidéo" type="textarea" label="Résumé court de la vidéo" onChange={ resume => handleChange('description', resume) } /> : <p className='p-5 right-9 text-lg'>{description}</p>}
+            {editing === 1 ? <InputWithLabel defaultValue={ name } placeholder={t('title.placeholder')} type="text" label={t('title.label')} onChange={ tmpTitle => handleChange('name', tmpTitle) } /> : <h1 className='indent-1 top-10 p-5 text-2xl font-bold'>{name}</h1>}
+            {editing === 1 ? <InputWithLabel defaultValue={ description } placeholder={t('description.placeholder')} type="textarea" label={t('description.label')} onChange={ resume => handleChange('description', resume) } /> : <p className='p-5 right-9 text-lg'>{description}</p>}
             </div>
             <div className='w-2/4'>
                 {editing === 1 ? <UploadFile setData={ setImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/> : null}

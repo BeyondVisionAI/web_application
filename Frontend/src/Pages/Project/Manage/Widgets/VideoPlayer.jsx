@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import ReactPlayer from 'react-player';
+import { useTranslation } from 'react-i18next';
 
 export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, newSecondsFromCursor, resetNewSecondsFromCursor, setIsPlaying }) => {
+  const { t } = useTranslation('translation', {keyPrefix: 'project.manage.videoPlayerWidget'});
   const [playedSeconds, setPlayedSeconds] = useState(0)
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null)
@@ -37,7 +39,7 @@ export const VideoPlayer = ({ videoUrl, setDuration, setPlayedSecondsInParent, n
   }, [playing]);
 
   if (videoUrl === 'Undefined')
-    return (<Widget weight='h-1/5' rounded='rounded-b-lg'>Uploading ...</Widget>)
+    return (<Widget weight='h-1/5' rounded='rounded-b-lg'>{t('uploading')}</Widget>)
 
   return (
     <div className="h-full drop-shadow-xl">
