@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 const ThumbnailDisplay = ({thumbnail, removeThumbnail}) => {
+    const { t } = useTranslation('translation', {keyPrefix: 'project.create.step2.form'});
     const [isHovered, setIsHovered] = useState(false)
     const [image, setImage] = useState(null)
 
@@ -18,7 +20,7 @@ const ThumbnailDisplay = ({thumbnail, removeThumbnail}) => {
         }
     }, []);
 
-    if (!image) return <h1>Loading...</h1>
+    if (!image) return <h1>{t('thumbnail.loadingLabel')}</h1>
     return ( 
         <div
         onClick={removeThumbnail}
