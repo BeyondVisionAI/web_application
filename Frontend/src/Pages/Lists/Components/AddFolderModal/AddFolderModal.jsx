@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function AddFolderModal({ closeModal, addToFolderList }) {
     const { t } = useTranslation('translation', {keyPrefix: 'dashboard.folders.add'});
-    const { tErr } = useTranslation('translation', {keyPrefix: ''})
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.modal'})
     const [folderName, setFolderName] = useState('')
 
     const wrapperRef = useRef(null);
