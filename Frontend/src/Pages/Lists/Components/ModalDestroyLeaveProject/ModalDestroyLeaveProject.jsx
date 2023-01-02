@@ -3,8 +3,10 @@ import "./ModalDestroyLeaveProject.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
+import { useTranslate } from 'react-i18next';
 
 export default function ModalDestroyLeaveProject({ refresh, open, close, projectId }) {
+    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs.project'});
 
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {
@@ -29,7 +31,7 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            toast.error("Can't leave project");
+            toast.error(tErr("leaveProject"));
         } finally {
             button.innerHTML = "Leave";
         }
@@ -48,7 +50,7 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            toast.error("Can't destroy project");
+            toast.error(tErr("deleteProject"));
         } finally {
             button.innerHTML = "Destroy";
         }
@@ -65,7 +67,7 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
                 });
                 setProjectName(res.data.name);
             } catch (err) {
-                toast.error("Can't get project informations");
+                toast.error(tErr("projectInfo"));
             }
         }
 
@@ -83,7 +85,7 @@ export default function ModalDestroyLeaveProject({ refresh, open, close, project
                     }
                 });
             } catch (err) {
-                toast.error("Can't get your informations on this project");
+                toast.error(tErr("roleInProject"));
                 close();
             }
         };

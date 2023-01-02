@@ -7,8 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
+import { useTranslate } from 'react-i18next';
 
 const Chat = (props) => {
+    const { tErr } = useTranslate('translation', {keyPrefix: "errMsgs"})
     // TODO:
     // Ajouter les messages que l'on envoi directement dans l'array de message
 
@@ -43,7 +45,7 @@ const Chat = (props) => {
             })
             setMessages([...messages, ...res.data]);
         } catch (e) {
-            toast.error("An error occured, please retry")
+            toast.error(tErr("errorOccured"));
         }
     }, [roomID]);
 

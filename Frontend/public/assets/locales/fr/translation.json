@@ -80,7 +80,8 @@
 			"yourName": "Votre nom",
 			"yourEmail": "Votre adresse mail",
 			"yourMessage": "Votre message",
-			"send": "Envoyer"
+			"send": "Envoyer",
+			"emailSent": "Email envoyé!"
 		}
 	},
 
@@ -327,9 +328,14 @@
 			}
 		},
 		"errMsgs": {
-			"projectCreation": {
+			"project": {
 				"s3Upload": "Une erreur est survenue en sauvegardant le fichier, veuillez réessayer"
 				, "update": "Une erreur est survenue pendant la mise à jour, veuillez réessayer"
+				, "leaveProject": "Une erreure est survenue en quittant le projet, veuillez réessayer"
+				, "deleteProject": "Une erreure est survenue en supprimant le projet, veuillez réessayer"
+				, "projectInfo": "Une erreure est survenue en accédant aux informations, veuillez réessayer"
+				, "roleInProject": "Impossible d'accéder à votre rôle dans ce projet"
+				, "deleteProjectFromList": "Une erreure est survenue en supprimant un projet d'une liste, veuillez réessayer"
 			},
 			"collaborator": {
 				"addCollaborator": "Une erreur est survenue en ajoutant un collaborateur, veuillez réessayer",
@@ -346,8 +352,28 @@
 			"payment": {
 				"paymentFail": "Paiement échoué, merci d'essayer un autre moyen de paiement"
 			},
+			"contact": {
+				"missingField": "Champ manquant pour envoyer un message",
+				"emailError": "Une erreur est survenue lors de l'envoi de votre mail, veuillez réessayer"
+			},
 			"password": {
 				"usernameOrPwdNotFilled": "Nom d'utilisateur ou mot de passe non remplis"
+			},
+			"dashboard": {
+				"accessLists": "Une erreur est survenue en accédant aux listes, veuillez réessayer",
+				"accessRecentProjects": "Une erreur est survenue en accédant aux projets récents, veuillez réessayer"
+			},
+			"list": {
+				"addProjectToList": "Une erreur est survenue en ajoutant le projet à une liste, veuillez réessayer",
+				"createList": "Une erreur est survenue en créant une nouvelle liste, veuillez réessayer",
+				"fetchAllLists": "Une erreur est survenue en récupérant toutes les listes, veuillez réessayer",
+				"leaveList": "Une erreur est survenue en quittant la liste, veuillez réessayer",
+				"deleteList": "Une erreur est survenue en supprimant la liste, veuillez réessayer",
+				"listInfo": "Impossible de récupérer les informations de la liste",
+				"roleInList": "Impossible de récupérer votre rôle dans cette liste"
+			},
+			"modal": {
+				"createFolder": "Une erreur est survenue en créant un dossier, veuillez réessayer"
 			},
 			"401": {
 				"userNotLoggedIn": "Erreur (401) - L'utilisateur n'est pas connecté.",

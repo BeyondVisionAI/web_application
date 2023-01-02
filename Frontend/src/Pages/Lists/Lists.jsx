@@ -19,6 +19,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 export default function Lists() {
 
     const { t } = useTranslation('translation', {keyPrefix: 'dashboard'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.dashboard'});
     const [recentProjects, setRecentProjects] = useState([])
     const [folders, setFolders] = useState([])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -43,7 +44,7 @@ export default function Lists() {
                 })
                 setFolders(res.data)
             } catch (e) {
-                toast.error("An error occured accessing lists, please try again");
+                toast.error(tErr("accessLists"));
             }
         }
         const getRecentProjects = async () => {
@@ -62,7 +63,7 @@ export default function Lists() {
                 }
                 setRecentProjects(projects)
             } catch (e) {
-                toast.error("An error occured trying to access recent projects, please try again");
+                toast.error(tErr("accessRecentProjects"));
             }
         }
         getLists()

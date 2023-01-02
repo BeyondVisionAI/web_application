@@ -80,7 +80,8 @@
 			"yourName": "Your name",
 			"yourEmail": "Your email",
 			"yourMessage": "Your message",
-			"send": "Send"
+			"send": "Send",
+			"emailSent": "Email successfully sent!"
 		}
 	},
 
@@ -327,9 +328,14 @@
 			}
 		},
 		"errMsgs": {
-			"projectCreation": {
+			"project": {
 				"s3Upload": "An error occured trying to upload the file, please retry"
 				, "update": "An error occured while updating, please retry"
+				, "leaveProject": "An error occured while leaving the project, please retry"
+				, "deleteProject": "An error occured while deleting the project, please retry"
+				, "projectInfo": "An error occured while getting project's information, please retry"
+				, "roleInProject": "Cannot get your role from this project"
+				, "deleteProjectFromList": "An error occured while removing a project from a list, please retry"
 			},
 			"collaborator": {
 				"addCollaborator": "An error occured while adding a collaborator, please retry",
@@ -346,8 +352,28 @@
 			"payment": {
 				"paymentFail": "Payment failed. Please try another payment method"
 			},
+			"contact": {
+				"missingField": "Missing field to send a message",
+				"emailError": "An error occured while sending your email, please retry"
+			},
 			"password": {
 				"usernameOrPwdNotFilled": "Username or password not filled"
+			},
+			"dashboard": {
+				"accessLists": "An error occured while accessing lists, please retry",
+				"accessRecentProjects": "An error occured while accessing recent projects, please retry"
+			},
+			"list": {
+				"addProjectToList": "An error occured while adding the project to a list, plase retry",
+				"createList": "An error occured while creating a new list, please retry",
+				"fetchAllLists": "An error occured while getting all lists, please retry",
+				"leaveList": "An error occured while leaving the list, please retry",
+				"deleteList": "An error occured while deleting the list, please retry",
+				"listInfo": "Cannot get list's information",
+				"roleInList": "Cannot get your role from this list"
+			},
+			"modal": {
+				"createFolder": "An error occured creating a folder, please retry"
 			},
 			"401": {
 				"userNotLoggedIn": "Error (401) - User is not logged in.",

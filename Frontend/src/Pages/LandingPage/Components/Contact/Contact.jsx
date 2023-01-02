@@ -11,10 +11,11 @@ const Contact = () => {
     const [email, setEmail] = useState("")
     const [message, setMessage] = useState("")
     const { t } = useTranslation('translation', {keyPrefix: 'landingPage.contact'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.contact'});
 
     async function sendEmail() {
         if (!name || !email || !message) {
-            toast.error("Missing field to send message")
+            toast.error(tErr("missingField"));
         }
         try {
             await axios({
@@ -27,12 +28,12 @@ const Contact = () => {
                 withCredentials: true,
                 url: `${process.env.REACT_APP_API_URL}/contactForm`,
             })
-            toast.success("Email successfully sent !");
+            toast.success(t("emailSent"));
             setName("")
             setEmail("")
             setMessage("")
         } catch (e) {
-            toast.error("Error while sending your email :(")
+            toast.error(tErr("emailError"));
         }
     }
 

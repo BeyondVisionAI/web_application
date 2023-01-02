@@ -3,9 +3,10 @@ import "./ModalAddProjectToList.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWithLabel';
+import { useTranslate } from 'react-i18next';
 
 export default function ModalAddProjectToList({ refresh, open, close, projectId }) {
-
+    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs.list'});
     const [customLists, setCustomLists] = useState([]);
     const [listToAdd, setListToAdd] = useState(-1);
     const [newListName, setNewListName] = useState("");
@@ -29,7 +30,7 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            toast.err("An error occured while adding the project to a list, try again later.");
+            toast.error(tErr("addProjectToList"));
         } finally {
             button.innerHTML = "Add"
         }
@@ -56,7 +57,7 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            toast.err("An error occured while creating a new list, try again later.");
+            toast.error(tErr("createList"));
         } finally {
             button.innerHTML = "Add"
         }
@@ -84,7 +85,7 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
                     ]))
                 });
             } catch (err) {
-                toast.error("Can't get all lists")
+                toast.error(tErr("fetchAllLists"));
             }
         };
 

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function AddFolderModal({ closeModal, addToFolderList }) {
     const { t } = useTranslation('translation', {keyPrefix: 'dashboard.folders.add'});
+    const { tErr } = useTranslation('translation', {keyPrefix: ''})
     const [folderName, setFolderName] = useState('')
 
     const wrapperRef = useRef(null);
@@ -60,7 +61,7 @@ export default function AddFolderModal({ closeModal, addToFolderList }) {
             addToFolderList(res.data)
             closeModal()
         } catch (error) {
-            toast.error("An error occured creating a folder, please try again later");
+            toast.error(tErr("createFolder"));
         }
     }
 
