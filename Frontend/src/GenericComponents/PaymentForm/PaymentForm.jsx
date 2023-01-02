@@ -51,7 +51,7 @@ const PaymentForm = (props) => {
                 setIsLoading(false)
             }
         } catch (err) {
-            toast.error(tErr(serverError))
+            toast.error(tErr("serverError"))
         }
     }
 
