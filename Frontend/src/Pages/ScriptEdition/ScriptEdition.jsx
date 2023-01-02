@@ -12,8 +12,11 @@ import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
 import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function ScriptEdition(props) {
+    const { tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const {socket, currentUser} = useContext(AuthContext);
     const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
     const [replicas, setReplicas] = useState([]);
@@ -51,7 +54,7 @@ export default function ScriptEdition(props) {
                     if (video.status === 200)
                         videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
                 } catch (error) {
-                    toast.error("An error occured getting the project, please retry")
+                    toast.error(tErr('project.getProject'));
                 }
                 setProject({
                     id: id,
@@ -60,7 +63,7 @@ export default function ScriptEdition(props) {
                     status: projectR.data.status
                 });
             } catch (error) {
-                toast.error("An error occured while updating the project, please retry")
+                toast.error(tErr("project.updateProject"));
             }
         }
 
@@ -75,11 +78,11 @@ export default function ScriptEdition(props) {
         axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
         .then((res) => {
             if (res.status !== 200) {
-                toast.error("An error occured when trying to generate the script");
+                toast.error(tErr('scriptEdition.scriptGeneration'));
             }
         })
         .catch((err) => {
-            toast.error(err)
+            toast.error(tErr("somethingWentWrong"));
         });
     }
 
@@ -88,11 +91,11 @@ export default function ScriptEdition(props) {
         axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieveFake'})
         .then((res) => {
             if (res.status !== 200) {
-                toast.error("An error occured when trying to generate the script");
+                toast.error(tErr('scriptEdition.scriptGeneration'));
             }
         })
         .catch((err) => {
-            toast.error(err)
+            toast.error(tErr("somethingWentWrong"));
         });
     }
 
@@ -140,25 +143,7 @@ export default function ScriptEdition(props) {
                 let resRep = Object.values(res.data);
                 setReplicas(resRep);
             } catch (e) {
-                let errMsg = "Error";
-                switch (e.response.status) {
-                    case 401:
-                        switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = t('errMsgs.401.userNotLoggedIn'); break;
-                            /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = t('errMsgs.401.projectNotYours'); break;
-                            default: errMsg = t('errMsgs.401.default'); break;
-                        } break;
-                    case 403: errMsg = t('errMsgs.403.forbiddenAccess'); break;
-                    case 404:
-                        switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = t('errMsgs.404.projectNotFound'); break;
-                            case "REPLICA_NOT_FOUND": errMsg = t('errMsgs.404.replicaNotFound'); break;
-                            default: errMsg = t('errMsgs.404.default'); break;
-                        } break;
-                    default /* 500 */ : errMsg = t('errMsgs.500.serverError'); break;
-                }
-                toast.error(errMsg);
+                toast.error(tErr("project.projectInfo"));
             }
         }
         fetchProjectDetails(props.match.params.id);
@@ -177,17 +162,17 @@ export default function ScriptEdition(props) {
 
     const LaunchGeneration = async() => {
         try {
-            toast.warning("Generation started");
+            toast.warning(tWarn("scriptGeneration"));
             const res = await axios({
                 method: "POST",
                 url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
                 withCredentials: true
             });
             if (res.status != 200) {
-                toast.error("An error occured when trying to generate the project");
+                toast.error(tErr("scriptEdition.scriptGeneration"));
             }
         } catch (error) {
-            toast.error("Could not generate the project");
+            toast.error(tErr("scriptEdition.couldNotGenerate"));
         }
     }
 
@@ -216,11 +201,11 @@ export default function ScriptEdition(props) {
                 });
             }
             else {
-                toast.error("Audiodescription file not ready");
+                toast.error(tErr("scriptEdition.audioDescFileNotReady"));
             }
        
         } catch (error) {
-            toast.error("Could not download the audiodescription file");
+            toast.error(tErr("scriptEdition.audioDownloadFailed"));
         }
     }
 
@@ -252,11 +237,11 @@ export default function ScriptEdition(props) {
                 });
             }
             else {
-                toast.error("Audiodescription file not ready");
+                toast.error(tErr("scriptEdition.audioDescFileNotReady"));
             }
        
         } catch (error) {
-            toast.error("Could not download the audiodescription file");
+            toast.error(tErr("scriptEdition.audioDownloadFailed"));
         }
     }
 

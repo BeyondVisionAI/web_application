@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject, folderList}) => {
     const { t } = useTranslation('translation', {keyPrefix: 'project.details'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const divRef = useRef(null)
     const [lineCount, setLineCount] = useState(0)
     const [showMore, setShowMore] = useState(false)
@@ -44,7 +45,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                 })
                 setCollaborators(collaborators.data);
             } catch (err) {
-                toast.error("An error occured while getting all the collaborators, please retry");
+                toast.error(tErr('collaborator.GetCollaborators'));
                 setCollaborators([])
             }
         }
@@ -123,7 +124,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             removeProjectFromList(project._id);
             closeDrawer()
           } catch (e) {
-            toast.error("Could not delete this project");
+            toast.error(tErr('project.deleteProject'));
           }
         }
       }
@@ -159,7 +160,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
           editProject(updatedProject)
         setIsEdit(false)
         } catch (error) {
-          toast.error("An error occured while saving, please retry")
+          toast.error(tErr("saveError"));
           setIsEdit(false)
 
         }

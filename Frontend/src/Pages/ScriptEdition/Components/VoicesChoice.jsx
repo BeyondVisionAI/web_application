@@ -1,8 +1,10 @@
 import {React, useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.voiceChoices'});
     const [voiceIndexSelected, setVoiceIndexSelected] = useState(undefined);
     const [voiceIdTemp, setVoiceIdTemp] = useState(undefined);
     const [voiceOptions, setVoiceOptions] = useState([]);
@@ -53,7 +55,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
                 temp.push(language);
             setLanguageOptions(temp);
         } catch (err) {
-            toast.error("An error occured while retrieving the languages, please retry")
+            toast.error(tErr("getAllLanguages"));
         }
     }
 
@@ -68,7 +70,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
             setVoiceOptions(response.data.voices);
             changeVoiceIndexSelected(voiceId, response.data.voices);
         } catch (err) {
-            toast.error("An error occured while retrieving the voices, please retry")
+            toast.error(tErr("getAllVoices"));
         }
     }
 

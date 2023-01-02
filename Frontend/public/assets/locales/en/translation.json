@@ -325,6 +325,9 @@
 				"collaborator": {
 					"alreadyAdded": "This collaborator is already added"
 				}
+			},
+			"scriptEdition" : {
+				"generationStart": "Script generation started"
 			}
 		},
 		"errMsgs": {
@@ -333,6 +336,9 @@
 				, "update": "An error occured while updating, please retry"
 				, "leaveProject": "An error occured while leaving the project, please retry"
 				, "deleteProject": "An error occured while deleting the project, please retry"
+				, "getProject": "An error occured while getting the project, please retry"
+				, "getAllProjects": "An error occured while getting the projects, please retry"
+				, "updateProject": "An error occured while updating the project, please retry"
 				, "projectInfo": "An error occured while getting project's information, please retry"
 				, "roleInProject": "Cannot get your role from this project"
 				, "deleteProjectFromList": "An error occured while removing a project from a list, please retry"
@@ -372,28 +378,35 @@
 				"listInfo": "Cannot get list's information",
 				"roleInList": "Cannot get your role from this list"
 			},
+			"folder": {
+				"folderNameNull": "Folder name cannot be empty"
+			},
 			"modal": {
 				"createFolder": "An error occured creating a folder, please retry"
 			},
-			"401": {
-				"userNotLoggedIn": "Error (401) - User is not logged in.",
-				"projectNotYours": "Error (401) - No collaboration found between the userId and the project.",
-				"default": "Error (401)."
-			},
-			"403": {
-				"forbiddenAccess": "Error (403) - User has no right to access the content."
-			},
-			"404": {
-				"projectNotFound": "Error (404) - Missing project.",
-				"replicaNotFound": "Error (404) - Missing replica.",
-				"default":"Error (404)."
-			},
-			"500": {
-				"serverError": "Internal Error."
+			"scriptEdition": {
+				"scriptGeneration": "An error occured while generating the script, please retry",
+				"couldNotGenerate": "Could not generate the project",
+				"audioDescFileNotReady": "The audiodescription file is not ready",
+				"audioDownloadFailed": "Could not download the audiodescription file",
+				"replica": {
+					"noOverlap": "You cannot overlap 2 replicas",
+					"moveReplica": "An error occured while moving the replica, please retry",
+					"updateReplica": "An error occured while updating the replica's content, please retry",
+					"createReplica": "An error occured while creating a replica, please retry",
+					"removeReplica": "An error occured while removing a replica, please retry",
+					"replicaOutOfScope": "You cannot create a replica outside of the scope of the video"
+				},
+				"replicaComment" : {
+					"postComment": "An error occured while posting a comment, please retry",
+					"removeComment": "An error occured while removing a comment",
+					"fetchAllReplicaComments": "An error occured while getting all the replica's comments, please retry"
+				}
 			},
 			"somethingWentWrong": "Something went wrong",
 			"errorOccured": "An error occured, please try again",
-			"serverError": "Error while contacting the server"
+			"serverError": "Error while contacting the server",
+			"saveError": "An error occured while saving, please retry"
 		}
 	}
 }

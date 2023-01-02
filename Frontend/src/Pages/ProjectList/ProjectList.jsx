@@ -8,8 +8,10 @@ import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import axios from 'axios';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const ProjectList = (props) => {
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
     const folderId = props.match.params.listId;
     const [projects, setProjects] = useState([])
     const [folderName, setFolderName] = useState('Folder')
@@ -35,7 +37,7 @@ const ProjectList = (props) => {
                 }
                 setProjects(projects)
             } catch (e) {
-                toast.error("An error occured getting the projects, please retry")
+                toast.error(tErr("getAllProjects"));
             }
         }
         getProjects()

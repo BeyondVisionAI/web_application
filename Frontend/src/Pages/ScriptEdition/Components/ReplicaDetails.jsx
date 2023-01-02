@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 const ReplicaDetails = ({ replica, updateReplica }) => {
     const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition'});
     const [isLoading, setIsLoading] = useState(false)
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
@@ -50,7 +51,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
             updateReplica(res.data)
             setIsLoading(false)
         } catch (err) {
-            toast.error("An error occured updatign the replica's text, please retry")
+            toast.error(tErr("replica.updateReplica"));
         }
     }
 
@@ -66,25 +67,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
                 let resComm = Object.values(res.data);
                 setComments(resComm);
             } catch (e) {
-                let errMsg = "Error";
-                switch (e.response.status) {
-                    case 401:
-                        switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = t('errMsgs.401.userNotLoggedIn'); break;
-                            /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = t('errMsgs.401.projectNotYours'); break;
-                            default: errMsg = t('errMsgs.401.default'); break;
-                        } break;
-                    case 403: errMsg = t('errMsgs.403.forbiddenAccess'); break;
-                    case 404:
-                        switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = t('errMsgs.404.projectNotFound'); break;
-                            case "REPLICA_NOT_FOUND": errMsg = t('errMsgs.404.replicaNotFound'); break;
-                            default: errMsg = t('errMsgs.404.default'); break;
-                        } break;
-                    default /* 500 */ : errMsg = t('errMsgs.500.serverError'); break;
-                }
-                toast.error(errMsg);
+                toast.error(tErr("replicaComment.fetchAllReplicaComments"));
             }
         }
         fetchReplicaComments();

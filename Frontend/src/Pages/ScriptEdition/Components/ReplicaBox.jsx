@@ -4,9 +4,10 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import Draggable from "react-draggable";
 import axios from "axios";
 import { toast } from 'react-toastify';
-
+import { useTranslation } from 'react-i18next';
 
 export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions }) {
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
     const [playing, setPlaying] = useState(false);
     const [position, setPosition] = useState({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
 
@@ -45,7 +46,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
     const computeDragDrop = async (event, data) => {
         let dropOffMSecond = parseInt(((data.x / parameters.secToPxCoef) * 1000).toFixed());
         if (isReplicaCollided(replicasPositions, dropOffMSecond, dropOffMSecond + parseInt(replica.duration))) {
-            toast.error("Error - You cannot overlap 2 replicas.")
+            toast.error(tErr("noOverlap"));
             return false;
         }
         let newPos = {...position}
@@ -65,7 +66,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
                 });
                 updateReplica(newReplica)                    
             } catch (_) {
-                toast.error("An error occured while moving the replica, please retry")
+                toast.error(tErr("moveReplica"));
             }
         }
     }

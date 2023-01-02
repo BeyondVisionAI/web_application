@@ -7,8 +7,10 @@ import ProjectDrawer from '../Lists/Components/ProjectDrawer/ProjectDrawer'
 import ProjectMiniature from '../Lists/Components/ProjectMiniature/ProjectMiniature'
 import CreateProject from '../Project/Create/CreateProject'
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const Projects = () => {
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
     const [projects, setProjects] = useState([])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedProject, setSelectedProject] = useState(null)
@@ -32,7 +34,7 @@ const Projects = () => {
                 }
                 setProjects(projects)
             } catch (e) {
-                toast.error("An error occured while getting the projects, please retry")
+                toast.error(tErr("getAllProjects"));
             }
         }
         getProjects()

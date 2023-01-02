@@ -18,6 +18,7 @@ const EDIT = {
 
 export default function ManageProject(props) {
     const { t } = useTranslation('translation', {keyPrefix: 'project.manage'});
+    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs.project"});
     const [project, setProject] = useState(null);
     const [editing, setEditing] = useState(EDIT.off);
     const history = useHistory();
@@ -36,7 +37,7 @@ export default function ManageProject(props) {
                             videoUrl = video.data.url;
                     }
                 } catch (error) {
-                    toast.error("An error occured trying to get the project, please retry");
+                    toast.error(tErr("getProject"));
                 }
 
                 setProject({
@@ -49,7 +50,7 @@ export default function ManageProject(props) {
                     isPaid: projectR.data.isPaid
                 });
             } catch (error) {
-                toast.error("An error occured trying to get the project, please retry");
+                toast.error(tErr("getProject"));
             }
         }
 
