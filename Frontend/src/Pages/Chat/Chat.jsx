@@ -7,10 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'react-toastify';
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const Chat = (props) => {
-    const { tErr } = useTranslate('translation', {keyPrefix: "errMsgs"})
+    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
     // TODO:
     // Ajouter les messages que l'on envoi directement dans l'array de message
 

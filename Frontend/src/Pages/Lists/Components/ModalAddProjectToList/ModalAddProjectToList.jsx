@@ -3,10 +3,10 @@ import "./ModalAddProjectToList.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWithLabel';
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalAddProjectToList({ refresh, open, close, projectId }) {
-    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs.list'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.list'});
     const [customLists, setCustomLists] = useState([]);
     const [listToAdd, setListToAdd] = useState(-1);
     const [newListName, setNewListName] = useState("");

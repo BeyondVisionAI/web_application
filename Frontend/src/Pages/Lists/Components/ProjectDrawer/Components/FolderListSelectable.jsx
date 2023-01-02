@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import CustomCheckbox from '../../../../../GenericComponents/CustomCheckbox/CustomCheckbox';
 import "./FolderListSelectable.css"
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
-    const { t } = useTranslate('translation', {keyPrefix: 'errMsgs'});
-    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs'});
+    const { t } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const [lists, setLists] = useState([])
     const [newListName, setNewListName] = useState('')
 

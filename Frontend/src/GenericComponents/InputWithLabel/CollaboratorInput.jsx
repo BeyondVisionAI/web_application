@@ -4,11 +4,11 @@ import validator from 'validator';
 import axios from "axios";
 import Tag from "./Tag";
 import { AuthContext } from "../Auth/Auth";
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEditable, projectId }) {
-    const { tWarn } = useTranslate('translation', {keyPrefix: 'warningMsgs.collaborators'})
-    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs.collaborators'})
+    const { tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.collaborators'})
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborators'})
     const [isValid, setIsValid] = useState(true);
     const [newCollaborator, setNewCollaborator] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);

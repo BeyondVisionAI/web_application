@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import "./ModalRemoveProjectFromList.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalRemoveProjectFromList({ refresh, open, close, projectId, listId }) {
-    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
 
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {

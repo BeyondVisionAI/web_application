@@ -6,11 +6,11 @@ import "./AskForPasswordChange.css"
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const AskForPasswordChange = () => {
-    const { t } = useTranslate('translation', {keyPrefix: 'password'});
-    const { tErr } = useTranslate('translation', {keyPrefix: "errMsgs.password"});
+    const { t } = useTranslation('translation', {keyPrefix: 'password'});
+    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs.password"});
     const [email, setEmail] = useState(null)
     const history = useHistory()
 

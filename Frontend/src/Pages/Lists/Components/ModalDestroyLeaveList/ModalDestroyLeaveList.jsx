@@ -3,10 +3,10 @@ import "./ModalDestroyLeaveList.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalDestroyLeaveList({ refresh, open, close, listId }) {
-    const { tErr } = useTranslate('translation', {keyPrefix: "errMsgs.list"});
+    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs.list"});
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {
             close();

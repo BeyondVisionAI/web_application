@@ -3,10 +3,10 @@ import "./ModalDestroyLeaveProject.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalDestroyLeaveProject({ refresh, open, close, projectId }) {
-    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs.project'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
 
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {

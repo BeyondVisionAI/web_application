@@ -6,11 +6,11 @@ import Checkout from './Checkout';
 import { toast } from 'react-toastify';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
-import { useTranslate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 const PaymentForm = (props) => {
-    const { tErr } = useTranslate('translation', {keyPrefix: 'errMsgs'});
+    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const [isLoading, setIsLoading] = useState(true)
     const [stripeOption, setStripeOptions] = useState({
         clientSecret: ''
