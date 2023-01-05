@@ -275,8 +275,6 @@ export default function ScriptEdition(props) {
     }
 
     if (project) {
-        console.log(project)
-        console.log("PROJET OK")
         return (
             <div className="script-edition-container h-screen w-screen overflow-x-hidden">
                 <div id="page-container" className="w-screen h-5/6 py-2 px-6">
