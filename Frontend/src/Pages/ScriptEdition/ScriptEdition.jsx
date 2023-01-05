@@ -287,7 +287,7 @@ export default function ScriptEdition(props) {
                             ?   <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
                             :   <DisabledCircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
                             }
-                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
+                            <CircleButton url="/menu.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
                             <CircleButton url="/user-icon.png" size='30px'/>
                         </div>
                     </div>
