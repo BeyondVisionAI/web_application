@@ -194,7 +194,7 @@ exports.createReplica = async function (req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-        await createReplicaAndCreateAudio(
+        await createReplicaAndAudio(
             req.params.projectId,
             req.body.content,
             req.body.timestamp,
