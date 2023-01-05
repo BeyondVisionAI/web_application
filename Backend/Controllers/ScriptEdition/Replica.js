@@ -80,7 +80,7 @@ const createReplicaAndAudio = async (
     lastEditor,
     ) => {
     try {
-        if (!projectId || !content || !voiceId || !actualStep || !status || !lastEditor) {
+        if (!projectId || !voiceId || !actualStep || !status || !lastEditor) {
             throw Error(Errors.REPLICA_AND_AUDIO_CREATION_MISSING_ARGUMENTS);
         }
         const newReplica = new Replica({
