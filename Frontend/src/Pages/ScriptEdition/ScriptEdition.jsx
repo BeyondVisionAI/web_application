@@ -354,7 +354,6 @@ export default function ScriptEdition(props) {
             </div>
         );
     } else {
-        console.log("NOT OK")
         return (
             <h1>Non</h1>
         )
