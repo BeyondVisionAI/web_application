@@ -37,42 +37,14 @@ export default function ScriptEdition(props) {
         socket.on('delete replica', async (replica) => {
             removeReplica(replica._id);
         });
+        socket.on('update generation status', async({generation_status}) => {
+            update_status(generation_status)
+        })
     }
 
     useEffect(() => {
         socket.emit("open project", props.match.params.id);
-        const getProject = async function (id) {
-            try {
-                let videoUrl = undefined;
-                let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`, { withCredentials: true });
-                try {
-                    let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
-    
-                    if (video.status === 200)
-                        videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
-                } catch (error) {
-                    console.error('Video non dispo');
-                }
-                setProject({
-                    id: id,
-                    title: projectR.data.name,
-                    videoUrl: videoUrl,
-                    status: projectR.data.status
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
         getProject(props.match.params.id)
-        socket.on('update generation status', async({generation_status}) => {
-            if (generation_status.status === 'Done' && generation_status.actualStep !== 'VideoGeneration') {}
-            else {
-                setProject({
-                    ...(project && project),
-                    ['status']: generation_status.status
-                });
-            }
-        })
         return (() => {
             socket.emit("close project", props.match.params.id);
         })
@@ -135,6 +107,69 @@ export default function ScriptEdition(props) {
         }
         setReplicas(newReplicas);
         setReplicaSelected(null);
+    }
+
+    async function update_status(generation_status) {
+        if (generation_status.status === 'Done' && generation_status.actualStep !== 'VideoGeneration') {}
+        else {
+            const project_cpy = await returnProject(props.match.params.id)
+            console.log(project_cpy)
+            setProject({
+                ...(project_cpy && project_cpy),
+                ['status']: generation_status.status
+            });
+
+            if (generation_status.status === 'Done')
+                toast.success("Generation Complete")
+            else if (generation_status.status === 'Error')
+                toast.success("An error occurred while generating the audio description.")
+        }
+    }
+
+    const getProject = async function (id) {
+        try {
+            let videoUrl = undefined;
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`, { withCredentials: true });
+            try {
+                let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
+
+                if (video.status === 200)
+                    videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
+            } catch (error) {
+                console.error('Video non dispo');
+            }
+            setProject({
+                id: id,
+                title: projectR.data.name,
+                videoUrl: videoUrl,
+                status: projectR.data.status
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const returnProject = async function (id) {
+        try {
+            let videoUrl = undefined;
+            let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`, { withCredentials: true });
+            try {
+                let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
+
+                if (video.status === 200)
+                    videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
+            } catch (error) {
+                console.error('Video non dispo');
+            }
+            return ({
+                id: id,
+                title: projectR.data.name,
+                videoUrl: videoUrl,
+                status: projectR.data.status
+            })
+        } catch (error) {
+            console.error(error);
+        }
     }
 
 
