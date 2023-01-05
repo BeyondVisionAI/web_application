@@ -50,7 +50,7 @@ export default function ScriptEdition(props) {
                 let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`, { withCredentials: true });
                 try {
                     let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
-
+    
                     if (video.status === 200)
                         videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
                 } catch (error) {
@@ -66,8 +66,16 @@ export default function ScriptEdition(props) {
                 console.error(error);
             }
         }
-
         getProject(props.match.params.id)
+        socket.on('update generation status', async({generation_status}) => {
+            if (generation_status.status === 'Done' && generation_status.actualStep !== 'VideoGeneration') {}
+            else {
+                setProject({
+                    ...(project && project),
+                    ['status']: generation_status.status
+                });
+            }
+        })
         return (() => {
             socket.emit("close project", props.match.params.id);
         })
@@ -162,6 +170,7 @@ export default function ScriptEdition(props) {
             socket.off("new replica");
             socket.off("update replica");
             socket.off("delete replica");
+            socket.off("update generation status");
         })
     }, []);
 
@@ -258,6 +267,8 @@ export default function ScriptEdition(props) {
     }
 
     if (project) {
+        console.log(project)
+        console.log("PROJET OK")
         return (
             <div className="script-edition-container h-screen w-screen overflow-x-hidden">
                 <div id="page-container" className="w-screen h-5/6 py-2 px-6">
@@ -272,7 +283,11 @@ export default function ScriptEdition(props) {
                             ?   <CircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
                             :   <DisabledCircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
                             }
-                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
+                            {project.status !== 'InProgress' && replicas.length !== 0
+                            ?   <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
+                            :   <DisabledCircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
+                            }
+                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => RedirectToProjectManagement()}/>
                             <CircleButton url="/user-icon.png" size='30px'/>
                         </div>
                     </div>
@@ -323,6 +338,7 @@ export default function ScriptEdition(props) {
             </div>
         );
     } else {
+        console.log("NOT OK")
         return (
             <h1>Non</h1>
         )
