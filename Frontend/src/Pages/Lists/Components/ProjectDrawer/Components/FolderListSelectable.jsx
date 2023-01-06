@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
     const { t } = useTranslation('translation', {keyPrefix: 'errMsgs'});
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const [lists, setLists] = useState([])
     const [newListName, setNewListName] = useState('')
 

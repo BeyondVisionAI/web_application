@@ -310,103 +310,103 @@
 					"notLoading": "Save"
 				}
 			}
-		},
+		}
+	},
+	"payment": {
+		"paymentSuccess": "Payment successfully processed"
+	},
+	"password": {
+		"ifLinkPwdReset": "If this email is linked to an account you will receive a link to reset your password in the next few minutes"
+	},
+	"warningMsgs": {
 		"payment": {
-			"paymentSuccess": "Payment successfully processed"
+			"paymentProcessing": "Payment processing. We'll update you when payment is recieved"
 		},
-		"password": {
-			"ifLinkPwdReset": "If this email is linked to an account you will receive a link to reset your password in the next few minutes"
-		},
-		"warningMsgs": {
-			"payment": {
-				"paymentProcessing": "Payment processing. We'll update you when payment is recieved"
-			},
+		"collaborator": {
 			"collaborator": {
-				"collaborator": {
-					"alreadyAdded": "This collaborator is already added"
-				}
-			},
-			"scriptEdition" : {
-				"generationStart": "Script generation started"
+				"alreadyAdded": "This collaborator is already added"
 			}
 		},
-		"errMsgs": {
-			"project": {
-				"s3Upload": "An error occured trying to upload the file, please retry"
-				, "update": "An error occured while updating, please retry"
-				, "leaveProject": "An error occured while leaving the project, please retry"
-				, "deleteProject": "An error occured while deleting the project, please retry"
-				, "getProject": "An error occured while getting the project, please retry"
-				, "getAllProjects": "An error occured while getting the projects, please retry"
-				, "updateProject": "An error occured while updating the project, please retry"
-				, "projectInfo": "An error occured while getting project's information, please retry"
-				, "roleInProject": "Cannot get your role from this project"
-				, "deleteProjectFromList": "An error occured while removing a project from a list, please retry"
-			},
-			"collaborator": {
-				"addCollaborator": "An error occured while adding a collaborator, please retry",
-				"deleteCollaborator": "An error occured while deleting a collaborator, please retry",
-				"updateCollaborator": "An error occured while updating a collaborator's role, please retry",
-				"getUser": "Error while getting user, please retry",
-				"getCollaborators": "An error occured while fetching all collaborators, please retry"
-			},
-			"description" : {
-				"uploadImage": "An error occured while updating the image, please retry",
-				"uploadThumbnail": "An error occured while updating the thumbnail, please retry",
-				"getThumbnail": "An error occured while getting the thumbnail, please retry"
-			},
-			"payment": {
-				"paymentFail": "Payment failed. Please try another payment method"
-			},
-			"contact": {
-				"missingField": "Missing field to send a message",
-				"emailError": "An error occured while sending your email, please retry"
-			},
-			"password": {
-				"usernameOrPwdNotFilled": "Username or password not filled"
-			},
-			"dashboard": {
-				"accessLists": "An error occured while accessing lists, please retry",
-				"accessRecentProjects": "An error occured while accessing recent projects, please retry"
-			},
-			"list": {
-				"addProjectToList": "An error occured while adding the project to a list, plase retry",
-				"createList": "An error occured while creating a new list, please retry",
-				"fetchAllLists": "An error occured while getting all lists, please retry",
-				"leaveList": "An error occured while leaving the list, please retry",
-				"deleteList": "An error occured while deleting the list, please retry",
-				"listInfo": "Cannot get list's information",
-				"roleInList": "Cannot get your role from this list"
-			},
-			"folder": {
-				"folderNameNull": "Folder name cannot be empty"
-			},
-			"modal": {
-				"createFolder": "An error occured creating a folder, please retry"
-			},
-			"scriptEdition": {
-				"scriptGeneration": "An error occured while generating the script, please retry",
-				"couldNotGenerate": "Could not generate the project",
-				"audioDescFileNotReady": "The audiodescription file is not ready",
-				"audioDownloadFailed": "Could not download the audiodescription file",
-				"replica": {
-					"noOverlap": "You cannot overlap 2 replicas",
-					"moveReplica": "An error occured while moving the replica, please retry",
-					"updateReplica": "An error occured while updating the replica's content, please retry",
-					"createReplica": "An error occured while creating a replica, please retry",
-					"removeReplica": "An error occured while removing a replica, please retry",
-					"replicaOutOfScope": "You cannot create a replica outside of the scope of the video"
-				},
-				"replicaComment" : {
-					"postComment": "An error occured while posting a comment, please retry",
-					"removeComment": "An error occured while removing a comment",
-					"fetchAllReplicaComments": "An error occured while getting all the replica's comments, please retry"
-				}
-			},
-			"somethingWentWrong": "Something went wrong",
-			"errorOccured": "An error occured, please try again",
-			"serverError": "Error while contacting the server",
-			"saveError": "An error occured while saving, please retry"
+		"scriptEdition" : {
+			"generationStart": "Script generation started"
 		}
+	},
+	"errMsgs": {
+		"project": {
+			"s3Upload": "An error occured trying to upload the file, please retry"
+			, "update": "An error occured while updating, please retry"
+			, "leaveProject": "An error occured while leaving the project, please retry"
+			, "deleteProject": "An error occured while deleting the project, please retry"
+			, "getProject": "An error occured while getting the project, please retry"
+			, "getAllProjects": "An error occured while getting the projects, please retry"
+			, "updateProject": "An error occured while updating the project, please retry"
+			, "projectInfo": "An error occured while getting project's information, please retry"
+			, "roleInProject": "Cannot get your role from this project"
+			, "deleteProjectFromList": "An error occured while removing a project from a list, please retry"
+		},
+		"collaborator": {
+			"addCollaborator": "An error occured while adding a collaborator, please retry",
+			"deleteCollaborator": "An error occured while deleting a collaborator, please retry",
+			"updateCollaborator": "An error occured while updating a collaborator's role, please retry",
+			"getUser": "Error while getting user, please retry",
+			"getCollaborators": "An error occured while fetching all collaborators, please retry"
+		},
+		"description" : {
+			"uploadImage": "An error occured while updating the image, please retry",
+			"uploadThumbnail": "An error occured while updating the thumbnail, please retry",
+			"getThumbnail": "An error occured while getting the thumbnail, please retry"
+		},
+		"payment": {
+			"paymentFail": "Payment failed. Please try another payment method"
+		},
+		"contact": {
+			"missingField": "Missing field to send a message",
+			"emailError": "An error occured while sending your email, please retry"
+		},
+		"password": {
+			"usernameOrPwdNotFilled": "Username or password not filled"
+		},
+		"dashboard": {
+			"accessLists": "An error occured while accessing lists, please retry",
+			"accessRecentProjects": "An error occured while accessing recent projects, please retry"
+		},
+		"list": {
+			"addProjectToList": "An error occured while adding the project to a list, plase retry",
+			"createList": "An error occured while creating a new list, please retry",
+			"fetchAllLists": "An error occured while getting all lists, please retry",
+			"leaveList": "An error occured while leaving the list, please retry",
+			"deleteList": "An error occured while deleting the list, please retry",
+			"listInfo": "Cannot get list's information",
+			"roleInList": "Cannot get your role from this list"
+		},
+		"folder": {
+			"folderNameNull": "Folder name cannot be empty"
+		},
+		"modal": {
+			"createFolder": "An error occured creating a folder, please retry"
+		},
+		"scriptEdition": {
+			"scriptGeneration": "An error occured while generating the script, please retry",
+			"couldNotGenerate": "Could not generate the project",
+			"audioDescFileNotReady": "The audiodescription file is not ready",
+			"audioDownloadFailed": "Could not download the audiodescription file",
+			"replica": {
+				"noOverlap": "You cannot overlap 2 replicas",
+				"moveReplica": "An error occured while moving the replica, please retry",
+				"updateReplica": "An error occured while updating the replica's content, please retry",
+				"createReplica": "An error occured while creating a replica, please retry",
+				"removeReplica": "An error occured while removing a replica, please retry",
+				"replicaOutOfScope": "You cannot create a replica outside of the scope of the video"
+			},
+			"replicaComment" : {
+				"postComment": "An error occured while posting a comment, please retry",
+				"removeComment": "An error occured while removing a comment",
+				"fetchAllReplicaComments": "An error occured while getting all the replica's comments, please retry"
+			}
+		},
+		"somethingWentWrong": "Something went wrong",
+		"errorOccured": "An error occured, please try again",
+		"serverError": "Error while contacting the server",
+		"saveError": "An error occured while saving, please retry"
 	}
 }

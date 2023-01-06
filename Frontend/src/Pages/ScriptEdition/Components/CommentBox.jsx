@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useTranslation } from 'react-i18next';
 
 const CommentBox = ({comments, replica, updateComments, removeComment}) => {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scripEdition.replicaComment'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scripEdition.replicaComment'});
     const [newComment, setNewComment] = useState("");
     const [contextSelectedCommentId, setContextSelectedCommentId] = useState(null);
     const bottomOfMessageRef = useRef(null);

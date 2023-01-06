@@ -6,7 +6,7 @@ import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 import { useTranslation } from 'react-i18next';
 
 export default function ModalDestroyLeaveProject({ refresh, open, close, projectId }) {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
 
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {

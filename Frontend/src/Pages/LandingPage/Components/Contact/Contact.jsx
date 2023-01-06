@@ -11,7 +11,7 @@ const Contact = () => {
     const [email, setEmail] = useState("")
     const [message, setMessage] = useState("")
     const { t } = useTranslation('translation', {keyPrefix: 'landingPage.contact'});
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.contact'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.contact'});
 
     async function sendEmail() {
         if (!name || !email || !message) {

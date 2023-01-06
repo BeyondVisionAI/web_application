@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 const AskForPasswordChange = () => {
     const { t } = useTranslation('translation', {keyPrefix: 'password'});
-    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs.password"});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs.password"});
     const [email, setEmail] = useState(null)
     const history = useHistory()
 

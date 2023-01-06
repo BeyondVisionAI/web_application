@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
 export default function ModalRemoveProjectFromList({ refresh, open, close, projectId, listId }) {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
 
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {

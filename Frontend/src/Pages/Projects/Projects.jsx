@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const Projects = () => {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
     const [projects, setProjects] = useState([])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedProject, setSelectedProject] = useState(null)

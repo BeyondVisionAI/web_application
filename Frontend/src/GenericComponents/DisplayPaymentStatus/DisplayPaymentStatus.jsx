@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 const DisplayPaymentStatus = () => {
   const stripe = useStripe();
   const { t } = useTranslation('translation', {keyPrefix: "payment"});
-  const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+  const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
   const { tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.payment'});
 
   useEffect(() => {

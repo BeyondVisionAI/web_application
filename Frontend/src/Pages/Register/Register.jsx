@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 const Register = () => {
     const { t } = useTranslation('translation', {keyPrefix: 'authentication.registerForm'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'authentication.registerForm.errMsgs'});
     const [firstName, setFirstName] = useState(null)
     const [lastName, setLastName] = useState(null)
     const [password, setPassword] = useState(null)
@@ -37,11 +38,11 @@ const Register = () => {
 
     async function register() {
         if (!firstName || !lastName || !password || !confirmPassword || !email) {
-            toast.error(t('errMsgs.allTheFieldsMustBeFilled'))
+            toast.error(tErr('allTheFieldsMustBeFilled'))
         } else if (password !== confirmPassword) {
-            toast.error(t('errMsgs.passwordMismatch'))
+            toast.error(tErr('passwordMismatch'))
         } else if(!areFieldsValid()) {
-            toast.error(t('errMsgs.invalidFields'))
+            toast.error(tErr('invalidFields'))
         } else {
             try {
                 var res = await axios({
@@ -61,9 +62,9 @@ const Register = () => {
                 }
             } catch (err) {
                 if (err.response && (err.response.status === 409)) {
-                    toast.error(t('errMsgs.emailAlreadyUsed'))
+                    toast.error(tErr('emailAlreadyUsed'))
                 } else {
-                    toast.error(t('errMsgs.serverError'))
+                    toast.error(tErr('serverError'))
                 }
             }
         }

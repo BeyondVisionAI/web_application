@@ -13,13 +13,14 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
+import { toast } from 'react-toastify';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
 
     const { t } = useTranslation('translation', {keyPrefix: 'dashboard'});
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.dashboard'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.dashboard'});
     const [recentProjects, setRecentProjects] = useState([])
     const [folders, setFolders] = useState([])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)

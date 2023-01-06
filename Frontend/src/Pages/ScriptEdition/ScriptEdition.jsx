@@ -11,12 +11,12 @@ import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
-import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';import { useTranslation } from 'react-i18next';
+import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 import { useTranslation } from 'react-i18next';
 
 export default function ScriptEdition(props) {
     const { tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const {socket, currentUser} = useContext(AuthContext);
     const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
     const [replicas, setReplicas] = useState([]);

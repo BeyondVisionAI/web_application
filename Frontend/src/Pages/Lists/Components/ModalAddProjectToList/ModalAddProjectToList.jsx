@@ -6,7 +6,7 @@ import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWi
 import { useTranslation } from 'react-i18next';
 
 export default function ModalAddProjectToList({ refresh, open, close, projectId }) {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.list'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.list'});
     const [customLists, setCustomLists] = useState([]);
     const [listToAdd, setListToAdd] = useState(-1);
     const [newListName, setNewListName] = useState("");

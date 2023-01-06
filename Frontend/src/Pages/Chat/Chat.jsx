@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const Chat = (props) => {
-    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
     // TODO:
     // Ajouter les messages que l'on envoi directement dans l'array de message
 

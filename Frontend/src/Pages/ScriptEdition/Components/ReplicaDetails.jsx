@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 const ReplicaDetails = ({ replica, updateReplica }) => {
     const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition'});
     const [isLoading, setIsLoading] = useState(false)
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);

@@ -18,7 +18,7 @@ const EDIT = {
 
 export default function ManageProject(props) {
     const { t } = useTranslation('translation', {keyPrefix: 'project.manage'});
-    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs.project"});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs.project"});
     const [project, setProject] = useState(null);
     const [editing, setEditing] = useState(EDIT.off);
     const history = useHistory();

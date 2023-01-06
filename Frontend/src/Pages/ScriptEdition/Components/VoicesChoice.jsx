@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.voiceChoices'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.voiceChoices'});
     const [voiceIndexSelected, setVoiceIndexSelected] = useState(undefined);
     const [voiceIdTemp, setVoiceIdTemp] = useState(undefined);
     const [voiceOptions, setVoiceOptions] = useState([]);

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 const PaymentForm = (props) => {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const [isLoading, setIsLoading] = useState(true)
     const [stripeOption, setStripeOptions] = useState({
         clientSecret: ''

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEditable, projectId }) {
     const { tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.collaborators'})
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborators'})
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborators'})
     const [isValid, setIsValid] = useState(true);
     const [newCollaborator, setNewCollaborator] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);

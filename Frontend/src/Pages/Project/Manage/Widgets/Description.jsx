@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function Description({ editing, setEditing, updateProjectValues, projectId, name, description, thumbnailId }) {
     const { t } = useTranslation('translation', {keyPrefix: 'project.manage.descriptionWidget'});
-    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
     const [tmpProject, setTmpProject] = useState({name: name, description: description});
     const [thumbnail, setThumbnail] = useState(null);
     const [image, setImage] = useState(null);

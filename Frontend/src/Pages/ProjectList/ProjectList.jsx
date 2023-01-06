@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const ProjectList = (props) => {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
     const folderId = props.match.params.listId;
     const [projects, setProjects] = useState([])
     const [folderName, setFolderName] = useState('Folder')

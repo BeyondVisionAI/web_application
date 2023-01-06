@@ -6,7 +6,7 @@ import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
 import { useTranslation } from 'react-i18next';
 
 export default function ModalDestroyLeaveList({ refresh, open, close, listId }) {
-    const { tErr } = useTranslation('translation', {keyPrefix: "errMsgs.list"});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs.list"});
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {
             close();

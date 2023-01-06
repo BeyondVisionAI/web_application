@@ -11,8 +11,8 @@ import { useTranslation } from 'react-i18next';
 
 export default function CreateProject({ show, onHide, addToProjectList }) {
     const { t } = useTranslation('translation', {keyPrefix: 'project.create'});
-    const { tp } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
-    const { tc } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborator'});
+    const { t: tp } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
+    const { t: tc } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborator'});
     const [modalStep, setModalStep] = useState(0);
     const [video, setVideo] = useState(null);
     const [image, setImage] = useState(null);

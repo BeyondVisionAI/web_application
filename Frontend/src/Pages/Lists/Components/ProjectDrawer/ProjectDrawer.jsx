@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject, folderList}) => {
     const { t } = useTranslation('translation', {keyPrefix: 'project.details'});
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const divRef = useRef(null)
     const [lineCount, setLineCount] = useState(0)
     const [showMore, setShowMore] = useState(false)
@@ -45,7 +45,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                 })
                 setCollaborators(collaborators.data);
             } catch (err) {
-                toast.error(tErr('collaborator.GetCollaborators'));
+                toast.error(tErr('collaborator.getCollaborators'));
                 setCollaborators([])
             }
         }

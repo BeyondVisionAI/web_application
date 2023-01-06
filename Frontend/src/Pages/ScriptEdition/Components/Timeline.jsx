@@ -16,7 +16,7 @@ const canvasHeight = 80;
 const MIN_ZOOM = 30;
 
 const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     const [secToPxCoef, setSecToPxCoef] = useState(100);
     const [replicasPositions, setReplicasPositions] = useState([]);

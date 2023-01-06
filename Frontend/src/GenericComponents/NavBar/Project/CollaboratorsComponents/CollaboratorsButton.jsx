@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function CollaboratorsButton( { projectId, isEditable } ) {
     // const [notifications, setNotifications] = useState(0);
-    const { tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborator'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborator'});
     const [modalShow, setShowModal] = useState(false);
     const [collaborators, setCollaborators] = useState(null);
 
