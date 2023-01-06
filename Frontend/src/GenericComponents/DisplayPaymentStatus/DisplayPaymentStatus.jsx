@@ -7,7 +7,7 @@ const DisplayPaymentStatus = () => {
   const stripe = useStripe();
   const { t } = useTranslation('translation', {keyPrefix: "payment"});
   const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
-  const { tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.payment'});
+  const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.payment'});
 
   useEffect(() => {
     if (!stripe) {

@@ -15,7 +15,7 @@ import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleB
 import { useTranslation } from 'react-i18next';
 
 export default function ScriptEdition(props) {
-    const { tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
+    const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const {socket, currentUser} = useContext(AuthContext);
     const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
