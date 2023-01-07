@@ -85,6 +85,8 @@
 	},
 
 	"dashboard": {
+		"addedToProject": "You've been added to a project",
+		"removedFromProject": "You've been removed from a project",
 		"projects": {
 			"recents": "Recent Projects",
 			"add": "Create a new project",

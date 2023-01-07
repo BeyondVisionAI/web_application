@@ -1,3 +1,4 @@
+const { sendDataToUser, dashboardRooms } = require("../../Configs/socketIOConfig");
 const { Collaboration } = require("../../Models/Collaboration");
 const { Errors } = require("../../Models/Errors");
 const { Role, isValidRole } = require("../../Models/Roles");
@@ -80,6 +81,14 @@ exports.createCollaboration = async function(req, res) {
         }
 
         const newCollab = await module.exports.createCollaborationDB(targetUser._id, req.params.projectId, req.body.titleOfCollaboration, req.body.rights);
+        console.log('creation de la collab');
+        var targetUserIndex = dashboardRooms.findIndex((elem) => elem.userId === String(targetUser._id));
+        if (targetUserIndex != -1) {
+            console.log('envoi de linfo');
+            dashboardRooms[targetUserIndex].sockets.forEach((socket) => {
+                sendDataToUser(socket, "added to project");
+            });
+        }
         return res.status(200).send(newCollab);
     } catch (err) {
         console.log("Collaboration->createCollaboration: " + err);
@@ -155,6 +164,19 @@ exports.deleteCollaboration = async function(req, res) {
             return res.status(401).send(Errors.ROLE_UNAUTHORIZED);
         }
 
+        console.log('suppression de la collab');
+        console.log(dashboardRooms);
+        console.log(targetCollab.userId);
+
+        var targetUserIndex = dashboardRooms.findIndex((elem) => elem.userId === String(targetCollab.userId));
+        if (targetUserIndex != -1) {
+            console.log('envoi de linfo');
+            console.log(dashboardRooms[targetUserIndex]);
+            console.log(dashboardRooms[targetUserIndex].sockets);
+            dashboardRooms[targetUserIndex].sockets.forEach((socket) => {
+                sendDataToUser(socket, "removed from project", targetCollab.projectId);
+            });
+        }
         await Collaboration.deleteOne({ _id: targetCollab._id });
         return res.status(204).send("");
     } catch (err) {

@@ -11,6 +11,7 @@ const parseCookie = str =>
   }, {});
 
 exports.projectsRooms = [];
+exports.dashboardRooms = [];
 exports.io = null;
 
 exports.sendDataToUser = function(user, route, data) {
@@ -44,6 +45,31 @@ exports.socketIOConfig = function (http) {
     exports.io.on('connection', (socket) => { /* socket object may be used to send specific messages to the new connected client */
         console.log(`Client ${socket.id} connected !`)
         socket.emit('connection', null);
+
+        socket.on('open dashboard', userId => {
+            console.log('new user in dashboard room');
+            var index = exports.dashboardRooms.findIndex((elem) => elem.userId === userId);
+            if (index === -1) {
+                console.log(`Creating new dashboardRoom with userId = ${userId}`);
+                var newDashboardRoom = {
+                    userId: userId,
+                    sockets: [socket.id]
+                }
+                exports.dashboardRooms.push(newDashboardRoom);
+            } else {
+                if (!exports.dashboardRooms[index].sockets.includes(socket.id)) {
+                    exports.dashboardRooms[index].sockets.push(socket.id)
+                }
+            }
+        });
+
+        socket.on('close dashboard', () => {
+            console.log('remove user from dashboard room');
+            var index = exports.dashboardRooms.findIndex(x => x.sockets.includes(socket.id));
+            if (index !== -1) {
+                exports.dashboardRooms[index].sockets.splice(exports.dashboardRooms[index].sockets.indexOf(socket.id), 1);
+            }
+        });
 
         socket.on("open project", projectId => {
             var index = exports.projectsRooms.findIndex((elem) => elem.id === projectId);

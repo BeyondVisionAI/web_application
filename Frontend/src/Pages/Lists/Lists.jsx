@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react'
 import "./Lists.css"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CreateProject from '../Project/Create/CreateProject';
 import ProjectDrawer from './Components/ProjectDrawer/ProjectDrawer';
 import ProjectMiniature from './Components/ProjectMiniature/ProjectMiniature';
@@ -13,11 +13,14 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
+import { AuthContext } from '../../GenericComponents/Auth/Auth';
+import { toast } from 'react-toastify';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
 
+    const {socket, currentUser} = useContext(AuthContext);
     const { t } = useTranslation('translation', {keyPrefix: 'dashboard'});
     const [recentProjects, setRecentProjects] = useState([])
     const [folders, setFolders] = useState([])
@@ -29,11 +32,63 @@ export default function Lists() {
     // Stripe
     const [isRedirectFromPayment, setIsRedirectFromPayment] = useState(false);
 
+    function initSocketListener() {
+        console.log('wesh');
+        socket.on('added to project', async () => {
+            toast.success(`${t('addedToProject')}`);
+            getRecentProjects();
+        });
+        socket.on('removed from project', async (projectId) => {
+            console.log('toudoummmm');
+            //ouvrir une popup
+            toast.success(`${t('removedFromProject')}`);
+
+            //penser a fermer le drawer si c'est ce projet la qui était ouvert
+            console.log(selectedProject);
+            if (selectedProject !== null && selectedProject.id === projectId) {
+                setSelectedProject(null);
+                isDrawerOpen(false);
+            }
+
+            //si le projet fait parti des 3 derniers, refaire le call
+            console.log(recentProjects);
+            if (recentProjects.findIndex((elem) => elem.id === projectId) !== -1) {
+                console.log('get recents');
+                getRecentProjects();
+            }
+        });
+        socket.on('project updated');
+        //update le drawer si c'est ce projet qui est ouvert
+        //si le projet est dans les 3 derniers, mettre à jour ce projet là
+    }
+
+    const getRecentProjects = async () => {
+        console.log('tutu');
+        try {
+            var res = await axios({
+                url: `${process.env.REACT_APP_API_URL}/projects`,
+                method: 'GET',
+                withCredentials: true,
+                params: {
+                    limit: 3
+                }
+            })
+            var projects = [...res.data];
+            for (const project of projects) {
+                project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
+            }
+            setRecentProjects(projects)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     useEffect(() => {
         return (clearAllBodyScrollLocks)
     }, []);
 
     useEffect(() => {
+        socket.emit('open dashboard', currentUser.userId);
         const getLists = async () => {
             try {
                 var res = await axios({
@@ -57,6 +112,7 @@ export default function Lists() {
                     }
                 })
                 var projects = [...res.data];
+                console.log(projects);
                 for (const project of projects) {
                     project['thumbnailUrl'] = await DownloadFileUrl('bv-thumbnail-project', project?.thumbnail?.name)
                 }
@@ -67,6 +123,15 @@ export default function Lists() {
         }
         getLists()
         getRecentProjects()
+        initSocketListener()
+
+        return(() => {
+            console.log('yoloo');
+            socket.off('added to project');
+            socket.off('removed from project');
+            socket.off('project updated');
+            socket.emit('close dashboard');
+        })
     }, []);
     useEffect(() => {
         const clientSecret = new URLSearchParams(window.location.search).get(

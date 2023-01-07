@@ -148,7 +148,7 @@ exports.getAllProjects = async function (req, res) {
     try {
         var projectsIds = null
         if (req.query.limit) {
-            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(parseInt(req.body.limit));
+            projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 }).limit(parseInt(req.query.limit));
         } else {
             projectsIds = await CollaborationModel.find({userId : req.user.userId}).sort({ _id: -1 });
         }
