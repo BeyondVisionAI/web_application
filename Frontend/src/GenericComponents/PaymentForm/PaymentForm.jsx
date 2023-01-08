@@ -6,9 +6,11 @@ import Checkout from './Checkout';
 import { toast } from 'react-toastify';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
+import { useTranslation } from 'react-i18next';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 const PaymentForm = (props) => {
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const [isLoading, setIsLoading] = useState(true)
     const [stripeOption, setStripeOptions] = useState({
         clientSecret: ''
@@ -49,7 +51,7 @@ const PaymentForm = (props) => {
                 setIsLoading(false)
             }
         } catch (err) {
-            toast.error("Error while contacting the server")
+            toast.error(tErr("serverError"))
         }
     }
 

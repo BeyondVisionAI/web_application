@@ -3,8 +3,11 @@ import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import CustomCheckbox from '../../../../../GenericComponents/CustomCheckbox/CustomCheckbox';
 import "./FolderListSelectable.css"
+import { useTranslation } from 'react-i18next';
 
 const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
+    const { t } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const [lists, setLists] = useState([])
     const [newListName, setNewListName] = useState('')
 
@@ -17,7 +20,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
             })
             setLists(res.data)
         } catch (e) {
-            console.error(e)
+            toast.error(tErr('list.fetchAllLists'));
         }
     }
 
@@ -30,7 +33,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
     }, [defaultLists]);
 
     const handleCreateList = async () => {
-        if (!newListName) return toast.error("Folder name must not be null !")
+        if (!newListName) return toast.error(tErr("folder.folderNameNull"));
         try {
             var res = await axios({
                 url: `${process.env.REACT_APP_API_URL}/lists`,
@@ -40,12 +43,12 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
                     name: newListName,
                 }
             })
-            toast.success("Folder successfully created")
+            toast.success(t("dashboard.folders.sucessMessage"));
             setLists([...lists, res.data])
             addToFolderList(res.data)
             setNewListName('')
         } catch (error) {
-            console.error(error)
+            toast.error(tErr("list.createList"));
         }
     }
 
@@ -58,8 +61,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
                     withCredentials: true,
                 })
             } catch (e) {
-                console.error(e)
-                toast.error("Could not add this project to the list !")
+                toast.error(tErr("list.addProjectToList"));
             }
         } else {
             try {
@@ -69,8 +71,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
                     withCredentials: true,
                 })
             } catch (e) {
-                console.error(e)
-                toast.error("Could not remove this project from the list !")
+                toast.error(tErr("project.deleteProjectFromList"));
             }
         }
     }

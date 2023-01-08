@@ -49,7 +49,7 @@ const Checkout = (props) => {
       <h2 className="payment-label">Payment for {props.amount + " " + props.currency}</h2>
       <PaymentElement />
       <br />
-      <Button disabled={!stripe} label="Submit" onClick={() => console.log("a")}></Button>
+      <Button disabled={!stripe} label="Submit"></Button>
       {errorMessage && <div>{errorMessage}</div>}
     </form>
   );

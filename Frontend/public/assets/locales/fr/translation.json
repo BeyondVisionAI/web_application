@@ -80,7 +80,8 @@
 			"yourName": "Votre nom",
 			"yourEmail": "Votre adresse mail",
 			"yourMessage": "Votre message",
-			"send": "Envoyer"
+			"send": "Envoyer",
+			"emailSent": "Email envoyé!"
 		}
 	},
 
@@ -309,24 +310,103 @@
 					"notLoading": "Enrgistrer"
 				}
 			}
-		},
-		"errMsgs": {
-			"401": {
-				"userNotLoggedIn": "Erreur (401) - L'utilisateur n'est pas connecté.",
-				"projectNotYours": "Erreur (401) - Aucune collaboration trouvé entre l'utilisateur et le projet.",
-				"default": "Erreur (401)."
-			},
-			"403": {
-				"forbiddenAccess": "Erreur (403) - L'utilisateur n'a pas les droits sur le contenu."
-			},
-			"404": {
-				"projectNotFound": "Erreur (404) - Projet introuvable.",
-				"replicaNotFound": "Erreur (404) - Replica introuvable.",
-				"default":"Erreur (404)."
-			},
-			"500": {
-				"serverError": "Erreur serveur."
-			}
 		}
+	},
+	"payment": {
+		"paymentSuccess": "Paiement traité avec succès"
+	},
+	"password": {
+		"ifLinkPwdReset": "Si cette adresse email est liée à un compte vous recevrez un email pour réinitialiser votre mot de passe dans quelques minutes"
+	},
+	"warningMsgs": {
+		"payment": {
+			"paymentProcessing": "Paiement en cours, nous vous alerterons lorsque le paiement sera reçu"
+		},
+		"collaborator": {
+			"collaborator": {
+				"alreadyAdded": "Ce collaborateur a déjà été ajouté"
+			}
+		},
+		"scriptEdition": {
+			"generationStart": "La génération du script a commencé"
+		}
+	},
+	"errMsgs": {
+		"project": {
+			"s3Upload": "Une erreur est survenue en sauvegardant le fichier, veuillez réessayer"
+			, "update": "Une erreur est survenue pendant la mise à jour, veuillez réessayer"
+			, "leaveProject": "Une erreur est survenue en quittant le projet, veuillez réessayer"
+			, "deleteProject": "Une erreur est survenue en supprimant le projet, veuillez réessayer"
+			, "getProject": "Une erreur est survenue en accédant au projet, veuillez réessayer"
+			, "getAllProjects": "Une erreur est survenue en accédant aux projets, veuillez réessayer"
+			, "updateProject": "Une erreur est survenue en modfiant le projet, veuillez réessayer"
+			, "projectInfo": "Une erreur est survenue en accédant aux informations, veuillez réessayer"
+			, "roleInProject": "Impossible d'accéder à votre rôle dans ce projet"
+			, "deleteProjectFromList": "Une erreur est survenue en supprimant un projet d'une liste, veuillez réessayer"
+		},
+		"collaborator": {
+			"addCollaborator": "Une erreur est survenue en ajoutant un collaborateur, veuillez réessayer",
+			"deleteCollaborator": "Une erreur est survenue en supprimant un collaborateur, veuillez réessayer",
+			"updateCollaborator": "Une erreur est survenue en mettant à jour un collaborateur, veuillez réessayer",
+			"getUser": "Une erreur est survenue en récupérant un utilisateur, veuillez réessayer",
+			"getCollaborators": "Une erreur est survenue en récupérant tous les utilisateurs, veuillez réessayer"
+		},
+		"description" : {
+			"uploadImage": "Une erreur est survenue en ajoutant l'image, veuillez réessayer",
+			"uploadThumbnail": "Une erreur est survenue en ajoutant la vignette, veuillez réessayer",
+			"getThumbnail": "Une erreur est survenue en récupérant la vignette, veuillez réessayer"
+		},
+		"payment": {
+			"paymentFail": "Paiement échoué, merci d'essayer un autre moyen de paiement"
+		},
+		"contact": {
+			"missingField": "Champ manquant pour envoyer un message",
+			"emailError": "Une erreur est survenue lors de l'envoi de votre mail, veuillez réessayer"
+		},
+		"password": {
+			"usernameOrPwdNotFilled": "Nom d'utilisateur ou mot de passe non remplis"
+		},
+		"dashboard": {
+			"accessLists": "Une erreur est survenue en accédant aux listes, veuillez réessayer",
+			"accessRecentProjects": "Une erreur est survenue en accédant aux projets récents, veuillez réessayer"
+		},
+		"list": {
+			"addProjectToList": "Une erreur est survenue en ajoutant le projet à une liste, veuillez réessayer",
+			"createList": "Une erreur est survenue en créant une nouvelle liste, veuillez réessayer",
+			"fetchAllLists": "Une erreur est survenue en récupérant toutes les listes, veuillez réessayer",
+			"leaveList": "Une erreur est survenue en quittant la liste, veuillez réessayer",
+			"deleteList": "Une erreur est survenue en supprimant la liste, veuillez réessayer",
+			"listInfo": "Impossible de récupérer les informations de la liste",
+			"roleInList": "Impossible de récupérer votre rôle dans cette liste"
+		},
+		"folder": {
+			"folderNameNull": "Le nom du dossier ne peut pas être vide"
+		},
+		"modal": {
+			"createFolder": "Une erreur est survenue en créant un dossier, veuillez réessayer"
+		},
+		"scriptEdition": {
+			"scriptGeneration": "Une erreur est survenue pendant la génération du script, veuillez réessayer",
+			"couldNotGenerate": "Impossible de générer le rendu du projet",
+			"audioDescFileNotReady": "Le fichier d'audiodescription n'est pas prêt",
+			"audioDownloadFailed": "Impossible de télécharger le fichier d'audiodescription",
+			"replica": {
+				"noOverlap": "Vous ne pouvez pas faire se chevaucher 2 répliques",
+				"moveReplica": "Une erreur est survenue en bougeant la réplique, veuillez réessayer",
+				"updateReplica": "Une erreur est survenue en modifiant le contenu de la réplique, veuillez réessayer",
+				"createReplica": "Une erreur est survenue en créant une réplique, veuillez réessayer",
+				"removeReplica": "Une erreur est survenue en supprimant une réplique, veuillez réessayer",
+				"replicaOutOfScope": "Vous ne pouvez pas créer une réplique en dehors de la portée de la vidéo"
+			},
+			"replicaComment" : {
+				"postComment": "Une erreur est survenue à l'ajout d'un commentaire, veuillez réessayer",
+				"removeComment": "Une erreur est survenue en supprimant un commentaire",
+				"fetchAllReplicaComments": "Une erreur est survenue lors de la récupération des commentaires de la réplique, veuillez réessayer"
+			}
+		},
+		"somethingWentWrong": "Une erreur est survenue",
+		"errorOccured": "Une erreur est survenue, veuillez réessayer",
+		"serverError": "Une erreur est survenue en contactant le serveur",
+		"saveError": "Une erreur est survenue en sauvegardant, veuillez réessayer"
 	}
 }

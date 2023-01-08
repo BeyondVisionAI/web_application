@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import "./ModalRemoveProjectFromList.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalRemoveProjectFromList({ refresh, open, close, projectId, listId }) {
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
 
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {
@@ -27,8 +29,7 @@ export default function ModalRemoveProjectFromList({ refresh, open, close, proje
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
-            toast.error("Can't remove project from list, check your rights");
+            toast.error(tErr("project.deleteProjectFromList"));
         } finally {
             button.innerHTML = "Remove";
         }
@@ -45,7 +46,7 @@ export default function ModalRemoveProjectFromList({ refresh, open, close, proje
                 });
                 setProjectName(res.data.name);
             } catch (err) {
-                toast.error("Can't get project informations");
+                toast.error(tErr("project.projectInfo"));
             }
         }
 
@@ -59,7 +60,7 @@ export default function ModalRemoveProjectFromList({ refresh, open, close, proje
                 });
                 setListName(res.data.name);
             } catch (err) {
-                toast.error("Can't get list informations");
+                toast.error(tErr("list.listInfo"));
             }
         }
 

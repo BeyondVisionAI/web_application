@@ -6,10 +6,13 @@ import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideoStep from './DropVideoStep';
 import { useHistory } from "react-router-dom";
 import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 export default function CreateProject({ show, onHide, addToProjectList }) {
     const { t } = useTranslation('translation', {keyPrefix: 'project.create'});
+    const { t: tp } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
+    const { t: tc } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborator'});
     const [modalStep, setModalStep] = useState(0);
     const [video, setVideo] = useState(null);
     const [image, setImage] = useState(null);
@@ -65,7 +68,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             });
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
-        }).catch(err => console.error("Upload thumbnail error:", err));
+        }).catch(() => toast.error(tp("s3Upload")));
 
         UploadFileOnS3(video, 'beyondvision-vod-source-km23jds9b71q', process.env.REACT_APP_S3_REGION, `${values.id}.${video.name.split(".").pop()}`)
         .then(async videoRes => {
@@ -77,7 +80,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             });
             handleChange('videoId', videoResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
-        }).catch(err => console.error("Upload video error:", err));
+        }).catch(() => toast.error(tp("s3Upload")));
     }
 
     const addCollaborators = (projectId) => {
@@ -85,7 +88,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             try {
                 axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: collaborator.user.email, titleOfCollaboration: 'Read', rights: 'READ'});
             } catch (error) {
-                console.error(error);
+                toast.error(tc("addCollaborator"));
             }
         });
     }
@@ -98,7 +101,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             setShowPayment(true);
             await uploadMedia();
         } catch (error) {
-            console.error(error);
+            toast.error(tp("update"));
         }
     }
 

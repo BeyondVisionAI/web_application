@@ -3,9 +3,10 @@ import "./ModalDestroyLeaveList.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalDestroyLeaveList({ refresh, open, close, listId }) {
-
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs.list"});
     const closeOnEscapeKeydown = (e) => {
         if ((e.charCode || e.keyCode) === 27) {
             close();
@@ -29,8 +30,7 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
-            toast.error("Can't leave list");
+            toast.error(tErr("leaveList"));
         } finally {
             button.innerHTML = "Leave";
         }
@@ -49,8 +49,7 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
-            toast.error("Can't destroy list");
+            toast.error(tErr("deleteList"));
         } finally {
             button.innerHTML = "Destroy";
         }
@@ -67,7 +66,7 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
                 });
                 setListName(res.data.name);
             } catch (err) {
-                toast.error("Can't get list informations");
+                toast.error(tErr("listInfo"));
             }
         }
 
@@ -85,8 +84,7 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
                     }
                 });
             } catch (err) {
-                toast.error("Can't get your informations on this list");
-                console.log(err);
+                toast.error(tErr("roleInList"));
                 close();
             }
         };
@@ -101,10 +99,6 @@ export default function ModalDestroyLeaveList({ refresh, open, close, listId }) 
             document.body.removeEventListener('keydown', closeOnEscapeKeydown);
         }
     }, [listId]);
-
-    const displayData = () => {
-        console.log(role);
-    }
 
     if (open) {
         return (

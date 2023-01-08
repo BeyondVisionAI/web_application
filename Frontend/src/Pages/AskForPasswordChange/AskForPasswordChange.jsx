@@ -6,14 +6,17 @@ import "./AskForPasswordChange.css"
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const AskForPasswordChange = () => {
+    const { t } = useTranslation('translation', {keyPrefix: 'password'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs.password"});
     const [email, setEmail] = useState(null)
     const history = useHistory()
 
     function askForChange() {
         if (!email ) {
-            toast.error("Username or password not filled")
+            toast.error(tErr("usernameOrPwdNotFilled"));
         } else {
             axios({
                 method: "POST",
@@ -23,11 +26,11 @@ const AskForPasswordChange = () => {
                 withCredentials: true,
                 url: `${process.env.REACT_APP_API_URL}/user/askForPasswordChange`,
                 }).then((res) => {
-                    toast.success('If this email is linked to an account you will receive a link to reset your password in the next few minutes')
+                    toast.success(t('ifLinkPwdReset'));
                     history.push('/login')
                 })
                 .catch((err) => {
-                    toast.success('If this email is linked to an account you will receive a link to reset your password in the next few minutes')
+                    toast.success(t('ifLinkPwdReset'));
                     history.push('/login')
               })
         }

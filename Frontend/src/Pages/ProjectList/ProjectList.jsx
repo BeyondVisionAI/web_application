@@ -7,8 +7,11 @@ import "./ProjectList.css"
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import axios from 'axios';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const ProjectList = (props) => {
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
     const folderId = props.match.params.listId;
     const [projects, setProjects] = useState([])
     const [folderName, setFolderName] = useState('Folder')
@@ -22,7 +25,6 @@ const ProjectList = (props) => {
     useEffect(() => {
         const getProjects = async () => {
             try {
-                console.log("🚀 ~ file: ProjectList.jsx ~ line 27 ~ getProjects ~ folderId", folderId)
                 var res = await axios({
                     url: `${process.env.REACT_APP_API_URL}/lists/${folderId}`,
                     method: 'GET',
@@ -35,7 +37,7 @@ const ProjectList = (props) => {
                 }
                 setProjects(projects)
             } catch (e) {
-                console.error(e)
+                toast.error(tErr("getAllProjects"));
             }
         }
         getProjects()

@@ -13,12 +13,14 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
+import { toast } from 'react-toastify';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
 
     const { t } = useTranslation('translation', {keyPrefix: 'dashboard'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.dashboard'});
     const [recentProjects, setRecentProjects] = useState([])
     const [folders, setFolders] = useState([])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -43,7 +45,7 @@ export default function Lists() {
                 })
                 setFolders(res.data)
             } catch (e) {
-                console.error(e)
+                toast.error(tErr("accessLists"));
             }
         }
         const getRecentProjects = async () => {
@@ -62,7 +64,7 @@ export default function Lists() {
                 }
                 setRecentProjects(projects)
             } catch (e) {
-                console.error(e)
+                toast.error(tErr("accessRecentProjects"));
             }
         }
         getLists()
@@ -145,7 +147,6 @@ export default function Lists() {
             let projectsCopy = [...recentProjects];
             projectsCopy.splice(idx, 1);
             setRecentProjects(projectsCopy)
-            console.log("🚀 ~ file: Lists.jsx:119 ~ removeProjectFromList ~ projectsCopy", projectsCopy)
         }
     }
 

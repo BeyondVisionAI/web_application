@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 const Login = () => {
     const { t } = useTranslation('translation', {keyPrefix: 'authentication'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'authentication.errorMessages'});
     const [password, setPassword] = useState(null)
     const [email, setEmail] = useState(null)
     const { currentUser } = useContext(AuthContext);
@@ -17,7 +18,7 @@ const Login = () => {
 
     function authenticate() {
         if (!email || !password) {
-            toast.error(t('usernameOrPasswordNotFilled'))
+            toast.error(tErr('usernameOrPasswordNotFilled'))
         } else {
             axios({
                 method: "POST",
@@ -34,13 +35,13 @@ const Login = () => {
               })
               .catch((err) => {
                 if ((err.response.status === 404)) {
-                    toast.error(t('invalidEmailOrPassword'))
+                    toast.error(tErr('invalidEmailOrPassword'))
                 } else if (err.response.status === 401 && err.response.data == "EMAIL_NOT_VERIFIED") {
-                    toast.error(t('unverifiedEmail'))
+                    toast.error(tErr('unverifiedEmail'))
                 } else if (err.response.status === 401 && err.response.data == "INVALID_PASSWORD") {
-                    toast.error(t('invalidEmailOrPassword'))
+                    toast.error(tErr('invalidEmailOrPassword'))
                 } else {
-                    toast.error(t('serverError'))
+                    toast.error(tErr('serverError'))
                 }
               })
         }

@@ -7,6 +7,7 @@ import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
 import VideoPlayer from './Widgets/VideoPlayer';
 import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const EDIT = {
@@ -17,6 +18,7 @@ const EDIT = {
 
 export default function ManageProject(props) {
     const { t } = useTranslation('translation', {keyPrefix: 'project.manage'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs.project"});
     const [project, setProject] = useState(null);
     const [editing, setEditing] = useState(EDIT.off);
     const history = useHistory();
@@ -35,7 +37,7 @@ export default function ManageProject(props) {
                             videoUrl = video.data.url;
                     }
                 } catch (error) {
-                    console.error(error);
+                    toast.error(tErr("getProject"));
                 }
 
                 setProject({
@@ -48,7 +50,7 @@ export default function ManageProject(props) {
                     isPaid: projectR.data.isPaid
                 });
             } catch (error) {
-                console.error(error);
+                toast.error(tErr("getProject"));
             }
         }
 

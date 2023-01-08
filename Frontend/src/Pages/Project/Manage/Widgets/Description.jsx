@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function Description({ editing, setEditing, updateProjectValues, projectId, name, description, thumbnailId }) {
     const { t } = useTranslation('translation', {keyPrefix: 'project.manage.descriptionWidget'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
     const [tmpProject, setTmpProject] = useState({name: name, description: description});
     const [thumbnail, setThumbnail] = useState(null);
     const [image, setImage] = useState(null);
@@ -29,14 +30,13 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     let url = await DownloadFileUrl('bv-thumbnail-project', image.data.name);
                     setThumbnail(url);
                 } catch (err) {
-                    console.error(`Getting file ${thumbnailId} on S3`, err);
+                    toast.error(tErr('description.gettingThumbnail'))
                 }
             }
 
             if (thumbnailId)
                 getThumbnailProject(projectId);
         } catch (error) {
-            console.error(error);
             toast.error(t('errMsgs.errWhileFetchingData'));
         }
     }, [projectId, setThumbnail, thumbnailId]);
@@ -75,8 +75,8 @@ export default function Description({ editing, setEditing, updateProjectValues, 
                     ETag: imageRes.ETag,
                 });
                 if (thumbnailResponse.status !== 200)
-                    console.error("Update image db error");
-            }).catch(err => console.error("Upload thumbnail error:", err));
+                    toast.error(tErr("description.uploadImage"));
+            }).catch(() => toast.error(tErr("description.uploadThumbnail")));
         }
 
         async function updateProject () {
