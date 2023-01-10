@@ -67,7 +67,7 @@ export default function ProjectDataStep({ image, setImage, nextStep, prevStep, h
                 <InputWithLabel defaultValue={ values.name } placeholder={t('title.placeholder')} type="text" label={t('title.label')} onChange={setTitle} />
                 <InputWithLabel defaultValue={ values.description } placeholder={t('description.placeholder')} type="textarea" label={t('description.label')} onChange={setDescription} />
                 <label className="input-with-label-label" htmlFor="videoType">
-                    {t('genreLabel')}
+                    {t('genre.label')}
                 </label>
                 <select className="input-with-label-input" id='videoType' defaultValue={ values.videoType } onChange={(e) => setSelectedType(e.target.value)}>
                     {types.map((element) => (<option key={element}>{element}</option>))}
