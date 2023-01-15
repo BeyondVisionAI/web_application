@@ -17,26 +17,27 @@ const createAudio = async (replica) => {
             replica.status = 'InProgress';
             replica.actualStep = 'Voice';
             await replica.save();
-            
-            await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
+            axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
                 projectId: projectId,
                 voiceId: voiceId,
                 text: content,
                 replicaId: _id
             })
             .then(async (response) => {
+                console.log("IN THEN");
                 if (response.status != 200) {
                     throw Error(response.data);
                 }
                 replica.duration = response.data.audioDuration;
                 replica.status = 'Done';
                 replica.actualStep = 'Voice';
-                var index = projectsRooms.findIndex((elem) => elem.id == projectId);
                 for (var user of projectsRooms[index].users) {
+                    console.log("🚀 ~ file: Replica.js:37 ~ .then ~ user", user)
                     sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
                 }
             })
             .catch((err) => {
+                console.log("🚀 ~ file: Replica.js:41 ~ createAudio ~ err", err)
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
                 throw err;
@@ -97,6 +98,10 @@ const createReplicaAndAudio = async (
         newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
         const replica = await newReplica.save();
         await createAudio(newReplica);
+        var index = projectsRooms.findIndex((elem) => elem.id === projectId);
+        for (var user of projectsRooms[index].users) {
+            sendDataToUser(user, "new replica", newReplica);
+        }
         return replica;
     } catch (err) {
         console.log(err);

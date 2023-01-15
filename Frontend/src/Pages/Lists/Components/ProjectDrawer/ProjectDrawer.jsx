@@ -173,12 +173,13 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
         else setThumbnail('/login-image.jpg')
         setIsEdit(false)
       }
+      console.log("🚀 ~ file: ProjectDrawer.jsx:182 ~ ProjectDrawer ~ userRole", userRole)
 
     return (
         <div ref={divRef} className={`project-drawer-container ${isOpen && 'project-drawer-container-active'}`}>
           <div className="project-drawer-editor-icons-container">
-            <a className="project-drawer-editor-icon-container" href={`/project/${project?._id}/edit`}><FiScissors className="project-drawer-editor-icon"/></a>
-            {isEdit ? 
+            {['OWNER', 'ADMIN', 'WRITE'].includes(userRole) && <a className="project-drawer-editor-icon-container" href={`/project/${project?._id}/edit`}><FiScissors className="project-drawer-editor-icon"/></a>}
+            {isEdit ?
             <>
               <div className="project-drawer-editor-icon-container" onClick={handleEditCancel}><FaPlus className="project-drawer-editor-icon icon-rotate"/></div>
               <div className="project-drawer-editor-icon-container" onClick={handleEditSave}><FaCheck className="project-drawer-editor-icon"/></div>
