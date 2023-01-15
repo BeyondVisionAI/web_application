@@ -24,7 +24,7 @@ const Profile = () => {
                         <img className='profileActionButtonIcon' src="https://cdn-icons-png.flaticon.com/512/1000/1000885.png" alt="Your email" />
                         <p className='profileActionButtonLabel'>{currentUser.email}</p>
                     </btn>
-                    <btn className='profileActionButton' onClick={logout}  style={{cursor: 'pointer'}}>
+                    <btn className='profileActionButton criticalAction' onClick={logout}  style={{cursor: 'pointer'}}>
                         <img className='profileActionButtonIcon' src="https://cdn-icons-png.flaticon.com/512/4043/4043198.png" alt="Log out icon" />
                         <p className='profileActionButtonLabel'>Log out</p>
                     </btn>

@@ -55,8 +55,8 @@
     width: 100%;
     margin: 2%;
     border: solid 0.1em;
-    border-radius: 10%;
-    border-color: lightgray;
+    border-radius: 10px;
+    border-color: black;
     font-size: large;
     padding: 1em;
 }
@@ -67,4 +67,9 @@
 
 .profileActionButtonLabel {
     margin: 0.5em 2em 0.5em 1em;
+}
+
+.criticalAction {
+    color: red;
+    border-color: red;
 }
