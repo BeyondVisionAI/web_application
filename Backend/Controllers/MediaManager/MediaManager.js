@@ -40,7 +40,6 @@ exports.DownloadFileUrl = async function (bucketName, keyName) {
             Bucket: bucketName,
             Key: keyName,
         };
-        console.log("🚀 ~ file: MediaManager.js:43 ~ params", params)
         const url = await s3.getSignedUrl('getObject', params);
         
         return (url);
