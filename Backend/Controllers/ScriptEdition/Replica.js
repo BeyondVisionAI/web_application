@@ -37,7 +37,6 @@ const createAudio = async (replica) => {
                 }
             })
             .catch((err) => {
-                console.log("🚀 ~ file: Replica.js:41 ~ createAudio ~ err", err)
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
                 replica.save();
