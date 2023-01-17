@@ -5,21 +5,21 @@ import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import Chat from '../Chat/Chat';
-import NavBarVariante from '../../GenericComponents/NavBar/Project/NavBarVariante';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 import AudioPlayer from './Components/AudioPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
+import AccountButton from '../../GenericComponents/Auth/AccountButton';
 import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
-
+import { useTranslation } from 'react-i18next';
 
 export default function ScriptEdition(props) {
-
+    const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const {socket, currentUser} = useContext(AuthContext);
-
+    const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -29,39 +29,19 @@ export default function ScriptEdition(props) {
     const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
 
-    useMemo(() => {
-        socket.on('connection', () => {
-            console.log(`I'm connected with the back-end for the script edition`);
-        });
-    
+    function initSocketListener() {
         socket.on('new replica', async (newReplica) => {
             setReplicas([...replicas, newReplica])
         });
-    
+
         socket.on('update replica', async (replica) => {
-            console.log("🚀 ~ file: ScriptEdition.jsx:43 ~ socket.on ~ replica", replica)
             updateReplica(replica);
         });
-    
+
         socket.on('delete replica', async (replica) => {
             removeReplica(replica._id);
         });
-    }, [socket, replicas])
-
-    
-    socket.on('replica detected', async () => {
-        try {
-            const res = await axios({
-                method: "GET",
-                url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/replicas`,
-                withCredentials: true
-            });
-            let resRep = Object.values(res.data);
-            setReplicas(resRep);
-        } catch (e) {
-            console.log('error detected when call new replica in front')
-        }
-    });
+    }
 
     useEffect(() => {
         socket.emit("open project", props.match.params.id);
@@ -75,9 +55,8 @@ export default function ScriptEdition(props) {
                     if (video.status === 200)
                         videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
                 } catch (error) {
-                    console.error('Video non dispo');
+                    toast.error(tErr('project.getProject'));
                 }
-                // videoUrl = '/Marco_Destruction.mp4'
                 setProject({
                     id: id,
                     title: projectR.data.name,
@@ -85,7 +64,7 @@ export default function ScriptEdition(props) {
                     status: projectR.data.status
                 });
             } catch (error) {
-                console.error(error);
+                toast.error(tErr("project.updateProject"));
             }
         }
 
@@ -94,6 +73,32 @@ export default function ScriptEdition(props) {
             socket.emit("close project", props.match.params.id);
         })
     }, [props.match.params.id]);
+
+    const callGenerationIA = () => {
+        axios.defaults.withCredentials = true;
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieve'})
+        .then((res) => {
+            if (res.status !== 200) {
+                toast.error(tErr('scriptEdition.scriptGeneration'));
+            }
+        })
+        .catch((err) => {
+            toast.error(tErr("somethingWentWrong"));
+        });
+    }
+
+    const callGenerationIAFake = () => {
+        axios.defaults.withCredentials = true;
+        axios.post(`${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/generationIA`, {typeGeneration: 'ActionRetrieveFake'})
+        .then((res) => {
+            if (res.status !== 200) {
+                toast.error(tErr('scriptEdition.scriptGeneration'));
+            }
+        })
+        .catch((err) => {
+            toast.error(tErr("somethingWentWrong"));
+        });
+    }
 
     const updateReplicaAction = async (selectedId) => {
         setReplicaSelected(selectedId);
@@ -139,30 +144,21 @@ export default function ScriptEdition(props) {
                 let resRep = Object.values(res.data);
                 setReplicas(resRep);
             } catch (e) {
-                let errMsg = "Error";
-                switch (e.response.status) {
-                    case 401:
-                        switch (e.response.data) {
-                            case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                            /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                            default: errMsg = "Error (401)."; break;
-                        } break;
-                    case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                    case 404:
-                        switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                            case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                            default: errMsg = "Error (404)."; break;
-                        } break;
-                    default /* 500 */ : errMsg = "Internal Error."; break;
-                }
-                toast.error(errMsg);
-                console.error(e);
+                toast.error(tErr("project.projectInfo"));
             }
         }
         fetchProjectDetails(props.match.params.id);
     }, []);
+
+    useEffect(() => {
+        initSocketListener()
+
+        return(() => {
+            socket.off("new replica");
+            socket.off("update replica");
+            socket.off("delete replica");
+        })
+    }, [replicas, initSocketListener, socket]);
 
     const RedirectToProjectManagement = () => {
         history.push(`/projects/`);
@@ -170,18 +166,17 @@ export default function ScriptEdition(props) {
 
     const LaunchGeneration = async() => {
         try {
-            toast.warning("Generation started");
+            toast.warning(tWarn("scriptGeneration"));
             const res = await axios({
                 method: "POST",
                 url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
                 withCredentials: true
             });
             if (res.status != 200) {
-                toast.error("An error occured when trying to generate the project");
+                toast.error(tErr("scriptEdition.scriptGeneration"));
             }
         } catch (error) {
-            toast.error("Could not generate the project");
-            console.log(error)
+            toast.error(tErr("scriptEdition.couldNotGenerate"));
         }
     }
 
@@ -210,12 +205,11 @@ export default function ScriptEdition(props) {
                 });
             }
             else {
-                toast.error("Audiodescription file not ready");
+                toast.error(tErr("scriptEdition.audioDescFileNotReady"));
             }
        
         } catch (error) {
-            toast.error("Could not download the audiodescription file");
-            console.log(error)
+            toast.error(tErr("scriptEdition.audioDownloadFailed"));
         }
     }
 
@@ -247,12 +241,11 @@ export default function ScriptEdition(props) {
                 });
             }
             else {
-                toast.error("Audiodescription file not ready");
+                toast.error(tErr("scriptEdition.audioDescFileNotReady"));
             }
        
         } catch (error) {
-            toast.error("Could not download the audiodescription file");
-            console.log(error)
+            toast.error(tErr("scriptEdition.audioDownloadFailed"));
         }
     }
 
@@ -263,6 +256,18 @@ export default function ScriptEdition(props) {
                     <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
                         <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
                         <div className='flex flex-row gap-1 pa-0'>
+                            <button
+                              className="button-container whitespace-nowrap"
+                              onClick={() => callGenerationIAFake()}
+                            >
+                                <div className="button-text">Générer le faux script</div>
+                            </button>
+                            <button
+                              className="button-container whitespace-nowrap"
+                              onClick={() => callGenerationIA()}
+                            >
+                                <div className="button-text">Générer le script</div>
+                            </button>
                             {project.status === 'Done'
                             ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
                             :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
@@ -272,7 +277,7 @@ export default function ScriptEdition(props) {
                             :   <DisabledCircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
                             }
                             <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
-                            <CircleButton url="/user-icon.png" size='30px'/>
+                            <AccountButton/>
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 edit-bloc">
@@ -307,11 +312,11 @@ export default function ScriptEdition(props) {
                         />
                     </div>
                     <AudioPlayer
-                    replicas={replicas}
-                    playedSeconds={playedSeconds}
-                    newSecondsFromCursor={newSecondsFromCursor}
-                    resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
-                    triggerPause={!isPlaying}
+                        replicas={replicas}
+                        playedSeconds={playedSeconds}
+                        newSecondsFromCursor={newSecondsFromCursor}
+                        resetNewSecondsFromCursor={() => setNewSecondsFromCursor(null)}
+                        triggerPause={!isPlaying}
                     />
                 </div>
                 {/* <Chat projectId={props.match.params.id}/> */}
