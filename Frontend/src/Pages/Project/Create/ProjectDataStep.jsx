@@ -3,18 +3,20 @@ import UploadFile from '../../../GenericComponents/Files/UploadFile';
 import InputWithLabel from '../../../GenericComponents/InputWithLabel/InputWithLabel';
 import ThumbnailDisplay from './ThumbnailDisplay';
 import CollaboratorInput from '../../../GenericComponents/InputWithLabel/CollaboratorInput';
+import { useTranslation } from 'react-i18next';
 
 export default function ProjectDataStep({ image, setImage, nextStep, prevStep, handleChange, values, collaborators, setCollaborators }) {
+    const { t } = useTranslation('translation', {keyPrefix: 'project.create.step2.form'});
     const types = [
-        "Aucun",
-        "Aventure",
-        "Action",
-        "Drame",
-        "Jeunesse",
-        "Musical",
-        "Policier",
-        "Science fiction",
-        "Horreur"
+        t('genre.values.none'),
+        t('genre.values.adventure'),
+        t('genre.values.action'),
+        t('genre.values.drame'),
+        t('genre.values.family'),
+        t('genre.values.musical'),
+        t('genre.values.crime'),
+        t('genre.values.sciFi'),
+        t('genre.values.horror')
     ];
     const [selectedType, setSelectedType] = useState(null);
     const [description, setDescription] = useState(null);
@@ -62,10 +64,10 @@ export default function ProjectDataStep({ image, setImage, nextStep, prevStep, h
     return (
         <form className="flex w-full h-full">
             <div className="flex flex-col justify-start p-6 w-2/3">
-                <InputWithLabel defaultValue={ values.name } placeholder="Title" type="text" label="Title" onChange={setTitle} />
-                <InputWithLabel defaultValue={ values.description } placeholder="Résumé de la vidéo" type="textarea" label="Résumé court de la vidéo" onChange={setDescription} />
+                <InputWithLabel defaultValue={ values.name } placeholder={t('title.placeholder')} type="text" label={t('title.label')} onChange={setTitle} />
+                <InputWithLabel defaultValue={ values.description } placeholder={t('description.placeholder')} type="textarea" label={t('description.label')} onChange={setDescription} />
                 <label className="input-with-label-label" htmlFor="videoType">
-                    Genre de la vidéo
+                    {t('genre.label')}
                 </label>
                 <select className="input-with-label-input" id='videoType' defaultValue={ values.videoType } onChange={(e) => setSelectedType(e.target.value)}>
                     {types.map((element) => (<option key={element}>{element}</option>))}
@@ -76,11 +78,11 @@ export default function ProjectDataStep({ image, setImage, nextStep, prevStep, h
             </div>
 
             <div className="flex flex-wrap w-1/3 h-1/2 shadow-xl rounded items-center justify-center">
-                {(!thumbnail && !image) && <UploadFile text="Drag and drop your thumbnail !" setData={ setLocalImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>}
+                {(!thumbnail && !image) && <UploadFile text={t('thumbnail.label')} setData={ setLocalImage } isFill={image ? true : false} types=".jpg, .jpeg, .png"/>}
                 { (thumbnail || image) && <ThumbnailDisplay thumbnail={image || thumbnail} removeThumbnail={() => {setThumbnail(null); setImage(null)}} />}
             </div>
             <div className="text-gray-500 text-sm absolute bottom-0 left-0 px-6 py-10">
-                <h1>Les informations fournies ci-dessus nous aiderons à audio-décrire votre vidéo plus éfficacement.</h1>
+                <h1>{t('commentOnDataUsage')}</h1>
             </div>
             <div className="absolute bottom-0 right-0 p-6">
                 <button
@@ -88,7 +90,7 @@ export default function ProjectDataStep({ image, setImage, nextStep, prevStep, h
                 type="button"
                 onClick={prev}
                 >
-                Back
+                {t('previous')}
                 </button>
                 <button
                 disabled={!areAllRequiredFieldsFilled}
@@ -96,7 +98,7 @@ export default function ProjectDataStep({ image, setImage, nextStep, prevStep, h
                 type="button"
                 onClick={next}
                 >
-                Next
+                {t('next')}
                 </button>
             </div>
         </form>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ProjectDataStep from './ProjectDataStep';
 import PaymentStep from './PaymentStep';
@@ -6,8 +6,13 @@ import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideoStep from './DropVideoStep';
 import { useHistory } from "react-router-dom";
 import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 export default function CreateProject({ show, onHide, addToProjectList }) {
+    const { t } = useTranslation('translation', {keyPrefix: 'project.create'});
+    const { t: tp } = useTranslation('translation', {keyPrefix: 'errMsgs.project'});
+    const { t: tc } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborator'});
     const [modalStep, setModalStep] = useState(0);
     const [video, setVideo] = useState(null);
     const [image, setImage] = useState(null);
@@ -23,9 +28,9 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
     const [showPayment, setShowPayment] = useState(false);
     const [collaborators, setCollaborators] = useState([]);
     const [steps, setSteps] = useState([
-        {title: 'Téléverser la vidéo', img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/><polyline points="16 16 12 12 8 16"/></svg>, isDone: true},
-        {title: 'Détails du projet', img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>, isDone: false},
-        {title: 'Paiement', img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, isDone: false}
+        {title: t('step1.title'), img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/><polyline points="16 16 12 12 8 16"/></svg>, isDone: true},
+        {title: t('step2.title'), img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>, isDone: false},
+        {title: t('step3.title'), img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, isDone: false}
     ]);
     
     const history = useHistory();
@@ -63,7 +68,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             });
             handleChange('thumbnailId', thumbnailResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { thumbnailId: values.thumbnailId });
-        }).catch(err => console.error("Upload thumbnail error:", err));
+        }).catch(() => toast.error(tp("s3Upload")));
 
         UploadFileOnS3(video, 'beyondvision-vod-source-km23jds9b71q', process.env.REACT_APP_S3_REGION, `${values.id}.${video.name.split(".").pop()}`)
         .then(async videoRes => {
@@ -75,7 +80,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             });
             handleChange('videoId', videoResponse.data._id);
             axios.patch(`${process.env.REACT_APP_API_URL}/projects/${values.id}`, { videoId: values.videoId });
-        }).catch(err => console.error("Upload video error:", err));
+        }).catch(() => toast.error(tp("s3Upload")));
     }
 
     const addCollaborators = (projectId) => {
@@ -83,7 +88,7 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             try {
                 axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: collaborator.user.email, titleOfCollaboration: 'Read', rights: 'READ'});
             } catch (error) {
-                console.error(error);
+                toast.error(tc("addCollaborator"));
             }
         });
     }
@@ -95,9 +100,8 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
             addCollaborators(projectResponse.data._id);
             setShowPayment(true);
             await uploadMedia();
-            await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectResponse.data._id}/generationIA`, { typeGeneration: 'ActionRetrieve' });
         } catch (error) {
-            console.error(error);
+            toast.error(tp("update"));
         }
     }
 

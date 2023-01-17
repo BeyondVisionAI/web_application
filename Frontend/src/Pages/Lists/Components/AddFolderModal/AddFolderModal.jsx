@@ -3,8 +3,11 @@ import axios from 'axios';
 import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWithLabel';
 import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 export default function AddFolderModal({ closeModal, addToFolderList }) {
+    const { t } = useTranslation('translation', {keyPrefix: 'dashboard.folders.add'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.modal'})
     const [folderName, setFolderName] = useState('')
 
     const wrapperRef = useRef(null);
@@ -43,7 +46,7 @@ export default function AddFolderModal({ closeModal, addToFolderList }) {
 
     const handleAdd = async () => {
         if (folderName === '') {
-            toast.error('Folder name cannot be empty')
+            toast.error(t('errMsgs.noEmptyName'))
         }
         try {
             var res = await axios({
@@ -54,11 +57,11 @@ export default function AddFolderModal({ closeModal, addToFolderList }) {
                     name: folderName,
                 }
             })
-            toast.success("Folder successfully created")
+            toast.success(t('successMessage'))
             addToFolderList(res.data)
             closeModal()
         } catch (error) {
-            console.error(error)
+            toast.error(tErr("createFolder"));
         }
     }
 
@@ -69,7 +72,7 @@ export default function AddFolderModal({ closeModal, addToFolderList }) {
                 <div ref={wrapperRef} className="relative w-1/4 my-6 mx-auto max-w-7xl h-1/4">
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none h-full focus:outline-none">
                         <div className="flex items-center justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                            <h3>Add a folder</h3>
+                            <h3>{t('label')}</h3>
                             <button
                             className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                             onClick={() => closeModal()}
@@ -80,7 +83,7 @@ export default function AddFolderModal({ closeModal, addToFolderList }) {
                             </button>
                         </div>
                         <div className='flex items-start w-full justify-start h-full ml-4 mt-4 flex-col'>
-                            <InputWithLabel label='Folder Name' type='text' onChange={handleChange}/>
+                            <InputWithLabel label={t('nameLabel')} type='text' onChange={handleChange}/>
                             <div onClick={handleAdd} className='flex items-center justify-center w-8 h-8 bg-myBlue text-white rounded-full absolute right-5 bottom-5 cursor-pointer'><FaPlus /></div>
                         </div>
                     </div>

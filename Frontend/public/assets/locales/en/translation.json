@@ -9,6 +9,7 @@
 			"contact": "Contact"
 		}
 	},
+
 	"landingPage": {
 		"audioDescription": "Audio Description",
 		"madeEasy": "made easy",
@@ -79,7 +80,333 @@
 			"yourName": "Your name",
 			"yourEmail": "Your email",
 			"yourMessage": "Your message",
-			"send": "Send"
+			"send": "Send",
+			"emailSent": "Email successfully sent!"
 		}
+	},
+
+	"dashboard": {
+		"projects": {
+			"recents": "Recent Projects",
+			"add": "Create a new project",
+			"more": "See all projects"
+		},
+		"folders": {
+			"title": "Folders",
+			"add": {
+				"label": "Add a new folder",
+				"nameLabel": "Folder name",
+				"successMessage": "Folder successfully created",
+				"errMsgs": {
+					"noEmptyName": "Folder name cannot be empty"
+				}
+			},
+			"delete": {
+				"label": "Delete folder",
+				"errorMessage": "Error while deleting folder"
+			}
+		}
+	},
+
+	"authentication": {
+		"goBackHome": "← Go back to Home Page",
+		"logInForm": {
+			"title": "Log In",
+			"underTitle": "Beyond Vision is a web platform designed to facilitate the creation of audio description for short films",
+			"email": {
+				"label": "Email",
+				"placeholder": "mail@website.com"
+			},
+			"password": {
+				"label": "Password",
+				"placeholder": "Min. 8 characters"
+			},
+			"noAccount": "No account ?",
+			"createAccountNow": "Create one now !",
+			"forgottenPassword": "Forgot your password ?",
+			"resetPasswordNow": "Reset it now !",
+			"submitLabel": "Login"
+		},
+		"registerForm": {
+			"title": "Create an account",
+			"underTitle": "Beyond Vision is a web platform designed to facilitate the creation of audio description for short films",
+			"email": {
+				"label": "Email",
+				"placeholder": "mail@website.com",
+				"validationFailedMsg": "Invalid email address"
+			},
+			"name": {
+				"firstname": {
+					"label": "First Name",
+					"placeholder": "John"
+				},
+				"lastname": {
+					"label": "Last Name",
+					"placeholder": "Doe"
+				},
+				"validationFailedMsg": "Name cannot contain special characters"
+			},
+			"password": {
+				"label": "Password",
+				"verifyLabel": "Verify your password",
+				"placeholder": "Min. 8 characters",
+				"validationFailedMsg": "Min. 1 Uppercase, 1 number, 1 special character"
+			},
+			"gotAccount": "Already have an account ?",
+			"logInNow": "Log In Now !",
+			"submitLabel": "Create Account",
+			"successMessage": "Account created",
+			"errMsgs": {
+				"allTheFieldsMustBeFilled": "All the fields needs to be filled",
+				"passwordMismatch": "Passwords are not matching",
+				"invalidFields": "Invalid fields",
+				"emailAlreadyUsed": "Email already in use",
+				"serverError": "Error while contacting the server"
+			}
+		},
+		"passwordResetForm": {
+			"title": "Reset your password",
+			"underTitle": "Beyond Vision is a web platform designed to facilitate the creation of audio description for short films",
+			"password": {
+				"label": "Password",
+				"verifyLabel": "Verify your password",
+				"placeholder": "Min. 8 characters",
+				"validationFailedMsg": "Min. 1 Uppercase, 1 number, 1 special character"
+			},
+			"rememberPassword": "Remember your password ?",
+			"logInNow": "Log In Now !",
+			"submitLabel": "Reset now",
+			"successMessage": "Password successfully changed",
+			"errMsgs": {
+				"passwordMismatch": "Passwords are not matching",
+				"validationFailedMsg": "Passwords needs to have at least 1 uppercase, 1 number, 1 special character",
+				"serverError": "Could not modify password. Try again later"
+			}
+		},
+		"emailVerification": {
+			"label": "Verifying your email...",
+			"successMessage": "Email Verified",
+			"errorMessage": "Email couldn't be verified, try again later"
+		},
+		"errorMessages": {
+			"usernameOrPasswordNotFilled": "Username or password not filled",
+			"invalidEmailOrPassword": "Invalid email or password",
+			"unverifiedEmail": "Email not verified",
+			"serverError": "Error while contacting the server"
+		}
+	},
+
+	"project": {
+		"create": {
+			"step1": {
+				"title": "Upload the video",
+				"next": "Next"
+			},
+			"step2": {
+				"title": "Project details",
+				"form": {
+					"title": {
+						"label": "Title",
+						"placeholder": "Title"
+					},
+					"description": {
+						"label": "Short summary of the video",
+						"placeholder": "Summary of the video"
+					},
+					"genre": {
+						"label": "Video genre",
+						"values": {
+							"none": "None",
+							"adventure": "Adventure",
+							"action": "Action",
+							"drame": "Drame",
+							"family": "Family",
+							"musical": "Musical",
+							"crime": "Crime",
+							"sciFi": "Science-fiction",
+							"horror": "Horror"
+						}
+					},
+					"thumbnail": {
+						"label": "Drag and drop your thumbnail !",
+						"loadingLabel": "Loading..."
+					},
+					"commentOnDataUsage": "The intel provided above will help us to generate the audio description in a more accurate way.",
+					"previous": "Back",
+					"next": "Next"
+				}
+			},
+			"step3": {
+				"title": "Payment",
+				"creatingProject": "Project is creating, please wait"
+			}
+		},
+		"manage": {
+			"editor": "Editor",
+			"config": "Configurations",
+			"cancel": "Cancel",
+			"done": "Done",
+			"descriptionWidget": {
+				"title": {
+					"label": "Title",
+					"placeholder": "Title"
+				},
+				"description": {
+					"label": "Short summary of the video",
+					"placeholder": "Summary of the video"
+				},
+				"updateSuccess": "Updated successfully",
+				"errMsgs": {
+					"errWhileFetchingData": "An error occured while fetching data!",
+					"errWhileUpdatingProject": "An error occured while updating the project",
+					"errPleaseRetry": "Error, please retry."
+				}
+			},
+			"videoPlayerWidget": {
+				"uploading": "Uploading..."
+			},
+			"errMsgs": {
+				"projectNotFound": "Project not found"
+			}
+		},
+		"details": {
+			"collaborators": {
+				"add": "Add collaborators"
+			},
+			"description": {
+				"label": "Description"
+			},
+			"status": {
+				"label": "Status"
+			},
+			"folders": {
+				"label": "Folders",
+				"add":"Create a new folder"
+			}
+		}
+	},
+
+	"scriptEdition": {
+		"replicaDetails": {
+			"title": "Replica's parameters",
+			"empty": "Aucun réplique sélectionnée",
+			"you": "You",
+			"text": {
+				"label": "Text :",
+				"detail": "-/100"
+			},
+			"voice": {
+				"label": "Voice :"
+			},
+			"startingTime": {
+				"label": "Starting at :"
+			},
+			"comments": {
+				"label": "Comments :"
+			},
+			"saveButton": {
+				"label": {
+					"isLoading": "Saving...",
+					"notLoading": "Save"
+				}
+			}
+		}
+	},
+	"payment": {
+		"paymentSuccess": "Payment successfully processed"
+	},
+	"password": {
+		"ifLinkPwdReset": "If this email is linked to an account you will receive a link to reset your password in the next few minutes"
+	},
+	"warningMsgs": {
+		"payment": {
+			"paymentProcessing": "Payment processing. We'll update you when payment is recieved"
+		},
+		"collaborator": {
+			"collaborator": {
+				"alreadyAdded": "This collaborator is already added"
+			}
+		},
+		"scriptEdition" : {
+			"generationStart": "Script generation started"
+		}
+	},
+	"errMsgs": {
+		"project": {
+			"s3Upload": "An error occured trying to upload the file, please retry"
+			, "update": "An error occured while updating, please retry"
+			, "leaveProject": "An error occured while leaving the project, please retry"
+			, "deleteProject": "An error occured while deleting the project, please retry"
+			, "getProject": "An error occured while getting the project, please retry"
+			, "getAllProjects": "An error occured while getting the projects, please retry"
+			, "updateProject": "An error occured while updating the project, please retry"
+			, "projectInfo": "An error occured while getting project's information, please retry"
+			, "roleInProject": "Cannot get your role from this project"
+			, "deleteProjectFromList": "An error occured while removing a project from a list, please retry"
+		},
+		"collaborator": {
+			"addCollaborator": "An error occured while adding a collaborator, please retry",
+			"deleteCollaborator": "An error occured while deleting a collaborator, please retry",
+			"updateCollaborator": "An error occured while updating a collaborator's role, please retry",
+			"getUser": "Error while getting user, please retry",
+			"getCollaborators": "An error occured while fetching all collaborators, please retry"
+		},
+		"description" : {
+			"uploadImage": "An error occured while updating the image, please retry",
+			"uploadThumbnail": "An error occured while updating the thumbnail, please retry",
+			"getThumbnail": "An error occured while getting the thumbnail, please retry"
+		},
+		"payment": {
+			"paymentFail": "Payment failed. Please try another payment method"
+		},
+		"contact": {
+			"missingField": "Missing field to send a message",
+			"emailError": "An error occured while sending your email, please retry"
+		},
+		"password": {
+			"usernameOrPwdNotFilled": "Username or password not filled"
+		},
+		"dashboard": {
+			"accessLists": "An error occured while accessing lists, please retry",
+			"accessRecentProjects": "An error occured while accessing recent projects, please retry"
+		},
+		"list": {
+			"addProjectToList": "An error occured while adding the project to a list, plase retry",
+			"createList": "An error occured while creating a new list, please retry",
+			"fetchAllLists": "An error occured while getting all lists, please retry",
+			"leaveList": "An error occured while leaving the list, please retry",
+			"deleteList": "An error occured while deleting the list, please retry",
+			"listInfo": "Cannot get list's information",
+			"roleInList": "Cannot get your role from this list"
+		},
+		"folder": {
+			"folderNameNull": "Folder name cannot be empty"
+		},
+		"modal": {
+			"createFolder": "An error occured creating a folder, please retry"
+		},
+		"scriptEdition": {
+			"scriptGeneration": "An error occured while generating the script, please retry",
+			"couldNotGenerate": "Could not generate the project",
+			"audioDescFileNotReady": "The audiodescription file is not ready",
+			"audioDownloadFailed": "Could not download the audiodescription file",
+			"replica": {
+				"noOverlap": "You cannot overlap 2 replicas",
+				"moveReplica": "An error occured while moving the replica, please retry",
+				"updateReplica": "An error occured while updating the replica's content, please retry",
+				"createReplica": "An error occured while creating a replica, please retry",
+				"removeReplica": "An error occured while removing a replica, please retry",
+				"replicaOutOfScope": "You cannot create a replica outside of the scope of the video"
+			},
+			"replicaComment" : {
+				"postComment": "An error occured while posting a comment, please retry",
+				"removeComment": "An error occured while removing a comment",
+				"fetchAllReplicaComments": "An error occured while getting all the replica's comments, please retry"
+			}
+		},
+		"somethingWentWrong": "Something went wrong",
+		"errorOccured": "An error occured, please try again",
+		"serverError": "Error while contacting the server",
+		"saveError": "An error occured while saving, please retry"
 	}
 }

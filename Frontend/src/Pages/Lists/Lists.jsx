@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react'
 import "./Lists.css"
 import { useState, useEffect } from "react";
-import { toast } from 'react-toastify';
 import CreateProject from '../Project/Create/CreateProject';
 import ProjectDrawer from './Components/ProjectDrawer/ProjectDrawer';
 import ProjectMiniature from './Components/ProjectMiniature/ProjectMiniature';
@@ -12,15 +11,17 @@ import AddFolderModal from './Components/AddFolderModal/AddFolderModal';
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
-import NavBarVariante from '../../GenericComponents/NavBar/Dashboard/NavBarVariante';
-import { Elements } from '@stripe/react-stripe-js';
-import DisplayPaymentStatus from '../../GenericComponents/DisplayPaymentStatus/DisplayPaymentStatus';
+import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
 import AccountButton from '../../GenericComponents/Auth/AccountButton';
+import { toast } from 'react-toastify';
+
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
 
+    const { t } = useTranslation('translation', {keyPrefix: 'dashboard'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.dashboard'});
     const [recentProjects, setRecentProjects] = useState([])
     const [folders, setFolders] = useState([])
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -45,7 +46,7 @@ export default function Lists() {
                 })
                 setFolders(res.data)
             } catch (e) {
-                console.error(e)
+                toast.error(tErr("accessLists"));
             }
         }
         const getRecentProjects = async () => {
@@ -64,7 +65,7 @@ export default function Lists() {
                 }
                 setRecentProjects(projects)
             } catch (e) {
-                console.error(e)
+                toast.error(tErr("accessRecentProjects"));
             }
         }
         getLists()
@@ -147,7 +148,6 @@ export default function Lists() {
             let projectsCopy = [...recentProjects];
             projectsCopy.splice(idx, 1);
             setRecentProjects(projectsCopy)
-            console.log("🚀 ~ file: Lists.jsx:119 ~ removeProjectFromList ~ projectsCopy", projectsCopy)
         }
     }
 
@@ -179,7 +179,7 @@ export default function Lists() {
                 <div style={{ marginRight:'1vw', marginTop:'2vh' }}><AccountButton /></div>
             </div>
             <div className='dashboard-inner-container'>
-                <h1 className='dashboard-inner-container-title'>Recent Projects</h1>
+                <h1 className='dashboard-inner-container-title'>{t('projects.recents')}</h1>
                 <div className='dashboard-cards-container'>
                     <ProjectMiniature isAdd openAddProject={handleOpenProjectModal} />
                     {recentProjects.map((project, idx) => {
@@ -190,11 +190,11 @@ export default function Lists() {
                 </div>
                 <div className='dashboard-see-all-projects-container'>
                     <a className='dashboard-see-all-projects-content' href='/projects'>
-                        <p>See all projects</p>
+                        <p>{t('projects.more')}</p>
                         <HiArrowNarrowRight className='dashboard-see-all-projects-icon'/>
                     </a>
                 </div>
-                <h1 className='dashboard-inner-container-title'>Folders</h1>
+                <h1 className='dashboard-inner-container-title'>{t('folders.title')}</h1>
                 <div className='dashboard-folder-container'>
                     <FolderCard isAdd openAddFolder={handleOpenFolderModal}/>
                     {folders.map(folder => {

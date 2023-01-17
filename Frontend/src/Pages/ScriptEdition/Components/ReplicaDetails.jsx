@@ -4,8 +4,11 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import './ReplicaDetails.css'
 import VoiceChoices from "./VoicesChoice";
+import { useTranslation } from 'react-i18next';
 
 const ReplicaDetails = ({ replica, updateReplica }) => {
+    const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition'});
     const [isLoading, setIsLoading] = useState(false)
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
@@ -48,7 +51,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
             updateReplica(res.data)
             setIsLoading(false)
         } catch (err) {
-            console.error("error => ", err);
+            toast.error(tErr("replica.updateReplica"));
         }
     }
 
@@ -64,48 +67,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
                 let resComm = Object.values(res.data);
                 setComments(resComm);
             } catch (e) {
-                let errMsg = "Error";
-                switch (e.response.status) {
-                    case 401:
-                        switch (e.response.data) {
-                            case "USER_NOT_LOGIN":
-                                errMsg = "Error (401) - User is not logged in.";
-                                break;
-                            /* errors that fits the 403 to me */
-                            case "PROJECT_NOT_YOURS":
-                                errMsg = "Error (401) - No collaboration found between the userId and the project.";
-                                break;
-                            default:
-                                errMsg = "Error (401).";
-                                break;
-                        }
-                        break;
-                    case 403:
-                        errMsg = "Error (403) - User has no right to access the content.";
-                        break;
-                    case 404:
-                        switch (e.response.data) {
-                            case "PROJECT_NOT_FOUND":
-                                errMsg = "Error (404) - Missing project.";
-                                break;
-                            case "REPLICA_NOT_FOUND":
-                                errMsg = "Error (404) - Missing replica.";
-                                break;
-                            case "REPLICA_NOT_IN_PROJECT":
-                                errMsg = "Error (404) - Invalid replica, does not belong to the project.";
-                                break;
-                            default:
-                                errMsg = "Error (404).";
-                                break;
-                        }
-                        break;
-                    default /* 500 */
-                    :
-                        errMsg = "Internal Error.";
-                        break;
-                }
-                toast.error(errMsg);
-                console.error(e);
+                toast.error(tErr("replicaComment.fetchAllReplicaComments"));
             }
         }
         fetchReplicaComments();
@@ -180,20 +142,20 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
         if (fName) {
             return `${fName.charAt(0).toUpperCase() + fName.slice(1)} .${person.lastName.charAt(0).toUpperCase()}`;
         } else {
-            return ("you")
+            return (t('replicaDetails.you'))
         }
     }
 
     return (
         <div className="h-full w-full flex flex-col justify-around py-2 px-6">
             {/* Titre */}
-            <h1 className="text-blue-400 text-2xl text-center">Paramètres de la réplique</h1>
+            <h1 className="text-blue-400 text-2xl text-center">{t('replicaDetails.title')}</h1>
 
             {/* Texte */}
             <div>
                 <div className="w-full flex flex-row justify-between items-center">
-                    <h3 className="section-title">Texte :</h3>
-                    <h3>-/100</h3>
+                    <h3 className="section-title">{t('replicaDetails.text.label')}</h3>
+                    <h3>{t('replicaDetails.text.detail')}</h3>
                 </div>
                 <textarea name="replica-text"
                           value={ text } maxLength='100' rows={3}
@@ -207,19 +169,20 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
             {/* Voix */}
             <div>
                 <VoiceChoices voiceId={ voiceIdSelected } setVoiceIdSelected={ setVoiceIdSelected } replicaId={ replicaId }/>
+                {/*<h3 className="section-title">{t('replicaDetails.voice.label')}</h3>*/}
                 {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
-                    <h3 className="section-title">Commence à :</h3>
+                    <h3 className="section-title">{t('replicaDetails.startingTime.label')}</h3>
                     <input type='text' defaultValue={ formatTimestamp(timestamp, duration) } disabled={true}
                            className="inline-flex items-center
-                        w-1/2 p-2 text-base
-                        border border-solid border-blue-300 rounded">
+                            w-1/2 p-2 text-base
+                            border border-solid border-blue-300 rounded">
                     </input>
                 </div>
             </div>
 
             <div className="w-full flex flex-row justify-between items-center">
-                <h3 className="section-title">Commentaires:</h3>
+                <h3 className="section-title">{t('replicaDetails.comments.label')}</h3>
                 <h3>{ comments.length }</h3>
             </div>
             <div id="comment-frame" className="wrapper">

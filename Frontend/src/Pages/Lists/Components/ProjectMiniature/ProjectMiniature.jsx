@@ -9,13 +9,16 @@ import CollaboratorsButton from '../../../../GenericComponents/NavBar/Project/Co
 import ProfilePic from '../../../../GenericComponents/ProfilePic/ProfilePic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 export default function ProjectMiniature({ project, openDrawer, isAdd, openAddProject }) {
+    const { t } = useTranslation('translation', {keyPrefix: 'dashboard.projects'});
+    
     if (isAdd) {
         return (
         <div className='project-card-container project-card-container-centered' onClick={openAddProject}>
             <FontAwesomeIcon icon={faPlus} />
-            <p>Create a new project</p>
+            <p>{t('add')}</p>
         </div>
         )
     }

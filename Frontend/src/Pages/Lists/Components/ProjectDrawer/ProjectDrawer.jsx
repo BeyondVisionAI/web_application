@@ -12,8 +12,11 @@ import { UploadFileOnS3 } from "../../../../GenericComponents/Files/S3Manager";
 import CollaboratorInput from "../../../../GenericComponents/InputWithLabel/CollaboratorInput";
 import { AuthContext } from "../../../../GenericComponents/Auth/Auth";
 import SVGLogos from '../../../../GenericComponents/SVGLogos/SVGLogos';
+import { useTranslation } from 'react-i18next';
 
 const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removeProjectFromList, editProject, folderList}) => {
+    const { t } = useTranslation('translation', {keyPrefix: 'project.details'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const divRef = useRef(null)
     const [lineCount, setLineCount] = useState(0)
     const [showMore, setShowMore] = useState(false)
@@ -42,7 +45,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                 })
                 setCollaborators(collaborators.data);
             } catch (err) {
-                console.error(err);
+                toast.error(tErr('collaborator.getCollaborators'));
                 setCollaborators([])
             }
         }
@@ -121,7 +124,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             removeProjectFromList(project._id);
             closeDrawer()
           } catch (e) {
-            toast.error("Could not delete this project");
+            toast.error(tErr('project.deleteProject'));
           }
         }
       }
@@ -130,7 +133,6 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
         try {
           let updatedProject = {}
           let data = {}
-          console.log("🚀 ~ file: ProjectDrawer.jsx ~ line 113 ~ handleEditSave ~ thumbnail", thumbnail)
           if (thumbnail !== '/login-image.jpg' && thumbnail !== project?.thumbnailUrl) {
             const imageRes = await UploadFileOnS3(thumbnail, 'bv-thumbnail-project', 'us-east-1', `${project._id}.${thumbnail.name.split(".").pop()}`)
             const thumbnailResponse = await axios({
@@ -158,7 +160,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
           editProject(updatedProject)
         setIsEdit(false)
         } catch (error) {
-          console.error(error)
+          toast.error(tErr("saveError"));
           setIsEdit(false)
 
         }
@@ -193,7 +195,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
             <div className="project-drawer-content">
                 {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{title}</h1>}
                 <CollaboratorInput setCollaborators={setCollaborators} projectId={project?._id} isEditable={isEdit} collaborators={collaborators} />
-                <h2 className="project-drawer-sub-title">Description</h2>
+                <h2 className="project-drawer-sub-title">{t('description.label')}</h2>
                 {isEdit ? <InputWithLabel fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
                   lineCount > 15 ?
                   <p>
@@ -203,12 +205,12 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                   </p> :
                     <p id="project-description" className="project-drawer-text-content">{description}</p>
                 }
-                <h2 className="project-drawer-sub-title">Status</h2>
+                <h2 className="project-drawer-sub-title">{t('status.label')}</h2>
                 <div className="flex flex-row inline-block align-middle project-status">
                     <SVGLogos logoType={ project?.actualStep }/>
                     <SVGLogos logoType={ project?.status }/>
                 </div>
-                <h2 className="project-drawer-sub-title">Folders</h2>
+                <h2 className="project-drawer-sub-title">{t('folders.label')}</h2>
                 <FolderListSelectable defaultLists={folderList || null} project={project} addToFolderList={addToFolderList ? addToFolderList : null}/>
             </div>
         </div>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import UploadFile from '../../../GenericComponents/Files/UploadFile';
 import VideoPlayer from '../Manage/Widgets/VideoPlayer';
+import { useTranslation } from 'react-i18next';
 
 export default function DropVideoStep({ video, setVideo, nextStep, handleChange }) {
+    const { t } = useTranslation('translation', {keyPrefix: 'project.create.step1'});
     const [videoDuration, setVideoDuration] = useState(null);
     const onClick = e => {
         e.preventDefault();
@@ -47,7 +49,7 @@ export default function DropVideoStep({ video, setVideo, nextStep, handleChange 
                 type="button"
                 onClick={ onClick }
                 >
-                Next
+                {t('next')}
                 </button>
             </div>
         </form>

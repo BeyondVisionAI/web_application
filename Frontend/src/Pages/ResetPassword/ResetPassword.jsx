@@ -7,8 +7,10 @@ import { toast } from 'react-toastify';
 import InputWithLabel from './../../GenericComponents/InputWithLabel/InputWithLabel';
 import Button from './../../GenericComponents/Button/Button';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const ResetPassword = () => {
+    const { t } = useTranslation('translation', {keyPrefix: 'authentication.passwordResetForm'});
     let location = useLocation()
     const [uid, setUID] = useState()
     const [password, setPassword] = useState(null)
@@ -24,11 +26,11 @@ const ResetPassword = () => {
     async function makeChange() {
         const regexPassword = new RegExp(passRegex);
         if (password !== confirmPassword) {
-            toast.error("Passwords are not matching")
+            toast.error(t('errMsgs.passwordMismatch'))
             return
         }
         if (!regexPassword.test(password)) {
-            toast.error("Passwords needs to have at least 1 uppercase, 1 number, 1 special character")
+            toast.error(t('errMsgs.validationFailedMsg'))
             return
         }
         try {
@@ -42,11 +44,11 @@ const ResetPassword = () => {
                 url: `${process.env.REACT_APP_API_URL}/user/changePassword`,
             })
             if (res.status === 200) {
-                toast.success("Password successfully changed")
+                toast.success(t('successMessage'))
                 history.push('/login')
             }
         } catch {
-            toast.error("Could not modify password. Try again later")
+            toast.error(t('errMsgs.serverError'))
             history.push('/login')
         }
     }
@@ -55,12 +57,12 @@ const ResetPassword = () => {
         <div className="login-container">
             <div className="login-left-container">
                 <div className="login-form">
-                    <h1 className="login-form-title">Reset your password</h1>
-                    <h2 className="login-form-under-title">Beyond Vision is a web platform designed to facilitate the creation of audio description for short films</h2>
-                    <InputWithLabel errorMessage="Min. 1 Uppercase, 1 number, 1 special character" verifyRegex={passRegex} placeholder="Min. 8 characters" type="password" label="Password" onChange={setPassword} />
-                    <InputWithLabel errorMessage="Min. 1 Uppercase, 1 number, 1 special character" verifyRegex={passRegex} placeholder="Min. 8 characters" type="password" label="Verify Password" onChange={setConfirmPassword} />
-                    <p className="login-no-account">Remember your password ? <b onClick={() => history.push("/login")}>Log In Now !</b></p>
-                    <div style={{width: "50%", alignSelf: 'center'}}><Button onClick={makeChange} label="Reset your password"/></div>
+                    <h1 className="login-form-title">{t('title')}</h1>
+                    <h2 className="login-form-under-title">{t('underTitle')}</h2>
+                    <InputWithLabel errorMessage={t('password.validationFailedMsg')} verifyRegex={passRegex} placeholder={t('password.placeholder')} type="password" label={t('password.label')} onChange={setPassword} />
+                    <InputWithLabel errorMessage={t('password.validationFailedMsg')} verifyRegex={passRegex} placeholder={t('password.placeholder')} type="password" label={t('password.verifyLabel')} onChange={setConfirmPassword} />
+                    <p className="login-no-account">{t('rememberPassword')} <b onClick={() => history.push("/login")}>{t('LogInNow')}</b></p>
+                    <div style={{width: "50%", alignSelf: 'center'}}><Button onClick={makeChange} label={t('submitLabel')}/></div>
                 </div>
             </div>
             <div className="login-right-container">

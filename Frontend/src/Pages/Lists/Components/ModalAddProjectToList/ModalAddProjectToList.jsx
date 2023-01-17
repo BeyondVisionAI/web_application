@@ -3,9 +3,10 @@ import "./ModalAddProjectToList.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import InputWithLabel from '../../../../GenericComponents/InputWithLabel/InputWithLabel';
+import { useTranslation } from 'react-i18next';
 
 export default function ModalAddProjectToList({ refresh, open, close, projectId }) {
-
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.list'});
     const [customLists, setCustomLists] = useState([]);
     const [listToAdd, setListToAdd] = useState(-1);
     const [newListName, setNewListName] = useState("");
@@ -29,7 +30,7 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
+            toast.error(tErr("addProjectToList"));
         } finally {
             button.innerHTML = "Add"
         }
@@ -56,16 +57,13 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
             refresh(oldKey => oldKey + 1);
             close();
         } catch (e) {
-            console.log(e);
+            toast.error(tErr("createList"));
         } finally {
             button.innerHTML = "Add"
         }
     };
 
-    const setList = (listId) => {
-        setListToAdd(listId);
-        console.log(listId);
-    };
+    const setList = (listId) => setListToAdd(listId);
 
     useEffect(() => {
         const getAllCustomLists = async () => {
@@ -87,7 +85,7 @@ export default function ModalAddProjectToList({ refresh, open, close, projectId 
                     ]))
                 });
             } catch (err) {
-                toast.error("Can't get all lists")
+                toast.error(tErr("fetchAllLists"));
             }
         };
 

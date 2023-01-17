@@ -4,15 +4,16 @@ import validator from 'validator';
 import axios from "axios";
 import Tag from "./Tag";
 import { AuthContext } from "../Auth/Auth";
-
+import { useTranslation } from 'react-i18next';
 
 function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEditable, projectId }) {
+    const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.collaborators'})
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.collaborators'})
     const [isValid, setIsValid] = useState(true);
     const [newCollaborator, setNewCollaborator] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
     const [userRole, setUserRole] = useState(null);
     const {currentUser} = useContext(AuthContext)
-    console.log("🚀 ~ file: CollaboratorInput.jsx:15 ~ currentUser", currentUser)
 
     axios.defaults.withCredentials = true;
 
@@ -46,14 +47,14 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
         e.preventDefault();
         try {
             if (collaborators?.find(collaborator => collaborator.user.email === newCollaborator)) {
-                toast.warning("This collaborator is already added");
+                toast.warning(tWarn("alreadyAdded"));
                 return;
             }
             let collaboratorsUpdate = [...collaborators];
             const user = await axios.post(`${process.env.REACT_APP_API_URL}/user/email`, { email: newCollaborator });
 
             if (user.status != 200) {
-                toast.error("Error while getting user, please retry");
+                toast.error(tErr("getUser"));
                 return;
             }
             var newCollab = await axios.post(`${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations`, { email: user.data.email, titleOfCollaboration: 'Read', rights: 'READ'});
@@ -63,8 +64,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             setCollaborators(collaboratorsUpdate);
         } catch (error) {
             setErrorMessage('Email is invalid!');
-            toast.error(error);
-            console.error(error);
+            toast.error(tErr("addCollaborator"));
         }
     }
 
@@ -73,12 +73,17 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
         const idxCollab = collaborators.findIndex((item) => item.projectId === projectId && item.userId === userId)
         if (idxCollab !== -1) {
             const collab = collaborators[idxCollab];
-            axios({
-                method: 'DELETE',
-                url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
-            })
+            try {
+                axios({
+                    method: 'DELETE',
+                    url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
+                })
+                setCollaborators(updatedCollaborators);
+            } catch (_) {
+                setErrorMessage("Cannot delete the collaborator!");
+                toast.error(tErr("deleteCollaborator"));
+            }
         }
-        setCollaborators(updatedCollaborators);
     }
 
     const handleRoleChange = async (role, userId) => {
@@ -88,17 +93,22 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             if (role === collab.rights) {
                 return;
             }
-            const res = await axios({
-                method: 'PATCH',
-                url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
-                data: {
-                    titleOfCollaboration: role.toLowerCase(),
-                    rights: role,
-                }
-            })
-            let newCollabs = [...collaborators]
-            newCollabs[idxCollab] = {...collaborators[idxCollab], ...res.data};
-            setCollaborators(newCollabs);
+            try {
+                const res = await axios({
+                    method: 'PATCH',
+                    url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/collaborations/${collab._id}`,
+                    data: {
+                        titleOfCollaboration: role.toLowerCase(),
+                        rights: role,
+                    }
+                })
+                let newCollabs = [...collaborators]
+                newCollabs[idxCollab] = {...collaborators[idxCollab], ...res.data};
+                setCollaborators(newCollabs);
+            } catch (_) {
+                setErrorMessage("Cannot change the collaborator's role!");
+                toast.error(tErr("updateCollaborator"));
+            }
         }
     }
 
@@ -129,7 +139,6 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             </div>}
             <div className="flex flex-wrap flex-row w-full pt-1">
                 {collaborators?.map((collaborator) => {
-                    console.log("🚀 ~ file: CollaboratorInput.jsx:90 ~ {collaborators?.map ~ collaborator", collaborator)
                     return (
                         <Tag
                          key={collaborator.user._id}

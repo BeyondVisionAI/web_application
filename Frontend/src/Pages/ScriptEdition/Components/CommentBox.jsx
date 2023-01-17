@@ -3,9 +3,10 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import Tooltip from '@mui/material/Tooltip';
+import { useTranslation } from 'react-i18next';
 
 const CommentBox = ({comments, replica, updateComments, removeComment}) => {
-
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scripEdition.replicaComment'});
     const [newComment, setNewComment] = useState("");
     const [contextSelectedCommentId, setContextSelectedCommentId] = useState(null);
     const bottomOfMessageRef = useRef(null);
@@ -69,27 +70,7 @@ const CommentBox = ({comments, replica, updateComments, removeComment}) => {
             });
             updateComments(commentResponse.data);
         } catch (e) {
-            let errMsg = "Error";
-            switch (e.response.status) {
-                case 401:
-                    switch (e.response.data) {
-                        case "USER_NOT_LOGIN": errMsg = "Error (401) - User is not logged in."; break;
-                        /* errors that fits the 403 to me */
-                        case "PROJECT_NOT_YOURS": errMsg = "Error (401) - No collaboration found between the userId and the project."; break;
-                        case "ROLE_UNAUTHORIZED": errMsg = "Error (401) - Your rights are invalid for requested operation."; break;
-                        default: errMsg = "Error (401)."; break;
-                    } break;
-                case 403: errMsg = "Error (403) - User has no right to access the content."; break;
-                case 404:
-                    switch (e.response.data) {
-                        case "PROJECT_NOT_FOUND": errMsg = "Error (404) - Missing project."; break;
-                        case "REPLICA_NOT_FOUND": errMsg = "Error (404) - Missing replica."; break;
-                        default: errMsg = "Error (404)."; break;
-                    } break;
-                default /* 500 */ : errMsg = "Internal Error."; break;
-            }
-            toast.error(errMsg);
-            console.error(e);
+            toast.error(tErr("postComment"));
         }
         setNewComment("");
     }
@@ -105,43 +86,7 @@ const CommentBox = ({comments, replica, updateComments, removeComment}) => {
 
             removeComment(contextSelectedCommentId);
         } catch (err) {
-            let errLog;
-
-            switch (err.response.status) {
-                case 401:
-                    switch (err.response.data) {
-                        case "USER_NOT_LOGIN":
-                            errLog = `Error (${err.response.status}) - User not logged in.`;
-                            break;
-                        case "PROJECT_NOT_YOURS":
-                            errLog = `Error (${err.response.status}) - You are not the owner of this project.`;
-                            break;
-                        case "ROLE_UNAUTHORIZED":
-                            errLog = `Error (${err.response.status}) - Invalid rights.`;
-                            break;
-                        default: errLog = `Error (${err.response.status}).`;
-                            break;
-                    }
-                    break;
-                case 403:
-                    errLog = `Error (${err.response.status}).`;
-                    break;
-                case 404:
-                    switch (err.reponse.data) {
-                        case "PROJECT_NOT_FOUND":
-                            errLog = `Error (${err.response.status}) - Project not found.`;
-                            break;
-                        case "REPLICACOMMENT_NOT_FOUND":
-                            errLog = `Error (${err.response.status}) - Replica Comment not found.`;
-                            break;
-                        default:
-                            errLog = `Error (${err.response.status}).`;
-                            break;
-                    }
-                default/*500*/: errLog = `Error (${err.response.status}) - Internal Error.`; break;
-            }
-
-            toast.error(errLog);
+            toast.error(tErr("removeComment"));
         }
     }
 

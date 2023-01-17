@@ -6,8 +6,11 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import TextareaAutosize from 'react-textarea-autosize';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const Chat = (props) => {
+    const { t: tErr } = useTranslation('translation', {keyPrefix: "errMsgs"})
     // TODO:
     // Ajouter les messages que l'on envoi directement dans l'array de message
 
@@ -18,9 +21,7 @@ const Chat = (props) => {
     const [roomID, setRoomID] = useState(null)
     const [isOpen, setIsOpen] = useState(false)
     
-    socket.on('connection', () => {
-        console.log(`I'm connected with the back-end`);
-    });
+    socket.on('connection', () => {});
     
     socket.on('newMessage', (message) => {
         setMessages([...messages, message]);
@@ -34,7 +35,6 @@ const Chat = (props) => {
     }, [props]);
 
     useEffect(async () => {
-        console.log("🚀 ~ file: Chat.jsx ~ line 36 ~ useEffect ~ roomID", roomID)
         if (!roomID) return
         socket.emit("join room", roomID);
         try {
@@ -43,10 +43,9 @@ const Chat = (props) => {
                 withCredentials: true,
                 url: `${process.env.REACT_APP_API_URL}/chat/${roomID}`,
             })
-            console.log("🚀 ~ file: Chat.jsx ~ line 31 ~ useEffect ~ res", res.data)
             setMessages([...messages, ...res.data]);
         } catch (e) {
-            console.error(e)
+            toast.error(tErr("errorOccured"));
         }
     }, [roomID]);
 
@@ -73,7 +72,6 @@ const Chat = (props) => {
 
     function scrollToBottomOfMessages() {
         var element = document.getElementById("message-container");
-        console.log("🚀 ~ file: Chat.jsx ~ line 53 ~ useEffect ~ element", element)
         if (!element)
             return
         element.scrollTop = element.scrollHeight;

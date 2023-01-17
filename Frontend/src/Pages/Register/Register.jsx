@@ -7,8 +7,11 @@ import "./Register.css"
 import validator from 'validator';
 import InputWithLabel from '../../GenericComponents/InputWithLabel/InputWithLabel';
 import Button from '../../GenericComponents/Button/Button';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
+    const { t } = useTranslation('translation', {keyPrefix: 'authentication.registerForm'});
+    const { t: tErr } = useTranslation('translation', {keyPrefix: 'authentication.registerForm.errMsgs'});
     const [firstName, setFirstName] = useState(null)
     const [lastName, setLastName] = useState(null)
     const [password, setPassword] = useState(null)
@@ -35,11 +38,11 @@ const Register = () => {
 
     async function register() {
         if (!firstName || !lastName || !password || !confirmPassword || !email) {
-            toast.error("All the fields needs to be filled")
+            toast.error(tErr('allTheFieldsMustBeFilled'))
         } else if (password !== confirmPassword) {
-            toast.error("Passwords are not matching")
+            toast.error(tErr('passwordMismatch'))
         } else if(!areFieldsValid()) {
-            toast.error("Invalid fields")
+            toast.error(tErr('invalidFields'))
         } else {
             try {
                 var res = await axios({
@@ -54,14 +57,14 @@ const Register = () => {
                     url: `${process.env.REACT_APP_API_URL}/user/register`,
                 })
                 if (res.status === 200) {
-                    toast.success("Account created")
+                    toast.success(t('successMessage'))
                     history.push('/login')
                 }
             } catch (err) {
                 if (err.response && (err.response.status === 409)) {
-                    toast.error("Email already in use")
+                    toast.error(tErr('emailAlreadyUsed'))
                 } else {
-                    toast.error("Error while contacting the server")
+                    toast.error(tErr('serverError'))
                 }
             }
         }
@@ -75,15 +78,15 @@ const Register = () => {
         <div className="login-container">
             <div className="login-left-container">
                 <div className="login-form">
-                    <h1 className="login-form-title">Create an account</h1>
-                    <h2 className="login-form-under-title">Beyond Vision is a web platform designed to facilitate the creation of audio description for short films</h2>
-                    <InputWithLabel errorMessage="Invalid email address" verifyRegex={"email"} placeholder="mail@website.com" type="email" label="Email" onChange={setEmail} />
-                    <InputWithLabel errorMessage="Name cannot contain special characters" verifyRegex={nameRegex} placeholder="John" type="text" label="First Name" onChange={setFirstName} />
-                    <InputWithLabel errorMessage="Name cannot contain special characters" verifyRegex={nameRegex} placeholder="Doe" type="text" label="Last Name" onChange={setLastName} />
-                    <InputWithLabel errorMessage="Min. 1 Uppercase, 1 number, 1 special character" verifyRegex={passRegex} placeholder="Min. 8 characters" type="password" label="Password" onChange={setPassword} />
-                    <InputWithLabel errorMessage="Min. 1 Uppercase, 1 number, 1 special character" verifyRegex={passRegex} placeholder="Min. 8 characters" type="password" label="Verify Password" onChange={setConfirmPassword} />
-                    <p className="login-no-account">Already have an account ? <b onClick={() => history.push("/login")}>Log In Now !</b></p>
-                    <div style={{width: "50%", alignSelf: 'center', paddingBottom: '40px'}}><Button onClick={register} label="Create account"/></div>
+                    <h1 className="login-form-title">{t('title')}</h1>
+                    <h2 className="login-form-under-title">{t('underTitle')}</h2>
+                    <InputWithLabel errorMessage={t('email.validationFailedMsg')} verifyRegex={"email"} placeholder={t('email.placeholder')} type="email" label={t('email.label')} onChange={setEmail} />
+                    <InputWithLabel errorMessage={t('name.validationFailedMsg')} verifyRegex={nameRegex} placeholder={t('name.firstname.placeholder')} type="text" label={t('name.firstname.label')} onChange={setFirstName} />
+                    <InputWithLabel errorMessage={t('name.validationFailedMsg')} verifyRegex={nameRegex} placeholder={t('name.lastname.placeholder')} type="text" label={t('name.lastname.label')} onChange={setLastName} />
+                    <InputWithLabel errorMessage={t('password.validationFailedMsg')} verifyRegex={passRegex} placeholder={t('password.placeholder')} type="password" label={t('password.label')} onChange={setPassword} />
+                    <InputWithLabel errorMessage={t('password.validationFailedMsg')} verifyRegex={passRegex} placeholder={t('password.placeholder')} type="password" label={t('password.verifyLabel')} onChange={setConfirmPassword} />
+                    <p className="login-no-account">{t('gotAccount')} <b onClick={() => history.push("/login")}>{t('logInNow')}</b></p>
+                    <div style={{width: "50%", alignSelf: 'center', paddingBottom: '40px'}}><Button onClick={register} label={t('submitLabel')}/></div>
                 </div>
             </div>
             <div className="login-right-container">
