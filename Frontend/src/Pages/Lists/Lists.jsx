@@ -184,7 +184,7 @@ export default function Lists() {
                     <ProjectMiniature isAdd openAddProject={handleOpenProjectModal} />
                     {recentProjects.map((project, idx) => {
                         if (idx < 3) {
-                            return <ProjectMiniature project={project} openDrawer={() => handleOpenDrawer(project)} />
+                            return <ProjectMiniature key={idx} project={project} openDrawer={() => handleOpenDrawer(project)} />
                         }
                     })}
                 </div>
@@ -198,7 +198,7 @@ export default function Lists() {
                 <div className='dashboard-folder-container'>
                     <FolderCard isAdd openAddFolder={handleOpenFolderModal}/>
                     {folders.map(folder => {
-                        return <FolderCard folder={folder} removeFromList={removeFolderFromList}/>
+                        return <FolderCard key={folder?._id} folder={folder} removeFromList={removeFolderFromList}/>
                     })}
                 </div>
             </div>
