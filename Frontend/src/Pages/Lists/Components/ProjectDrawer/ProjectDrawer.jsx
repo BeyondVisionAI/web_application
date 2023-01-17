@@ -173,7 +173,6 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
         else setThumbnail('/login-image.jpg')
         setIsEdit(false)
       }
-      console.log("🚀 ~ file: ProjectDrawer.jsx:182 ~ ProjectDrawer ~ userRole", userRole)
 
     return (
         <div ref={divRef} className={`project-drawer-container ${isOpen && 'project-drawer-container-active'}`}>
