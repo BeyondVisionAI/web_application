@@ -14,6 +14,7 @@ import { AuthContext } from '../../GenericComponents/Auth/Auth';
 import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
+import FullPageLoader from '../../GenericComponents/FullPageLoader/FullPageLoader';
 
 export default function ScriptEdition(props) {
     const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
@@ -95,8 +96,6 @@ export default function ScriptEdition(props) {
 
     const initSocketListener =  useCallback(() => {
         socket.on('new replica', async (newReplica) => {
-            console.log("🚀 ~ file: ScriptEdition.jsx:98 ~ socket.on ~ newReplica", newReplica)
-            console.log("🚀 ~ file: ScriptEdition.jsx:101 ~ socket.on ~ replicas", replicas)
             setReplicas([...replicas, newReplica])
         });
 
@@ -330,7 +329,7 @@ export default function ScriptEdition(props) {
         );
     } else {
         return (
-            <h1>Non</h1>
+            <FullPageLoader />
         )
     }
 }

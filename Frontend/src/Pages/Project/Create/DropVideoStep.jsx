@@ -29,7 +29,7 @@ export default function DropVideoStep({ video, setVideo, nextStep, handleChange 
                     other={ video ? <p className="relative z-20 cursor-pointer text-blue-500 hover:text-blue-600 block">{ video.name }</p> : null }
                     />
                     :
-                    <div className='flex flex-col h-full mt-4'>
+                    <div className='flex flex-col mt-4' style={{height: '60vh'}}>
                         <VideoPlayer videoUrl={URL.createObjectURL(video)} setDuration={ setVideoDuration }/>
                         <div className='flex flex-row justify-between bg-black rounded-b'>
                             <p className="my-2 ml-4 input-with-label-label text-white align-middle">
