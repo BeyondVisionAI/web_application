@@ -24,6 +24,7 @@ const createAudio = async (replica) => {
                 replicaId: _id
             })
             .then(async (response) => {
+                console.log("🚀 ~ file: Replica.js:27 ~ .then ~ response", response)
                 console.log("IN THEN");
                 if (response.status != 200) {
                     throw Error(response.data);
@@ -31,6 +32,8 @@ const createAudio = async (replica) => {
                 replica.duration = response.data.audioDuration;
                 replica.status = 'Done';
                 replica.actualStep = 'Voice';
+                await replica.save();
+                const index = projectsRooms.findIndex((elem) => elem.id === projectId.toString());
                 for (var user of projectsRooms[index].users) {
                     console.log("🚀 ~ file: Replica.js:37 ~ .then ~ user", user)
                     sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
@@ -40,9 +43,9 @@ const createAudio = async (replica) => {
                 console.log("🚀 ~ file: Replica.js:41 ~ createAudio ~ err", err)
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
+                replica.save();
                 throw err;
             });
-            await replica.save();
             return true;
         }
     } catch (error) {
