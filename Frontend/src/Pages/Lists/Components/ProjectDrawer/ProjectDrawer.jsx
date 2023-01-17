@@ -49,7 +49,9 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
                 setCollaborators([])
             }
         }
-        getCollaborators();
+        if (project) {
+          getCollaborators();
+        }
     }, [ project ])
 
     useEffect(() => {
@@ -193,10 +195,10 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
               <ThumbnailEditable editThumbnail={setThumbnail} isEditable={isEdit} thumbnailUrl={thumbnail}/>
             </div>
             <div className="project-drawer-content">
-                {isEdit ? <InputWithLabel fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{title}</h1>}
+                {isEdit ? <InputWithLabel label="" fullWidth type="text" onChange={setTitle} defaultValue={title} /> : <h1 className="project-drawer-title">{title}</h1>}
                 <CollaboratorInput setCollaborators={setCollaborators} projectId={project?._id} isEditable={isEdit} collaborators={collaborators} />
                 <h2 className="project-drawer-sub-title">{t('description.label')}</h2>
-                {isEdit ? <InputWithLabel fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
+                {isEdit ? <InputWithLabel label="" fullWidth type="textarea" onChange={setDescription} defaultValue={description} /> : 
                   lineCount > 15 ?
                   <p>
                     {!showMore && <p className="project-drawer-text-content" style={{maxHeight: '35vh', overflow: 'hidden'}} >{description}</p>}

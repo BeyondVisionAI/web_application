@@ -96,6 +96,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ReplicaBox
+                key={index}
                 replica={replica}
                 index={index}
                 parameters={{secToPxCoef: secToPxCoef, timestamp: currentTime}}
@@ -115,6 +116,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
             var durationLeft = duration - ((i - 1) * 60)
             timecodeLines.push(
                 <TimecodeLine
+                key={i}
                 className=""
                 videoLength={durationLeft}
                 secondToPixelCoef={secToPxCoef}

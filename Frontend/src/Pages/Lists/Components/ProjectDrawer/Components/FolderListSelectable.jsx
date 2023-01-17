@@ -88,7 +88,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
             <div className='folder-list-selectable-options-container'>
                 {lists.map((list) => {
                 return (
-                        <CustomCheckbox label={list?.name} onChange={(e) => handleCheckbox(e, list?._id)} defaultState={isProjectInList(list)} style={{height: '6vh'}}/>
+                        <CustomCheckbox key={list?._id} label={list?.name} onChange={(e) => handleCheckbox(e, list?._id)} defaultState={isProjectInList(list)} style={{height: '6vh'}}/>
                     )
                 })}
             </div>

@@ -9,7 +9,7 @@ const BreadCrumbs = ({pathObject}) => {
                 <p className='breadcrumbs-item-next'><a className='breadcrumbs-item-link' href={'/dashboard'}> Beyond Vision</a>{'>'}</p>
             </div>
             {pathObject.map((path, idx) => (
-                <div className='breadcrumbs-item-container'>
+                <div key={idx} className='breadcrumbs-item-container'>
                     {idx + 1 < pathObject.length ? <p className='breadcrumbs-item-next'> <a className={idx + 1 < pathObject.length ? 'breadcrumbs-item-link' : 'breadcrumbs-item-link-active'} href={path.url}> {path.name}</a>{'>'}</p> : <p>{path.name}</p>}
                 </div>
             ))}
