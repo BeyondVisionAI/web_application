@@ -13,6 +13,7 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { useTranslation } from 'react-i18next';
 import { loadStripe } from '@stripe/stripe-js';
+import AccountButton from '../../GenericComponents/Auth/AccountButton';
 import { toast } from 'react-toastify';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
@@ -152,8 +153,14 @@ export default function Lists() {
 
     return (
         <div id="dashboard-container" className="dashboard-container">
-            <ProjectDrawer folderList={folders} editProject={editProject} project={selectedProject} isOpen={isDrawerOpen} closeDrawer={handleCloseDrawer} addToFolderList={(folder) => setFolders([...folders, folder])}
-            removeProjectFromList={removeProjectFromList}/>
+                <ProjectDrawer
+                    folderList={folders}
+                    editProject={editProject}
+                    project={selectedProject}
+                    isOpen={isDrawerOpen}
+                    closeDrawer={handleCloseDrawer}
+                    addToFolderList={(folder) => setFolders([...folders, folder])}
+                    removeProjectFromList={removeProjectFromList}/>
             {isProjectCreationModelOpen && (
                 <CreateProject
                     show={isProjectCreationModelOpen}
@@ -167,7 +174,10 @@ export default function Lists() {
                     addToFolderList={(folder) => setFolders([...folders, folder])}
                 />
             )}
-            <BreadCrumbs pathObject={[{url: '/dashboard', name: 'Dashboard'}]} />
+            <div className='navbar'>
+                <BreadCrumbs pathObject={[{url: '/dashboard', name: 'Dashboard'}]} />
+                <div style={{ marginRight:'1vw', marginTop:'2vh' }}><AccountButton /></div>
+            </div>
             <div className='dashboard-inner-container'>
                 <h1 className='dashboard-inner-container-title'>{t('projects.recents')}</h1>
                 <div className='dashboard-cards-container'>

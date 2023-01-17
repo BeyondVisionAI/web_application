@@ -85,3 +85,11 @@
 .dashboard-see-all-projects-content:hover > .dashboard-see-all-projects-icon {
     transform: translateX(.5vw);
 }
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}

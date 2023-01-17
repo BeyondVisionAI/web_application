@@ -1,0 +1,75 @@
+.navigation {
+    margin: 1em 2em;
+    font-size: x-large;
+    color: rgb(0, 118, 168);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    vertical-align: middle;
+    align-items: center;
+    margin: auto;
+}
+
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    vertical-align: middle;
+    align-items: center;
+    margin: auto;
+}
+
+.profilePictureContainer {
+    width: 15em;
+    height: 15em;
+    margin: 20%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profilePictureImage {
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
+
+.userName {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.buttonsContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 5%;
+}
+
+.profileActionButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin: 2%;
+    border: solid 0.1em;
+    border-radius: 10px;
+    border-color: black;
+    font-size: large;
+    padding: 1em;
+}
+
+.profileActionButtonIcon {
+    height: 2em;
+}
+
+.profileActionButtonLabel {
+    margin: 0.5em 2em 0.5em 1em;
+}
+
+.criticalAction {
+    color: red;
+    border-color: red;
+}
