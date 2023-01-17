@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
 import { useTranslation } from 'react-i18next';
+import { BounceLoader } from 'react-spinners';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 const PaymentForm = (props) => {
@@ -63,7 +64,7 @@ const PaymentForm = (props) => {
         return (
             <div>
                 <h1>
-                    Loading....
+                    <BounceLoader color='#7793ED' />
                 </h1>
             </div>
         )

@@ -29,7 +29,7 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
     }, [ projectId ])
 
     if (!collaborators) {
-        return <BounceLoader color='#7793ed' />;
+        return <BounceLoader color='#7793ed'/>;
     }
 
     return (

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
+import FullPageLoader from "../../../GenericComponents/FullPageLoader/FullPageLoader";
 
 const ThumbnailDisplay = ({thumbnail, removeThumbnail}) => {
     const { t } = useTranslation('translation', {keyPrefix: 'project.create.step2.form'});
@@ -20,7 +21,7 @@ const ThumbnailDisplay = ({thumbnail, removeThumbnail}) => {
         }
     }, []);
 
-    if (!image) return <h1>{t('thumbnail.loadingLabel')}</h1>
+    if (!image) return <FullPageLoader />
     return ( 
         <div
         onClick={removeThumbnail}
