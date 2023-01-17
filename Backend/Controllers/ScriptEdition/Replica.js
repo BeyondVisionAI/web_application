@@ -36,7 +36,12 @@ const createAudio = async (replica) => {
                     sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
                 }
             })
-            .catch((err) => {
+            .catch(async (err) => {
+
+                const index = projectsRooms.findIndex((elem) => elem.id === projectId.toString());
+                for (var user of projectsRooms[index].users) {
+                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
+                }
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
                 replica.save();
