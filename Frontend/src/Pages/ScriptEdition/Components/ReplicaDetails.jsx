@@ -106,7 +106,6 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
 
 
     useEffect(() => {
-        console.log("🚀 ~ file: ReplicaDetails.jsx:10 ~ ReplicaDetails ~ replica", replica)
         const fetchReplicaComments = async () => {
             try {
                 const res = await axios({
@@ -160,7 +159,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
             <div>
                 <div className="w-full flex flex-row justify-between items-center">
                     <h3 className="section-title">{t('replicaDetails.text.label')}</h3>
-                    <h3>{t('replicaDetails.text.detail')}</h3>
+                    <h3>{characterCount}</h3>
                 </div>
                 <textarea name="replica-text"
                           value={ text } maxLength='100' rows={3}
