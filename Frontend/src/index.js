@@ -5,11 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import './core/i18n/i18n';
+import FullPageLoader from './GenericComponents/FullPageLoader/FullPageLoader';
 
 const loadingMarkup = (
-  <div className="py-4 text-center">
-    <h3>Loading..</h3>
-  </div>
+  <FullPageLoader />
 )
 
 ReactDOM.render(

@@ -7,6 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import Button from "../Button/Button";
 import "./Checkout.css"
+import { BounceLoader } from "react-spinners";
 
 
 const Checkout = (props) => {
@@ -20,7 +21,7 @@ const Checkout = (props) => {
   if (!stripe || !elements) {
     return (
       <div>
-        <h1>Loading...</h1>
+          <BounceLoader color='#7793ED' />
       </div>
     );
   }

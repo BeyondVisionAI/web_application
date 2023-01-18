@@ -17,8 +17,7 @@ const createAudio = async (replica) => {
             replica.status = 'InProgress';
             replica.actualStep = 'Voice';
             await replica.save();
-            
-            await axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
+            axios.post(`${process.env.SERVER_IA_URL}/Voice/TextToSpeech`, {
                 projectId: projectId,
                 voiceId: voiceId,
                 text: content,
@@ -31,17 +30,23 @@ const createAudio = async (replica) => {
                 replica.duration = response.data.audioDuration;
                 replica.status = 'Done';
                 replica.actualStep = 'Voice';
-                var index = projectsRooms.findIndex((elem) => elem.id == projectId);
+                await replica.save();
+                const index = projectsRooms.findIndex((elem) => elem.id === projectId.toString());
                 for (var user of projectsRooms[index].users) {
                     sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
                 }
             })
-            .catch((err) => {
+            .catch(async (err) => {
+
+                const index = projectsRooms.findIndex((elem) => elem.id === projectId.toString());
+                for (var user of projectsRooms[index].users) {
+                    sendDataToUser(user, "update replica", {...replica._doc, audioUrl: await getReplicaAudioUrl(replica)});
+                }
                 replica.status = 'Error';
                 replica.actualStep = 'Voice';
+                replica.save();
                 throw err;
             });
-            await replica.save();
             return true;
         }
     } catch (error) {
@@ -97,6 +102,10 @@ const createReplicaAndAudio = async (
         newReplica.audioName = `${newReplica.projectId}/${newReplica._id}.mp3`;
         const replica = await newReplica.save();
         await createAudio(newReplica);
+        var index = projectsRooms.findIndex((elem) => elem.id === projectId);
+        for (var user of projectsRooms[index].users) {
+            sendDataToUser(user, "new replica", newReplica);
+        }
         return replica;
     } catch (err) {
         console.log(err);

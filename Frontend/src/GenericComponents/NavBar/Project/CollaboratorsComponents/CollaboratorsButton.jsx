@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import "./CollaboratorsButton.css"
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { BounceLoader } from 'react-spinners';
 
 export default function CollaboratorsButton( { projectId, isEditable } ) {
     // const [notifications, setNotifications] = useState(0);
@@ -28,7 +29,7 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
     }, [ projectId ])
 
     if (!collaborators) {
-        return <h1>Loading...</h1>;
+        return <BounceLoader color='#7793ed'/>;
     }
 
     return (

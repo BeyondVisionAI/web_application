@@ -6,6 +6,7 @@ import './ReplicaDetails.css'
 import VoiceChoices from "./VoicesChoice";
 import { useTranslation } from 'react-i18next';
 
+
 const ReplicaDetails = ({ replica, updateReplica }) => {
     const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition'});
@@ -13,6 +14,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
     const [text, setText] = useState(replica.content);
     const [comments, setComments] = useState([]);
     const [timestamp, setTimestamp] = useState(replica.timestamp);
+    const [formattedTimestamp, setFormattedTimestamp] = useState('');
     const [duration, setDuration] = useState(replica.duration);
     const [replicaId, setReplicaId] = useState(replica.id);
     const [voiceIdSelected, setVoiceIdSelected] = useState(replica.voiceId);
@@ -56,55 +58,11 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
     }
 
 
-    useEffect(() => {
-        const fetchReplicaComments = async () => {
-            try {
-                const res = await axios({
-                    method: 'GET',
-                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
-                    withCredentials: true
-                });
-                let resComm = Object.values(res.data);
-                setComments(resComm);
-            } catch (e) {
-                toast.error(tErr("replicaComment.fetchAllReplicaComments"));
-            }
-        }
-        fetchReplicaComments();
-        setText(replica.content);
-        setCharacterCount(`${replica.content.length}/100`);
-        setTimestamp(replica.timestamp);
-        setDuration(replica.duration);
-        setVoiceIdSelected(replica.voiceId);
-        setReplicaId(replica._id);
-        setLastEdit(replica.lastEditDate);
-        setLastEditor(replica.lastEditor);
-    }, [replica]);
-
-    /***
-     * COMMENT UPDATE
-     */
-    const updateComments = (newComment) => {
-        var newComments = [...comments];
-        if (newComments.findIndex((item) => item._id === newComment._id) !== -1) {
-            newComments[newComments.findIndex((item) => item._id === newComment._id)] = newComment;
-        } else {
-            newComments.push(newComment);
-        }
-        setComments(newComments);
-    }
-
-    const removeComment = (commentID) => {
-        var newComments = [...comments];
-        newComments.splice(newComments.findIndex((item) => item._id === commentID), 1);
-        setComments(newComments);
-    }
-
     /***
      * FORMATTING FUNCTIONS
      */
 
-    const formatTimestamp = function (t, d) {
+     const formatTimestamp = function (t, d) {
         const msToTimecode = function(t) {
             var hours = Math.floor(t / 3600000);
             var minutes = Math.floor((t - (hours * 3600000)) / 60000);
@@ -146,6 +104,52 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
         }
     }
 
+
+    useEffect(() => {
+        const fetchReplicaComments = async () => {
+            try {
+                const res = await axios({
+                    method: 'GET',
+                    url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments`,
+                    withCredentials: true
+                });
+                let resComm = Object.values(res.data);
+                setComments(resComm);
+            } catch (e) {
+                toast.error(tErr("replicaComment.fetchAllReplicaComments"));
+            }
+        }
+        fetchReplicaComments();
+        setText(replica.content);
+        setCharacterCount(`${replica.content.length}/100`);
+        setTimestamp(replica.timestamp);
+        setDuration(replica.duration);
+        setVoiceIdSelected(replica.voiceId);
+        setReplicaId(replica._id);
+        setLastEdit(replica.lastEditDate);
+        setLastEditor(replica.lastEditor);
+        setFormattedTimestamp(formatTimestamp(replica.timestamp, replica.duration))
+    }, [replica]);
+
+    /***
+     * COMMENT UPDATE
+     */
+    const updateComments = (newComment) => {
+        var newComments = [...comments];
+        if (newComments.findIndex((item) => item._id === newComment._id) !== -1) {
+            newComments[newComments.findIndex((item) => item._id === newComment._id)] = newComment;
+        } else {
+            newComments.push(newComment);
+        }
+        setComments(newComments);
+    }
+
+    const removeComment = (commentID) => {
+        var newComments = [...comments];
+        newComments.splice(newComments.findIndex((item) => item._id === commentID), 1);
+        setComments(newComments);
+    }
+
     return (
         <div className="h-full w-full flex flex-col justify-around py-2 px-6">
             {/* Titre */}
@@ -155,7 +159,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
             <div>
                 <div className="w-full flex flex-row justify-between items-center">
                     <h3 className="section-title">{t('replicaDetails.text.label')}</h3>
-                    <h3>{t('replicaDetails.text.detail')}</h3>
+                    <h3>{characterCount}</h3>
                 </div>
                 <textarea name="replica-text"
                           value={ text } maxLength='100' rows={3}
@@ -173,7 +177,7 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
                 {/* Starting time */}
                 <div className="w-full flex flex-row justify-between items-center mt-1">
                     <h3 className="section-title">{t('replicaDetails.startingTime.label')}</h3>
-                    <input type='text' defaultValue={ formatTimestamp(timestamp, duration) } disabled={true}
+                    <input type='text' defaultValue={formattedTimestamp} disabled={true}
                            className="inline-flex items-center
                             w-1/2 p-2 text-base
                             border border-solid border-blue-300 rounded">

@@ -14,6 +14,8 @@ import { AuthContext } from '../../GenericComponents/Auth/Auth';
 import AccountButton from '../../GenericComponents/Auth/AccountButton';
 import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 import { useTranslation } from 'react-i18next';
+import { useCallback } from 'react';
+import FullPageLoader from '../../GenericComponents/FullPageLoader/FullPageLoader';
 
 export default function ScriptEdition(props) {
     const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
@@ -28,51 +30,6 @@ export default function ScriptEdition(props) {
     const [newSecondsFromCursor, setNewSecondsFromCursor] = useState(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const history = useHistory();
-
-    function initSocketListener() {
-        socket.on('new replica', async (newReplica) => {
-            setReplicas([...replicas, newReplica])
-        });
-
-        socket.on('update replica', async (replica) => {
-            updateReplica(replica);
-        });
-
-        socket.on('delete replica', async (replica) => {
-            removeReplica(replica._id);
-        });
-    }
-
-    useEffect(() => {
-        socket.emit("open project", props.match.params.id);
-        const getProject = async function (id) {
-            try {
-                let videoUrl = undefined;
-                let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`, { withCredentials: true });
-                try {
-                    let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
-
-                    if (video.status === 200)
-                        videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
-                } catch (error) {
-                    toast.error(tErr('project.getProject'));
-                }
-                setProject({
-                    id: id,
-                    title: projectR.data.name,
-                    videoUrl: videoUrl,
-                    status: projectR.data.status
-                });
-            } catch (error) {
-                toast.error(tErr("project.updateProject"));
-            }
-        }
-
-        getProject(props.match.params.id)
-        return (() => {
-            socket.emit("close project", props.match.params.id);
-        })
-    }, [props.match.params.id]);
 
     const callGenerationIA = () => {
         axios.defaults.withCredentials = true;
@@ -113,16 +70,20 @@ export default function ScriptEdition(props) {
         return null;
     }
 
-    const updateReplica = (newReplica) => {
+    const updateReplica = useCallback(
+      (newReplica) => {
         const idx = replicas.findIndex((item) => item._id === newReplica._id)
         if (idx !== -1) {
             var newReplicas = [...replicas]
             newReplicas[idx] = newReplica;
             setReplicas(newReplicas)
         }
-    }
+      },
+      [replicas, setReplicas],
+    )
 
-    const removeReplica = (replicaID) => {
+    const removeReplica = useCallback(
+      (replicaID) => {
         var newReplicas = [...replicas];
         const index = newReplicas.findIndex((item) => item._id === replicaID);
         if (index !== -1) {
@@ -130,8 +91,54 @@ export default function ScriptEdition(props) {
         }
         setReplicas(newReplicas);
         setReplicaSelected(null);
-    }
+      },
+      [replicas, setReplicas, setReplicaSelected],
+    )
 
+    const initSocketListener =  useCallback(() => {
+        socket.on('new replica', async (newReplica) => {
+            setReplicas([...replicas, newReplica])
+        });
+
+        socket.on('update replica', async (replica) => {
+            updateReplica(replica);
+        });
+
+        socket.on('delete replica', async (replica) => {
+            removeReplica(replica._id);
+        });
+    }, [replicas, setReplicas, updateReplica, removeReplica, socket])
+
+    useEffect(() => {
+        socket.emit("open project", props.match.params.id);
+        const getProject = async function (id) {
+            try {
+                let videoUrl = undefined;
+                let projectR = await axios.get(`${process.env.REACT_APP_API_URL}/projects/${id}`, { withCredentials: true });
+                try {
+                    let video = await axios.get(`${process.env.REACT_APP_API_URL}/videos/${id}/${projectR.data.videoId}`, { withCredentials: true });
+
+                    if (video.status === 200)
+                        videoUrl = await DownloadFileUrl('beyondvision-vod-source-km23jds9b71q', video.data.name);
+                } catch (error) {
+                    toast.error(tErr('project.getProject'));
+                }
+                setProject({
+                    id: id,
+                    title: projectR.data.name,
+                    videoUrl: videoUrl,
+                    status: projectR.data.status
+                });
+            } catch (error) {
+                toast.error(tErr("project.updateProject"));
+            }
+        }
+
+        getProject(props.match.params.id)
+        return (() => {
+            socket.emit("close project", props.match.params.id);
+        })
+    }, [props.match.params.id]);
 
     useEffect(() => {
         const fetchProjectDetails = async (id) => {
@@ -148,14 +155,16 @@ export default function ScriptEdition(props) {
             }
         }
         fetchProjectDetails(props.match.params.id);
-        initSocketListener()
+    }, []);
 
+    useEffect(() => {
+        initSocketListener()
         return(() => {
             socket.off("new replica");
             socket.off("update replica");
             socket.off("delete replica");
         })
-    }, []);
+    }, [initSocketListener, socket]);
 
     const RedirectToProjectManagement = () => {
         history.push(`/projects/`);
@@ -284,7 +293,7 @@ export default function ScriptEdition(props) {
                             :   <EmptyReplicaDetails/>
                             }
                         </div>
-                        <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg">
+                        <div id="movie-insight" className="p-2 w-3/5 rounded-xl shadow-lg" style={{maxHeight: '60vh'}}>
                             <VideoPlayer
                                 videoUrl={project.videoUrl}
                                 setDuration={setVideoDuration}
@@ -321,7 +330,7 @@ export default function ScriptEdition(props) {
         );
     } else {
         return (
-            <h1>Non</h1>
+            <FullPageLoader />
         )
     }
 }
