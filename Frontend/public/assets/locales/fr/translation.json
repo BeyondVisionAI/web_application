@@ -109,6 +109,11 @@
 	},
 
 	"authentication": {
+		"authButton": {
+			"yourProfile": "Votre profil",
+			"yourDashboard": "Vos projets",
+			"signout": "Se déconnecter"
+		},
 		"goBackHome": "← Retourner à la page d'acceuil",
 		"logInForm": {
 			"title": "Identification",

@@ -6,8 +6,10 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from './Auth';
 import './Auth.css';
 import CircleButton from '../Button/CircleButton';
+import { useTranslation } from 'react-i18next';
 
 export default function AccountButton() {
+  const { t } = useTranslation('translation', {keyPrefix: 'authentication.authButton'});
   const history = useHistory();
   const { currentUser, logout } = useContext(AuthContext);
   const [ isUserMenuActive, setIsUserMenuActive ] = useState(false);
@@ -25,15 +27,17 @@ export default function AccountButton() {
         <CircleButton url="/user-icon.png" size='30px' onClick={() => {userClick()}}/>
         {isUserMenuActive &&
           <div className='userMenuContainer'>
-              <Link to={'/profile'}>
-                  Your profile
-              </Link>
+              <Link to={'/profile'}>{t('yourProfile')}</Link>
+
+              <Link to={'/dashboard'}>{t('yourDashboard')}</Link>
+
               <hr/>
+
               <btn onClick={logout} style={{cursor:'pointer'}}>
                   <FontAwesomeIcon
                       style={{color: 'red'}}
                       icon={faSignOutAlt}/>
-                  Log out
+                  {t('signout')}
               </btn>
           </div>
         }
