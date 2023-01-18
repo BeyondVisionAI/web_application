@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from './Auth';
 import './Auth.css';
-import CircleButton from '../Button/CircleButton';
 import { useTranslation } from 'react-i18next';
+import ImageButton from '../Button/ImageButton';
 
 export default function AccountButton() {
   const { t } = useTranslation('translation', {keyPrefix: 'authentication.authButton'});
@@ -24,20 +24,17 @@ export default function AccountButton() {
   return (
     <div>
       <div className="dropdown">
-        <CircleButton url="/user-icon.png" size='30px' onClick={() => {userClick()}}/>
+        <ImageButton type="UserIcon" onClick={ () => { userClick() } }/>
         {isUserMenuActive &&
           <div className='userMenuContainer'>
-              <Link to={'/profile'}>{t('yourProfile')}</Link>
-
-              <Link to={'/dashboard'}>{t('yourDashboard')}</Link>
-
+              <Link to='/profile'>{ t('yourProfile') }</Link>
+              <Link to='/dashboard'>{ t('yourDashboard') }</Link>
               <hr/>
-
-              <btn onClick={logout} style={{cursor:'pointer'}}>
-                  <FontAwesomeIcon
-                      style={{color: 'red'}}
-                      icon={faSignOutAlt}/>
-                  {t('signout')}
+              <btn onClick={ logout } style={ { cursor:'pointer' } } >
+                  <FontAwesomeIcon className="slide-content"
+                      style={ { color: 'red' } }
+                      icon={ faSignOutAlt }/>
+                  { t('signout') }
               </btn>
           </div>
         }
