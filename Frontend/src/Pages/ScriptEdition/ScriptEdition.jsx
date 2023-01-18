@@ -7,15 +7,15 @@ import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 import AudioPlayer from './Components/AudioPlayer';
-import CircleButton from '../../GenericComponents/Button/CircleButton';
+import ImageButton from '../../GenericComponents/Button/ImageButton';
 import './ScriptEdition.css';
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
 import AccountButton from '../../GenericComponents/Auth/AccountButton';
-import DisabledCircleButton from '../../GenericComponents/Button/DisabledCircleButton';
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import FullPageLoader from '../../GenericComponents/FullPageLoader/FullPageLoader';
+import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 
 export default function ScriptEdition(props) {
     const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
@@ -259,30 +259,24 @@ export default function ScriptEdition(props) {
         return (
             <div className="script-edition-container h-screen w-screen overflow-x-hidden">
                 <div id="page-container" className="w-screen h-5/6 py-2 px-6">
-                    <div id="title" className="h-1/10 w-full flex flex-row justify-between items-center py-4">
-                        <h1 className="text-blue-400 w-1/3 inline-flex items-center text-4xl">{project.title}</h1>
-                        <div className='flex flex-row gap-1 pa-0'>
+                    <div className='navbar'>
+                        <BreadCrumbs pathObject={[{url: '/dashboard', name: project.title}]} />
+                        <div className='flex flex-row gap-3'>
                             <button
                               className="button-container whitespace-nowrap"
                               onClick={() => callGenerationIAFake()}
                             >
-                                <div className="button-text">Générer le faux script</div>
-                            </button>
-                            <button
-                              className="button-container whitespace-nowrap"
-                              onClick={() => callGenerationIA()}
-                            >
                                 <div className="button-text">Générer le script</div>
                             </button>
-                            {project.status === 'Done'
-                            ?   <CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
-                            :   <DisabledCircleButton CircleButton url="/mp4-dl.png" size='40px' onClick={() => DownloadVideo()}/>
-                            }
-                            {project.status === 'Done'
-                            ?   <CircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
-                            :   <DisabledCircleButton url="/mp3-dl.png" size='40px' onClick={() => DownloadFile()}/>
-                            }
-                            <CircleButton url="/instagram-direct.png" size='30px' onClick={() => LaunchGeneration()}/>
+                            {/*<button*/}
+                            {/*  className="button-container whitespace-nowrap"*/}
+                            {/*  onClick={() => callGenerationIA()}*/}
+                            {/*>*/}
+                            {/*    <div className="button-text">Générer le script</div>*/}
+                            {/*</button>*/}
+                            <ImageButton disabled={(project.status === 'Done') ? (false) : (true)} type="Mp4File" onClick={() => DownloadVideo()}/>
+                            <ImageButton disabled={(project.status === 'Done') ? (false) : (true)} type="Mp3File" onClick={() => DownloadFile()}/>
+                            <ImageButton type="SendArrow" size='30px' onClick={() => LaunchGeneration()}/>
                             <AccountButton/>
                         </div>
                     </div>
