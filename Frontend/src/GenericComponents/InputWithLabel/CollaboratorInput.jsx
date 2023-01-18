@@ -53,7 +53,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
             let collaboratorsUpdate = [...collaborators];
             const user = await axios.post(`${process.env.REACT_APP_API_URL}/user/email`, { email: newCollaborator });
 
-            if (user.status != 200) {
+            if (user.status !== 200) {
                 toast.error(tErr("getUser"));
                 return;
             }
@@ -69,7 +69,7 @@ function CollaboratorInput({ defaultValue, collaborators, setCollaborators, isEd
     }
 
     const deleteCollaborator = async (userId) => {
-        const updatedCollaborators = collaborators?.filter((collaborator) => collaborator.user._id != userId);
+        const updatedCollaborators = collaborators?.filter((collaborator) => collaborator.user._id !== userId);
         const idxCollab = collaborators.findIndex((item) => item.projectId === projectId && item.userId === userId)
         if (idxCollab !== -1) {
             const collab = collaborators[idxCollab];

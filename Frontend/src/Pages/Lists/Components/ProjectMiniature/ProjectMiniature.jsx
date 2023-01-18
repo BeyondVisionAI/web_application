@@ -1,10 +1,4 @@
-import React, { useContext } from 'react';
 import "./ProjectMiniature.css";
-import { useState, useEffect } from "react";
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
-import { AuthContext } from '../../../../GenericComponents/Auth/Auth';
-import { DownloadFileUrl } from '../../../../GenericComponents/Files/S3Manager';
 import CollaboratorsButton from '../../../../GenericComponents/NavBar/Project/CollaboratorsComponents/CollaboratorsButton';
 import ProfilePic from '../../../../GenericComponents/ProfilePic/ProfilePic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,7 +19,7 @@ export default function ProjectMiniature({ project, openDrawer, isAdd, openAddPr
 
     return (
        <div className='project-card-container project-card-drawer-trigger' onClick={openDrawer}>
-            <img src={project?.thumbnail ? project.thumbnailUrl : '/login-image.jpg'} className='project-card-image'/> 
+            <img src={project?.thumbnail ? project.thumbnailUrl : '/login-image.jpg'} className='project-card-image' alt=""/> 
             <div className='project-card-floating-collaborators'>
                 <CollaboratorsButton projectId={project?._id} />
             </div>

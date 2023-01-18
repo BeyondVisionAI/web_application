@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import axios from 'axios';
 import React from 'react'
 import "./Lists.css"
@@ -12,11 +13,9 @@ import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { DownloadFileUrl } from '../../GenericComponents/Files/S3Manager';
 import { useTranslation } from 'react-i18next';
-import { loadStripe } from '@stripe/stripe-js';
 import AccountButton from '../../GenericComponents/Auth/AccountButton';
 import { toast } from 'react-toastify';
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_CLIENT_KEY);
 
 export default function Lists() {
 
@@ -28,9 +27,6 @@ export default function Lists() {
     const [selectedProject, setSelectedProject] = useState(null)
     const [isProjectCreationModelOpen, setIsProjectCreationModalOpen] = useState(false)
     const [isFolderCreationModelOpen, setIsFolderCreationModalOpen] = useState(false)
-
-    // Stripe
-    const [isRedirectFromPayment, setIsRedirectFromPayment] = useState(false);
 
     useEffect(() => {
         return (clearAllBodyScrollLocks)
@@ -77,7 +73,6 @@ export default function Lists() {
         );
 
         if (clientSecret) {
-            setIsRedirectFromPayment(true);
         }
     }, []);
 
@@ -186,6 +181,7 @@ export default function Lists() {
                         if (idx < 3) {
                             return <ProjectMiniature key={idx} project={project} openDrawer={() => handleOpenDrawer(project)} />
                         }
+                        return null;
                     })}
                 </div>
                 <div className='dashboard-see-all-projects-container'>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { React, useEffect, useState } from 'react';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import '../react-contextmenu.css';
@@ -8,11 +9,6 @@ import ReplicaBox from './ReplicaBox';
 import TimelineCursor from './TimelineCursor';
 import { useTranslation } from 'react-i18next';
 
-// temporary duration of a project, so we can do the timeline
-// const videoLength = 3600000 / 4;
-const canvasHeight = 80;
-// coefficient between seconds (in ms) and pixels : 1 sec =
-// var secToPxCoef = 300; // will change if zoom
 const MIN_ZOOM = 30;
 
 const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
@@ -22,7 +18,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
     const [replicasPositions, setReplicasPositions] = useState([]);
     const [newReplicaTimestamp, setNewReplicaTimestamp] = useState(-1); // smh not sure how its updated, soooo
     var timecodeArray = [];
-    const [currentTime, setCurrentTime] = useState(0);
+    const currentTime  = 0;
 
 
     const addReplica = async function () {
@@ -50,10 +46,9 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
         }
     }
 
-
     const removeReplica = async function () {
         try {
-            const res = await axios({
+            await axios({
                 method: 'DELETE',
                 url: `${process.env.REACT_APP_API_URL}/projects/${projectId}/replicas/${contextSelectedReplicaId}`,
                 withCredentials: true

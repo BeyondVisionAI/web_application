@@ -232,7 +232,7 @@ exports.generationIA = async function (req, res) {
 
                 project.ActualStep = 'ActionRetrieve';
                 await axios.post(`${process.env.SERVER_IA_URL}/AI/Action/FinishedProcess`, {
-                    jsonPath: "../Files/Json/Action-638a321f6826a6c3cf094b96.json",
+                    jsonPath: "../Files/Json/Anodin-demo.json",
                     userId: req.user.userId,
                     projectId: req.params.projectId,
                 })

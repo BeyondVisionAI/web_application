@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import UploadFile from '../../../GenericComponents/Files/UploadFile';
 import VideoPlayer from '../Manage/Widgets/VideoPlayer';

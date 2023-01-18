@@ -1,13 +1,11 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../GenericComponents/Auth/Auth';
-import { useHistory } from 'react-router-dom';
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import "./Profile.css";
 import ProfilePic from '../../GenericComponents/ProfilePic/ProfilePic';
 
 const Profile = () => {
     const { currentUser, logout } = useContext(AuthContext);
-    const history = useHistory();
 
     return (
         <>

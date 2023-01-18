@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { React, useEffect } from 'react';
 
 const canvasHeight = 80;
@@ -31,7 +32,7 @@ const TimecodeLine = ({videoLength, secondToPixelCoef, minute, zoom}) => {
 
         for (var second = 0; second < 60; second++) {
             drawLine(ctx, spacing * second, 0.5);
-            if (second != 0 && second % 10 == 0)
+            if (second !== 0 && second % 10 === 0)
                 ctx.fillText(`${minute - 1}:${second}`, spacing * second + 15, 30);
             // ms
             drawLine(ctx, spacing * second + spacing * 0.25, 0.2);

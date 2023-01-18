@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
-import ReactPlayer from 'react-player';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import Draggable from "react-draggable";
 import axios from "axios";

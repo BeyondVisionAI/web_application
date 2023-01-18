@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useCallback, useState, useContext } from "react";
-import CollaboratorsButton from "../../../../GenericComponents/NavBar/Project/CollaboratorsComponents/CollaboratorsButton";
 import { toast } from 'react-toastify';
 import FolderListSelectable from "./Components/FolderListSelectable";
 import "./ProjectDrawer.css"
@@ -52,7 +52,7 @@ const ProjectDrawer = ({project, isOpen, closeDrawer, addToFolderList, removePro
         if (project) {
           getCollaborators();
         }
-    }, [ project ])
+    }, [project])
 
     useEffect(() => {
       if (project?.description) {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import Widget from '../../../../GenericComponents/Widget/Widget';
 import ReactPlayer from 'react-player';

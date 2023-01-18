@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {React, useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -31,7 +32,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     const changeVoiceIndexSelected = function(voiceId, arr) {
         if (!arr && arr.length > 0) {
             const index = arr.findIndex(item => {
-                return item.id == voiceId
+                return item.id === voiceId
             });
 
             if (index === -1) {
@@ -76,7 +77,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
 
     async function checkVoiceId() {
         if (voiceId >= 0) {
-            const index = voiceOptions.findIndex(item => item.id == voiceId);
+            const index = voiceOptions.findIndex(item => item.id === voiceId);
 
             if (index === -1) {
                 setLanguageSelected(0);
@@ -96,7 +97,7 @@ const VoiceChoices = ({ voiceId, setVoiceIdSelected, replicaId }) => {
     }, [languageSelected]);
 
     useEffect(async () => {
-        if (voiceIdTemp != voiceId) {
+        if (voiceIdTemp !== voiceId) {
             checkVoiceId();
         }
     }, [voiceId]);

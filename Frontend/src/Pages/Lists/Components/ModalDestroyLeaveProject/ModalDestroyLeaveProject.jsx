@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import "./ModalDestroyLeaveProject.css";
 import { toast } from 'react-toastify';

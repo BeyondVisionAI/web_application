@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react';
 import ReplicaDetails from './Components/ReplicaDetails';
 import EmptyReplicaDetails from './Components/EmptyReplicaDetails';
 import Timeline from './Components/Timeline';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
 import VideoPlayer from '../Project/Manage/Widgets/VideoPlayer';
 import AudioPlayer from './Components/AudioPlayer';
 import CircleButton from '../../GenericComponents/Button/CircleButton';
@@ -20,8 +20,7 @@ import FullPageLoader from '../../GenericComponents/FullPageLoader/FullPageLoade
 export default function ScriptEdition(props) {
     const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
-    const {socket, currentUser} = useContext(AuthContext);
-    const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
+    const {socket} = useContext(AuthContext);
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
@@ -29,7 +28,6 @@ export default function ScriptEdition(props) {
     const [playedSeconds, setPlayedSeconds] = useState(0);
     const [newSecondsFromCursor, setNewSecondsFromCursor] = useState(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const history = useHistory();
 
     const callGenerationIA = () => {
         axios.defaults.withCredentials = true;
@@ -166,10 +164,6 @@ export default function ScriptEdition(props) {
         })
     }, [initSocketListener, socket]);
 
-    const RedirectToProjectManagement = () => {
-        history.push(`/projects/`);
-    }
-
     const LaunchGeneration = async() => {
         try {
             toast.warning(tWarn("scriptGeneration"));
@@ -178,7 +172,7 @@ export default function ScriptEdition(props) {
                 url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
                 withCredentials: true
             });
-            if (res.status != 200) {
+            if (res.status !== 200) {
                 toast.error(tErr("scriptEdition.scriptGeneration"));
             }
         } catch (error) {

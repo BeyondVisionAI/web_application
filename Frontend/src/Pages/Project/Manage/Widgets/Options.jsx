@@ -7,9 +7,9 @@ export default function Options({ projectId }) {
     script: false,
     checkScript: false
   });
-  const [audioOption, setAudioOption] = useState([{name: 'Beyond vision IA', selected: true}]);
-  const [scriptOption, setScriptOption] = useState([{name: 'Beyond vision IA', selected: true}]);
-  const [checkScriptOption, setCheckScriptOption] = useState([{name: 'Beyond vision service', selected: true}]);
+  const audioOption = useState([{name: 'Beyond vision IA', selected: true}]);
+  const scriptOption = useState([{name: 'Beyond vision IA', selected: true}]);
+  const checkScriptOption = useState([{name: 'Beyond vision service', selected: true}]);
 
   // TODO: Fill option thanks the project data ?
 

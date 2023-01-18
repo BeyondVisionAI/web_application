@@ -15,7 +15,6 @@ import ResetPassword from './Pages/ResetPassword/ResetPassword';
 import Lists from './Pages/Lists/Lists';
 import ManageProject from './Pages/Project/Manage/ManageProject';
 import ScriptEdition from './Pages/ScriptEdition/ScriptEdition';
-import Chat from './Pages/Chat/Chat';
 import Profile from './Pages/Profile/Profile';
 import ProjectList from './Pages/ProjectList/ProjectList';
 import Projects from './Pages/Projects/Projects';
