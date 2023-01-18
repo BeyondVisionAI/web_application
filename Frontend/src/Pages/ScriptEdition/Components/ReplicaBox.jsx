@@ -82,7 +82,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             bounds={{left: 0, right: parameters.secToPxCoef * (videoDuration - (replica.duration / 1000))}}
             >
                 <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white flex items-center justify-center
-                        absolute' style={{width: `${parameters.secToPxCoef * replica.duration / 1000}px`}}
+                        absolute' style={{width: `${parameters.secToPxCoef * replica.duration / 1000}px`, minWidth: replica.status !== 'Done' ? 'fit-content' : '0'}}
                             onClick={() => onReplicaSelection(replica._id)}
                             onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
                             {/* should be adjustable to the size of the replica (so its length) */}
