@@ -5,6 +5,7 @@ import Draggable from "react-draggable";
 import axios from "axios";
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { BounceLoader, ClipLoader } from 'react-spinners';
 
 export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions }) {
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
@@ -80,12 +81,13 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             // grid={[parameters.secToPxCoef / 10, 0]}
             bounds={{left: 0, right: parameters.secToPxCoef * (videoDuration - (replica.duration / 1000))}}
             >
-                <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
+                <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white flex items-center justify-center
                         absolute' style={{width: `${parameters.secToPxCoef * replica.duration / 1000}px`}}
                             onClick={() => onReplicaSelection(replica._id)}
                             onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
                             {/* should be adjustable to the size of the replica (so its length) */}
                             <p className={'truncate px-4'}>{replica.content}</p>
+                            {replica.status !== 'Done' && <ClipLoader color='#F6F8FF' size={20}/>}
                 </button>
             </Draggable>
             {/* <ReactPlayer url='https://d1meq9j1gywa1t.cloudfront.net/Project-Test/001.mp3' playing={ playing } /> */}
