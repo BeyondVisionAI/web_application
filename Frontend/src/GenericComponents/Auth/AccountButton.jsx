@@ -22,17 +22,17 @@ export default function AccountButton() {
   return (
     <div>
       <div className="dropdown">
-        <ImageButton type="UserIcon" onClick={() => {userClick()}}/>
+        <ImageButton type="UserIcon" onClick={ () => {userClick()} }/>
         {isUserMenuActive &&
           <div className='userMenuContainer'>
-              <Link className='slide-container' to={'/profile'}>
+              <Link className='slide-container' to={ '/profile' }>
                   Your profile
               </Link>
               <hr/>
-              <btn className='slide-container' onClick={logout} style={{cursor:'pointer'}}>
+              <btn className='slide-container' onClick={ logout } style={{ cursor:'pointer' }}>
                   <FontAwesomeIcon className="slide-content"
-                      style={{color: 'red'}}
-                      icon={faSignOutAlt}/>
+                      style={{ color: 'red' }}
+                      icon={ faSignOutAlt }/>
                   Log out
               </btn>
           </div>

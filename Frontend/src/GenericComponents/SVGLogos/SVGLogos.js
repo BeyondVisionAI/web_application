@@ -98,22 +98,22 @@ const logosImages = [
         </svg>
     }, {
         type: "Mp3File",
-        image: <IconContext.Provider value={{color: '#7793ed', size: 42}}>
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
             <FaRegFileAudio/>
         </IconContext.Provider>
     }, {
         type: "Mp4File",
-        image: <IconContext.Provider value={{color: '#7793ed', size: 42}}>
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
             <FaRegFileVideo/>
         </IconContext.Provider>
     }, {
         type: "SendArrow",
-        image: <IconContext.Provider value={{color: '#7793ed', size: 42}}>
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
             <MdRestartAlt/>
         </IconContext.Provider>
     }, {
         type: "UserIcon",
-        image: <IconContext.Provider value={{color: '#7793ed', size: 42}}>
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
             <FaUserCircle/>
         </IconContext.Provider>
     }
