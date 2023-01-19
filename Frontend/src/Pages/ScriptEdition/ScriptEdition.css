@@ -7,3 +7,14 @@
   background: rgba(0, 0, 0, 0.6);
   border-radius: 12px;
 }
+
+.navbar {
+  display: flex;
+  padding-top: 1rem;
+  margin-inline: 2.5%;
+  padding-bottom: 1rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+}
