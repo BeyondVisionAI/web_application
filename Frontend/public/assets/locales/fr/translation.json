@@ -409,6 +409,10 @@
 				"fetchAllReplicaComments": "Une erreur est survenue lors de la récupération des commentaires de la réplique, veuillez réessayer"
 			}
 		},
+		"voiceChoices": {
+			"getAllVoices": "Une erreur est survenue en récupérant toutes les voix, veuillez réessayer",
+			"getAllLanguages": "Une erreur est survenue en récupérant toutes les langues, veuillez réessayer"
+		},
 		"somethingWentWrong": "Une erreur est survenue",
 		"errorOccured": "Une erreur est survenue, veuillez réessayer",
 		"serverError": "Une erreur est survenue en contactant le serveur",

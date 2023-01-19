@@ -21,7 +21,6 @@ export default function ScriptEdition(props) {
     const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const {socket, currentUser} = useContext(AuthContext);
-    const { t } = useTranslation('translation', {keyPrefix: 'scriptEdition'});
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0);
