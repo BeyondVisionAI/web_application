@@ -404,6 +404,10 @@
 				"fetchAllReplicaComments": "An error occured while getting all the replica's comments, please retry"
 			}
 		},
+		"voiceChoices": {
+			"getAllVoices": "An error occured while retrieving all voices, please retry",
+			"getAllLanguages": "An error occured while retrieving all languages, please retry"
+		},
 		"somethingWentWrong": "Something went wrong",
 		"errorOccured": "An error occured, please try again",
 		"serverError": "Error while contacting the server",
