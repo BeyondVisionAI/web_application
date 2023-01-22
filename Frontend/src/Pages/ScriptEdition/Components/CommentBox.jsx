@@ -78,7 +78,7 @@ const CommentBox = ({comments, replica, updateComments, removeComment}) => {
 
     const deleteComment = async function () {
         try {
-            const res = await axios({
+            await axios({
                 method: 'DELETE',
                 url: `${process.env.REACT_APP_API_URL}/projects/${replica.projectId}/replicas/${replica._id}/comments/${contextSelectedCommentId}`,
                 withCredentials: true

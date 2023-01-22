@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import PaymentForm from '../../../GenericComponents/PaymentForm/PaymentForm';
 import { useTranslation } from 'react-i18next';

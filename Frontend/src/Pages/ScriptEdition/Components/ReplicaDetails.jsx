@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {React, useEffect, useState } from "react";
 import CommentBox from './CommentBox';
 import axios from 'axios';
@@ -24,8 +25,8 @@ const ReplicaDetails = ({ replica, updateReplica }) => {
     const [lastEditor, setLastEditor] = useState(replica.lastEditor);
     const [characterCount, setCharacterCount] = useState("" + replica.content.length + "/100");
 
+
     const [isTextUpdated, toggleTextUpdate] = useState(false);
-    let replicaTextUpdateTimeout = null;
 
     /***
      * TEXT AND REPLICA UPDATE

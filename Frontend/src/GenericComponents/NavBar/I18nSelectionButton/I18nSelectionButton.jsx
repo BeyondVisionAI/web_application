@@ -12,7 +12,7 @@ const I18nSelectionButton = () => {
             return <button onClick={() => {setIsI18nMenuActive(!isI18nMenuActive)}}>language</button>;
         return (
             <button onClick={() => {setIsI18nMenuActive(!isI18nMenuActive)}}>
-                <img src={selectedLanguage.flagSrc} width="28" height="16"/>
+                <img src={selectedLanguage.flagSrc} width="28" height="16" alt=""/>
             </button>
         )
     }
@@ -31,7 +31,7 @@ const I18nSelectionButton = () => {
                             <button
                                 className={(availableLanguage.code === i18n.language) ? "i18n-selected-link" : "navbar-link"}
                                 onClick={()=>{i18n.changeLanguage(availableLanguage.code)}}>
-                                <img src={availableLanguage.flagSrc} width="28" height="16"/>
+                                <img src={availableLanguage.flagSrc} width="28" height="16" alt=""/>
                                 {availableLanguage.label}
                             </button>
                         </li>    

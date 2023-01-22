@@ -1,6 +1,5 @@
 import {React } from "react";
 import './ReplicaDetails.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslation } from 'react-i18next';
 
 const EmptyReplicaDetails = () => {

@@ -1,14 +1,7 @@
 import { useRef } from 'react';
 import axios from 'axios';
-import UserWithAction from '../../../Auth/UserWithAction';
 import { useEffect } from 'react';
 import "./EditCollaborators.css"
-
-const Change = {
-    noChanges: 0,
-    rightsChanges: 1,
-    kickChanges: 2
-}
 
 export default function EditCollaborators({ projectId, collaborators, isModalOpen, closeModal }) {
     const wrapperRef = useRef(null);

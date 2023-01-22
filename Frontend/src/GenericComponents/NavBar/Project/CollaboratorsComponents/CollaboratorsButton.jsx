@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import "./CollaboratorsButton.css"
@@ -26,7 +28,7 @@ export default function CollaboratorsButton( { projectId, isEditable } ) {
             }
         }
         getCollaborators();
-    }, [ projectId ])
+    }, [projectId])
 
     if (!collaborators) {
         return <BounceLoader color='#7793ed'/>;

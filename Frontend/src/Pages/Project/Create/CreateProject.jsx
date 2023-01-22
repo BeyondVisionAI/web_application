@@ -1,10 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ProjectDataStep from './ProjectDataStep';
 import PaymentStep from './PaymentStep';
 import StepsBar from '../../../GenericComponents/StepsBar/StepsBar';
 import DropVideoStep from './DropVideoStep';
-import { useHistory } from "react-router-dom";
 import { UploadFileOnS3 } from '../../../GenericComponents/Files/S3Manager';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,6 @@ export default function CreateProject({ show, onHide, addToProjectList }) {
         {title: t('step3.title'), img: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>, isDone: false}
     ]);
     
-    const history = useHistory();
     axios.defaults.withCredentials = true;
 
     const prevStep = () => {

@@ -38,7 +38,7 @@ const Projects = () => {
             }
         }
         getProjects()
-    }, []);
+    }, [tErr]);
 
     const handleOpenDrawer = (project) => {
         const bodyElement = document.getElementById('dashboard-container')

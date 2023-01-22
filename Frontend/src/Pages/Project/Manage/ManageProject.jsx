@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -5,7 +6,6 @@ import Description from './Widgets/Description';
 import ProjectStatus from './Widgets/ProjectStatus';
 import Options from './Widgets/Options';
 import Bill from './Widgets/Bill';
-import VideoPlayer from './Widgets/VideoPlayer';
 import NavBarVariante from '../../../GenericComponents/NavBar/Project/NavBarVariante';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -102,7 +102,7 @@ export default function ManageProject(props) {
                             description={project.description}
                             thumbnailId={project.thumbnailId}
                         />
-                        <h2>{project.isPaid == true ? "Is Paid" : "Is not Paid"}</h2>
+                        <h2>{project.isPaid === true ? "Is Paid" : "Is not Paid"}</h2>
                      </div>
                      <div className='h-full w-1/3 rounded-xl'>
                          <ProjectStatus

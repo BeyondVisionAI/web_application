@@ -36,9 +36,9 @@ const Login = () => {
               .catch((err) => {
                 if ((err.response.status === 404)) {
                     toast.error(tErr('invalidEmailOrPassword'))
-                } else if (err.response.status === 401 && err.response.data == "EMAIL_NOT_VERIFIED") {
+                } else if (err.response.status === 401 && err.response.data === "EMAIL_NOT_VERIFIED") {
                     toast.error(tErr('unverifiedEmail'))
-                } else if (err.response.status === 401 && err.response.data == "INVALID_PASSWORD") {
+                } else if (err.response.status === 401 && err.response.data === "INVALID_PASSWORD") {
                     toast.error(tErr('invalidEmailOrPassword'))
                 } else {
                     toast.error(tErr('serverError'))

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import ProjectDrawer from '../Lists/Components/ProjectDrawer/ProjectDrawer';
 import ProjectMiniature from '../Lists/Components/ProjectMiniature/ProjectMiniature';
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
-import CreateProject from '../Project/Create/CreateProject';
 import "./ProjectList.css"
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 import axios from 'axios';
@@ -41,7 +40,7 @@ const ProjectList = (props) => {
             }
         }
         getProjects()
-    }, []);
+    }, [folderId, tErr]);
 
     const handleOpenDrawer = (project) => {
         const bodyElement = document.getElementById('dashboard-container')
