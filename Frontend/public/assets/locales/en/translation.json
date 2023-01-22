@@ -336,6 +336,11 @@
 			"generationStart": "Script generation started"
 		}
 	},
+	"sucMsgs": {
+		"scriptEdition": {
+			"ADGenerationSuccess": "Audiodescription generation complete"
+		}
+	},
 	"errMsgs": {
 		"project": {
 			"s3Upload": "An error occured trying to upload the file, please retry"
@@ -391,6 +396,7 @@
 			"createFolder": "An error occured creating a folder, please retry"
 		},
 		"scriptEdition": {
+			"ADGenerationError": "An error occurred while generating the audio description, please retry",
 			"scriptGeneration": "An error occured while generating the script, please retry",
 			"couldNotGenerate": "Could not generate the project",
 			"audioDescFileNotReady": "The audiodescription file is not ready",

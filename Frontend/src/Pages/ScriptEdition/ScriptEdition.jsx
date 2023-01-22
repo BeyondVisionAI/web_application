@@ -18,8 +18,9 @@ import FullPageLoader from '../../GenericComponents/FullPageLoader/FullPageLoade
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 
 export default function ScriptEdition(props) {
-    const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
+    const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.scriptEdition'});
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tSuc } = useTranslation('translation', {keyPrefix: 'sucMsgs'});
     const {socket} = useContext(AuthContext);
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
@@ -101,9 +102,9 @@ export default function ScriptEdition(props) {
                 ['status']: generationStatus.status
             });
             if (generationStatus.status === 'Done' && generationStatus.actualStep === 'VideoGeneration')
-                toast.success("Generation Complete")
+                toast.success(tSuc('scriptEdition.ADGenerationSuccess'))
             else if (generationStatus.status === 'Error')
-                toast.success("An error occurred while generating the audio description.")
+                toast.error(tErr('scriptEdition.ADGenerationError'));
     },
     [project]
     )
@@ -186,8 +187,7 @@ export default function ScriptEdition(props) {
 
     const LaunchGeneration = async() => {
         try {
-            //toast.warning(tWarn("scriptGeneration")); NOTE: Je sais pas comment fonctionne la traduction mais le message est moche, je change temporairement le message au cas ou si on fait la démo dans la semaine
-            toast.warning("Starting AD generation");
+            toast.warning(tWarn("generationStart"))
             const res = await axios({
                 method: "POST",
                 url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
