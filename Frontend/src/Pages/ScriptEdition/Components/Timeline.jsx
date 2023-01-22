@@ -125,9 +125,10 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
 
     const onTimelineClick = (e) => {
         if (e.detail === 2) {
-            var timelineScroll = document.getElementById('timeline-container').scrollLeft
-            let result = (e.clientX + timelineScroll) / secToPxCoef
-            setNewSecondsFromCursor(result - 0.25)
+            const timelineScroll = document.getElementById('timeline-container').scrollLeft
+            const paddingLeft = window.getComputedStyle(document.getElementById('page-container'), null).getPropertyValue('padding-left')
+            const result = (e.clientX + timelineScroll - parseInt(paddingLeft)) / secToPxCoef
+            setNewSecondsFromCursor(result)
         }
     }
 

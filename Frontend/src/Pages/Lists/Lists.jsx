@@ -171,7 +171,7 @@ export default function Lists() {
             )}
             <div className='navbar'>
                 <BreadCrumbs pathObject={[{url: '/dashboard', name: 'Dashboard'}]} />
-                <div style={{ marginRight:'1vw', marginTop:'2vh' }}><AccountButton /></div>
+                <AccountButton/>
             </div>
             <div className='dashboard-inner-container'>
                 <h1 className='dashboard-inner-container-title'>{t('projects.recents')}</h1>

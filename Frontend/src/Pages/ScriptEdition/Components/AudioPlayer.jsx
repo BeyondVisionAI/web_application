@@ -1,94 +1,132 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSecondsFromCursor, triggerPause}) => {
     const [sortedReplicas, setSortedReplicas] = useState([])
-    const [currentReplicaAudio, setCurrentReplicaAudio] = useState(null);
-    const [currentReplica, setCurrentReplica] = useState(null);
-    const [nextReplicaAudio, setNextReplicaAudio] = useState(null);
-    const [nextReplicaIndex, setNextReplicaIndex] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false)
+    const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+    const [replicasAudio, setReplicasAudio] = useState([]);
+    const [nextReplicaId, setNextReplicaId] = useState(null);
+    const [nextReplicaEndTimestamp, setNextReplicaEndTimestamp] = useState(null);
 
-    useEffect(() => {
-        if (isPlaying) {
-            setTimeout(loadNextAudio, currentReplica?.duration)
+    const loadAudio = useCallback(
+      (replicaId, isNext = false) => {
+        const idx = replicas.findIndex(i => i._id === replicaId);
+        const replica = replicas[idx];
+        if (replica?.audioUrl) {
+            const replicaAudioObj = {
+                id: replicaId,
+                audio: new Audio(replica.audioUrl),
+                replica: replica
+            }
+            setReplicasAudio([...replicasAudio, replicaAudioObj]);
+            if (isNext) {
+                setNextReplicaId(replicaId)
+            }
         }
-    }, [isPlaying]);
+      },
+      [replicas],
+    )
 
     useEffect(() => {
-        if (isPlaying) {
-            currentReplicaAudio?.pause()
-            setIsPlaying(false)
+        console.log("🚀 ~ file: AudioPlayer.jsx:31 ~ useEffect ~ isAudioPlaying", isAudioPlaying)
+        if (isAudioPlaying) {
+            setIsAudioPlaying(false);
+            const idx = replicasAudio.findIndex(i => i.id === nextReplicaId)
+            if (idx !== -1) {
+                console.log("🚀 ~ file: AudioPlayer.jsx:36 ~ useEffect ~ replicasAudio[idx]", replicasAudio[idx])
+                replicasAudio[idx]?.audio?.pause();
+            }
         }
     }, [triggerPause]);
 
+    const updateAudio = useCallback(
+        (replicaId) => {
+            const idx = replicasAudio.findIndex(i => i.id === replicaId);
+            if (idx !== -1) {
+                const cpyAudio = [...replicasAudio];
+                const idxReplica = replicas.findIndex(i => i._id === replicaId);
+                const replica = replicas[idxReplica];
+                if (replica.audioUrl !== cpyAudio[idx].replica.audioUrl) {
+                    cpyAudio[idx].audio = new Audio(replica.audioUrl);
+                    cpyAudio[idx].replica = replica;
+                    setReplicasAudio(cpyAudio);
+                }
+            }
+        },
+        [replicasAudio, replicas]
+    )
+
+    const returnClosestId = useCallback(
+        (currentTime) => {
+            if (sortedReplicas.length === 0) return;
+            const closest = sortedReplicas.reduce(function(prev, curr) {
+                return (Math.abs(curr.timestamp - currentTime) < Math.abs(prev.timestamp - currentTime) ? curr : prev);
+            });
+            let closestIdx = sortedReplicas.findIndex(val => val === closest)
+            if (closest.timestamp + closest.duration < currentTime) {
+                if (closestIdx + 1 < sortedReplicas.length) {
+                    closestIdx += 1;
+                } else {
+                    closestIdx = 0;
+                }
+            }
+            return (sortedReplicas[closestIdx]._id)
+        },
+        [sortedReplicas]
+    )
+
     useEffect(() => {
         if (!newSecondsFromCursor) return;
-        if (sortedReplicas.length === 0) return;
-        var closest = sortedReplicas.reduce(function(prev, curr) {
-            return (Math.abs(curr.timestamp - newSecondsFromCursor * 1000) < Math.abs(prev.timestamp - newSecondsFromCursor * 1000) ? curr : prev);
-        });
-        var closestIdx = sortedReplicas.findIndex(val => val === closest)
-        if (closest.timestamp + closest.duration < newSecondsFromCursor * 1000) {
-            closestIdx += 1;
+        const currentTime = newSecondsFromCursor * 1000;
+        const closestId = returnClosestId(currentTime);
+        if (replicasAudio.filter(i => i.id === closestId).length === 0) {
+            loadAudio(closestId, true)
+        } else {
+            setNextReplicaId(closestId)
         }
-        loadNextAudio(closestIdx)
         resetNewSecondsFromCursor()
     }, [newSecondsFromCursor]);
 
     useEffect(() => {
-        loadNextAudio()
-    }, [sortedReplicas]);
-
-    useEffect(() => {
-        if (playedSeconds * 1000 >= currentReplica?.timestamp && !isPlaying) {
-            currentReplicaAudio?.play()
-            setIsPlaying(true)
+        const idx = replicasAudio.findIndex(i => i.id === nextReplicaId);
+        if (idx !== -1) {
+            const replica = replicasAudio[idx];
+            const currentTime = playedSeconds * 1000;
+            if (currentTime >= replica.replica.timestamp && !isAudioPlaying && currentTime <= nextReplicaEndTimestamp) {
+                replica.audio.play()
+                setIsAudioPlaying(true);
+            } else {
+                if (currentTime > nextReplicaEndTimestamp && !newSecondsFromCursor) {
+                    setNextReplicaId(returnClosestId(currentTime))
+                }
+                setIsAudioPlaying(false)
+            }
+        } else {
+            loadAudio(nextReplicaId)
         }
     }, [playedSeconds]);
 
     useEffect(() => {
+        const idx = replicas.findIndex(i => i._id === nextReplicaId)
+        if (idx !== -1) {
+            setNextReplicaEndTimestamp(replicas[idx].timestamp + replicas[idx].duration)
+        }
+    }, [nextReplicaId]);
+
+    useEffect(() => {
         let sorted = replicas.sort((a, b) => a.timestamp - b.timestamp)
         setSortedReplicas(sorted)
+        replicas.forEach(replica => {
+            if (replicasAudio.filter(i => i.id === replica._id).length === 0) {
+                loadAudio(replica._id)
+            } else {
+                updateAudio(replica._id)
+            }
+        })
+        if (!nextReplicaId) {
+            setNextReplicaId(replicas[0]._id)
+        }
     }, [replicas]);
 
-    const loadNextAudio = (nextIdx) => {
-        let idx = 0;
-        if (nextIdx === null || nextIdx === undefined) {
-            idx = nextReplicaIndex
-        } else {
-            if (nextIdx === nextReplicaIndex) {
-                currentReplicaAudio?.fastSeek(0)
-                return
-            }
-            idx = nextIdx
-        }
-        setIsPlaying(false)
-        if (idx === -1) {
-            setCurrentReplica(null)
-            setCurrentReplicaAudio(null)
-            return
-        }
-        if (idx === 0) {
-            if (!sortedReplicas.length) return
-            setCurrentReplica(sortedReplicas[0])
-            setCurrentReplicaAudio(new Audio(sortedReplicas[0]?.audioUrl))
-            setNextReplicaAudio(new Audio(sortedReplicas[1]?.audioUrl))
-            setNextReplicaIndex(1)
-            return
-        }
-        if (idx + 1 < sortedReplicas.length) {
-            setCurrentReplicaAudio(nextReplicaAudio)
-            setCurrentReplica(sortedReplicas[idx])
-            setNextReplicaAudio(new Audio(sortedReplicas[idx + 1]?.audioUrl))
-            setNextReplicaIndex(idx + 1)
-        } else {
-            setCurrentReplicaAudio(nextReplicaAudio)
-            setCurrentReplica(replicas[idx])
-            setNextReplicaAudio(null)
-            setNextReplicaIndex(-1)
-        }
-    }
     return (
         <div />
      );

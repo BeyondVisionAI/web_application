@@ -1,4 +1,7 @@
 import React from 'react';
+import { FaRegFileAudio, FaRegFileVideo, FaUserCircle } from 'react-icons/fa';
+import { MdRestartAlt } from 'react-icons/md';
+import { IconContext } from 'react-icons/';
 
 const logosImages = [
     {
@@ -93,6 +96,26 @@ const logosImages = [
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
             <polygon points="8.75 16.02 15.5 12.75 8.75 8.48 8.75 16.02"></polygon>
         </svg>
+    }, {
+        type: "Mp3File",
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
+            <FaRegFileAudio/>
+        </IconContext.Provider>
+    }, {
+        type: "Mp4File",
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
+            <FaRegFileVideo/>
+        </IconContext.Provider>
+    }, {
+        type: "SendArrow",
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
+            <MdRestartAlt/>
+        </IconContext.Provider>
+    }, {
+        type: "UserIcon",
+        image: <IconContext.Provider value={{ color: '#7793ed', size: 42 }}>
+            <FaUserCircle/>
+        </IconContext.Provider>
     }
 ];
 

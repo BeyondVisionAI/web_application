@@ -109,6 +109,11 @@
 	},
 
 	"authentication": {
+		"authButton": {
+			"yourProfile": "Your profile",
+			"yourDashboard": "Your dashboard",
+			"signout": "Sign out"
+		},
 		"goBackHome": "← Go back to Home Page",
 		"logInForm": {
 			"title": "Log In",
@@ -403,6 +408,10 @@
 				"removeComment": "An error occured while removing a comment",
 				"fetchAllReplicaComments": "An error occured while getting all the replica's comments, please retry"
 			}
+		},
+		"voiceChoices": {
+			"getAllVoices": "An error occured while retrieving all voices, please retry",
+			"getAllLanguages": "An error occured while retrieving all languages, please retry"
 		},
 		"somethingWentWrong": "Something went wrong",
 		"errorOccured": "An error occured, please try again",

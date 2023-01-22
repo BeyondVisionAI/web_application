@@ -7,7 +7,7 @@ import "./FolderListSelectable.css"
 import { useTranslation } from 'react-i18next';
 
 const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
-    const { t } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t } = useTranslation('translation', {keyPrefix: 'dashboard.folders.add'});
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
     const [lists, setLists] = useState([])
     const [newListName, setNewListName] = useState('')
@@ -44,7 +44,7 @@ const FolderListSelectable = ({project, addToFolderList, defaultLists}) => {
                     name: newListName,
                 }
             })
-            toast.success(t("dashboard.folders.sucessMessage"));
+            toast.success(t("successMessage"));
             setLists([...lists, res.data])
             addToFolderList(res.data)
             setNewListName('')
