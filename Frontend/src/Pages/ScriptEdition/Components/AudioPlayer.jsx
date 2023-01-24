@@ -98,7 +98,9 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
                 if (currentTime > nextReplicaEndTimestamp && !newSecondsFromCursor) {
                     setNextReplicaId(returnClosestId(currentTime))
                 }
-                setIsAudioPlaying(false)
+                if (currentTime > nextReplicaEndTimestamp && isAudioPlaying) {
+                    setIsAudioPlaying(false)
+                }
             }
         } else {
             loadAudio(nextReplicaId)
@@ -122,9 +124,9 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
                 updateAudio(replica._id)
             }
         })
-        if (!nextReplicaId) {
-            setNextReplicaId(replicas[0]?._id)
-        }
+        const currentTime = newSecondsFromCursor * 1000;
+        const closestId = returnClosestId(currentTime);
+        setNextReplicaId(closestId)
     }, [replicas]);
 
     return (
