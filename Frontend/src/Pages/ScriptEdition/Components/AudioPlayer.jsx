@@ -126,7 +126,11 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
         })
         const currentTime = newSecondsFromCursor * 1000;
         const closestId = returnClosestId(currentTime);
-        setNextReplicaId(closestId)
+        if (closestId) {
+            setNextReplicaId(closestId)
+        } else {
+            setNextReplicaId(replicas[0]?._id)
+        }
     }, [replicas]);
 
     return (

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { BounceLoader, ClipLoader } from 'react-spinners';
 
-export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions }) {
+export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions, isSelected }) {
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
     const [playing, setPlaying] = useState(false);
     const [position, setPosition] = useState({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
