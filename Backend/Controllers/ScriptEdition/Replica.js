@@ -169,6 +169,7 @@ exports.createReplica = async function (req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
+<<<<<<< Updated upstream
         const newReplica = new Replica({
             projectId: req.params.projectId,
             content: req.body.content,
@@ -189,6 +190,19 @@ exports.createReplica = async function (req, res) {
             sendDataToUser(user, "new replica", newReplica);
         }
         res.status(200).send(newReplica);
+=======
+        const replica = await createReplicaAndAudio(
+            req.params.projectId,
+            req.body.content,
+            req.body.timestamp,
+            req.body.duration,
+            req.body.voiceId,
+            'Created',
+            'Done',
+            req.user.userId,
+        );
+        res.status(200).send(replica);
+>>>>>>> Stashed changes
     } catch (err) {
         console.log("Replica->createReplica : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);
