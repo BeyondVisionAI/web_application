@@ -47,7 +47,7 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
                 if (currentTime > nextReplicaEndTimestamp && !newSecondsFromCursor) {
                     setNextReplicaId(returnClosestId(currentTime))
                 }
-                if (currentTime > nextReplicaEndTimestamp &&    isAudioPlaying) {
+                if (currentTime > nextReplicaEndTimestamp && isAudioPlaying) {
                     setIsAudioPlaying(false)
                 }
             }
