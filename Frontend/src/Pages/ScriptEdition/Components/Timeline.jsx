@@ -16,12 +16,8 @@ const canvasHeight = 80;
 // var secToPxCoef = 300; // will change if zoom
 const MIN_ZOOM = 30;
 
-<<<<<<< Updated upstream
-const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
-=======
 const Timeline = ({duration, replicaSelected, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
->>>>>>> Stashed changes
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     const [secToPxCoef, setSecToPxCoef] = useState(100);
     const [replicasPositions, setReplicasPositions] = useState([]);
@@ -50,55 +46,9 @@ const Timeline = ({duration, replicaSelected, replicas, projectId, onReplicaSele
                 withCredentials: true
             });
             updateReplica(res.data);
-<<<<<<< Updated upstream
-        } catch (err) { // TODO check
-            let errLog;
-            console.error("error : ", err);
-
-            switch (err.response.status) {
-                case 401:
-                    switch (err.response.data) {
-                        case "USER_NOT_LOGIN":
-                            errLog = `Error (${err.response.status}) - User not logged in.`;
-                            break;
-                        case "PROJECT_NOT_YOURS":
-                            errLog = `Error (${err.response.status}) - You are not the owner of this project.`;
-                            break;
-                        case "ROLE_UNAUTHORIZED":
-                            errLog = `Error (${err.response.status}) - Invalid rights.`;
-                            break;
-                        default: errLog = `Error (${err.response.status}).`;
-                            break;
-                    }
-                    break;
-                case 403:
-                    errLog = `Error (${err.response.status}).`;
-                    break;
-                case 404:
-                    switch (err.reponse.data) {
-                        case "PROJECT_NOT_FOUND":
-                            errLog = `Error (${err.response.status}) - Project not found.`;
-                            break;
-                        case "REPLICA_NOT_FOUND":
-                            errLog = `Error (${err.response.status}) - Replica not found.`;
-                            break;
-                        case "REPLICA_NOT_IN_PROJECT":
-                            errLog = `Error (${err.response.status}) - Replica does not belong to the project.`;
-                            break;
-                            default:
-                            errLog = `Error (${err.response.status}).`;
-                            break;
-                    }
-                default/*500*/: errLog = `Error (${err.response.status}) - Internal Error.`; break;
-            }
-
-            toast.error(errLog);
-=======
             onReplicaSelection(res.data._id)
-            console.log("🚀 ~ file: Timeline.jsx:48 ~ addReplica ~ res.data", res.data)
         } catch (err) {
             toast.error(tErr("createReplica"));
->>>>>>> Stashed changes
         }
     }
 
@@ -189,11 +139,8 @@ const Timeline = ({duration, replicaSelected, replicas, projectId, onReplicaSele
         console.log("🚀 ~ file: Timeline.jsx:109 ~ replicaLine ~ replica", replica)
         return (
             <ReplicaBox
-<<<<<<< Updated upstream
-=======
                 isSelected={replica._id === replicaSelected}
                 key={index}
->>>>>>> Stashed changes
                 replica={replica}
                 index={index}
                 parameters={{secToPxCoef: secToPxCoef, timestamp: currentTime}}

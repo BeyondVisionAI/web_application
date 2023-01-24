@@ -6,12 +6,8 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 
 
-<<<<<<< Updated upstream
-export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions }) {
-=======
 export default function ReplicaBox({ replica, index, parameters, onReplicaSelection, setSelectedRepId, updateReplica, videoDuration, replicasPositions, isSelected }) {
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
->>>>>>> Stashed changes
     const [playing, setPlaying] = useState(false);
     const [position, setPosition] = useState({x: parameters.secToPxCoef * replica.timestamp / 1000, y: 0})
 
@@ -80,12 +76,6 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
             // grid={[parameters.secToPxCoef / 10, 0]}
             bounds={{left: 0, right: parameters.secToPxCoef * (videoDuration - (replica.duration / 1000))}}
             >
-<<<<<<< Updated upstream
-                <button className='bg-blue-700 py-4 rounded focus:outline-none focus:border hover:border-green-400 focus:border-orange-400 text-white
-                        absolute' style={{width: `${parameters.secToPxCoef * replica.duration / 1000}px`}}
-                            onClick={() => onReplicaSelection(replica._id)}
-                            onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}>
-=======
                 <button className='mt-1 py-4 rounded box-border focus:outline-none flex items-center justify-center absolute'
                     style={{
                         width: `${parameters.secToPxCoef * replica.duration / 1000}px`,
@@ -98,7 +88,6 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
                     onClick={() => onReplicaSelection(replica._id)}
                     onContextMenu={() => {onReplicaSelection(replica._id); setSelectedRepId(replica._id)}}
                 >
->>>>>>> Stashed changes
                             {/* should be adjustable to the size of the replica (so its length) */}
                             <p className={'truncate px-4'}>{replica.content}</p>
                 </button>
