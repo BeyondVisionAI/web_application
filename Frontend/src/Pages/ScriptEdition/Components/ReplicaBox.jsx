@@ -95,6 +95,7 @@ export default function ReplicaBox({ replica, index, parameters, onReplicaSelect
                 >
                             {/* should be adjustable to the size of the replica (so its length) */}
                             <p className={'truncate px-4'}>{replica.content}</p>
+                            {replica.status !== 'Done' && <ClipLoader color='#F6F8FF' size={20}/>}
                 </button>
             </Draggable>
             {/* <ReactPlayer url='https://d1meq9j1gywa1t.cloudfront.net/Project-Test/001.mp3' playing={ playing } /> */}
