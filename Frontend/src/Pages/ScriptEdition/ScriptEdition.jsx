@@ -94,18 +94,17 @@ export default function ScriptEdition(props) {
       [replicas, setReplicas, setReplicaSelected],
     )
 
-    const updateGenerationButtons = useCallback(
+    const updateGenerationButtons = useCallback(  
         (generationStatus) => {
             setProject({
                 ...(project && project),
                 ['status']: generationStatus.status
             });
             if (generationStatus.status === 'Done' && generationStatus.actualStep === 'VideoGeneration')
-                toast.success(tSuc('scriptEdition.ADGenerationSuccess'))
+                toast.success(tSuc('scriptEdition.ADGenerationSuccess'));
             else if (generationStatus.status === 'Error')
                 toast.error(tErr('scriptEdition.ADGenerationError'));
-    },
-    [project]
+        }, [project]
     )
 
     const initSocketListener =  useCallback(() => {
@@ -120,9 +119,8 @@ export default function ScriptEdition(props) {
         socket.on('delete replica', async (replica) => {
             removeReplica(replica._id);
         });
-        socket.on('update generation status', async({generationStatus}) => {
+        socket.on('update generation status', async(generationStatus) => {
             updateGenerationButtons(generationStatus);
-
         })
     }, [replicas, setReplicas, updateReplica, removeReplica, updateGenerationButtons, socket])
 
@@ -235,7 +233,7 @@ export default function ScriptEdition(props) {
 
     const isEmptyRepliquas = () => {
         if (replicas.length === 0)
-            return (false)
+            return (false);
         const emptyReplicaIndex = replicas.find(r => r.content == null || r.content === "");
 
         return (emptyReplicaIndex === undefined);
