@@ -96,7 +96,6 @@ export default function ScriptEdition(props) {
 
     const updateGenerationButtons = useCallback(
         (generationStatus) => {
-            generationStatus = generationStatus.generationStatus
             setProject({
                 ...(project && project),
                 ['status']: generationStatus.status
@@ -122,7 +121,7 @@ export default function ScriptEdition(props) {
             removeReplica(replica._id);
         });
         socket.on('update generation status', async({generationStatus}) => {
-            updateGenerationButtons({generationStatus});
+            updateGenerationButtons(generationStatus);
 
         })
     }, [replicas, setReplicas, updateReplica, removeReplica, updateGenerationButtons, socket])
@@ -187,7 +186,7 @@ export default function ScriptEdition(props) {
 
     const LaunchGeneration = async() => {
         try {
-            toast.warning(tWarn("generationStart"))
+            toast.warning(tWarn("generationStart"));
             const res = await axios({
                 method: "POST",
                 url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
@@ -235,6 +234,8 @@ export default function ScriptEdition(props) {
     }
 
     const isEmptyRepliquas = () => {
+        if (replicas.length === 0)
+            return (false)
         const emptyReplicaIndex = replicas.find(r => r.content == null || r.content === "");
 
         return (emptyReplicaIndex === undefined);
@@ -297,7 +298,7 @@ export default function ScriptEdition(props) {
                             {/*</button>*/}
                             <ImageButton disabled={ (project.status === 'Done') ? (false) : (true) } type="Mp4File" onClick={ () => DownloadVideo() }/>
                             <ImageButton disabled={ (project.status === 'Done') ? (false) : (true) } type="Mp3File" onClick={ () => DownloadFile() }/>
-                            <ImageButton disabled={ replicas.length !== 0 && isEmptyRepliquas() && project.status !== 'InProgress' ? (false) : (true) } type="SendArrow" size='30px' onClick={ () => LaunchGeneration() } />
+                            <ImageButton disabled={isEmptyRepliquas() && project.status !== 'InProgress' ? (false) : (true) } type="SendArrow" size='30px' onClick={ () => LaunchGeneration() } />
                             <AccountButton/>
                         </div>
                     </div>

@@ -199,12 +199,11 @@ exports.setStatus = async function (req, res) {
             project.progress = 100;
 
             await project.save()
-            .then(async () => {
-                var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
-                for (var user of projectsRooms[index].users) {
-                    sendDataToUser(user, "update generation status", {generationStatus: {actualStep:project.actualStep, status: project.status}});
-                }
-            })
+            
+            var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
+            for (var user of projectsRooms[index].users) {
+                sendDataToUser(user, "update generation status", {generationStatus: {actualStep:project.actualStep, status: project.status}});
+            }
 
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
