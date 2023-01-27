@@ -123,7 +123,7 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
             }
         })
         if (!nextReplicaId) {
-            setNextReplicaId(replicas[0]._id)
+            setNextReplicaId(replicas[0]?._id)
         }
     }, [replicas]);
 
