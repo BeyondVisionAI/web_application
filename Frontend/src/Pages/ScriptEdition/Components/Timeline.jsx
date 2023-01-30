@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 const MIN_ZOOM = 30;
 
-const Timeline = ({duration, isPlaying, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
+const Timeline = ({duration, replicaSelected, isPlaying, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     const [secToPxCoef, setSecToPxCoef] = useState(100);
