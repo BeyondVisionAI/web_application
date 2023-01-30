@@ -154,7 +154,7 @@ const Timeline = ({duration, replicaSelected, isPlaying, replicas, projectId, on
                 className='flex overflow-x-scroll overflow-y-hidden relative
                     w-full m-0 bg-gray-200 border-solid border-t-2 border-l-2 border-r-2 border-gray-300 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'
                     >
-                    <div className='flex flex-row items-start'>
+                    <div className='flex flex-row items-start' style={{minHeight: '5rem'}}>
                         {replicaLine}
                     </div>
                     <div className='flex flex-row w-full'>

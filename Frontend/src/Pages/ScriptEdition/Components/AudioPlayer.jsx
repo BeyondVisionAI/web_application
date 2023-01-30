@@ -32,7 +32,6 @@ const AudioPlayer = ({replicas, playedSeconds, newSecondsFromCursor, resetNewSec
             setIsAudioPlaying(false);
             const idx = replicasAudio.findIndex(i => i.id === nextReplicaId)
             if (idx !== -1) {
-                console.log("🚀 ~ file: AudioPlayer.jsx:36 ~ useEffect ~ replicasAudio[idx]", replicasAudio[idx])
                 replicasAudio[idx]?.audio?.pause();
             }
         }
