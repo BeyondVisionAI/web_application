@@ -300,7 +300,7 @@ export default function ScriptEdition(props) {
                             <AccountButton/>
                         </div>
                     </div>
-                    <div className="flex flex-row gap-3 edit-bloc">
+                    <div className="flex flex-row gap-3 edit-bloc" style={{height: '59vh'}}>
                         <div id="menu-detail" className="bg-white w-2/5 h-1/10 shadow-lg rounded-xl">
                             {replicaSelected !== null && getReplicaFromId(replicaSelected) !== null
                             ?   <ReplicaDetails replica={ getReplicaFromId(replicaSelected) } updateReplica={ updateReplica }/>
@@ -320,6 +320,7 @@ export default function ScriptEdition(props) {
 
                     <div className="flex h-1/3 w-full pb-6 mt-2">
                         <Timeline
+                        replicaSelected={replicaSelected}
                         className="w-full h-full bg-gray-100 rounded-b-3xl opacity-50 shadow-lg"
                         playedSeconds={ playedSeconds }
                         duration={ videoDuration }

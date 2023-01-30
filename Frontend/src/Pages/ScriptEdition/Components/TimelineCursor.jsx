@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Draggable from "react-draggable";
 
 const grabbable =  {
@@ -14,18 +14,35 @@ const grabbableActive = {
     cursor: '-webkit-grabbing', // eslint-disable-line
 }
 
+function useOnScreen(ref) {
+
+    const [isIntersecting, setIntersecting] = useState(false)
+    const observer = useMemo(() => new IntersectionObserver(
+      ([entry]) => setIntersecting(entry.isIntersecting)
+    ), [ref])
+    useEffect(() => {
+      observer.observe(ref.current)
+      return () => observer.disconnect()
+    }, [])
+    return isIntersecting
+}
+
 const TimelineCursor = ({secondsPlayed, secondToPixelRatio, setNewSecondsFromCursor, onTimelineSeek}) => {
     const [position, setPosition] = useState({x: secondsPlayed * secondToPixelRatio, y: 0})
     const [cursorStyle, setCursorStyle] = useState(grabbable)
     const cursorRef = useRef(null)
+    const isVisible = useOnScreen(cursorRef)
+    const timelineContainer = document.getElementById('timeline-container')
 
     useEffect(() => {
         setPosition({x: secondsPlayed * secondToPixelRatio, y: 0})
     }, [secondToPixelRatio, secondsPlayed]);
 
     useEffect(() => {
-        cursorRef?.current?.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
-    }, [position]);
+        if (!isVisible) {
+            timelineContainer?.scrollTo(position.x, position.y)
+        }
+    }, [isVisible]);
 
     const onDragStart = () => {
         setCursorStyle(grabbableActive)

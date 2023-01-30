@@ -203,7 +203,7 @@ exports.createReplica = async function (req, res) {
             || !req.body.voiceId) {
             return res.status(400).send(Errors.BAD_REQUEST_MISSING_INFOS);
         }
-        await createReplicaAndAudio(
+        const replica = await createReplicaAndAudio(
             req.params.projectId,
             req.body.content,
             req.body.timestamp,
@@ -213,7 +213,7 @@ exports.createReplica = async function (req, res) {
             'Done',
             req.user.userId,
         );
-        res.status(200).send("Replica created !");
+        res.status(200).send(replica);
     } catch (err) {
         console.log("Replica->createReplica : " + err);
         return res.status(500).send(Errors.INTERNAL_ERROR);

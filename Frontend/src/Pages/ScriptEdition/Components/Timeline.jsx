@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 const MIN_ZOOM = 30;
 
-const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
+const Timeline = ({duration, replicaSelected, replicas, projectId, onReplicaSelection, updateReplica, removeReplicaFromState, playedSeconds, setNewSecondsFromCursor}) => {
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs.scriptEdition.replica'});
     const [contextSelectedReplicaId, setSelectedRepId] = useState(null);
     const [secToPxCoef, setSecToPxCoef] = useState(100);
@@ -41,6 +41,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
                 withCredentials: true
             });
             updateReplica(res.data);
+            onReplicaSelection(res.data._id)
         } catch (err) {
             toast.error(tErr("createReplica"));
         }
@@ -91,6 +92,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
     const replicaLine = replicas.map((replica, index) => {
         return (
             <ReplicaBox
+                isSelected={replica._id === replicaSelected}
                 key={index}
                 replica={replica}
                 index={index}
@@ -150,7 +152,7 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
                 id="timeline-container"
                 onClick={onTimelineClick}
                 className='flex overflow-x-scroll overflow-y-hidden relative
-                    w-full m-0 bg-gray-500 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'
+                    w-full m-0 bg-gray-200 border-solid border-t-2 border-l-2 border-r-2 border-gray-300 rounded-b-3xl opacity-50 shadow-lg items-start flex-col'
                     >
                     <div className='flex flex-row items-start'>
                         {replicaLine}
@@ -174,10 +176,12 @@ const Timeline = ({duration, replicas, projectId, onReplicaSelection, updateRepl
             </ContextMenu>
 
             <ContextMenu id="timeline_menu" onShow={e => {
-                var scrollX = e.target.scrollX;
-                var posX = e.detail.position.x;
-                var result = ((scrollX + posX - (16 * 2)) / secToPxCoef); // -2 rem equals the adjustment of the position
-                setNewReplicaTimestamp((result * 1000).toFixed(0))
+                const timeline = document.getElementById('timeline-container')
+                const paddingLeft = window.getComputedStyle(document.getElementById('page-container'), null).getPropertyValue('padding-left')
+                const scrollX = timeline.scrollLeft;
+                const posX = e.detail.position.x;
+                const result = (((scrollX + posX) - parseInt(paddingLeft)) / secToPxCoef) * 1000; // -2 rem equals the adjustment of the position
+                setNewReplicaTimestamp(result.toFixed(0))
             }}>
                 <MenuItem onClick={addReplica}>
                  {/* <MenuItem onClick= _ => await addReplica(newReplicaTimestamp)> */}
