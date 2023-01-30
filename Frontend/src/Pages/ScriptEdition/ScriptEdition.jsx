@@ -29,6 +29,7 @@ export default function ScriptEdition(props) {
     const [playedSeconds, setPlayedSeconds] = useState(0);
     const [newSecondsFromCursor, setNewSecondsFromCursor] = useState(null)
     const [isPlaying, setIsPlaying] = useState(false)
+    console.log("🚀 ~ file: ScriptEdition.jsx:31 ~ ScriptEdition ~ isPlaying", isPlaying)
 
     const callGenerationIA = () => {
         axios.defaults.withCredentials = true;
@@ -330,6 +331,7 @@ export default function ScriptEdition(props) {
                         updateReplica={ updateReplica }
                         removeReplicaFromState={ removeReplica }
                         setNewSecondsFromCursor={ setNewSecondsFromCursor }
+                        isPlaying={isPlaying}
                         />
                     </div>
                     <AudioPlayer

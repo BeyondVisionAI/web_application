@@ -27,7 +27,7 @@ function useOnScreen(ref) {
     return isIntersecting
 }
 
-const TimelineCursor = ({secondsPlayed, secondToPixelRatio, setNewSecondsFromCursor, onTimelineSeek}) => {
+const TimelineCursor = ({secondsPlayed, isPlaying, secondToPixelRatio, setNewSecondsFromCursor, onTimelineSeek}) => {
     const [position, setPosition] = useState({x: secondsPlayed * secondToPixelRatio, y: 0})
     const [cursorStyle, setCursorStyle] = useState(grabbable)
     const cursorRef = useRef(null)
@@ -39,7 +39,7 @@ const TimelineCursor = ({secondsPlayed, secondToPixelRatio, setNewSecondsFromCur
     }, [secondToPixelRatio, secondsPlayed]);
 
     useEffect(() => {
-        if (!isVisible) {
+        if (!isVisible && isPlaying) {
             timelineContainer?.scrollTo(position.x, position.y)
         }
     }, [isVisible]);
