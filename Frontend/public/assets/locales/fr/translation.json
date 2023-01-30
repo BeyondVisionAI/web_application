@@ -336,6 +336,11 @@
 			"generationStart": "La génération du script a commencé"
 		}
 	},
+	"sucMsgs": {
+		"scriptEdition": {
+			"ADGenerationSuccess": "Generation de l'audiodescription terminée"
+		}
+	},
 	"errMsgs": {
 		"project": {
 			"s3Upload": "Une erreur est survenue en sauvegardant le fichier, veuillez réessayer"
@@ -391,6 +396,7 @@
 			"createFolder": "Une erreur est survenue en créant un dossier, veuillez réessayer"
 		},
 		"scriptEdition": {
+			"ADGenerationError": "Une erreur est survenue pendant la génération de l'audiodescription, veuillez réessayer",
 			"scriptGeneration": "Une erreur est survenue pendant la génération du script, veuillez réessayer",
 			"couldNotGenerate": "Impossible de générer le rendu du projet",
 			"audioDescFileNotReady": "Le fichier d'audiodescription n'est pas prêt",

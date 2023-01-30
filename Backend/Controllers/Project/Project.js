@@ -6,6 +6,7 @@ const { ProjectListed } = require("../../Models/list/ProjectListed");
 const axios = require("axios");
 const { Payment, PaymentStatus } = require("../../Models/Payment");
 const { getProjectReplicasFromId, createAudio } = require("../../Controllers/ScriptEdition/Replica")
+const { projectsRooms, sendDataToUser } = require("../../Configs/socketIOConfig.js");
 
 const projectHasBeenPaid = async function (projectId) {
     const payments = await Payment.find({ projectId: projectId });
@@ -197,11 +198,13 @@ exports.setStatus = async function (req, res) {
         else if (req.body.statusType === 'Done')
             project.progress = 100;
 
+            await project.save()
+            
+            var index = projectsRooms.findIndex((elem) => elem.id === req.params.projectId);
+            for (var user of projectsRooms[index].users) {
+                sendDataToUser(user, "update generation status", { actualStep: project.actualStep, status: project.status });
+            }
 
-        await project.save();
-        if (project.ActualStep === 'VoiceGeneration' && project.statusType === 'Done') {
-            axios.post(`${process.env.SERVER_IA_URL}/GenerationVideo`, { projectId: req.params.projectId })
-        }
         return (res.status(200).send("The status has been changed"));
     } catch (err) {
         console.log(`Project->setStatus: ${err}`);
@@ -280,6 +283,9 @@ exports.finishedEdition = async function (req, res) {
 
         if (project.actualStep === 'AudioGeneration' && project.status === 'Done') {
             axios.post(`${process.env.SERVER_IA_URL}/Generation/GenerationVideo`, { projectId: req.params.projectId })
+            .catch((err) => {
+                throw(err)
+            })
         }
     } catch (err) {
         console.log("Project->Finished Edition: " + err);

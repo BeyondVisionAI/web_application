@@ -18,8 +18,9 @@ import FullPageLoader from '../../GenericComponents/FullPageLoader/FullPageLoade
 import BreadCrumbs from '../../GenericComponents/BreadCrumbs/BreadCrumbs';
 
 export default function ScriptEdition(props) {
-    const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs'});
+    const { t: tWarn } = useTranslation('translation', {keyPrefix: 'warningMsgs.scriptEdition'});
     const { t: tErr } = useTranslation('translation', {keyPrefix: 'errMsgs'});
+    const { t: tSuc } = useTranslation('translation', {keyPrefix: 'sucMsgs'});
     const {socket} = useContext(AuthContext);
     const [replicas, setReplicas] = useState([]);
     const [project, setProject] = useState(null);
@@ -93,6 +94,19 @@ export default function ScriptEdition(props) {
       [replicas, setReplicas, setReplicaSelected],
     )
 
+    const updateGenerationButtons = useCallback(  
+        (generationStatus) => {
+            setProject({
+                ...(project && project),
+                ['status']: generationStatus.status
+            });
+            if (generationStatus.status === 'Done' && generationStatus.actualStep === 'VideoGeneration')
+                toast.success(tSuc('scriptEdition.ADGenerationSuccess'));
+            else if (generationStatus.status === 'Error')
+                toast.error(tErr('scriptEdition.ADGenerationError'));
+        }, [project]
+    )
+
     const initSocketListener =  useCallback(() => {
         socket.on('new replica', async (newReplica) => {
             setReplicas([...replicas, newReplica])
@@ -105,7 +119,10 @@ export default function ScriptEdition(props) {
         socket.on('delete replica', async (replica) => {
             removeReplica(replica._id);
         });
-    }, [replicas, setReplicas, updateReplica, removeReplica, socket])
+        socket.on('update generation status', async(generationStatus) => {
+            updateGenerationButtons(generationStatus);
+        })
+    }, [replicas, setReplicas, updateReplica, removeReplica, updateGenerationButtons, socket])
 
     useEffect(() => {
         socket.emit("open project", props.match.params.id);
@@ -161,12 +178,13 @@ export default function ScriptEdition(props) {
             socket.off("new replica");
             socket.off("update replica");
             socket.off("delete replica");
+            socket.off("update generation status");
         })
     }, [initSocketListener, socket]);
 
     const LaunchGeneration = async() => {
         try {
-            toast.warning(tWarn("scriptGeneration"));
+            toast.warning(tWarn("generationStart"));
             const res = await axios({
                 method: "POST",
                 url: `${process.env.REACT_APP_API_URL}/projects/${props.match.params.id}/finishedEdition`,
@@ -211,6 +229,14 @@ export default function ScriptEdition(props) {
         } catch (error) {
             toast.error(tErr("scriptEdition.audioDownloadFailed"));
         }
+    }
+
+    const isEmptyRepliquas = () => {
+        if (replicas.length === 0)
+            return (false);
+        const emptyReplicaIndex = replicas.find(r => r.content == null || r.content === "");
+
+        return (emptyReplicaIndex === undefined);
     }
 
     const DownloadVideo = async() => {
@@ -270,7 +296,7 @@ export default function ScriptEdition(props) {
                             {/*</button>*/}
                             <ImageButton disabled={ (project.status === 'Done') ? (false) : (true) } type="Mp4File" onClick={ () => DownloadVideo() }/>
                             <ImageButton disabled={ (project.status === 'Done') ? (false) : (true) } type="Mp3File" onClick={ () => DownloadFile() }/>
-                            <ImageButton type="SendArrow" size='30px' onClick={() => LaunchGeneration()}/>
+                            <ImageButton disabled={isEmptyRepliquas() && project.status !== 'InProgress' ? (false) : (true) } type="SendArrow" size='30px' onClick={ () => LaunchGeneration() } />
                             <AccountButton/>
                         </div>
                     </div>
